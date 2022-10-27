@@ -7,7 +7,7 @@
   "unpkg": "VentoseUI.umd.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ShoneSingLone/ShoneSingLone.github.io.git"
+    "url": "https://github.com/ShoneSingLone/ui-vue3-antdv.git"
   },
   "homepage": "https://github.com/ShoneSingLone/ShoneSingLone.github.io#readme",
   "scripts": {

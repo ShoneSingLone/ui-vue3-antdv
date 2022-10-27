@@ -5,7 +5,6 @@ import useVueJsx from "@vitejs/plugin-vue-jsx";
 import path from "path";
 import svgHelper from "./plugins/vite/svg";
 
-
 const isApp = process.env.type === "app";
 
 const globals = {
@@ -16,9 +15,10 @@ const globals = {
   // dayjs: "dayjs",
   // moment: "dayjs",
   // axios: "axios",
-}
+};
 
 const ConfigOptions = {
+  base: "./",
   plugins: [useVue(), useVueJsx(), svgHelper()],
   resolve: {
     alias: {
@@ -40,7 +40,7 @@ const ConfigOptions = {
       external: Object.keys(globals),
       plugins: [],
       output: {
-        globals
+        globals,
       },
     },
   },
