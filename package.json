@@ -11,7 +11,7 @@
   },
   "homepage": "https://github.com/ShoneSingLone/ShoneSingLone.github.io#readme",
   "scripts": {
-    "bs": "npm i --legacy-peer-deps && npm run make:language",
+    "bs": "npm i --legacy-peer-deps",
     "up": "npm version patch && npm publish --access public",
     "start": "vite --open",
     "build": "npm run build:app && npm run build:lib",
