@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@ventose/utils-node': ^0.0.11
   '@vitejs/plugin-vue': ^3.1.0
   '@vitejs/plugin-vue-jsx': ^2.0.1
   ant-design-vue: ^3.2.13
@@ -33,6 +34,7 @@ dependencies:
   vue-router: 4.1.5_vue@3.2.40
 
 devDependencies:
+  '@ventose/utils-node': 0.0.11
   '@vitejs/plugin-vue': 3.1.2_vite@3.1.8+vue@3.2.40
   '@vitejs/plugin-vue-jsx': 2.0.1_vite@3.1.8+vue@3.2.40
   cross-env: 7.0.3
@@ -441,6 +443,12 @@ packages:
   /@trysound/sax/0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
+    dev: true
+
+  /@ventose/utils-node/0.0.11:
+    resolution: {integrity: sha512-KvEjmk4PGNyR/2arQ2PasMU7iZ2CoK121fFJ+4Dh7SeHS/VQlMlkHRiTD5MQDbTegFHtuw+VLaZUTZ82fbGDTA==}
+    dependencies:
+      lodash: 4.17.21
     dev: true
 
   /@vitejs/plugin-vue-jsx/2.0.1_vite@3.1.8+vue@3.2.40:
@@ -1233,7 +1241,7 @@ packages:
     dev: false
 
   /image-size/0.5.5:
-    resolution: {integrity: sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=}
+    resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
     engines: {node: '>=0.10.0'}
     hasBin: true
     requiresBuild: true
@@ -1332,7 +1340,6 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: false
 
   /loose-envify/1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
