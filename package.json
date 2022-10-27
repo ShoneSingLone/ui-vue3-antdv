@@ -9,10 +9,10 @@
     "type": "git",
     "url": "https://github.com/ShoneSingLone/ui-vue3-antdv.git"
   },
-  "homepage": "https://github.com/ShoneSingLone/ShoneSingLone.github.io#readme",
+  "homepage": "https://shonesinglone.github.io/ui-vue3-antdv/",
   "scripts": {
     "bs": "npm i --legacy-peer-deps",
-    "up": "npm version patch && npm publish --access public",
+    "up": "npm run build:lib && npm version patch && npm publish --access public",
     "start": "vite --open",
     "build": "npm run build:app && npm run build:lib",
     "build:lib": "vue-tsc --noEmit && vite build",
