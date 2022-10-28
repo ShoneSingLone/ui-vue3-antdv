@@ -28,6 +28,8 @@ const appPlugins = {
 
 const State_App = reactive({});
 
+document.title="vue3+antdv+components"
+
 createApp(App)
   .use(appPlugins, {
     dependState: State_App,
