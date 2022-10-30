@@ -53,6 +53,7 @@ export default defineComponent({
   data() {
     const vm = this;
     const configs = vm.configs;
+
     const handleConfigsValidate = (eventType) => {
       configs.validate && configs.validate(eventType);
     };
@@ -62,8 +63,8 @@ export default defineComponent({
       "onUpdate:value": (val, ...args) => {
         configs.value = val;
         this.$emit("update:modelValue", val);
-        if (_.isFunction(configs.onAfterValueChang)) {
-          configs.onAfterValueChange(configs);
+        if (_.isFunction(listeners.onAfterValueChange)) {
+          listeners.onAfterValueChange.call(configs, val);
         }
         /* TODO: rule检测*/
         handleConfigsValidate(EVENT_TYPE.update);
@@ -86,7 +87,7 @@ export default defineComponent({
       listeners[prop] = function (...args) {
         /* console.log("🚀", prop, listeners[prop].queue, args); */
         _.each(listeners[prop].queue, (listener) => {
-          listener(...args);
+          listener?.apply(vm.configs, args);
         });
       };
       listeners[prop].queue = [value];
@@ -280,12 +281,12 @@ export default defineComponent({
     MutatingProps(this, "configs.FormItemId", this.FormItemId);
 
     /* $(`[formitemid="${this.FormItemId}"]`).on("blur", (e) => {
-			this.componentSettings.listener();
-		}); */
+      this.componentSettings.listener();
+    }); */
   },
   /* beforeUnmount() {
-		$(`[formitemid="${this.FormItemId}"]`).off("blur");
-	}, */
+    $(`[formitemid="${this.FormItemId}"]`).off("blur");
+  }, */
   methods: {
     setTips(type = "", msg = "") {
       MutatingProps(this, "configs.itemTips", { type, msg });

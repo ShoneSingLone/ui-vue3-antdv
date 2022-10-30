@@ -17,7 +17,6 @@ export function defItem(options: t_itemConfigs) {
   }
   const configs = reactive(
     _.merge(
-      {},
       {
         /* 提示信息，可以用于提示或者定位 */
         itemTips: {},
@@ -25,7 +24,7 @@ export function defItem(options: t_itemConfigs) {
         itemType: options.itemType || "Input",
         /*默认绑定的是value*/
       },
-      options
+      { ...options }
     )
   );
 
