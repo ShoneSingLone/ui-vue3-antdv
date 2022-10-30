@@ -124,7 +124,7 @@ export const UI = {
       });
     },
   },
-  message: new Proxy(notification, {
+  message: new Proxy(message, {
     get(notificationApi, propertyKey, receiver) {
       const notificationApiElement = notificationApi[propertyKey];
       return new Proxy(notificationApiElement, {

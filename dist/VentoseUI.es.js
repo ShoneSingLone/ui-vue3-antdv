@@ -24193,7 +24193,7 @@ const C6 = ({
       e.validate && e.validate(s);
     }, r = {
       "onUpdate:value": (s, ...v) => {
-        e.value = s, this.$emit("update:modelValue", s), ve.isFunction(e.onAfterValueChang) && e.onAfterValueChange(e), n(Fn.update);
+        e.value = s, this.$emit("update:modelValue", s), ve.isFunction(r.onAfterValueChange) && r.onAfterValueChange.call(e, s), n(Fn.update);
       },
       onChange: () => {
         n(Fn.change);
@@ -24211,7 +24211,7 @@ const C6 = ({
     function o(s, v) {
       r[s] = function(...h) {
         ve.each(r[s].queue, (y) => {
-          y(...h);
+          y == null || y.apply(t.configs, h);
         });
       }, r[s].queue = [v];
     }
@@ -25757,10 +25757,12 @@ function tR(t) {
 let nR = 0;
 function rR(t) {
   t.prop || (t.prop = `xItem${nR++}`, console.error(`no xItem prop replace by ${t.prop}`)), ve.isInput(t.isShow) || (t.isShow = !0);
-  const e = Tr(ve.merge({}, {
+  const e = Tr(ve.merge({
     itemTips: {},
     itemType: t.itemType || "Input"
-  }, t));
+  }, {
+    ...t
+  }));
   return {
     [e.prop]: e
   };

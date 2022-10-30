@@ -1,6 +1,6 @@
 {
   "name": "@ventose/ui",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "./dist/VentoseUI.es.js",
   "module": "./dist/VentoseUI.es.js",
   "unpkg": "./dist/VentoseUI.umd.js",
@@ -11,7 +11,8 @@
   "homepage": "https://shonesinglone.github.io/ui-vue3-antdv/",
   "scripts": {
     "bs": "npm i --legacy-peer-deps",
-    "up": "npm version patch && npm publish --access public",
+    "npmpatch": "npm version patch",
+    "up": "npm publish --access public",
     "start": "vite --open",
     "cleandist": "node ./plugins/ci/clean.js",
     "build": "npm run build:app && npm run build:lib",
