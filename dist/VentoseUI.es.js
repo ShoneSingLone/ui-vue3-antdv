@@ -59126,11 +59126,11 @@ async function validateForm(configsForm) {
           }
         }
         if (configs.validate) {
-          configs.validate.formCallBack = (result) => {
-            delete configs.validate.formCallBack;
+          configs.__onAfterValidate = function(result) {
+            delete configs.__onAfterValidate;
             resolve(result);
           };
-          configs.validate(EVENT_TYPE.validateForm);
+          configs.validate.call(configs, EVENT_TYPE.validateForm);
         } else {
           resolve();
         }
@@ -59148,12 +59148,13 @@ const AllWasWell = (res) => {
 };
 const checkXItem = async (xItemConfigs, handlerResult) => {
   xItemConfigs.checking = true;
+  let result;
   try {
     const { rules, prop } = xItemConfigs;
-    const result = await (async () => {
+    result = await (async () => {
       let dontCheck = 0;
-      for (let i2 = 0; i2 < rules.length; i2++) {
-        const rule = rules[i2];
+      for (const element of rules) {
+        const rule = element;
         const trigger2 = rule.trigger || [];
         let isFail = await (async () => {
           let trigBy;
@@ -59211,12 +59212,12 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
       }
     })();
     handlerResult(result);
-    if (mylodash.isFunction(xItemConfigs.validate.formCallBack)) {
-      xItemConfigs.validate.formCallBack(result);
-    }
   } catch (error) {
     console.error(error);
   } finally {
+    if (mylodash.isFunction(xItemConfigs.__onAfterValidate)) {
+      xItemConfigs.__onAfterValidate.call(xItemConfigs, result);
+    }
     xItemConfigs.validate.triggerEventsObj = {};
   }
 };
