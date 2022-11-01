@@ -38,14 +38,14 @@ window.moment = dayjs;
 window.jquery = $;
 
 import {
-  defPagination,
-  setPagination,
-  getPaginationPageSize,
-  defCol,
-  defColActions,
-  defColActionsBtnlist,
-  defDataGridOption,
-  setDataGridInfo,
+	defPagination,
+	setPagination,
+	getPaginationPageSize,
+	defCol,
+	defColActions,
+	defColActionsBtnlist,
+	defDataGridOption,
+	setDataGridInfo
 } from "./xDataGrid/common";
 import { defItem, vModel, antColKey } from "./xForm/common.jsx";
 import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
@@ -56,25 +56,25 @@ import { UI } from "./UI";
 
 /* my-private-ui-component */
 const componentMyUI = {
-  xButton,
-  xRender,
-  xItem,
-  xForm,
-  xButtonCountDown,
-  xGap,
-  xCharts,
-  xView,
-  xIcon,
-  xDataGrid,
-  xDataGridToolbar,
-  xColFilter,
-  xPagination,
-  xCellLabel,
-  xVirScroll,
+	xButton,
+	xRender,
+	xItem,
+	xForm,
+	xButtonCountDown,
+	xGap,
+	xCharts,
+	xView,
+	xIcon,
+	xDataGrid,
+	xDataGridToolbar,
+	xColFilter,
+	xPagination,
+	xCellLabel,
+	xVirScroll
 };
 
 const components = {
-  ...componentMyUI,
+	...componentMyUI
 };
 
 export { Utils as Utils };
@@ -111,18 +111,18 @@ export { RegexFn as RegexFn };
 export { FormRules as FormRules };
 
 export const VentoseUIWithInstall = {
-  install: (app, options /* {appPlugins,dependState} */) => {
-    installDirective(app, options);
-    installPopoverDirective(app, options);
-    installUIDialogComponent(UI, options);
-    mylodash.each(components, (component, name) => {
-      if (component.name) {
-        name = component.name;
-      } else {
-        mylodash.doNothing(name, `miss name`);
-      }
-      app.component(component.name || name, component);
-    });
-    app.use(Antd);
-  },
+	install: (app, options /* {appPlugins,dependState} */) => {
+		installDirective(app, options);
+		installPopoverDirective(app, options);
+		installUIDialogComponent(UI, options);
+		mylodash.each(components, (component, name) => {
+			if (component.name) {
+				name = component.name;
+			} else {
+				mylodash.doNothing(name, `miss name`);
+			}
+			app.component(component.name || name, component);
+		});
+		app.use(Antd);
+	}
 };

@@ -11,12 +11,12 @@ export default ({property, slots, listeners}) => {
 */
 
 export default ({ property, slots, listeners }) => {
-  const _property = _.merge({}, property, {
-    checked: property.value,
-    onClick() {
-      listeners["onUpdate:value"](!_property.value);
-    },
-  });
-  /*用span包裹：宽度自适应*/
-  return <span>{h(Switch, _.omit(_property, ["value"]))}</span>;
+	const _property = _.merge({}, property, {
+		checked: property.value,
+		onClick() {
+			listeners["onUpdate:value"](!_property.value);
+		}
+	});
+	/*用span包裹：宽度自适应*/
+	return <span>{h(Switch, _.omit(_property, ["value"]))}</span>;
 };

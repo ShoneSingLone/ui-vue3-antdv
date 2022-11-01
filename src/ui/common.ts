@@ -10,59 +10,59 @@ import { _ } from "./loadCommonUtil";
  * @returns
  */
 export const MutatingProps = (item, prop, val = null) => {
-  item = item || {};
-  const propArray = prop.split(".");
-  let key = "";
-  let nextItem = item;
+	item = item || {};
+	const propArray = prop.split(".");
+	let key = "";
+	let nextItem = item;
 
-  const setVal = () => {
-    while ((key = propArray.shift())) {
-      if (!key) {
-        debugger;
-      }
-      /* 如果是最后一项，就赋值后退出 */
-      if (propArray.length === 0) {
-        nextItem[key] = val;
-        return;
-      } else {
-        /* 继续循环，如果中间有undefined，添加中间项 */
-        const _nextItem = nextItem[key];
-        if (!_nextItem) {
-          nextItem[key] = {};
-        }
-        nextItem = nextItem[key];
-      }
-    }
-  };
+	const setVal = () => {
+		while ((key = propArray.shift())) {
+			if (!key) {
+				debugger;
+			}
+			/* 如果是最后一项，就赋值后退出 */
+			if (propArray.length === 0) {
+				nextItem[key] = val;
+				return;
+			} else {
+				/* 继续循环，如果中间有undefined，添加中间项 */
+				const _nextItem = nextItem[key];
+				if (!_nextItem) {
+					nextItem[key] = {};
+				}
+				nextItem = nextItem[key];
+			}
+		}
+	};
 
-  const getVal = () => {
-    while ((key = propArray.shift())) {
-      const _nextItem = nextItem[key];
-      if (!_nextItem) {
-        return nextItem[key];
-      } else {
-        if (propArray.length === 0) {
-          return _nextItem;
-        } else {
-          nextItem = nextItem[key];
-        }
-      }
-    }
-    return nextItem;
-  };
+	const getVal = () => {
+		while ((key = propArray.shift())) {
+			const _nextItem = nextItem[key];
+			if (!_nextItem) {
+				return nextItem[key];
+			} else {
+				if (propArray.length === 0) {
+					return _nextItem;
+				} else {
+					nextItem = nextItem[key];
+				}
+			}
+		}
+		return nextItem;
+	};
 
-  /* 如果有输入 类似jQuery val() */
-  if (
-    val ||
-    _.isString(val) ||
-    _.isBoolean(val) ||
-    (_.isNumber(val) && !_.isNaN(val))
-  ) {
-    setVal(key, propArray, nextItem, val);
-  } else {
-    return getVal(key, propArray, nextItem);
-  }
-  return item;
+	/* 如果有输入 类似jQuery val() */
+	if (
+		val ||
+		_.isString(val) ||
+		_.isBoolean(val) ||
+		(_.isNumber(val) && !_.isNaN(val))
+	) {
+		setVal(key, propArray, nextItem, val);
+	} else {
+		return getVal(key, propArray, nextItem);
+	}
+	return item;
 };
 
 /*
@@ -83,28 +83,28 @@ export const MutatingProps = (item, prop, val = null) => {
 })();*/
 
 export const Utils = {
-  dateFormat(date, format = "YYYY-MM-DD") {
-    if (format === 1) {
-      format = "YYYY-MM-DD HH:mm:ss";
-    }
-    const label = dayjs(date).format(format);
-    return label === "Invalid Date" ? "--" : label;
-  },
-  keepDecimals(val, fractionDigits = 2) {
-    let num = Number((val * 100) / 1024 / 100).toFixed(fractionDigits);
-    if (num === "NaN") {
-      num = "-";
-    }
-    return num;
-  },
-  valueToLabel(value, options) {
-    const target = _.find(options, {
-      value,
-    });
-    if (target) {
-      return target.label;
-    } else {
-      return "--";
-    }
-  },
+	dateFormat(date, format = "YYYY-MM-DD") {
+		if (format === 1) {
+			format = "YYYY-MM-DD HH:mm:ss";
+		}
+		const label = dayjs(date).format(format);
+		return label === "Invalid Date" ? "--" : label;
+	},
+	keepDecimals(val, fractionDigits = 2) {
+		let num = Number((val * 100) / 1024 / 100).toFixed(fractionDigits);
+		if (num === "NaN") {
+			num = "-";
+		}
+		return num;
+	},
+	valueToLabel(value, options) {
+		const target = _.find(options, {
+			value
+		});
+		if (target) {
+			return target.label;
+		} else {
+			return "--";
+		}
+	}
 };

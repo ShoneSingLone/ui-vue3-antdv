@@ -8,23 +8,23 @@ import _ from "lodash";
  * @returns {any}
  */
 export default ({ property, slots, listeners }) => {
-  const _property = _.omit(property, ["options"]);
-  const renderOptions = () => {
-    if (property.isButton) {
-      return _.map(property.options, (option) => {
-        return <RadioButton value={option.value}>{option.label}</RadioButton>;
-      });
-    }
-    return _.map(property.options, (option) => {
-      return <Radio value={option.value}>{option.label}</Radio>;
-    });
-  };
+	const _property = _.omit(property, ["options"]);
+	const renderOptions = () => {
+		if (property.isButton) {
+			return _.map(property.options, option => {
+				return <RadioButton value={option.value}>{option.label}</RadioButton>;
+			});
+		}
+		return _.map(property.options, option => {
+			return <Radio value={option.value}>{option.label}</Radio>;
+		});
+	};
 
-  return (
-    <RadioGroup
-      {...property}
-      {...listeners}
-      v-slots={{ default: renderOptions }}
-    />
-  );
+	return (
+		<RadioGroup
+			{...property}
+			{...listeners}
+			v-slots={{ default: renderOptions }}
+		/>
+	);
 };

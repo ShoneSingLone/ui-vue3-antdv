@@ -10,8 +10,8 @@ const SUCCESS = false;
 const FAIL = true;
 
 export const RegexFn = {
-  email: () => /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-  mobile: () => /^1[34578]\d{9}$/,
+	email: () => /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+	mobile: () => /^1[34578]\d{9}$/
 };
 
 /**
@@ -20,82 +20,82 @@ export const RegexFn = {
 		return msg();
 	} });
  */
-const makeFormRules = (options) => {
-  options.trigger = options.trigger || [EVENT_TYPE.update];
-  options.msg = options.msg || "";
-  return options;
+const makeFormRules = options => {
+	options.trigger = options.trigger || [EVENT_TYPE.update];
+	options.msg = options.msg || "";
+	return options;
 };
 
 export const FormRules = {
-  SUCCESS,
-  FAIL,
-  required(msg, trigger = [EVENT_TYPE.update]) {
-    return makeFormRules({
-      name: "required",
-      msg: msg || $t("必填项").label,
-      async validator(value) {
-        /*必填的简单验证*/
-        if (value) {
-          /*不为空数组*/
-          if (_.isArray(value)) {
-            if (value.length > 0) {
-              return SUCCESS;
-            } else {
-              return FAIL;
-            }
-          }
-          /*TODO:object*/
-          return SUCCESS;
-        }
+	SUCCESS,
+	FAIL,
+	required(msg, trigger = [EVENT_TYPE.update]) {
+		return makeFormRules({
+			name: "required",
+			msg: msg || $t("必填项").label,
+			async validator(value) {
+				/*必填的简单验证*/
+				if (value) {
+					/*不为空数组*/
+					if (_.isArray(value)) {
+						if (value.length > 0) {
+							return SUCCESS;
+						} else {
+							return FAIL;
+						}
+					}
+					/*TODO:object*/
+					return SUCCESS;
+				}
 
-        if (_.isBoolean(value)) return SUCCESS;
-        if (_.isNumber(value) && !_.isNaN(value)) return SUCCESS;
+				if (_.isBoolean(value)) return SUCCESS;
+				if (_.isNumber(value) && !_.isNaN(value)) return SUCCESS;
 
-        return FAIL;
-      },
-      trigger,
-    });
-  },
-  demo() {
-    return {
-      name: "Demo",
-      msg: "Demo",
-      async validator(value) {
-        await _.sleep(1000);
-        return FAIL;
-      },
-      trigger: [
-        EVENT_TYPE.update,
-        EVENT_TYPE.input,
-        EVENT_TYPE.change,
-        EVENT_TYPE.blur,
-      ],
-    };
-  },
-  email() {
-    return {
-      name: "email",
-      msg: () => $t("请输入email").label,
-      async validator(value) {
-        if (RegexFn.email().test(value)) {
-          return SUCCESS;
-        }
-        return FAIL;
-      },
-      trigger: [
-        EVENT_TYPE.update,
-        EVENT_TYPE.input,
-        EVENT_TYPE.change,
-        EVENT_TYPE.blur,
-      ],
-    };
-  },
-  custom({ name, msg, validator, trigger }) {
-    return makeFormRules({
-      name,
-      msg,
-      validator,
-      trigger,
-    });
-  },
+				return FAIL;
+			},
+			trigger
+		});
+	},
+	demo() {
+		return {
+			name: "Demo",
+			msg: "Demo",
+			async validator(value) {
+				await _.sleep(1000);
+				return FAIL;
+			},
+			trigger: [
+				EVENT_TYPE.update,
+				EVENT_TYPE.input,
+				EVENT_TYPE.change,
+				EVENT_TYPE.blur
+			]
+		};
+	},
+	email() {
+		return {
+			name: "email",
+			msg: () => $t("请输入email").label,
+			async validator(value) {
+				if (RegexFn.email().test(value)) {
+					return SUCCESS;
+				}
+				return FAIL;
+			},
+			trigger: [
+				EVENT_TYPE.update,
+				EVENT_TYPE.input,
+				EVENT_TYPE.change,
+				EVENT_TYPE.blur
+			]
+		};
+	},
+	custom({ name, msg, validator, trigger }) {
+		return makeFormRules({
+			name,
+			msg,
+			validator,
+			trigger
+		});
+	}
 };

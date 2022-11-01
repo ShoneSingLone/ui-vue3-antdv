@@ -1,204 +1,196 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>jquery-gpopover Example</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/minty/bootstrap.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Quicksand"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <!-- Include the styles for the plugin -->
-    <link href="../jquery.gpopover.css" rel="stylesheet" />
-    <link
-      href="https://www.jqueryscript.net/css/jquerysctipttop.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <!-- Include jQuery and the jquery.gpopover plugin -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="../jquery.gpopover.js"></script>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<title>jquery-gpopover Example</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/minty/bootstrap.min.css" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Quicksand"
+			rel="stylesheet"
+			type="text/css" />
+		<!-- Include the styles for the plugin -->
+		<link href="../jquery.gpopover.css" rel="stylesheet" />
+		<link
+			href="https://www.jqueryscript.net/css/jquerysctipttop.css"
+			rel="stylesheet"
+			type="text/css" />
+		<!-- Include jQuery and the jquery.gpopover plugin -->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="../jquery.gpopover.js"></script>
 
-    <style>
-      body {
-        font-family: "Quicksand";
-        padding: 2em;
-        background-color: #333;
-      }
+		<style>
+			body {
+				font-family: "Quicksand";
+				padding: 2em;
+				background-color: #333;
+			}
 
-      h1 {
-        margin: 150px auto 50px auto;
-      }
+			h1 {
+				margin: 150px auto 50px auto;
+			}
 
-      #triggers {
-        text-align: center;
-      }
+			#triggers {
+				text-align: center;
+			}
 
-      #trigger-two {
-        float: left;
-      }
+			#trigger-two {
+				float: left;
+			}
 
-      #trigger-three {
-        float: right;
-      }
+			#trigger-three {
+				float: right;
+			}
 
-      #trigger-code {
-        width: 120px;
-      }
-    </style>
+			#trigger-code {
+				width: 120px;
+			}
+		</style>
 
-    <script>
-      $(function () {
-        // Use default options for the left and middle buttons
-        $("#trigger-one, #trigger-two").gpopover();
+		<script>
+			$(function () {
+				// Use default options for the left and middle buttons
+				$("#trigger-one, #trigger-two").gpopover();
 
-        // Use custom options for the right button
-        $("#trigger-three").gpopover({
-          width: 400,
-          preventHide: true,
-          onShow: function () {
-            if (console && console.log) console.log("Popover shown.");
-          },
-          onHide: function () {
-            if (console && console.log) console.log("Popover hidden.");
-          },
-        });
+				// Use custom options for the right button
+				$("#trigger-three").gpopover({
+					width: 400,
+					preventHide: true,
+					onShow: function () {
+						if (console && console.log) console.log("Popover shown.");
+					},
+					onHide: function () {
+						if (console && console.log) console.log("Popover hidden.");
+					}
+				});
 
-        /* Set up a click handler for the #trigger-code button which will
+				/* Set up a click handler for the #trigger-code button which will
                cause a countdown which shows and hides the popover in code. */
-        $("#trigger-code").click(function (e) {
-          var remaining = 3,
-            $button = $(this),
-            originalText = $button.text();
+				$("#trigger-code").click(function (e) {
+					var remaining = 3,
+						$button = $(this),
+						originalText = $button.text();
 
-          $button.text("Showing in " + remaining + "...");
-          $button.attr("disabled", "disabled");
+					$button.text("Showing in " + remaining + "...");
+					$button.attr("disabled", "disabled");
 
-          // Set up interval
-          var interval = setInterval(function () {
-            remaining -= 1;
+					// Set up interval
+					var interval = setInterval(function () {
+						remaining -= 1;
 
-            if (remaining > 0) $button.text("Showing in " + remaining + "...");
-            else $button.text("Hiding in " + -(-remaining - 5) + "...");
+						if (remaining > 0) $button.text("Showing in " + remaining + "...");
+						else $button.text("Hiding in " + -(-remaining - 5) + "...");
 
-            if (remaining == 0) {
-              // Trigger the show for the popover
-              // (note: it must have been initialised first)
-              $("#trigger-one").gpopover("show");
-            } else if (remaining <= -5) {
-              // Trigger the hide for the popover
-              $("#trigger-one").gpopover("hide");
+						if (remaining == 0) {
+							// Trigger the show for the popover
+							// (note: it must have been initialised first)
+							$("#trigger-one").gpopover("show");
+						} else if (remaining <= -5) {
+							// Trigger the hide for the popover
+							$("#trigger-one").gpopover("hide");
 
-              // Cancel this interval
-              clearInterval(interval);
-              $button.text(originalText);
-              $button.removeAttr("disabled");
-            }
-          }, 1000);
-        });
-      });
-    </script>
-  </head>
+							// Cancel this interval
+							clearInterval(interval);
+							$button.text(originalText);
+							$button.removeAttr("disabled");
+						}
+					}, 1000);
+				});
+			});
+		</script>
+	</head>
 
-  <body>
-    <div id="jquery-script-menu">
-      <div class="jquery-script-center">
-        <ul>
-          <li>
-            <a
-              href="https://www.jqueryscript.net/other/popover-smart-position-gpopover.html"
-              >Download This Plugin</a
-            >
-          </li>
-          <li>
-            <a href="https://www.jqueryscript.net/">Back To jQueryScript.Net</a>
-          </li>
-        </ul>
-        <div class="jquery-script-ads">
-          <script type="text/javascript">
-            <!--
-            google_ad_client = "ca-pub-2783044520727903";
-            /* jQuery_demo */
-            google_ad_slot = "2780937993";
-            google_ad_width = 728;
-            google_ad_height = 90;
-            //
-            -->
-          </script>
-          <script
-            type="text/javascript"
-            src="https://pagead2.googlesyndication.com/pagead/show_ads.js"
-          ></script>
-        </div>
-        <div class="jquery-script-clear"></div>
-      </div>
-    </div>
-    <h1>jquery-gpopover</h1>
+	<body>
+		<div id="jquery-script-menu">
+			<div class="jquery-script-center">
+				<ul>
+					<li>
+						<a
+							href="https://www.jqueryscript.net/other/popover-smart-position-gpopover.html"
+							>Download This Plugin</a
+						>
+					</li>
+					<li>
+						<a href="https://www.jqueryscript.net/">Back To jQueryScript.Net</a>
+					</li>
+				</ul>
+				<div class="jquery-script-ads">
+					<script type="text/javascript">
+						<!--
+						google_ad_client = "ca-pub-2783044520727903";
+						/* jQuery_demo */
+						google_ad_slot = "2780937993";
+						google_ad_width = 728;
+						google_ad_height = 90;
+						//
+						-->
+					</script>
+					<script
+						type="text/javascript"
+						src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+				</div>
+				<div class="jquery-script-clear"></div>
+			</div>
+		</div>
+		<h1>jquery-gpopover</h1>
 
-    <div id="triggers">
-      <!-- The buttons which trigger the popovers -->
-      <button
-        id="trigger-one"
-        data-popover="popover-one"
-        class="btn btn-primary"
-      >
-        Default Example
-      </button>
-      <button id="trigger-code" class="btn btn-info">From code</button>
+		<div id="triggers">
+			<!-- The buttons which trigger the popovers -->
+			<button
+				id="trigger-one"
+				data-popover="popover-one"
+				class="btn btn-primary">
+				Default Example
+			</button>
+			<button id="trigger-code" class="btn btn-info">From code</button>
 
-      <button
-        id="trigger-two"
-        data-popover="popover-two"
-        class="btn btn-danger"
-      >
-        Left Edge
-      </button>
-      <button
-        id="trigger-three"
-        data-popover="popover-three"
-        class="btn btn-danger"
-      >
-        Right Edge
-      </button>
-    </div>
+			<button
+				id="trigger-two"
+				data-popover="popover-two"
+				class="btn btn-danger">
+				Left Edge
+			</button>
+			<button
+				id="trigger-three"
+				data-popover="popover-three"
+				class="btn btn-danger">
+				Right Edge
+			</button>
+		</div>
 
-    <!-- Popover content elements. These can be located wherever you like in
+		<!-- Popover content elements. These can be located wherever you like in
          the page markup -->
 
-    <!-- Popover element for the 'Example 1' button -->
-    <div id="popover-one" class="gpopover">
-      Hello. Bits go here.
+		<!-- Popover element for the 'Example 1' button -->
+		<div id="popover-one" class="gpopover">
+			Hello. Bits go here.
 
-      <ul>
-        <li><a href="#1">One</a></li>
-        <li><a href="#2">Two</a></li>
-        <li><a href="#3">Three</a></li>
-      </ul>
-    </div>
+			<ul>
+				<li><a href="#1">One</a></li>
+				<li><a href="#2">Two</a></li>
+				<li><a href="#3">Three</a></li>
+			</ul>
+		</div>
 
-    <!-- Popover element for the 'Example 2' button -->
-    <div id="popover-two" class="gpopover">
-      Two
-      <ul>
-        <li><a href="#1">One</a></li>
-        <li><a href="#2">Two</a></li>
-        <li><a href="#3">Three</a></li>
-      </ul>
-    </div>
+		<!-- Popover element for the 'Example 2' button -->
+		<div id="popover-two" class="gpopover">
+			Two
+			<ul>
+				<li><a href="#1">One</a></li>
+				<li><a href="#2">Two</a></li>
+				<li><a href="#3">Three</a></li>
+			</ul>
+		</div>
 
-    <!-- Popover element for the 'Example 3' button -->
-    <div id="popover-three" class="gpopover">
-      This popover has some custom options set:
-      <pre>
+		<!-- Popover element for the 'Example 3' button -->
+		<div id="popover-three" class="gpopover">
+			This popover has some custom options set:
+			<pre>
 {
     width: 400,
     preventHide: true,
@@ -211,25 +203,25 @@
             console.log("Popover hidden.");
     }
 }</pre
-      >
-    </div>
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(["_setAccount", "UA-36251023-1"]);
-      _gaq.push(["_setDomainName", "jqueryscript.net"]);
-      _gaq.push(["_trackPageview"]);
+			>
+		</div>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(["_setAccount", "UA-36251023-1"]);
+			_gaq.push(["_setDomainName", "jqueryscript.net"]);
+			_gaq.push(["_trackPageview"]);
 
-      (function () {
-        var ga = document.createElement("script");
-        ga.type = "text/javascript";
-        ga.async = true;
-        ga.src =
-          ("https:" == document.location.protocol
-            ? "https://ssl"
-            : "http://www") + ".google-analytics.com/ga.js";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-  </body>
+			(function () {
+				var ga = document.createElement("script");
+				ga.type = "text/javascript";
+				ga.async = true;
+				ga.src =
+					("https:" == document.location.protocol
+						? "https://ssl"
+						: "http://www") + ".google-analytics.com/ga.js";
+				var s = document.getElementsByTagName("script")[0];
+				s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	</body>
 </html>
