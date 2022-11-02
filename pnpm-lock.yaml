@@ -18,6 +18,7 @@ specifiers:
   svgo: ^3.0.0
   typescript: ^4.6.4
   vite: ^3.1.0
+  vite-plugin-css-injected-by-js: ^2.1.1
   vue: ^3.2.37
   vue-router: '4'
   vue-tsc: ^0.40.4
@@ -44,6 +45,7 @@ devDependencies:
   svgo: 3.0.0
   typescript: 4.8.4
   vite: 3.1.8_less@4.1.3+sass@1.55.0
+  vite-plugin-css-injected-by-js: 2.1.1_vite@3.1.8
   vue-tsc: 0.40.13_typescript@4.8.4
 
 packages:
@@ -1654,6 +1656,14 @@ packages:
       browserslist: 4.21.4
       escalade: 3.1.1
       picocolors: 1.0.0
+    dev: true
+
+  /vite-plugin-css-injected-by-js/2.1.1_vite@3.1.8:
+    resolution: {integrity: sha512-gjIG6iFWde32oRr/bK9CsfN+jdbura2y4GlDzeOiEm6py38ud8dXzFl9zwmHjOjZdr8XEgQ9TovzVGNzp47esw==}
+    peerDependencies:
+      vite: '>2.0.0-0'
+    dependencies:
+      vite: 3.1.8_less@4.1.3+sass@1.55.0
     dev: true
 
   /vite/3.1.8_less@4.1.3+sass@1.55.0:
