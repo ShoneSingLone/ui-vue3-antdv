@@ -272,8 +272,8 @@ export default defineComponent({
 		}
 	},
 	mounted() {
-		if (this.configs?.oncece) {
-			this.configs.oncece.call(this.configs, this);
+		if (this.configs?.once) {
+			this.configs.once.call(this.configs, this);
 		}
 	},
 	created() {
