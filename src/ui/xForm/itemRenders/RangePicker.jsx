@@ -10,7 +10,7 @@ import { _ } from "../../loadCommonUtil";
  * @returns {any}
  */
 export default ({ property, slots, listeners }) => {
-  /*let value = "";
+	/*let value = "";
     if (property.value) {
         if (_.isArray(property.value)) {
             value = [
@@ -19,13 +19,13 @@ export default ({ property, slots, listeners }) => {
             ];
         }
     }*/
-  console.log("property", property.value);
-  return (
-    <RangePicker
-      {...property}
-      {...listeners}
-      v-slots={slots}
-      locale={Cpt_UI_locale.value.DatePicker}
-    />
-  );
+	console.log("property", property.value);
+	return (
+		<RangePicker
+			{...property}
+			{...listeners}
+			v-slots={slots}
+			locale={Cpt_UI_locale.value.DatePicker}
+		/>
+	);
 };

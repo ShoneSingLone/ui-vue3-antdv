@@ -10,22 +10,22 @@ import { h } from "vue";
  * @returns {any}
  */
 export default ({ property, slots, listeners }) => {
-  let component = Input;
-  if (property.isPassword) {
-    component = InputPassword;
-  }
-  if (property.isNumber) {
-    component = InputNumber;
-  }
-  if (property.isTextarea) {
-    component = Textarea;
-    property.autoSize = property.autoSize || {
-      minRows: 4,
-      maxRows: 6,
-    };
-  }
-  if (property.isSearch) {
-    component = InputSearch;
-  }
-  return <component {...property} {...listeners} v-slots={slots} />;
+	let component = Input;
+	if (property.isPassword) {
+		component = InputPassword;
+	}
+	if (property.isNumber) {
+		component = InputNumber;
+	}
+	if (property.isTextarea) {
+		component = Textarea;
+		property.autoSize = property.autoSize || {
+			minRows: 4,
+			maxRows: 6
+		};
+	}
+	if (property.isSearch) {
+		component = InputSearch;
+	}
+	return <component {...property} {...listeners} v-slots={slots} />;
 };

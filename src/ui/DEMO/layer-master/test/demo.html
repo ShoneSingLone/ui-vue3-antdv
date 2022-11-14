@@ -1,68 +1,68 @@
 ﻿<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>layer-更懂你的web弹窗解决方案</title>
+	<head>
+		<meta charset="utf-8" />
+		<title>layer-更懂你的web弹窗解决方案</title>
 
-    <style>
-      html {
-        background-color: #e3e3e3;
-        font-size: 14px;
-        color: #000;
-        font-family: "微软雅黑";
-      }
-      a,
-      a:hover {
-        text-decoration: none;
-      }
-      pre {
-        font-family: "微软雅黑";
-      }
-      .box {
-        padding: 20px;
-        background-color: #fff;
-        margin: 50px 100px;
-        border-radius: 5px;
-      }
-      .box a {
-        padding-right: 15px;
-      }
-      #about_hide {
-        display: none;
-      }
-      .layer_text {
-        background-color: #fff;
-        padding: 20px;
-      }
-      .layer_text p {
-        margin-bottom: 10px;
-        text-indent: 2em;
-        line-height: 23px;
-      }
-      .button {
-        display: inline-block;
-        *display: inline;
-        *zoom: 1;
-        line-height: 30px;
-        padding: 0 20px;
-        background-color: #56b4dc;
-        color: #fff;
-        font-size: 14px;
-        border-radius: 3px;
-        cursor: pointer;
-        font-weight: normal;
-      }
-      .photos-demo img {
-        width: 200px;
-      }
-    </style>
+		<style>
+			html {
+				background-color: #e3e3e3;
+				font-size: 14px;
+				color: #000;
+				font-family: "微软雅黑";
+			}
+			a,
+			a:hover {
+				text-decoration: none;
+			}
+			pre {
+				font-family: "微软雅黑";
+			}
+			.box {
+				padding: 20px;
+				background-color: #fff;
+				margin: 50px 100px;
+				border-radius: 5px;
+			}
+			.box a {
+				padding-right: 15px;
+			}
+			#about_hide {
+				display: none;
+			}
+			.layer_text {
+				background-color: #fff;
+				padding: 20px;
+			}
+			.layer_text p {
+				margin-bottom: 10px;
+				text-indent: 2em;
+				line-height: 23px;
+			}
+			.button {
+				display: inline-block;
+				*display: inline;
+				*zoom: 1;
+				line-height: 30px;
+				padding: 0 20px;
+				background-color: #56b4dc;
+				color: #fff;
+				font-size: 14px;
+				border-radius: 3px;
+				cursor: pointer;
+				font-weight: normal;
+			}
+			.photos-demo img {
+				width: 200px;
+			}
+		</style>
 
-    <script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
-    <script src="../dist/layer.js"></script>
-  </head>
-  <body>
-    <div class="box">
-      <pre>
+		<script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
+		<script src="../dist/layer.js"></script>
+	</head>
+	<body>
+		<div class="box">
+			<pre>
  @Name：layer
  @Version：v<script>document.write(layer.v)</script>
  @Description：通用 Web 弹层组件
@@ -76,38 +76,38 @@
 五、使用时请务必保留来源，请勿用于违反我国法律法规的 Web 平台。
 六、layer 是一款无偿的公益性项目，遵循 MIT 开源协议。
 </pre
-      >
-    </div>
+			>
+		</div>
 
-    <div class="box" style="text-align: center">
-      <a href="http://layer.layui.com/" target="_blank">更多示例</a>
-      <a href="http://www.layui.com/doc/modules/layer.html" target="_blank"
-        >使用文档</a
-      >
-      <a href="javascript:;" id="about">关于</a>
-    </div>
+		<div class="box" style="text-align: center">
+			<a href="http://layer.layui.com/" target="_blank">更多示例</a>
+			<a href="http://www.layui.com/doc/modules/layer.html" target="_blank"
+				>使用文档</a
+			>
+			<a href="javascript:;" id="about">关于</a>
+		</div>
 
-    <script>
-      !(function () {
-        //页面一打开就执行，放入ready是为了layer所需配件（css、扩展模块）加载完毕
-        layer.ready(function () {
-          layer.open({
-            type: 2,
-            title: "欢迎页",
-            maxmin: true,
-            area: ["800px", "500px"],
-            content: "http://layer.layui.com/test/welcome.html",
-            end: function () {
-              layer.tips("Hi", "#about", { tips: 1 });
-            },
-          });
-        });
+		<script>
+			!(function () {
+				//页面一打开就执行，放入ready是为了layer所需配件（css、扩展模块）加载完毕
+				layer.ready(function () {
+					layer.open({
+						type: 2,
+						title: "欢迎页",
+						maxmin: true,
+						area: ["800px", "500px"],
+						content: "http://layer.layui.com/test/welcome.html",
+						end: function () {
+							layer.tips("Hi", "#about", { tips: 1 });
+						}
+					});
+				});
 
-        //关于
-        $("#about").on("click", function () {
-          layer.alert("layui 出品");
-        });
-      })();
-    </script>
-  </body>
+				//关于
+				$("#about").on("click", function () {
+					layer.alert("layui 出品");
+				});
+			})();
+		</script>
+	</body>
 </html>

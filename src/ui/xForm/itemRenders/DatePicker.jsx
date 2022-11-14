@@ -11,22 +11,22 @@ import { _ } from "../../loadCommonUtil";
  * @returns {any}
  */
 export default ({ property, slots, listeners }) => {
-  let value = "";
-  if (property.value) {
-    value = dayjs(property.value);
-    _.doNothing(value, property.value);
-    if (value === "Invalid Date") {
-      _.doNothing("property.value", property.value);
-      value = "";
-    }
-  }
-  return (
-    <DatePicker
-      {...property}
-      {...listeners}
-      v-slots={slots}
-      value={value}
-      locale={Cpt_UI_locale.value.DatePicker}
-    />
-  );
+	let value = "";
+	if (property.value) {
+		value = dayjs(property.value);
+		_.doNothing(value, property.value);
+		if (value === "Invalid Date") {
+			_.doNothing("property.value", property.value);
+			value = "";
+		}
+	}
+	return (
+		<DatePicker
+			{...property}
+			{...listeners}
+			v-slots={slots}
+			value={value}
+			locale={Cpt_UI_locale.value.DatePicker}
+		/>
+	);
 };

@@ -2,30 +2,30 @@
 
 import "./index.less";
 import {
-  Avatar,
-  Alert,
-  Breadcrumb,
-  Card,
-  Descriptions,
-  Menu,
-  Modal,
-  Progress,
-  Popover,
-  Dropdown,
-  Button,
-  List,
-  Checkbox,
-  Popconfirm,
-  PageHeader,
-  Input,
-  Result,
-  Tabs,
-  Table,
-  Spin,
-  Layout,
-  Tooltip,
-  Upload,
-  Switch,
+	Avatar,
+	Alert,
+	Breadcrumb,
+	Card,
+	Descriptions,
+	Menu,
+	Modal,
+	Progress,
+	Popover,
+	Dropdown,
+	Button,
+	List,
+	Checkbox,
+	Popconfirm,
+	PageHeader,
+	Input,
+	Result,
+	Tabs,
+	Table,
+	Spin,
+	Layout,
+	Tooltip,
+	Upload,
+	Switch
 } from "ant-design-vue";
 import { DescriptionsItem } from "ant-design-vue/es/descriptions";
 import { MenuItem, SubMenu } from "ant-design-vue/es/menu";
@@ -34,10 +34,10 @@ import { DropdownButton } from "ant-design-vue/es/dropdown";
 import { TabPane } from "ant-design-vue/es/tabs";
 import { InputPassword } from "ant-design-vue/es/input";
 import {
-  LayoutHeader,
-  LayoutSider,
-  LayoutFooter,
-  LayoutContent,
+	LayoutHeader,
+	LayoutSider,
+	LayoutFooter,
+	LayoutContent
 } from "ant-design-vue/es/layout";
 /* 表单提示信息 */
 import "ant-design-vue/es/form/style/index.css";
@@ -68,14 +68,14 @@ window.moment = dayjs;
 window.jquery = $;
 
 import {
-  defPagination,
-  setPagination,
-  getPaginationPageSize,
-  defCol,
-  defColActions,
-  defColActionsBtnlist,
-  defDataGridOption,
-  setDataGridInfo,
+	defPagination,
+	setPagination,
+	getPaginationPageSize,
+	defCol,
+	defColActions,
+	defColActionsBtnlist,
+	defDataGridOption,
+	setDataGridInfo
 } from "./xDataGrid/common";
 import { defItem, vModel, antColKey } from "./xForm/common.jsx";
 import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
@@ -86,63 +86,63 @@ import { UI } from "./UI";
 
 /* my-private-ui-component */
 const componentMyUI = {
-  xButton,
-  xRender,
-  xItem,
-  xForm,
-  xButtonCountDown,
-  xGap,
-  xCharts,
-  xView,
-  xDataGrid,
-  xDataGridToolbar,
-  xColFilter,
-  xPagination,
-  xCellLabel,
+	xButton,
+	xRender,
+	xItem,
+	xForm,
+	xButtonCountDown,
+	xGap,
+	xCharts,
+	xView,
+	xDataGrid,
+	xDataGridToolbar,
+	xColFilter,
+	xPagination,
+	xCellLabel
 };
 
 /* ant-d-v */
 const componentAntdV = {
-  Avatar,
-  Alert,
-  Breadcrumb,
-  BreadcrumbItem,
-  Card,
-  Descriptions,
-  DescriptionsItem,
-  Progress,
-  Popover,
-  Menu,
-  MenuItem,
-  Modal,
-  SubMenu,
-  Dropdown,
-  DropdownButton,
-  Button,
-  List,
-  Checkbox,
-  Popconfirm,
-  PageHeader,
-  Input,
-  InputPassword,
-  Result,
-  Table,
-  Tabs,
-  TabPane,
-  Tooltip,
-  Spin,
-  Layout,
-  LayoutHeader,
-  LayoutSider,
-  LayoutFooter,
-  LayoutContent,
-  Upload,
-  Switch,
+	Avatar,
+	Alert,
+	Breadcrumb,
+	BreadcrumbItem,
+	Card,
+	Descriptions,
+	DescriptionsItem,
+	Progress,
+	Popover,
+	Menu,
+	MenuItem,
+	Modal,
+	SubMenu,
+	Dropdown,
+	DropdownButton,
+	Button,
+	List,
+	Checkbox,
+	Popconfirm,
+	PageHeader,
+	Input,
+	InputPassword,
+	Result,
+	Table,
+	Tabs,
+	TabPane,
+	Tooltip,
+	Spin,
+	Layout,
+	LayoutHeader,
+	LayoutSider,
+	LayoutFooter,
+	LayoutContent,
+	Upload,
+	Switch
 };
 
 const components = {
-  ...componentAntdV,
-  ...componentMyUI,
+	...componentAntdV,
+	...componentMyUI
 };
 
 export { UI as UI };
@@ -176,17 +176,17 @@ export { pickValueFrom as pickValueFrom };
 export { resetState_Value as resetState_Value };
 
 export const VentoseUIWithInstall = {
-  install: (app, options /* {appPlugins,dependState} */) => {
-    installPopoverDirective(app, options);
-    installUIDialogComponent(UI, options);
-    mylodash.each(components, (component, name) => {
-      if (component.name) {
-        name = component.name;
-      } else {
-        mylodash.doNothing(name, `miss name`);
-        debugger;
-      }
-      app.component(component.name || name, component);
-    });
-  },
+	install: (app, options /* {appPlugins,dependState} */) => {
+		installPopoverDirective(app, options);
+		installUIDialogComponent(UI, options);
+		mylodash.each(components, (component, name) => {
+			if (component.name) {
+				name = component.name;
+			} else {
+				mylodash.doNothing(name, `miss name`);
+				debugger;
+			}
+			app.component(component.name || name, component);
+		});
+	}
 };
