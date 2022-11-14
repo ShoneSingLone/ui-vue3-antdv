@@ -25,8 +25,8 @@ NOTE_2:	Color names provided in comments were derived using "Name that Color" on
 	display: block;
 	overflow-x: auto;
 	padding: 0.5em;
-	background: #FFFFDF; /* Half and Half (approx.) */
-/* --- Uncomment to add PureBASIC native IDE styled font!
+	background: #ffffdf; /* Half and Half (approx.) */
+	/* --- Uncomment to add PureBASIC native IDE styled font!
 	font-family: Consolas;
 */
 }
@@ -47,13 +47,13 @@ NOTE_2:	Color names provided in comments were derived using "Name that Color" on
 .hljs-section,
 .hljs-selector-pseudo,
 .hljs-addition {
-	color: #00AAAA; /* Persian Green (approx.) */
+	color: #00aaaa; /* Persian Green (approx.) */
 }
 
 .hljs-title, /* --- used for PureBASIC Procedures Names --- */
 .hljs-tag,
 .hljs-variable,
-.hljs-code  {
+.hljs-code {
 	color: #006666; /* Blue Stone (approx.) */
 }
 
@@ -69,20 +69,20 @@ NOTE_2:	Color names provided in comments were derived using "Name that Color" on
 
 .hljs-string, /* --- used for PureBASIC Strings --- */
 .hljs-selector-attr {
-	color: #0080FF; /* Azure Radiance (approx.) */
+	color: #0080ff; /* Azure Radiance (approx.) */
 }
 
 .hljs-symbol, /* --- used for PureBASIC Constants --- */
 .hljs-link,
 .hljs-deletion,
 .hljs-attribute {
-	color: #924B72; /* Cannon Pink (approx.) */
+	color: #924b72; /* Cannon Pink (approx.) */
 }
 
 .hljs-meta,
 .hljs-literal,
 .hljs-selector-id {
-	color: #924B72; /* Cannon Pink (approx.) */
+	color: #924b72; /* Cannon Pink (approx.) */
 	font-weight: bold;
 }
 

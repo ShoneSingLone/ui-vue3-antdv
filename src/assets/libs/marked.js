@@ -14,29 +14,22 @@ export const marked = (function (root) {
 	var block = {
 		newline: /^\n+/,
 		code: /^( {4}[^\n]+\n*)+/,
-		fences: /^ {0,3}(`{3,}|~{3,})([^`~\n]*)\n(?:|([\s\S]*?)\n)(?: {0,3}\1[~`]* *(?:\n+|$)|$)/,
+		fences:
+			/^ {0,3}(`{3,}|~{3,})([^`~\n]*)\n(?:|([\s\S]*?)\n)(?: {0,3}\1[~`]* *(?:\n+|$)|$)/,
 		hr: /^ {0,3}((?:- *){3,}|(?:_ *){3,}|(?:\* *){3,})(?:\n+|$)/,
 		heading: /^ {0,3}(#{1,6}) +([^\n]*?)(?: +#+)? *(?:\n+|$)/,
 		blockquote: /^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/,
 		list: /^( {0,3})(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,
-		html: "^ {0,3}(?:" // optional indentation
-			+
-			"<(script|pre|style)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)" // (1)
-			+
-			"|comment[^\\n]*(\\n+|$)" // (2)
-			+
-			"|<\\?[\\s\\S]*?\\?>\\n*" // (3)
-			+
-			"|<![A-Z][\\s\\S]*?>\\n*" // (4)
-			+
-			"|<!\\[CDATA\\[[\\s\\S]*?\\]\\]>\\n*" // (5)
-			+
-			"|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:\\n{2,}|$)" // (6)
-			+
-			"|<(?!script|pre|style)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:\\n{2,}|$)" // (7) open tag
-			+
-			"|</(?!script|pre|style)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:\\n{2,}|$)" // (7) closing tag
-			+
+		html:
+			"^ {0,3}(?:" + // optional indentation
+			"<(script|pre|style)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)" + // (1)
+			"|comment[^\\n]*(\\n+|$)" + // (2)
+			"|<\\?[\\s\\S]*?\\?>\\n*" + // (3)
+			"|<![A-Z][\\s\\S]*?>\\n*" + // (4)
+			"|<!\\[CDATA\\[[\\s\\S]*?\\]\\]>\\n*" + // (5)
+			"|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:\\n{2,}|$)" + // (6)
+			"|<(?!script|pre|style)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:\\n{2,}|$)" + // (7) open tag
+			"|</(?!script|pre|style)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:\\n{2,}|$)" + // (7) closing tag
 			")",
 		def: /^ {0,3}\[(label)\]: *\n? *<?([^\s>]+)>?(?:(?: +\n? *| *\n *)(title))? *(?:\n+|$)/,
 		nptable: noop,
@@ -44,7 +37,8 @@ export const marked = (function (root) {
 		lheading: /^([^\n]+)\n {0,3}(=+|-+) *(?:\n+|$)/,
 		// regex template, placeholders will be replaced according to different paragraph
 		// interruption rules of commonmark and the original markdown spec:
-		_paragraph: /^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html)[^\n]+)*)/,
+		_paragraph:
+			/^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html)[^\n]+)*)/,
 		text: /^[^\n]+/
 	};
 
@@ -57,17 +51,19 @@ export const marked = (function (root) {
 
 	block.bullet = /(?:[*+-]|\d{1,9}\.)/;
 	block.item = /^( *)(bull) ?[^\n]*(?:\n(?!\1bull ?)[^\n]*)*/;
-	block.item = edit(block.item, "gm")
-		.replace(/bull/g, block.bullet)
-		.getRegex();
+	block.item = edit(block.item, "gm").replace(/bull/g, block.bullet).getRegex();
 
 	block.list = edit(block.list)
 		.replace(/bull/g, block.bullet)
-		.replace("hr", "\\n+(?=\\1?(?:(?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$))")
+		.replace(
+			"hr",
+			"\\n+(?=\\1?(?:(?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$))"
+		)
 		.replace("def", "\\n+(?=" + block.def.source + ")")
 		.getRegex();
 
-	block._tag = "address|article|aside|base|basefont|blockquote|body|caption" +
+	block._tag =
+		"address|article|aside|base|basefont|blockquote|body|caption" +
 		"|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption" +
 		"|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe" +
 		"|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option" +
@@ -77,7 +73,10 @@ export const marked = (function (root) {
 	block.html = edit(block.html, "i")
 		.replace("comment", block._comment)
 		.replace("tag", block._tag)
-		.replace("attribute", / +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/)
+		.replace(
+			"attribute",
+			/ +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/
+		)
 		.getRegex();
 
 	block.paragraph = edit(block._paragraph)
@@ -106,8 +105,10 @@ export const marked = (function (root) {
 	 */
 
 	block.gfm = merge({}, block.normal, {
-		nptable: /^ *([^|\n ].*\|.*)\n *([-:]+ *\|[-| :]*)(?:\n((?:.*[^>\n ].*(?:\n|$))*)\n*|$)/,
-		table: /^ *\|(.+)\n *\|?( *[-:]+[-| :]*)(?:\n((?: *[^>\n ].*(?:\n|$))*)\n*|$)/
+		nptable:
+			/^ *([^|\n ].*\|.*)\n *([-:]+ *\|[-| :]*)(?:\n((?:.*[^>\n ].*(?:\n|$))*)\n*|$)/,
+		table:
+			/^ *\|(.+)\n *\|?( *[-:]+[-| :]*)(?:\n((?: *[^>\n ].*(?:\n|$))*)\n*|$)/
 	});
 
 	/**
@@ -116,15 +117,18 @@ export const marked = (function (root) {
 
 	block.pedantic = merge({}, block.normal, {
 		html: edit(
-				"^ *(?:comment *(?:\\n|\\s*$)" +
-				"|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)" // closed tag
-				+
-				"|<tag(?:\"[^\"]*\"|'[^']*'|\\s[^'\"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))")
+			"^ *(?:comment *(?:\\n|\\s*$)" +
+				"|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)" + // closed tag
+				"|<tag(?:\"[^\"]*\"|'[^']*'|\\s[^'\"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))"
+		)
 			.replace("comment", block._comment)
-			.replace(/tag/g, "(?!(?:" +
-				"a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub" +
-				"|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)" +
-				"\\b)\\w+(?!:|[^\\w\\s@]*@)\\b")
+			.replace(
+				/tag/g,
+				"(?!(?:" +
+					"a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub" +
+					"|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)" +
+					"\\b)\\w+(?!:|[^\\w\\s@]*@)\\b"
+			)
 			.getRegex(),
 		def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/,
 		heading: /^ *(#{1,6}) *([^\n]+?) *(?:#+ *)?(?:\n+|$)/,
@@ -177,9 +181,7 @@ export const marked = (function (root) {
 	 */
 
 	Lexer.prototype.lex = function (src) {
-		src = src
-			.replace(/\r\n|\r/g, "\n")
-			.replace(/\t/g, "    ");
+		src = src.replace(/\r\n|\r/g, "\n").replace(/\t/g, "    ");
 
 		return this.token(src, true);
 	};
@@ -209,7 +211,7 @@ export const marked = (function (root) {
 
 		while (src) {
 			// newline
-			if (cap = this.rules.newline.exec(src)) {
+			if ((cap = this.rules.newline.exec(src))) {
 				src = src.substring(cap[0].length);
 				if (cap[0].length > 1) {
 					this.tokens.push({
@@ -219,7 +221,7 @@ export const marked = (function (root) {
 			}
 
 			// code
-			if (cap = this.rules.code.exec(src)) {
+			if ((cap = this.rules.code.exec(src))) {
 				var lastToken = this.tokens[this.tokens.length - 1];
 				src = src.substring(cap[0].length);
 				// An indented code block cannot interrupt a paragraph.
@@ -230,15 +232,14 @@ export const marked = (function (root) {
 					this.tokens.push({
 						type: "code",
 						codeBlockStyle: "indented",
-						text: !this.options.pedantic ?
-							rtrim(cap, "\n") : cap
+						text: !this.options.pedantic ? rtrim(cap, "\n") : cap
 					});
 				}
 				continue;
 			}
 
 			// fences
-			if (cap = this.rules.fences.exec(src)) {
+			if ((cap = this.rules.fences.exec(src))) {
 				src = src.substring(cap[0].length);
 				this.tokens.push({
 					type: "code",
@@ -249,7 +250,7 @@ export const marked = (function (root) {
 			}
 
 			// heading
-			if (cap = this.rules.heading.exec(src)) {
+			if ((cap = this.rules.heading.exec(src))) {
 				src = src.substring(cap[0].length);
 				this.tokens.push({
 					type: "heading",
@@ -260,7 +261,7 @@ export const marked = (function (root) {
 			}
 
 			// table no leading pipe (gfm)
-			if (cap = this.rules.nptable.exec(src)) {
+			if ((cap = this.rules.nptable.exec(src))) {
 				item = {
 					type: "table",
 					header: splitCells(cap[1].replace(/^ *| *\| *$/g, "")),
@@ -294,7 +295,7 @@ export const marked = (function (root) {
 			}
 
 			// hr
-			if (cap = this.rules.hr.exec(src)) {
+			if ((cap = this.rules.hr.exec(src))) {
 				src = src.substring(cap[0].length);
 				this.tokens.push({
 					type: "hr"
@@ -303,7 +304,7 @@ export const marked = (function (root) {
 			}
 
 			// blockquote
-			if (cap = this.rules.blockquote.exec(src)) {
+			if ((cap = this.rules.blockquote.exec(src))) {
 				src = src.substring(cap[0].length);
 
 				this.tokens.push({
@@ -325,7 +326,7 @@ export const marked = (function (root) {
 			}
 
 			// list
-			if (cap = this.rules.list.exec(src)) {
+			if ((cap = this.rules.list.exec(src))) {
 				src = src.substring(cap[0].length);
 				bull = cap[2];
 				isordered = bull.length > 1;
@@ -359,17 +360,20 @@ export const marked = (function (root) {
 					// list item contains. Hacky.
 					if (~item.indexOf("\n ")) {
 						space -= item.length;
-						item = !this.options.pedantic ?
-							item.replace(new RegExp("^ {1," + space + "}", "gm"), "") :
-							item.replace(/^ {1,4}/gm, "");
+						item = !this.options.pedantic
+							? item.replace(new RegExp("^ {1," + space + "}", "gm"), "")
+							: item.replace(/^ {1,4}/gm, "");
 					}
 
 					// Determine whether the next list item belongs here.
 					// Backpedal if it does not belong in this list.
 					if (i !== l - 1) {
 						b = block.bullet.exec(cap[i + 1])[0];
-						if (bull.length > 1 ? b.length === 1 :
-							(b.length > 1 || (this.options.smartLists && b !== bull))) {
+						if (
+							bull.length > 1
+								? b.length === 1
+								: b.length > 1 || (this.options.smartLists && b !== bull)
+						) {
 							src = cap.slice(i + 1).join("\n") + src;
 							i = l - 1;
 						}
@@ -430,14 +434,18 @@ export const marked = (function (root) {
 			}
 
 			// html
-			if (cap = this.rules.html.exec(src)) {
+			if ((cap = this.rules.html.exec(src))) {
 				src = src.substring(cap[0].length);
 				this.tokens.push({
-					type: this.options.sanitize ?
-						"paragraph" : "html",
-					pre: !this.options.sanitizer &&
+					type: this.options.sanitize ? "paragraph" : "html",
+					pre:
+						!this.options.sanitizer &&
 						(cap[1] === "pre" || cap[1] === "script" || cap[1] === "style"),
-					text: this.options.sanitize ? (this.options.sanitizer ? this.options.sanitizer(cap[0]) : escape(cap[0])) : cap[0]
+					text: this.options.sanitize
+						? this.options.sanitizer
+							? this.options.sanitizer(cap[0])
+							: escape(cap[0])
+						: cap[0]
 				});
 				continue;
 			}
@@ -457,7 +465,7 @@ export const marked = (function (root) {
 			}
 
 			// table (gfm)
-			if (cap = this.rules.table.exec(src)) {
+			if ((cap = this.rules.table.exec(src))) {
 				item = {
 					type: "table",
 					header: splitCells(cap[1].replace(/^ *| *\| *$/g, "")),
@@ -483,7 +491,8 @@ export const marked = (function (root) {
 					for (i = 0; i < item.cells.length; i++) {
 						item.cells[i] = splitCells(
 							item.cells[i].replace(/^ *\| *| *\| *$/g, ""),
-							item.header.length);
+							item.header.length
+						);
 					}
 
 					this.tokens.push(item);
@@ -493,7 +502,7 @@ export const marked = (function (root) {
 			}
 
 			// lheading
-			if (cap = this.rules.lheading.exec(src)) {
+			if ((cap = this.rules.lheading.exec(src))) {
 				src = src.substring(cap[0].length);
 				this.tokens.push({
 					type: "heading",
@@ -508,14 +517,16 @@ export const marked = (function (root) {
 				src = src.substring(cap[0].length);
 				this.tokens.push({
 					type: "paragraph",
-					text: cap[1].charAt(cap[1].length - 1) === "\n" ?
-						cap[1].slice(0, -1) : cap[1]
+					text:
+						cap[1].charAt(cap[1].length - 1) === "\n"
+							? cap[1].slice(0, -1)
+							: cap[1]
 				});
 				continue;
 			}
 
 			// text
-			if (cap = this.rules.text.exec(src)) {
+			if ((cap = this.rules.text.exec(src))) {
 				// Top-level should never reach here.
 				src = src.substring(cap[0].length);
 				this.tokens.push({
@@ -541,20 +552,18 @@ export const marked = (function (root) {
 		escape: /^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,
 		autolink: /^<(scheme:[^\s\x00-\x1f<>]*|email)>/,
 		url: noop,
-		tag: "^comment" +
-			"|^</[a-zA-Z][\\w:-]*\\s*>" // self-closing tag
-			+
-			"|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>" // open tag
-			+
-			"|^<\\?[\\s\\S]*?\\?>" // processing instruction, e.g. <?php ?>
-			+
-			"|^<![a-zA-Z]+\\s[\\s\\S]*?>" // declaration, e.g. <!DOCTYPE html>
-			+
+		tag:
+			"^comment" +
+			"|^</[a-zA-Z][\\w:-]*\\s*>" + // self-closing tag
+			"|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>" + // open tag
+			"|^<\\?[\\s\\S]*?\\?>" + // processing instruction, e.g. <?php ?>
+			"|^<![a-zA-Z]+\\s[\\s\\S]*?>" + // declaration, e.g. <!DOCTYPE html>
 			"|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>", // CDATA section
 		link: /^!?\[(label)\]\(\s*(href)(?:\s+(title))?\s*\)/,
 		reflink: /^!?\[(label)\]\[(?!\s*\])((?:\\[\[\]]?|[^\[\]\\])+)\]/,
 		nolink: /^!?\[(?!\s*\])((?:\[[^\[\]]*\]|\\[\[\]]|[^\[\]])*)\](?:\[\])?/,
-		strong: /^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,
+		strong:
+			/^__([^\s_])__(?!_)|^\*\*([^\s*])\*\*(?!\*)|^__([^\s][\s\S]*?[^\s])__(?!_)|^\*\*([^\s][\s\S]*?[^\s])\*\*(?!\*)/,
 		em: /^_([^\s_])_(?!_)|^\*([^\s*<\[])\*(?!\*)|^_([^\s<][\s\S]*?[^\s_])_(?!_|[^\spunctuation])|^_([^\s_<][\s\S]*?[^\s])_(?!_|[^\spunctuation])|^\*([^\s<"][\s\S]*?[^\s\*])\*(?!\*|[^\spunctuation])|^\*([^\s*"<\[][\s\S]*?[^\s])\*(?!\*)/,
 		code: /^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,
 		br: /^( {2,}|\\)\n(?!\s*$)/,
@@ -565,18 +574,22 @@ export const marked = (function (root) {
 	// list of punctuation marks from common mark spec
 	// without ` and ] to workaround Rule 17 (inline code blocks/links)
 	inline._punctuation = "!\"#$%&'()*+,\\-./:;<=>?@\\[^_{|}~";
-	inline.em = edit(inline.em).replace(/punctuation/g, inline._punctuation).getRegex();
+	inline.em = edit(inline.em)
+		.replace(/punctuation/g, inline._punctuation)
+		.getRegex();
 
 	inline._escapes = /\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/g;
 
 	inline._scheme = /[a-zA-Z][a-zA-Z0-9+.-]{1,31}/;
-	inline._email = /[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/;
+	inline._email =
+		/[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/;
 	inline.autolink = edit(inline.autolink)
 		.replace("scheme", inline._scheme)
 		.replace("email", inline._email)
 		.getRegex();
 
-	inline._attribute = /\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/;
+	inline._attribute =
+		/\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/;
 
 	inline.tag = edit(inline.tag)
 		.replace("comment", block._comment)
@@ -624,9 +637,11 @@ export const marked = (function (root) {
 
 	inline.gfm = merge({}, inline.normal, {
 		escape: edit(inline.escape).replace("])", "~|])").getRegex(),
-		_extended_email: /[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/,
+		_extended_email:
+			/[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/,
 		url: /^((?:ftp|https?):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/,
-		_backpedal: /(?:[^?!.,:;*_~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_~)]+(?!$))+/,
+		_backpedal:
+			/(?:[^?!.,:;*_~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_~)]+(?!$))+/,
 		del: /^~+(?=\S)([\s\S]*?\S)~+/,
 		text: /^(`+|[^`])(?:[\s\S]*?(?:(?=[\\<!\[`*~]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@))|(?= {2,}\n|[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@))/
 	});
@@ -702,14 +717,14 @@ export const marked = (function (root) {
 
 		while (src) {
 			// escape
-			if (cap = this.rules.escape.exec(src)) {
+			if ((cap = this.rules.escape.exec(src))) {
 				src = src.substring(cap[0].length);
 				out += escape(cap[1]);
 				continue;
 			}
 
 			// tag
-			if (cap = this.rules.tag.exec(src)) {
+			if ((cap = this.rules.tag.exec(src))) {
 				if (!this.inLink && /^<a /i.test(cap[0])) {
 					this.inLink = true;
 				} else if (this.inLink && /^<\/a>/i.test(cap[0])) {
@@ -717,21 +732,24 @@ export const marked = (function (root) {
 				}
 				if (!this.inRawBlock && /^<(pre|code|kbd|script)(\s|>)/i.test(cap[0])) {
 					this.inRawBlock = true;
-				} else if (this.inRawBlock && /^<\/(pre|code|kbd|script)(\s|>)/i.test(cap[0])) {
+				} else if (
+					this.inRawBlock &&
+					/^<\/(pre|code|kbd|script)(\s|>)/i.test(cap[0])
+				) {
 					this.inRawBlock = false;
 				}
 
 				src = src.substring(cap[0].length);
-				out += this.options.sanitize ?
-					this.options.sanitizer ?
-					this.options.sanitizer(cap[0]) :
-					escape(cap[0]) :
-					cap[0];
+				out += this.options.sanitize
+					? this.options.sanitizer
+						? this.options.sanitizer(cap[0])
+						: escape(cap[0])
+					: cap[0];
 				continue;
 			}
 
 			// link
-			if (cap = this.rules.link.exec(src)) {
+			if ((cap = this.rules.link.exec(src))) {
 				var lastParenIndex = findClosingBracket(cap[2], "()");
 				if (lastParenIndex > -1) {
 					var linkLen = 4 + cap[1].length + lastParenIndex;
@@ -764,8 +782,10 @@ export const marked = (function (root) {
 			}
 
 			// reflink, nolink
-			if ((cap = this.rules.reflink.exec(src)) ||
-				(cap = this.rules.nolink.exec(src))) {
+			if (
+				(cap = this.rules.reflink.exec(src)) ||
+				(cap = this.rules.nolink.exec(src))
+			) {
 				src = src.substring(cap[0].length);
 				link = (cap[2] || cap[1]).replace(/\s+/g, " ");
 				link = this.links[link.toLowerCase()];
@@ -781,42 +801,46 @@ export const marked = (function (root) {
 			}
 
 			// strong
-			if (cap = this.rules.strong.exec(src)) {
+			if ((cap = this.rules.strong.exec(src))) {
 				src = src.substring(cap[0].length);
-				out += this.renderer.strong(this.output(cap[4] || cap[3] || cap[2] || cap[1]));
+				out += this.renderer.strong(
+					this.output(cap[4] || cap[3] || cap[2] || cap[1])
+				);
 				continue;
 			}
 
 			// em
-			if (cap = this.rules.em.exec(src)) {
+			if ((cap = this.rules.em.exec(src))) {
 				src = src.substring(cap[0].length);
-				out += this.renderer.em(this.output(cap[6] || cap[5] || cap[4] || cap[3] || cap[2] || cap[1]));
+				out += this.renderer.em(
+					this.output(cap[6] || cap[5] || cap[4] || cap[3] || cap[2] || cap[1])
+				);
 				continue;
 			}
 
 			// code
-			if (cap = this.rules.code.exec(src)) {
+			if ((cap = this.rules.code.exec(src))) {
 				src = src.substring(cap[0].length);
 				out += this.renderer.codespan(escape(cap[2].trim(), true));
 				continue;
 			}
 
 			// br
-			if (cap = this.rules.br.exec(src)) {
+			if ((cap = this.rules.br.exec(src))) {
 				src = src.substring(cap[0].length);
 				out += this.renderer.br();
 				continue;
 			}
 
 			// del (gfm)
-			if (cap = this.rules.del.exec(src)) {
+			if ((cap = this.rules.del.exec(src))) {
 				src = src.substring(cap[0].length);
 				out += this.renderer.del(this.output(cap[1]));
 				continue;
 			}
 
 			// autolink
-			if (cap = this.rules.autolink.exec(src)) {
+			if ((cap = this.rules.autolink.exec(src))) {
 				src = src.substring(cap[0].length);
 				if (cap[2] === "@") {
 					text = escape(this.mangle(cap[1]));
@@ -853,10 +877,16 @@ export const marked = (function (root) {
 			}
 
 			// text
-			if (cap = this.rules.text.exec(src)) {
+			if ((cap = this.rules.text.exec(src))) {
 				src = src.substring(cap[0].length);
 				if (this.inRawBlock) {
-					out += this.renderer.text(this.options.sanitize ? (this.options.sanitizer ? this.options.sanitizer(cap[0]) : escape(cap[0])) : cap[0]);
+					out += this.renderer.text(
+						this.options.sanitize
+							? this.options.sanitizer
+								? this.options.sanitizer(cap[0])
+								: escape(cap[0])
+							: cap[0]
+					);
 				} else {
 					out += this.renderer.text(escape(this.smartypants(cap[0])));
 				}
@@ -883,9 +913,9 @@ export const marked = (function (root) {
 		var href = link.href,
 			title = link.title ? escape(link.title) : null;
 
-		return cap[0].charAt(0) !== "!" ?
-			this.renderer.link(href, title, this.output(cap[1])) :
-			this.renderer.image(href, title, escape(cap[1]));
+		return cap[0].charAt(0) !== "!"
+			? this.renderer.link(href, title, this.output(cap[1]))
+			: this.renderer.image(href, title, escape(cap[1]));
 	};
 
 	/**
@@ -894,21 +924,23 @@ export const marked = (function (root) {
 
 	InlineLexer.prototype.smartypants = function (text) {
 		if (!this.options.smartypants) return text;
-		return text
-			// em-dashes
-			.replace(/---/g, "\u2014")
-			// en-dashes
-			.replace(/--/g, "\u2013")
-			// opening singles
-			.replace(/(^|[-\u2014/(\[{"\s])'/g, "$1\u2018")
-			// closing singles & apostrophes
-			.replace(/'/g, "\u2019")
-			// opening doubles
-			.replace(/(^|[-\u2014/(\[{\u2018\s])"/g, "$1\u201c")
-			// closing doubles
-			.replace(/"/g, "\u201d")
-			// ellipses
-			.replace(/\.{3}/g, "\u2026");
+		return (
+			text
+				// em-dashes
+				.replace(/---/g, "\u2014")
+				// en-dashes
+				.replace(/--/g, "\u2013")
+				// opening singles
+				.replace(/(^|[-\u2014/(\[{"\s])'/g, "$1\u2018")
+				// closing singles & apostrophes
+				.replace(/'/g, "\u2019")
+				// opening doubles
+				.replace(/(^|[-\u2014/(\[{\u2018\s])"/g, "$1\u201c")
+				// closing doubles
+				.replace(/"/g, "\u201d")
+				// ellipses
+				.replace(/\.{3}/g, "\u2026")
+		);
 	};
 
 	/**
@@ -952,17 +984,20 @@ export const marked = (function (root) {
 		}
 
 		if (!lang) {
-			return "<pre><code>" +
-				(escaped ? code : escape(code, true)) +
-				"</code></pre>";
+			return (
+				"<pre><code>" + (escaped ? code : escape(code, true)) + "</code></pre>"
+			);
 		}
-		return "<pre><code class=\"" +
-			marked.options.langClass + " " +
+		return (
+			'<pre><code class="' +
+			marked.options.langClass +
+			" " +
 			this.options.langPrefix +
 			escape(lang, true) +
-			"\">" +
+			'">' +
 			(escaped ? code : escape(code, true)) +
-			"</code></pre>\n";
+			"</code></pre>\n"
+		);
 	};
 
 	Renderer.prototype.blockquote = function (quote) {
@@ -975,16 +1010,18 @@ export const marked = (function (root) {
 
 	Renderer.prototype.heading = function (text, level, raw, slugger) {
 		if (this.options.headerIds) {
-			return "<h" +
+			return (
+				"<h" +
 				level +
-				" id=\"" +
+				' id="' +
 				this.options.headerPrefix +
 				slugger.slug(raw) +
-				"\">" +
+				'">' +
 				text +
 				"</h" +
 				level +
-				">\n";
+				">\n"
+			);
 		}
 		// ignore IDs
 		return "<h" + level + ">" + text + "</h" + level + ">\n";
@@ -996,7 +1033,7 @@ export const marked = (function (root) {
 
 	Renderer.prototype.list = function (body, ordered, start) {
 		var type = ordered ? "ol" : "ul",
-			startatt = (ordered && start !== 1) ? (" start=\"" + start + "\"") : "";
+			startatt = ordered && start !== 1 ? ' start="' + start + '"' : "";
 		return "<" + type + startatt + ">\n" + body + "</" + type + ">\n";
 	};
 
@@ -1005,11 +1042,13 @@ export const marked = (function (root) {
 	};
 
 	Renderer.prototype.checkbox = function (checked) {
-		return "<input " +
-			(checked ? "checked=\"\" " : "") +
-			"disabled=\"\" type=\"checkbox\"" +
+		return (
+			"<input " +
+			(checked ? 'checked="" ' : "") +
+			'disabled="" type="checkbox"' +
 			(this.options.xhtml ? " /" : "") +
-			"> ";
+			"> "
+		);
 	};
 
 	Renderer.prototype.paragraph = function (text) {
@@ -1019,12 +1058,9 @@ export const marked = (function (root) {
 	Renderer.prototype.table = function (header, body) {
 		if (body) body = "<tbody>" + body + "</tbody>";
 
-		return "<table>\n" +
-			"<thead>\n" +
-			header +
-			"</thead>\n" +
-			body +
-			"</table>\n";
+		return (
+			"<table>\n" + "<thead>\n" + header + "</thead>\n" + body + "</table>\n"
+		);
 	};
 
 	Renderer.prototype.tablerow = function (content) {
@@ -1033,9 +1069,9 @@ export const marked = (function (root) {
 
 	Renderer.prototype.tablecell = function (content, flags) {
 		var type = flags.header ? "th" : "td";
-		var tag = flags.align ?
-			"<" + type + " align=\"" + flags.align + "\">" :
-			"<" + type + ">";
+		var tag = flags.align
+			? "<" + type + ' align="' + flags.align + '">'
+			: "<" + type + ">";
 		return tag + content + "</" + type + ">\n";
 	};
 
@@ -1072,9 +1108,9 @@ export const marked = (function (root) {
 		} else {
 			href = escape(href);
 		}
-		var out = "<a class='link' href=\"" + href + "\"";
+		var out = "<a class='link' href=\"" + href + '"';
 		if (title) {
-			out += " title=\"" + title + "\"";
+			out += ' title="' + title + '"';
 		}
 		out += " target='_blank'>" + text + "</a>";
 		return out;
@@ -1086,9 +1122,9 @@ export const marked = (function (root) {
 			return text;
 		}
 
-		var out = "<img src=\"" + href + "\" alt=\"" + text + "\"";
+		var out = '<img src="' + href + '" alt="' + text + '"';
 		if (title) {
-			out += " title=\"" + title + "\"";
+			out += ' title="' + title + '"';
 		}
 		out += this.options.xhtml ? "/>" : ">";
 		return out;
@@ -1111,14 +1147,18 @@ export const marked = (function (root) {
 		TextRenderer.prototype.em =
 		TextRenderer.prototype.codespan =
 		TextRenderer.prototype.del =
-		TextRenderer.prototype.text = function (text) {
-			return text;
-		};
+		TextRenderer.prototype.text =
+			function (text) {
+				return text;
+			};
 
-	TextRenderer.prototype.link =
-		TextRenderer.prototype.image = function (href, title, text) {
-			return "" + text;
-		};
+	TextRenderer.prototype.link = TextRenderer.prototype.image = function (
+		href,
+		title,
+		text
+	) {
+		return "" + text;
+	};
 
 	TextRenderer.prototype.br = function () {
 		return "";
@@ -1218,12 +1258,15 @@ export const marked = (function (root) {
 					this.inline.output(this.token.text),
 					this.token.depth,
 					unescape(this.inlineText.output(this.token.text)),
-					this.slugger);
+					this.slugger
+				);
 			}
 			case "code": {
-				return this.renderer.code(this.token.text,
+				return this.renderer.code(
+					this.token.text,
 					this.token.lang,
-					this.token.escaped);
+					this.token.escaped
+				);
 			}
 			case "table": {
 				var header = "",
@@ -1237,7 +1280,8 @@ export const marked = (function (root) {
 				cell = "";
 				for (i = 0; i < this.token.header.length; i++) {
 					cell += this.renderer.tablecell(
-						this.inline.output(this.token.header[i]), {
+						this.inline.output(this.token.header[i]),
+						{
 							header: true,
 							align: this.token.align[i]
 						}
@@ -1250,12 +1294,10 @@ export const marked = (function (root) {
 
 					cell = "";
 					for (j = 0; j < row.length; j++) {
-						cell += this.renderer.tablecell(
-							this.inline.output(row[j]), {
-								header: false,
-								align: this.token.align[j]
-							}
-						);
+						cell += this.renderer.tablecell(this.inline.output(row[j]), {
+							header: false,
+							align: this.token.align[j]
+						});
 					}
 
 					body += this.renderer.tablerow(cell);
@@ -1292,7 +1334,8 @@ export const marked = (function (root) {
 					if (loose) {
 						if (this.peek().type === "text") {
 							var nextToken = this.peek();
-							nextToken.text = this.renderer.checkbox(checked) + " " + nextToken.text;
+							nextToken.text =
+								this.renderer.checkbox(checked) + " " + nextToken.text;
 						} else {
 							this.tokens.push({
 								type: "text",
@@ -1305,9 +1348,10 @@ export const marked = (function (root) {
 				}
 
 				while (this.next().type !== "list_item_end") {
-					body += !loose && this.token.type === "text" ?
-						this.parseText() :
-						this.tok();
+					body +=
+						!loose && this.token.type === "text"
+							? this.parseText()
+							: this.tok();
 				}
 				return this.renderer.listitem(body, task, checked);
 			}
@@ -1322,7 +1366,7 @@ export const marked = (function (root) {
 				return this.renderer.paragraph(this.parseText());
 			}
 			default: {
-				var errMsg = "Token with \"" + this.token.type + "\" type was not found.";
+				var errMsg = 'Token with "' + this.token.type + '" type was not found.';
 				if (this.options.silent) {
 					console.log(errMsg);
 				} else {
@@ -1348,7 +1392,10 @@ export const marked = (function (root) {
 		var slug = value
 			.toLowerCase()
 			.trim()
-			.replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, "")
+			.replace(
+				/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g,
+				""
+			)
 			.replace(/\s/g, "-");
 
 		if (this.seen.hasOwnProperty(slug)) {
@@ -1391,7 +1438,7 @@ export const marked = (function (root) {
 		"&": "&amp;",
 		"<": "&lt;",
 		">": "&gt;",
-		"\"": "&quot;",
+		'"': "&quot;",
 		"'": "&#39;"
 	};
 
@@ -1400,16 +1447,19 @@ export const marked = (function (root) {
 
 	function unescape(html) {
 		// explicitly match decimal, hex, and named HTML entities
-		return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/ig, function (_, n) {
-			n = n.toLowerCase();
-			if (n === "colon") return ":";
-			if (n.charAt(0) === "#") {
-				return n.charAt(1) === "x" ?
-					String.fromCharCode(parseInt(n.substring(2), 16)) :
-					String.fromCharCode(+n.substring(1));
+		return html.replace(
+			/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/gi,
+			function (_, n) {
+				n = n.toLowerCase();
+				if (n === "colon") return ":";
+				if (n.charAt(0) === "#") {
+					return n.charAt(1) === "x"
+						? String.fromCharCode(parseInt(n.substring(2), 16))
+						: String.fromCharCode(+n.substring(1));
+				}
+				return "";
 			}
-			return "";
-		});
+		);
 	}
 
 	function edit(regex, opt) {
@@ -1437,7 +1487,11 @@ export const marked = (function (root) {
 			} catch (e) {
 				return null;
 			}
-			if (prot.indexOf("javascript:") === 0 || prot.indexOf("vbscript:") === 0 || prot.indexOf("data:") === 0) {
+			if (
+				prot.indexOf("javascript:") === 0 ||
+				prot.indexOf("vbscript:") === 0 ||
+				prot.indexOf("data:") === 0
+			) {
 				return null;
 			}
 		}
@@ -1583,11 +1637,12 @@ export const marked = (function (root) {
 
 	function checkSanitizeDeprecation(opt) {
 		if (opt && opt.sanitize && !opt.silent) {
-			console.warn("marked(): sanitize and sanitizer parameters are deprecated since version 0.7.0, should not be used and will be removed in the future. Read more here: https://marked.js.org/#/USING_ADVANCED.md#options");
+			console.warn(
+				"marked(): sanitize and sanitizer parameters are deprecated since version 0.7.0, should not be used and will be removed in the future. Read more here: https://marked.js.org/#/USING_ADVANCED.md#options"
+			);
 		}
 	}
 
-	
 	/**
 	 * Marked
 	 */
@@ -1597,8 +1652,11 @@ export const marked = (function (root) {
 			throw new Error("marked(): input parameter is undefined or null");
 		}
 		if (typeof src !== "string") {
-			throw new Error("marked(): input parameter is of type " +
-				Object.prototype.toString.call(src) + ", string expected");
+			throw new Error(
+				"marked(): input parameter is of type " +
+					Object.prototype.toString.call(src) +
+					", string expected"
+			);
 		}
 
 		if (callback || typeof opt === "function") {
@@ -1639,9 +1697,7 @@ export const marked = (function (root) {
 
 				opt.highlight = highlight;
 
-				return err ?
-					callback(err) :
-					callback(null, out);
+				return err ? callback(err) : callback(null, out);
 			};
 
 			if (!highlight || highlight.length < 3) {
@@ -1676,11 +1732,14 @@ export const marked = (function (root) {
 			checkSanitizeDeprecation(opt);
 			return Parser.parse(Lexer.lex(src, opt), opt);
 		} catch (e) {
-			e.message += "\nPlease report this to https://github.com/markedjs/marked.";
+			e.message +=
+				"\nPlease report this to https://github.com/markedjs/marked.";
 			if ((opt || marked.defaults).silent) {
-				return "<p>An error occurred:</p><pre>" +
+				return (
+					"<p>An error occurred:</p><pre>" +
 					escape(e.message + "", true) +
-					"</pre>";
+					"</pre>"
+				);
 			}
 			throw e;
 		}
@@ -1690,11 +1749,10 @@ export const marked = (function (root) {
 	 * Options
 	 */
 
-	marked.options =
-		marked.setOptions = function (opt) {
-			merge(marked.defaults, opt);
-			return marked;
-		};
+	marked.options = marked.setOptions = function (opt) {
+		merge(marked.defaults, opt);
+		return marked;
+	};
 
 	marked.getDefaults = function () {
 		return {

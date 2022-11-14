@@ -8,38 +8,38 @@ let xItemNoPropCount = 0;
 
 /*make item configs */
 export function defItem(options: t_itemConfigs) {
-  if (!options.prop) {
-    options.prop = `xItem${xItemNoPropCount++}`;
-    console.error(`no xItem prop replace by ${options.prop}`);
-  }
-  if (!_.isInput(options.isShow)) {
-    options.isShow = true;
-  }
-  const configs = reactive(
-    _.merge(
-      {
-        /* 提示信息，可以用于提示或者定位 */
-        itemTips: {},
-        /*item 的类型 case by case 跟ui库关联*/
-        itemType: options.itemType || "Input",
-        /*默认绑定的是value*/
-      },
-      { ...options }
-    )
-  );
+	if (!options.prop) {
+		options.prop = `xItem${xItemNoPropCount++}`;
+		console.error(`no xItem prop replace by ${options.prop}`);
+	}
+	if (!_.isInput(options.isShow)) {
+		options.isShow = true;
+	}
+	const configs = reactive(
+		_.merge(
+			{
+				/* 提示信息，可以用于提示或者定位 */
+				itemTips: {},
+				/*item 的类型 case by case 跟ui库关联*/
+				itemType: options.itemType || "Input"
+				/*默认绑定的是value*/
+			},
+			{ ...options }
+		)
+	);
 
-  return {
-    [configs.prop]: configs,
-  };
+	return {
+		[configs.prop]: configs
+	};
 }
 
 defItem.labelWithTips = ({ label, tips, icon }) => {
-  return (
-    <span class="flex middle">
-      {label}
-      <aTooltip title={tips}>{icon}</aTooltip>
-    </span>
-  );
+	return (
+		<span class="flex middle">
+			{label}
+			<aTooltip title={tips}>{icon}</aTooltip>
+		</span>
+	);
 };
 
 /***
@@ -50,21 +50,21 @@ defItem.labelWithTips = ({ label, tips, icon }) => {
  * @param options:可以修改默认值
  */
 export function vModel(
-  configs,
-  prop,
-  options = {
-    data: "data",
-    dataXItem: "dataXItem",
-  }
+	configs,
+	prop,
+	options = {
+		data: "data",
+		dataXItem: "dataXItem"
+	}
 ) {
-  const { data = "data", dataXItem = "dataXItem" } = options;
-  return {
-    value: configs[data][prop],
-    configs: configs[dataXItem][prop],
-    "onUpdate:modelValue"(e) {
-      configs[data][prop] = e;
-    },
-  };
+	const { data = "data", dataXItem = "dataXItem" } = options;
+	return {
+		value: configs[data][prop],
+		configs: configs[dataXItem][prop],
+		"onUpdate:modelValue"(e) {
+			configs[data][prop] = e;
+		}
+	};
 }
 
 /***
@@ -76,14 +76,14 @@ export function vModel(
  * @param prop
  */
 export function antColKey(prop, makeRenderCell) {
-  const target = {
-    dataIndex: prop,
-    prop: prop,
-    key: prop,
-  };
+	const target = {
+		dataIndex: prop,
+		prop: prop,
+		key: prop
+	};
 
-  if (makeRenderCell) {
-    target.renderCell = makeRenderCell(prop);
-  }
-  return target;
+	if (makeRenderCell) {
+		target.renderCell = makeRenderCell(prop);
+	}
+	return target;
 }

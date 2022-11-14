@@ -19,15 +19,6 @@
 	</div>
 	<aCard>
 		<div>
-			<mkit>
-				<pre>
-### 自定义form 宽度，label宽度，居中 
-```js 
-console.log(window)
-```
-				 </pre
-				>
-			</mkit>
 			<DemoXFormWithForm :options="{ payload: { row: {} } }" />
 		</div>
 	</aCard>
@@ -52,7 +43,7 @@ import {
 	pickValueFrom,
 	FormRules
 } from "@ventose/ui";
-import DemoXFormWithForm from "./DemoXFormWithForm.vue";
+import { DemoXFormWithForm } from "./DemoXFormWithForm.tsx";
 
 const { $t } = State_UI;
 

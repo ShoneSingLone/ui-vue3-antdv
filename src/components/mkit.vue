@@ -20,13 +20,13 @@ const cssOptions = _.map(modules, (asyncFn, name) => {
 	const arr = name.split("/");
 	const label = _.last(arr);
 	return {
-		content: asyncFn,
+		asyncFn,
 		value: label,
 		label
 	};
 });
-debugger;
 export default {
+	props: ["content"],
 	data() {
 		return {
 			cssOptions,
@@ -38,20 +38,22 @@ export default {
 	watch: {
 		theme: {
 			immediate: true,
-			handler(theme) {
+			async handler(theme) {
 				localStorage.markdownHightlightTheme = this.theme;
-				const content = _.find(cssOptions, { value: theme })?.content || "";
+				const asyncFn = _.find(cssOptions, { value: theme })?.asyncFn;
+				if (!asyncFn) return;
+				const { default: content } = await asyncFn();
 				const id = `markdonw-hightlight-style`;
 				const $style = $(`#${id}`);
 				if ($style.length != 1) {
 					$("body").append($("<style/>", { id }));
 				}
-				// $style.html(content);
+				$style.html(content);
 			}
 		}
 	},
 	async mounted() {
-		this.originHTML = this.$slots.default()[0].children;
+		this.originHTML = this.content || this.$slots.default()[0].children;
 		const { Renderer } = marked;
 		marked.options = { langClass: "hljs" };
 		const renderer = new Renderer();

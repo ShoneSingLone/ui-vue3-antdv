@@ -4,7 +4,7 @@ import "./AppStyle.less";
 import { _, $, VentoseUIWithInstall, State_UI, $ } from "@ventose/ui";
 import { router } from "./router";
 import App from "./App.vue";
-import mkit from "./components/mkit.vue"
+import mkit from "./components/mkit.vue";
 
 const appPlugins = {
 	install: (app, options /*{dependState, appPlugins}*/) => {
@@ -15,7 +15,7 @@ const appPlugins = {
 		});
 		app.use({
 			install: (app, { watch } = {}) => {
-				app.component('mkit', mkit)
+				app.component("mkit", mkit);
 				//注册i8n实例并引入语言文件
 				app.config.globalProperties.$t = State_UI.$t;
 				State_UI.setAssetsBaseById("svg_assets_img");

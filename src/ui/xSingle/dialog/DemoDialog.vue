@@ -17,7 +17,8 @@ import {
 	getPaginationPageSize,
 	Utils
 } from "@ventose/ui";
-import DemoXFormWithForm from "../../xForm/DemoXFormWithForm.vue";
+import { DemoXFormWithForm } from "../../xForm/DemoXFormWithForm.tsx";
+
 const { $t } = State_UI;
 
 async function log() {
