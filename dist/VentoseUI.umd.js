@@ -29389,18 +29389,18 @@ div[id^=lazy-svg_] {
   z-index: 4;
   text-align: center;
 }
-.table-options {\r
-	display: flex;\r
-	flex-flow: row nowrap;\r
-	align-items: center;\r
+.table-options {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
 	padding: 10px 0;
 }
-.table-filter {\r
+.table-filter {
 	margin-left: 4px;
 }
-.table-pagination {\r
+.table-pagination {
 	padding: 10px 0;
-}\r
+}
 .vir-item-component {
   height: 100%;
   overflow: auto;
@@ -64642,8 +64642,8 @@ return (${scfObjSourceCode})(argVue,argPayload);
     },
     mounted() {
       var _a;
-      if ((_a = this.configs) == null ? void 0 : _a.oncece) {
-        this.configs.oncece.call(this.configs, this);
+      if ((_a = this.configs) == null ? void 0 : _a.once) {
+        this.configs.once.call(this.configs, this);
       }
     },
     created() {

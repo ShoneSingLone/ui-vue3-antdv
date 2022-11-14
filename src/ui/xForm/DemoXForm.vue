@@ -17,6 +17,20 @@
 			<xItem :configs="xForm.select" class="flex1" />
 		</div>
 	</div>
+	<aCard>
+		<div>
+			<mkit>
+				<pre>
+### 自定义form 宽度，label宽度，居中 
+```js 
+console.log(window)
+```
+				 </pre
+				>
+			</mkit>
+			<DemoXFormWithForm :options="{ payload: { row: {} } }" />
+		</div>
+	</aCard>
 </template>
 
 <script>
@@ -38,6 +52,7 @@ import {
 	pickValueFrom,
 	FormRules
 } from "@ventose/ui";
+import DemoXFormWithForm from "./DemoXFormWithForm.vue";
 
 const { $t } = State_UI;
 
@@ -49,6 +64,9 @@ async function log() {
 }
 
 export default {
+	components: {
+		DemoXFormWithForm
+	},
 	methods: {
 		valid() {}
 	},
