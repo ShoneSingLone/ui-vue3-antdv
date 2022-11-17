@@ -105,6 +105,7 @@ data() {
 					disabled() {
 						return vm.count % 3 === 0;
 					},
+					/* 异步函数会有loading效果 */
 					async onClick() {
 						await _.sleep(1000);
 					}
