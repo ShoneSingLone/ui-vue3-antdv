@@ -77,7 +77,7 @@ export default {
 							UI.dialog.component({
 								title: $t("DemoXFormWithForm").label,
 								component: defineComponent({
-									template: `<p>演示使用bundless的形式</p>`
+									template: `<p>演示使用bundless的形式，使用template，不使用jsx</p>`
 								}),
 								hideButtons: true,
 								hideCancel: true,
@@ -155,11 +155,11 @@ export default {
 									},
 									template: `
 										<div class="padding20">
-										<p>演示使用bundless的形式</p>
-										<div class="flex">
-											<xGap f="1" />
-											<aButton @click="setBtnDefault">改变按钮</aButton>
-										</div>
+											<p>演示使用bundless的形式，使用template，不使用jsx</p>
+											<div class="flex">
+												<xGap f="1" />
+												<aButton @click="setBtnDefault">改变按钮</aButton>
+											</div>
 										</div>`
 								}),
 								renderButtons: (dialogInstance) => {
