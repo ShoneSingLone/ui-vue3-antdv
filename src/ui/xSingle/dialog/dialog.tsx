@@ -85,7 +85,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 										},
 										mounted() {
 											if (options.fullscreen) {
-												layer.full(layerIndex);
+												this.fullDialog()
 											}
 										},
 										data() {
@@ -94,6 +94,9 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 											return { options };
 										},
 										methods: {
+											fullDialog() {
+												layer.full(layerIndex);
+											},
 											async handleClickOk() {
 												if (options.onOk) {
 													await options.onOk(options);
