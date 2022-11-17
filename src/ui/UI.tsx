@@ -53,7 +53,7 @@ const useModel = type => {
 	};
 };
 
-layer.loading = function (indexDelete) {
+layer.loading = function(indexDelete) {
 	this.loading.count = this.loading.count || 1;
 	this.loading.deep = this.loading.deep || new Set();
 	$("body").trigger("click");
@@ -80,6 +80,7 @@ layer.loading = function (indexDelete) {
 
 export const UI = {
 	dialog: {
+		/* installUIDialogComponent Vue3 依赖外部plugin，没有全局的 */
 		component: async (options: t_dialogOptions) => null,
 		success: useModel("success"),
 		info: useModel("info"),

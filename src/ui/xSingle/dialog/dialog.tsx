@@ -39,7 +39,8 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 				options._yes = options.yes;
 				delete options.yes;
 			}
-			let app = null;
+			/*dialog 的vue app*/
+			let dialogVueApp = null;
 
 			/* 处理按Esc键关闭弹窗 */
 			let handleEcsPress = {
@@ -77,8 +78,11 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 						success(indexPanel, layerIndex) {
 							handleEcsPress.on(layerIndex);
 							try {
-								app = createApp(
+								dialogVueApp = createApp(
 									defineComponent({
+										beforeMount() {
+											resolve(this);
+										},
 										mounted() {
 											if (options.fullscreen) {
 												layer.full(layerIndex);
@@ -104,7 +108,6 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 												}
 												if (isClose) {
 													layer.close(layerIndex);
-													reject();
 												} else {
 													return false;
 												}
@@ -132,25 +135,32 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 												if (this.options.hideButtons) {
 													return null;
 												}
+												if (_.isFunction(this.options.renderButtons)) {
+													/* 提供 handleClickOk、handleClickCancel*/
+													let vDomButtons = (() => {
+														let _vDomButtons = this.options.renderButtons(this);
+														if (!_vDomButtons) {
+															return null;
+														} else if (_vDomButtons.template) {
+															return h(_vDomButtons);
+														} else {
+															return _vDomButtons;
+														}
+													})();
 
-												if (this.options.renderButtons) {
-													return (
-														<div class="flex middle end ant-modal-footer">
-															{this.options.renderButtons(
-																this /* 提供 handleClickOk、handleClickCancel*/
-															)}
-														</div>
-													);
+													return vDomButtons;
 												}
+												return this.vDomDefaultButton;
+											},
+											vDomDefaultButton() {
 												const [isShowCancel, isShowOk] = (() => {
 													return [
 														!this.options.hideCancel || null,
 														!this.options.hideOk || null
 													];
 												})();
-
 												return (
-													<div class="flex middle end ant-modal-footer">
+													<>
 														{isShowCancel && (
 															<xButton
 																configs={{ onClick: this.handleClickCancel }}>
@@ -167,7 +177,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 																{this.okText}
 															</xButton>
 														)}
-													</div>
+													</>
 												);
 											}
 										},
@@ -177,14 +187,16 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 													class="flex vertical h100 width100"
 													data-el-id={__elId}>
 													{this.renderContent}
-													{this.renderButtons}
+													<div class="flex middle end ant-modal-footer">
+														{this.renderButtons}
+													</div>
 												</div>
 											);
 										}
 									})
 								);
-								app.use(appPlugins, { dependState });
-								app.mount(__elId);
+								dialogVueApp.use(appPlugins, { dependState });
+								dialogVueApp.mount(__elId);
 							} catch (e) {
 								console.error(e);
 							}
@@ -192,12 +204,12 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 							options.close = () => {
 								layer.close(layerIndex);
 							};
-							options.afterOpenDialoag && options.afterOpenDialoag(app);
+							options.afterOpenDialoag && options.afterOpenDialoag(dialogVueApp);
 						},
 						cancel() {
 							/*点击右上角的关闭按钮*/
-							if (app) {
-								app._instance?.proxy?.handleClickCancel();
+							if (dialogVueApp) {
+								dialogVueApp._instance?.proxy?.handleClickCancel();
 							}
 							return false;
 						},
@@ -205,14 +217,13 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 							handleEcsPress.off();
 							$container.remove();
 							$container = null;
-							if (app) {
-								app.unmount();
-								app = null;
+							if (dialogVueApp) {
+								dialogVueApp.unmount();
+								dialogVueApp = null;
 							}
 							options.payload = null;
 							options.__dialogInstance = null;
 							options = null;
-							resolve(true);
 						}
 					},
 					options
