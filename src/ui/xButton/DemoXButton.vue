@@ -1,4 +1,5 @@
 <script lang="tsx">
+//@ts-nocheck
 import {
 	defCol,
 	defColActions,

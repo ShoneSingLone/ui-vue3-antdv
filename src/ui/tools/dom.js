@@ -40,6 +40,10 @@ export const setDocumentTitle = title => {
 	get$title().text(title);
 };
 
+/**
+ *
+ * @param {*} colors
+ */
 export const setCSSVariables = colors => {
 	let $cssVariables = get$cssVariables();
 	const cssContent = _.map(colors, (value, prop) => `--${prop}:${value}`).join(

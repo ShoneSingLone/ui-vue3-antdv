@@ -65980,7 +65980,7 @@ const installUIDialogComponent = (UI2, {
       options._yes = options.yes;
       delete options.yes;
     }
-    let app = null;
+    let dialogVueApp = null;
     let handleEcsPress = {
       layerIndex: "",
       handler(event) {
@@ -66010,10 +66010,13 @@ const installUIDialogComponent = (UI2, {
       success(indexPanel, layerIndex) {
         handleEcsPress.on(layerIndex);
         try {
-          app = createApp(defineComponent({
+          dialogVueApp = createApp(defineComponent({
+            beforeMount() {
+              resolve(this);
+            },
             mounted() {
               if (options.fullscreen) {
-                layer.full(layerIndex);
+                this.fullDialog();
               }
             },
             data() {
@@ -66024,6 +66027,9 @@ const installUIDialogComponent = (UI2, {
               };
             },
             methods: {
+              fullDialog() {
+                layer.full(layerIndex);
+              },
               async handleClickOk() {
                 if (options.onOk) {
                   await options.onOk(options);
@@ -66038,7 +66044,6 @@ const installUIDialogComponent = (UI2, {
                 }
                 if (isClose) {
                   layer.close(layerIndex);
-                  reject();
                 } else {
                   return false;
                 }
@@ -66062,17 +66067,26 @@ const installUIDialogComponent = (UI2, {
                 if (this.options.hideButtons) {
                   return null;
                 }
-                if (this.options.renderButtons) {
-                  return createVNode("div", {
-                    "class": "flex middle end ant-modal-footer"
-                  }, [this.options.renderButtons(this)]);
+                if (mylodash.isFunction(this.options.renderButtons)) {
+                  let vDomButtons = (() => {
+                    let _vDomButtons = this.options.renderButtons(this);
+                    if (!_vDomButtons) {
+                      return null;
+                    } else if (_vDomButtons.template) {
+                      return h$1(_vDomButtons);
+                    } else {
+                      return _vDomButtons;
+                    }
+                  })();
+                  return vDomButtons;
                 }
+                return this.vDomDefaultButton;
+              },
+              vDomDefaultButton() {
                 const [isShowCancel, isShowOk] = (() => {
                   return [!this.options.hideCancel || null, !this.options.hideOk || null];
                 })();
-                return createVNode("div", {
-                  "class": "flex middle end ant-modal-footer"
-                }, [isShowCancel && createVNode(resolveComponent("xButton"), {
+                return createVNode(Fragment, null, [isShowCancel && createVNode(resolveComponent("xButton"), {
                   "configs": {
                     onClick: this.handleClickCancel
                   }
@@ -66094,13 +66108,15 @@ const installUIDialogComponent = (UI2, {
               return createVNode("div", {
                 "class": "flex vertical h100 width100",
                 "data-el-id": __elId
-              }, [this.renderContent, this.renderButtons]);
+              }, [this.renderContent, createVNode("div", {
+                "class": "flex middle end ant-modal-footer"
+              }, [this.renderButtons])]);
             }
           }));
-          app.use(appPlugins, {
+          dialogVueApp.use(appPlugins, {
             dependState
           });
-          app.mount(__elId);
+          dialogVueApp.mount(__elId);
         } catch (e2) {
           console.error(e2);
         }
@@ -66108,12 +66124,12 @@ const installUIDialogComponent = (UI2, {
         options.close = () => {
           layer.close(layerIndex);
         };
-        options.afterOpenDialoag && options.afterOpenDialoag(app);
+        options.afterOpenDialoag && options.afterOpenDialoag(dialogVueApp);
       },
       cancel() {
         var _a, _b;
-        if (app) {
-          (_b = (_a = app._instance) == null ? void 0 : _a.proxy) == null ? void 0 : _b.handleClickCancel();
+        if (dialogVueApp) {
+          (_b = (_a = dialogVueApp._instance) == null ? void 0 : _a.proxy) == null ? void 0 : _b.handleClickCancel();
         }
         return false;
       },
@@ -66121,14 +66137,13 @@ const installUIDialogComponent = (UI2, {
         handleEcsPress.off();
         $container.remove();
         $container = null;
-        if (app) {
-          app.unmount();
-          app = null;
+        if (dialogVueApp) {
+          dialogVueApp.unmount();
+          dialogVueApp = null;
         }
         options.payload = null;
         options.__dialogInstance = null;
         options = null;
-        resolve(true);
       }
     }, options));
   });

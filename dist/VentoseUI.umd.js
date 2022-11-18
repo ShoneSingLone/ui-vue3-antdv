@@ -65984,7 +65984,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
         options._yes = options.yes;
         delete options.yes;
       }
-      let app = null;
+      let dialogVueApp = null;
       let handleEcsPress = {
         layerIndex: "",
         handler(event) {
@@ -66014,10 +66014,13 @@ return (${scfObjSourceCode})(argVue,argPayload);
         success(indexPanel, layerIndex) {
           handleEcsPress.on(layerIndex);
           try {
-            app = vue.createApp(vue.defineComponent({
+            dialogVueApp = vue.createApp(vue.defineComponent({
+              beforeMount() {
+                resolve(this);
+              },
               mounted() {
                 if (options.fullscreen) {
-                  layer.full(layerIndex);
+                  this.fullDialog();
                 }
               },
               data() {
@@ -66028,6 +66031,9 @@ return (${scfObjSourceCode})(argVue,argPayload);
                 };
               },
               methods: {
+                fullDialog() {
+                  layer.full(layerIndex);
+                },
                 async handleClickOk() {
                   if (options.onOk) {
                     await options.onOk(options);
@@ -66042,7 +66048,6 @@ return (${scfObjSourceCode})(argVue,argPayload);
                   }
                   if (isClose) {
                     layer.close(layerIndex);
-                    reject();
                   } else {
                     return false;
                   }
@@ -66066,17 +66071,26 @@ return (${scfObjSourceCode})(argVue,argPayload);
                   if (this.options.hideButtons) {
                     return null;
                   }
-                  if (this.options.renderButtons) {
-                    return vue.createVNode("div", {
-                      "class": "flex middle end ant-modal-footer"
-                    }, [this.options.renderButtons(this)]);
+                  if (mylodash.isFunction(this.options.renderButtons)) {
+                    let vDomButtons = (() => {
+                      let _vDomButtons = this.options.renderButtons(this);
+                      if (!_vDomButtons) {
+                        return null;
+                      } else if (_vDomButtons.template) {
+                        return vue.h(_vDomButtons);
+                      } else {
+                        return _vDomButtons;
+                      }
+                    })();
+                    return vDomButtons;
                   }
+                  return this.vDomDefaultButton;
+                },
+                vDomDefaultButton() {
                   const [isShowCancel, isShowOk] = (() => {
                     return [!this.options.hideCancel || null, !this.options.hideOk || null];
                   })();
-                  return vue.createVNode("div", {
-                    "class": "flex middle end ant-modal-footer"
-                  }, [isShowCancel && vue.createVNode(vue.resolveComponent("xButton"), {
+                  return vue.createVNode(vue.Fragment, null, [isShowCancel && vue.createVNode(vue.resolveComponent("xButton"), {
                     "configs": {
                       onClick: this.handleClickCancel
                     }
@@ -66098,13 +66112,15 @@ return (${scfObjSourceCode})(argVue,argPayload);
                 return vue.createVNode("div", {
                   "class": "flex vertical h100 width100",
                   "data-el-id": __elId
-                }, [this.renderContent, this.renderButtons]);
+                }, [this.renderContent, vue.createVNode("div", {
+                  "class": "flex middle end ant-modal-footer"
+                }, [this.renderButtons])]);
               }
             }));
-            app.use(appPlugins, {
+            dialogVueApp.use(appPlugins, {
               dependState
             });
-            app.mount(__elId);
+            dialogVueApp.mount(__elId);
           } catch (e2) {
             console.error(e2);
           }
@@ -66112,12 +66128,12 @@ return (${scfObjSourceCode})(argVue,argPayload);
           options.close = () => {
             layer.close(layerIndex);
           };
-          options.afterOpenDialoag && options.afterOpenDialoag(app);
+          options.afterOpenDialoag && options.afterOpenDialoag(dialogVueApp);
         },
         cancel() {
           var _a, _b;
-          if (app) {
-            (_b = (_a = app._instance) == null ? void 0 : _a.proxy) == null ? void 0 : _b.handleClickCancel();
+          if (dialogVueApp) {
+            (_b = (_a = dialogVueApp._instance) == null ? void 0 : _a.proxy) == null ? void 0 : _b.handleClickCancel();
           }
           return false;
         },
@@ -66125,14 +66141,13 @@ return (${scfObjSourceCode})(argVue,argPayload);
           handleEcsPress.off();
           $container.remove();
           $container = null;
-          if (app) {
-            app.unmount();
-            app = null;
+          if (dialogVueApp) {
+            dialogVueApp.unmount();
+            dialogVueApp = null;
           }
           options.payload = null;
           options.__dialogInstance = null;
           options = null;
-          resolve(true);
         }
       }, options));
     });
