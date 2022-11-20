@@ -65,8 +65,20 @@ console.log(window)
 	render() {
 		return (
 			<div id="DialogModifyIP">
+				<xForm class="flex vertical" labelStyle={this.styleForm}>
+					<aAlert message={this.$t("提示信息").label} type="info" />
+					{_.map(this.dataXItem, item => {
+						return (
+							<>
+								<xGap t="10" />
+								<xItem configs={item} />
+							</>
+						);
+					})}
+				</xForm>
+
 				<mkit
-					content={`### 自定义form 宽度，label宽度，居中
+					md={`### 自定义form 宽度，label宽度，居中
 \`\`\`js
 <xForm class="flex vertical" labelStyle={this.styleForm}>
 	<aAlert message={this.$t("提示信息").label} type="info" />
@@ -100,17 +112,6 @@ styleForm: {
 }
 \`\`\``}
 				/>
-				<xForm class="flex vertical" labelStyle={this.styleForm}>
-					<aAlert message={this.$t("提示信息").label} type="info" />
-					{_.map(this.dataXItem, item => {
-						return (
-							<>
-								<xGap t="10" />
-								<xItem configs={item} />
-							</>
-						);
-					})}
-				</xForm>
 			</div>
 		);
 	}

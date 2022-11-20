@@ -1,26 +1,26 @@
 <template>
-	<div>
+	<aCard>
 		<xButton :configs="configsValidBtn" />
-		<div class="flex middle">
-			<span class="mr10">{{ formData.inputValue }}</span>
-			<xItem
-				:configs="xForm.search"
-				class="flex1"
-				v-model="formData.inputValue" />
-			<xItem
-				:configs="xForm.withLabelProperty"
-				class="flex1"
-				v-model="formData.inputValue" />
-		</div>
+		<mkit :md="tips1" />
+		<span class="mr10">{{ formData.inputValue }}</span>
+		<xItem
+			:configs="xForm.search"
+			class="flex1"
+			v-model="formData.inputValue" />
+		<mkit :md="tips2" />
+
 		<div class="flex middle mt10">
 			<span class="mr10">{{ xForm.select.value }}</span>
 			<xItem :configs="xForm.select" class="flex1" />
 		</div>
-	</div>
+		<xItem
+			:configs="xForm.withLabelProperty"
+			class="flex1"
+			v-model="formData.inputValue" />
+	</aCard>
+	<div class="mt10"></div>
 	<aCard>
-		<div>
-			<DemoXFormWithForm :options="{ payload: { row: {} } }" />
-		</div>
+		<DemoXFormWithForm :options="{ payload: { row: {} } }" />
 	</aCard>
 </template>
 
@@ -46,13 +46,6 @@ import {
 import { DemoXFormWithForm } from "./DemoXFormWithForm.tsx";
 
 const { $t } = State_UI;
-
-async function log() {
-	const text = this.text;
-	this.text = "loading...";
-	await _.sleep(1000);
-	this.text = text;
-}
 
 export default {
 	components: {
@@ -117,9 +110,52 @@ export default {
 				}
 			},
 			formData: {
-				inputValue: "可以单独使用v-model绑定数据"
+				inputValue: "v-model"
 			},
-			xForm
+			xForm,
+			tips1: `### 可以单独使用v-model绑定数据
+\`\`\`js
+<xItem :configs="xForm.search" class="flex1" v-model="formData.inputValue" />
+formData: {
+	inputValue: "v-model"
+},
+...defItem({
+	prop: "search",
+	placeholder: "Input",
+	allowClear: true,
+	onAfterValueChange(val) {
+		console.log("🚀:", "search configs", this, val);
+	}
+}),
+\`\`\`
+`,
+			tips2: `### 只使用configs绑定数据
+>必须有**value**属性		
+\`\`\`js
+<xItem :configs="xForm.select" class="flex1" />
+/* 必须有value属性 */
+...defItem({
+	value: [],
+	prop: "select",
+	label: $t("类型").label,
+	itemType: "Select",
+	options: [
+		{
+			label: $t("类型A").label,
+			value: "AAA"
+		},
+		{
+			label: $t("类型B").label,
+			value: "BBB"
+		}
+	],
+	mode: "multiple",
+	maxTagCount: 1,
+	maxTagTextLength: 10,
+	style: { width: "200px" }
+})
+\`\`\`
+`
 		};
 	}
 };

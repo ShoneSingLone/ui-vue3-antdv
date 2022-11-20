@@ -1,11 +1,11 @@
 <template>
-	<div class="markdown-wrapper description">
+	<div class="markdown-wrapper">
 		<select class="markdown-theme" v-model="theme">
 			<option v-for="item in cssOptions" :key="item.value" :value="item.value">
 				{{ item.label }}
 			</option>
 		</select>
-		<div class="markdown-wrapper description" v-html="html"></div>
+		<div class="markdown-wrapper_description" v-html="html"></div>
 	</div>
 </template>
 <script>
@@ -13,7 +13,9 @@ import { _, $ } from "@ventose/ui";
 import { marked } from "../assets/libs/marked";
 import { hljs } from "../assets/libs/highlight";
 
+/* 异步 */
 const modules = import.meta.glob("../assets/highlightstyles/*.css");
+/* 同步 */
 // const modules = import.meta.globEager("../assets/highlightstyles/*.css");
 
 const cssOptions = _.map(modules, (asyncFn, name) => {
@@ -26,7 +28,7 @@ const cssOptions = _.map(modules, (asyncFn, name) => {
 	};
 });
 export default {
-	props: ["content"],
+	props: ["md" /* md text content */],
 	data() {
 		return {
 			cssOptions,
@@ -53,7 +55,7 @@ export default {
 		}
 	},
 	async mounted() {
-		this.originHTML = this.content || this.$slots.default()[0].children;
+		this.originHTML = this.md || this.$slots.default()[0].children;
 		const { Renderer } = marked;
 		marked.options = { langClass: "hljs" };
 		const renderer = new Renderer();
@@ -66,9 +68,17 @@ export default {
 </script>
 
 <style scoped>
+.markdown-wrapper {
+	position: relative;
+}
 .markdown-theme {
 	position: absolute;
-	right: 24px;
-	top: 16px;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}
+
+.markdown-wrapper_description {
+	position: relative;
 }
 </style>

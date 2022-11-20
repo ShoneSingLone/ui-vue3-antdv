@@ -86,4 +86,8 @@ export default defineComponent({
 .site-layout-background {
 	background: #fff;
 }
+
+.ant-layout-content{
+	overflow: auto;
+}
 </style>
