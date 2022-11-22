@@ -1,16 +1,23 @@
-<script lang="jsx">
+//@ts-nocheck
 import { defineComponent } from "vue";
 import { _ } from "../loadCommonUtil";
 import { Pagination } from "ant-design-vue";
 import { setPagination } from "./common";
 import { lStorage } from "../tools/storage";
+import { State_UI } from "../State_UI";
+
 
 const PAGE_SIZE_OPTIONS = ["10", "20", "30"];
+const { page, size, total } = lStorage.appConfigs.pagination;
 
-export default defineComponent({
+
+export const xPagination = defineComponent({
 	name: "xPagination",
 	components: {
 		Pagination
+	},
+	setup() {
+		return { State_UI }
 	},
 	props: {
 		onPaginationChange: {
@@ -41,24 +48,33 @@ export default defineComponent({
 				this.onPaginationChange(this.pagination);
 			}
 		}, 30)
+	},
+	computed: {
+		i18nMessage() {
+			return {
+				"总条数": "总条数 {total}",
+				"条页": "{size}条/页",
+				...this.State_UI.i18nMessage
+			}
+		}
+	},
+	render() {
+		return (
+			<Pagination
+				v-model:current={this.pagination[page]}
+				pageSizeOptions={this.pageSizeOptions}
+				total={this.pagination[total]}
+				pageSize={this.pagination[size]}
+				show-size-changer
+				showTotal={total => this.$t("总条数", { total }, this.i18nMessage).label}
+				onShowSizeChange={this.onShowSizeChange}
+				onChange={this.onShowSizeChange}>
+				{{
+					buildOptionText: props => {
+						return <span>{this.$t("条页", { size: props.value }, this.i18nMessage).label}</span>;
+					}
+				}}
+			</Pagination>
+		);
 	}
 });
-
-const { page, size, total } = lStorage.appConfigs.pagination;
-</script>
-
-<template>
-	<Pagination
-		v-model:current="pagination[page]"
-		:page-size-options="pageSizeOptions"
-		:total="pagination[total]"
-		:page-size="pagination[size]"
-		show-size-changer
-		:show-total="total => $t('总条数', { total: total }).label"
-		@showSizeChange="onShowSizeChange"
-		@change="onShowSizeChange">
-		<template #buildOptionText="props">
-			<span>{{ $t("条页", { size: props.value }).label }}</span>
-		</template>
-	</Pagination>
-</template>

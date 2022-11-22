@@ -23,10 +23,14 @@ const BTN_PRESET_MAP = {
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideUploadOutlined" />,
 		text: State_UI.$t("上传").label
 	}),
-	delete: () => ({
-		icon: <xIcon class="x-button_icon-wrapper" icon="InsideDeleteOutlined" />,
-		text: State_UI.$t("删除").label
-	})
+	delete: (configs) => {
+		configs.type = "danger"
+		configs.ghost = true;
+		return {
+			icon: <xIcon class="x-button_icon-wrapper" icon="InsideDeleteOutlined" />,
+			text: State_UI.$t("删除").label
+		}
+	}
 };
 
 export type t_buttonOptions = {
@@ -43,7 +47,7 @@ export default defineComponent({
 		/* 预置 */
 		const presetFn = BTN_PRESET_MAP[this.configs.preset];
 		if (presetFn) {
-			const preset = presetFn();
+			const preset = presetFn(this.configs);
 			this.configs.text = (
 				<>
 					{preset.icon}
@@ -117,7 +121,7 @@ export default defineComponent({
 			}
 		}
 	},
-	created() {},
+	created() { },
 	methods: {
 		async onClick() {
 			if (_.isFunction(this?.configs?.onClick)) {

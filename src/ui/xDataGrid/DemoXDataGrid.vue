@@ -1,5 +1,9 @@
 <template>
 	<xDataGrid :configs="configs_table" />
+	<xPagination
+		class="table-pagination"
+		:pagination="configs_table.pagination"
+		:onPaginationChange="handlePaginationChange" />
 </template>
 
 <script>
@@ -23,6 +27,11 @@ const { $t } = State_UI;
 
 export default {
 	name: "DemoXDataGrid",
+	methods: {
+		handlePaginationChange(pagination) {
+			console.log("🚀:", "pagination", JSON.stringify(pagination, null, 2));
+		}
+	},
 	data() {
 		return {
 			configs_table: defDataGridOption({

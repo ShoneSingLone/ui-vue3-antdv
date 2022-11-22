@@ -124,7 +124,6 @@ export default {
 								}
 							}
 
-
 							let count = 0;
 
 							const dialogOptions = {
@@ -132,22 +131,27 @@ export default {
 								component: defineComponent({
 									methods: {
 										setBtnDefault() {
-											console.log("instance===dialogOptions.__dialogInstance", instance === dialogOptions.__dialogInstance);
+											console.log(
+												"instance===dialogOptions.__dialogInstance",
+												instance === dialogOptions.__dialogInstance
+											);
 											if (count++ % 2 === 0) {
-												instance.options.renderButtons = () => defineComponent({
-													template: `
+												instance.options.renderButtons = () =>
+													defineComponent({
+														template: `
 														<aButton @click="handleClick">${instance.cancelText}${count}</aButton>
 														<xGap l="10" />
 														<aButton @click="handleClick">count: ${count}</aButton>
 													`,
-													methods: {
-														handleClick() {
-															return instance.handleClickCancel();
+														methods: {
+															handleClick() {
+																return instance.handleClickCancel();
+															}
 														}
-													}
-												});
+													});
 											} else {
-												instance.options.renderButtons = instance.vDomDefaultButton;
+												instance.options.renderButtons =
+													instance.vDomDefaultButton;
 											}
 											/*options 本身不是响应式，需要在instance赋值再来触发*/
 											instance.options = { ...instance.options };
@@ -162,7 +166,7 @@ export default {
 											</div>
 										</div>`
 								}),
-								renderButtons: (dialogInstance) => {
+								renderButtons: dialogInstance => {
 									return dialogInstance.vDomDefaultButton;
 								},
 								maxmin: true,

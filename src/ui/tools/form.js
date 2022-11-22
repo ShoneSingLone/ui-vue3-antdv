@@ -12,7 +12,7 @@ export const pickValueFrom = configs => {
 };
 
 /*重置reactive数据*/
-export const resetState_Value = (state, initState) => {
+export const resetValueOf = (state, initState) => {
 	_.each(initState, (value, prop) => {
 		state[prop] = JSON.parse(JSON.stringify(value));
 	});

@@ -54,7 +54,7 @@ import xView from "./xView/xView.vue";
 import xDataGrid from "./xDataGrid/xDataGrid.vue";
 import xDataGridToolbar from "./xDataGrid/xDataGridToolbar.vue";
 import xCellLabel from "./xDataGrid/xCellLabel.vue";
-import xPagination from "./xDataGrid/xPagination.vue";
+import { xPagination } from "./xDataGrid/xPagination";
 import xColFilter from "./xDataGrid/xColFilter.vue";
 import { installUIDialogComponent } from "./xSingle/dialog/dialog";
 import { _ as mylodash } from "./loadCommonUtil.js";
@@ -81,7 +81,7 @@ import { defItem, vModel, antColKey } from "./xForm/common.jsx";
 import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
 import { setDocumentTitle, setCSSVariables } from "./tools/dom.js";
 import { lStorage } from "./tools/storage.js";
-import { pickValueFrom, resetState_Value } from "./tools/form.js";
+import { pickValueFrom, resetValueOf } from "./tools/form.js";
 import { UI } from "./UI";
 
 /* my-private-ui-component */
@@ -173,7 +173,7 @@ export { defItem as defItem };
 export { vModel as vModel };
 export { antColKey as antColKey };
 export { pickValueFrom as pickValueFrom };
-export { resetState_Value as resetState_Value };
+export { resetValueOf as resetValueOf };
 
 export const VentoseUIWithInstall = {
 	install: (app, options /* {appPlugins,dependState} */) => {

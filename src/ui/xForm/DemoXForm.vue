@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { h } from "vue";
 import {
 	defCol,
 	defColActions,
@@ -41,7 +42,8 @@ import {
 	validateForm,
 	AllWasWell,
 	pickValueFrom,
-	FormRules
+	FormRules,
+	VNodeCollection
 } from "@ventose/ui";
 import { DemoXFormWithForm } from "./DemoXFormWithForm.tsx";
 
@@ -67,6 +69,26 @@ export default {
 			}),
 			...defItem({
 				label: "withLabelProperty",
+				prop: "withLabelProperty",
+				placeholder: "Input",
+				allowClear: true,
+				rules: [FormRules.required()]
+			}),
+			...defItem({
+				labelVNodeRender: VNodeCollection.labelTips(
+					h(
+						"ul",
+						null,
+						[
+							$t(`只能由英文字母(区分大小写)、数字和特殊字符@.\\_-组成`).label,
+							$t(`不能以"op_svc"、"paas_op"或\\开头`).label,
+							$t(`不能以\\结尾`).label,
+							$t(`不能命名为"admin"、"power_user"或"guest"`).label,
+							$t(`长度范围是4到32位`).label
+						].map(content => h("li", null, content))
+					)
+				),
+				label: $t("label使用Tips").label,
 				prop: "withLabelProperty",
 				placeholder: "Input",
 				allowClear: true,
@@ -130,7 +152,7 @@ formData: {
 \`\`\`
 `,
 			tips2: `### 只使用configs绑定数据
->必须有**value**属性		
+>必须有**value**属性
 \`\`\`js
 <xItem :configs="xForm.select" class="flex1" />
 /* 必须有value属性 */

@@ -5,7 +5,7 @@
 				{{ item.label }}
 			</option>
 		</select>
-		<div class="markdown-wrapper_description" v-html="html"></div>
+		<div class="markdown-wrapper_description mt10" v-html="html"></div>
 	</div>
 </template>
 <script>
@@ -67,18 +67,28 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 .markdown-wrapper {
 	position: relative;
-}
-.markdown-theme {
-	position: absolute;
-	right: 0;
-	top: 0;
-	z-index: 1;
-}
+	.markdown-theme {
+		display: none;
+		position: absolute;
+		right: 0;
+		top: 0;
+		z-index: 1;
+	}
 
-.markdown-wrapper_description {
-	position: relative;
+	&:hover {
+		.markdown-theme {
+			display: block;
+		}
+	}
+
+	.markdown-wrapper_description {
+		position: relative;
+		code.hljs.language-js {
+			border-radius: 6px;
+		}
+	}
 }
 </style>

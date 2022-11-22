@@ -1,5 +1,4 @@
 //@ts-nocheck
-
 import { t_dialogOptions } from "./xSingle/dialog/dialog";
 import { State_UI } from "./State_UI";
 import layer from "./xSingle/layer/layer";
@@ -7,7 +6,8 @@ import {
 	Modal,
 	/* global */
 	message,
-	notification
+	notification,
+	ModalFuncProps
 } from "ant-design-vue";
 import _ from "lodash";
 import $ from "jquery";
@@ -53,7 +53,7 @@ const useModel = type => {
 	};
 };
 
-layer.loading = function(indexDelete) {
+layer.loading = function (indexDelete) {
 	this.loading.count = this.loading.count || 1;
 	this.loading.deep = this.loading.deep || new Set();
 	$("body").trigger("click");
@@ -86,23 +86,11 @@ export const UI = {
 		info: useModel("info"),
 		error: useModel("error"),
 		warning: useModel("warning"),
-		confirm({ title = "", content = "" }) {
-			return new Promise((resolve, reject) => {
-				Modal.confirm({
-					title,
-					icon: <ExclamationCircleOutlined />,
-					content: <div>{content}</div>,
-					onOk() {
-						resolve("ok");
-					},
-					onCancel() {
-						reject();
-					},
-					okText: State_UI.$t("确定").label,
-					cancelText: State_UI.$t("取消").label,
-					class: "test"
-				});
-			});
+		confirm: (options: ModalFuncProps) => {
+			options.okText = options.okText || State_UI.$t("确定").label;
+			options.cancelText = options.cancelText || State_UI.$t("取消").label;
+
+			Modal.confirm.call(Modal, options)
 		},
 		delete({ title, content } = {}) {
 			title = title || State_UI.$t("删除").label;
