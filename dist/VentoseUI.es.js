@@ -545,12 +545,13 @@ html #layuicss-layer {
   border-radius: 2px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   background-color: #000;
-  color: #fff;
+  color: #ffffff;
 }
 .layui-layer-tips .layui-layer-close {
   right: -2px;
   top: -1px;
 }
+/* \u4E09\u89D2\u57FA\u672C\u4F4D\u7F6E */
 .layui-layer-tips i.layui-layer-TipsG {
   position: absolute;
   width: 0;
@@ -756,10 +757,10 @@ html #layuicss-layer {
 @keyframes layer-bounceOut {
   100% {
     opacity: 0;
-    transform: scale(0.7);
+    transform: scale(0.9);
   }
   30% {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
   0% {
     transform: scale(1);
@@ -768,7 +769,7 @@ html #layuicss-layer {
 .layer-anim-close {
   animation-name: layer-bounceOut;
   animation-fill-mode: both;
-  animation-duration: 0.2s;
+  animation-duration: 0.3s;
 }
 @media screen and (max-width: 1100px) {
   .layui-layer-iframe {
@@ -66250,7 +66251,7 @@ $$1(document).on("mouseenter.uiPopver", "[data-follow-id]", function(event) {
   let app;
   const tipsContent = mylodash.isPlainObject(options.content) ? `<div id="${followId}_content">.</div>` : options.content;
   const popoverIndex = layer.tips(tipsContent, `#${followId}`, {
-    tips: [layer.UP, "#0FA6D8"],
+    tips: [layer.UP, "#000"],
     time: 1e3 * 60 * 10,
     success(indexPanel, layerIndex) {
       try {

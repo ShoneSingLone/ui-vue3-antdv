@@ -1,5 +1,11 @@
 <template>
-	<xButton :configs="configs.btn.modifyIP" />
+
+	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<mkit :md="md_vUiPopover" />
 	<xGap t="10" />
 	<xButton :configs="configs.btn.noBtn" />
 	<xGap t="10" />
@@ -36,6 +42,12 @@ async function log() {
 export default {
 	data() {
 		return {
+			md_vUiPopover: `### 使用v-uiPopover
+\`\`\`js
+/* 一般按钮 hover会有一个tips*/
+<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+\`\`\`
+`,
 			configs: {
 				btn: {
 					modifyIP: {
@@ -188,4 +200,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>

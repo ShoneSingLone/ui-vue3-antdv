@@ -85,7 +85,7 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 		? `<div id="${followId}_content">.</div>`
 		: options.content;
 	const popoverIndex = layer.tips(tipsContent, `#${followId}`, {
-		tips: [layer.UP, "#0FA6D8"],
+		tips: [layer.UP, "#000"],
 		/*hover 不允许 同时多个 tips出现*/
 		/*tipsMore: false,*/
 		time: 1000 * 60 * 10,
