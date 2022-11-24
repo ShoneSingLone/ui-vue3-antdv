@@ -1,5 +1,6 @@
 <template>
 	<aCard>
+		{{ valueFromConfigs }}
 		<xButton :configs="configsValidBtn" />
 		<mkit :md="tips1" />
 		<span class="mr10">{{ formData.inputValue }}</span>
@@ -9,6 +10,11 @@
 			v-model="formData.inputValue" />
 		<mkit :md="tips2" />
 
+		<div class="flex middle mt10">
+			<span class="mr10">{{ xForm.slots.value }}</span>
+			<xItem :configs="xForm.slots" class="flex1" />
+			<span class="mr10">{{ xForm.slotsAddonBefore.value }}</span>
+		</div>
 		<div class="flex middle mt10">
 			<span class="mr10">{{ xForm.select.value }}</span>
 			<xItem :configs="xForm.select" class="flex1" />
@@ -25,7 +31,7 @@
 </template>
 
 <script>
-import { h } from "vue";
+import { h, markRaw } from "vue";
 import {
 	defCol,
 	defColActions,
@@ -43,9 +49,11 @@ import {
 	AllWasWell,
 	pickValueFrom,
 	FormRules,
-	VNodeCollection
+	VNodeCollection,
+	components
 } from "@ventose/ui";
 import { DemoXFormWithForm } from "./DemoXFormWithForm.tsx";
+const { xItem } = components;
 
 const { $t } = State_UI;
 
@@ -56,9 +64,35 @@ export default {
 	methods: {
 		valid() {}
 	},
+	setup(props) {
+		return {
+			pickValueFrom
+		};
+	},
+	computed: {
+		valueFromConfigs() {
+			return JSON.stringify(pickValueFrom(this.xForm));
+		}
+	},
 	data() {
 		const vm = this;
 		const xForm = {
+			...defItem({
+				value: [],
+				prop: "slotsAddonBefore",
+				itemType: "Select",
+				options: [
+					{
+						label: $t("类型A").label,
+						value: "AAA"
+					},
+					{
+						label: $t("类型B").label,
+						value: "BBB"
+					}
+				],
+				style: { width: "80px" }
+			}),
 			...defItem({
 				prop: "search",
 				placeholder: "Input",
@@ -72,6 +106,22 @@ export default {
 				prop: "withLabelProperty",
 				placeholder: "Input",
 				allowClear: true,
+				rules: [FormRules.required()]
+			}),
+			...defItem({
+				label: "slots",
+				prop: "slots",
+				value: "slots的value",
+				placeholder: "Input",
+				allowClear: true,
+				once() {
+					const vDomSlotsSelector = h(xItem, {
+						configs: vm.xForm.slotsAddonBefore
+					});
+					this.slots = markRaw({
+						addonBefore: () => vDomSlotsSelector
+					});
+				},
 				rules: [FormRules.required()]
 			}),
 			...defItem({

@@ -23,13 +23,13 @@ const BTN_PRESET_MAP = {
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideUploadOutlined" />,
 		text: State_UI.$t("上传").label
 	}),
-	delete: (configs) => {
-		configs.type = "danger"
+	delete: configs => {
+		configs.type = "danger";
 		configs.ghost = true;
 		return {
 			icon: <xIcon class="x-button_icon-wrapper" icon="InsideDeleteOutlined" />,
 			text: State_UI.$t("删除").label
-		}
+		};
 	}
 };
 
@@ -121,7 +121,7 @@ export default defineComponent({
 			}
 		}
 	},
-	created() { },
+	created() {},
 	methods: {
 		async onClick() {
 			if (_.isFunction(this?.configs?.onClick)) {

@@ -6,10 +6,8 @@ import { setPagination } from "./common";
 import { lStorage } from "../tools/storage";
 import { State_UI } from "../State_UI";
 
-
 const PAGE_SIZE_OPTIONS = ["10", "20", "30"];
 const { page, size, total } = lStorage.appConfigs.pagination;
-
 
 export const xPagination = defineComponent({
 	name: "xPagination",
@@ -17,7 +15,7 @@ export const xPagination = defineComponent({
 		Pagination
 	},
 	setup() {
-		return { State_UI }
+		return { State_UI };
 	},
 	props: {
 		onPaginationChange: {
@@ -52,10 +50,10 @@ export const xPagination = defineComponent({
 	computed: {
 		i18nMessage() {
 			return {
-				"总条数": "总条数 {total}",
-				"条页": "{size}条/页",
+				总条数: "总条数 {total}",
+				条页: "{size}条/页",
 				...this.State_UI.i18nMessage
-			}
+			};
 		}
 	},
 	render() {
@@ -66,12 +64,18 @@ export const xPagination = defineComponent({
 				total={this.pagination[total]}
 				pageSize={this.pagination[size]}
 				show-size-changer
-				showTotal={total => this.$t("总条数", { total }, this.i18nMessage).label}
+				showTotal={total =>
+					this.$t("总条数", { total }, this.i18nMessage).label
+				}
 				onShowSizeChange={this.onShowSizeChange}
 				onChange={this.onShowSizeChange}>
 				{{
 					buildOptionText: props => {
-						return <span>{this.$t("条页", { size: props.value }, this.i18nMessage).label}</span>;
+						return (
+							<span>
+								{this.$t("条页", { size: props.value }, this.i18nMessage).label}
+							</span>
+						);
 					}
 				}}
 			</Pagination>

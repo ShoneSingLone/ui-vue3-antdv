@@ -50,7 +50,7 @@ import { defItem, vModel, antColKey } from "./xForm/common.jsx";
 import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
 import { setDocumentTitle, setCSSVariables } from "./tools/dom.js";
 import { lStorage } from "./tools/storage.js";
-import { pickValueFrom, resetValueOf } from "./tools/form.js";
+import { pickValueFrom, resetValueOf, setValueTo } from "./tools/form.js";
 import { UI } from "./UI";
 import { VNodeCollection } from "./tools/VNodeRender";
 
@@ -108,6 +108,7 @@ export { vModel as vModel };
 export { antColKey as antColKey };
 export { pickValueFrom as pickValueFrom };
 export { resetValueOf as resetValueOf };
+export { setValueTo as setValueTo };
 export { RegexFn as RegexFn };
 export { FormRules as FormRules };
 

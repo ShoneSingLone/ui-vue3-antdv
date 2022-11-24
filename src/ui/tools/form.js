@@ -4,8 +4,21 @@ export const pickValueFrom = configs => {
 	return _.reduce(
 		configs,
 		(target, config, prop) => {
-			target[prop] = JSON.parse(JSON.stringify(config.value));
+			try {
+				target[prop] = JSON.parse(JSON.stringify(config.value));
+			} catch (error) {
+				console.error(error);
+			}
 			return target;
+		},
+		{}
+	);
+};
+export const setValueTo = (configs, values) => {
+	return _.map(
+		values,
+		(value, prop) => {
+			configs[prop].value = value;
 		},
 		{}
 	);

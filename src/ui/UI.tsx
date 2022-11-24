@@ -90,7 +90,7 @@ export const UI = {
 			options.okText = options.okText || State_UI.$t("确定").label;
 			options.cancelText = options.cancelText || State_UI.$t("取消").label;
 
-			Modal.confirm.call(Modal, options)
+			Modal.confirm.call(Modal, options);
 		},
 		delete({ title, content } = {}) {
 			title = title || State_UI.$t("删除").label;
