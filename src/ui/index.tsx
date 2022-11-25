@@ -20,6 +20,7 @@ import xCellLabel from "./xDataGrid/xCellLabel.vue";
 import { xPagination } from "./xDataGrid/xPagination";
 import xColFilter from "./xDataGrid/xColFilter.vue";
 import xVirScroll from "./xSingle/xScroll/xVirScroll.vue";
+import { xVirTable } from "./xDataGrid/xVirTable";
 import { _ as mylodash } from "./loadCommonUtil.js";
 import { State_UI, Cpt_UI_locale } from "./State_UI";
 import dayjs from "dayjs";
@@ -70,7 +71,8 @@ const componentMyUI = {
 	xColFilter,
 	xPagination,
 	xCellLabel,
-	xVirScroll
+	xVirScroll,
+	xVirTable
 };
 
 export const components = {
