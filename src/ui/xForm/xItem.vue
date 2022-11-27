@@ -160,8 +160,7 @@ export default defineComponent({
 		componentSettings() {
 			const vm = this;
 			const configs = vm.configs;
-			configs.value =
-				configs.value !== undefined ? configs.value : vm.modelValue;
+			configs.value = configs.value !== undefined ? configs.value : vm.modelValue;
 			const property = {};
 			let slots = {};
 

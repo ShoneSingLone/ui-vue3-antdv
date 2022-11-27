@@ -1506,6 +1506,21 @@ div[id^="xDialog_"] {
   box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2), 0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12) !important;
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset006pxrgba(255, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 /*!
  * vue-material v1.0.0-beta-8
  * Made with <3 by marcosmoura 2018
@@ -1947,6 +1962,37 @@ button:focus {
 .md-button-content {
   position: relative;
   z-index: 2;
+}
+
+div[id^=xVirTable].xVirTable-wrapper {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  min-width: 500px;
+  height: 100%;
+  overflow: auto;
+}
+
+div[id^=xVirTable].xVirTable-wrapper .xVirTable-body-wrapper {
+  overflow: auto;
+  position: relative;
+}
+
+div[id^=xVirTable].xVirTable-wrapper .xVirTable-body-wrapper .xVirTable-body-item {
+  position: absolute;
+  width: 100%;
+}
+
+div[id^=xVirTable].xVirTable-wrapper [role=thead] [role=tr] [role=th] {
+  color: rgba(0, 0, 0, 0.8509803922);
+  font-weight: 500;
+  text-align: left;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.3s ease;
+  border-right: 1px solid #f0f0f0;
+  padding: 16px;
+  overflow-wrap: break-word;
 }/*!
  * 
  * ant-design-vue v3.2.13
@@ -64943,6 +64989,369 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   ], 512);
 }
 const xVirScroll = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
+const xVirTableTh = defineComponent({
+  props: ["column"],
+  computed: {
+    prop() {
+      var _a;
+      return (_a = this.column) == null ? void 0 : _a.prop;
+    },
+    label() {
+      var _a;
+      return (_a = this.column) == null ? void 0 : _a.label;
+    },
+    vDomCellContent() {
+      return this.label;
+    }
+  },
+  render() {
+    return createVNode("div", {
+      "role": "th",
+      "class": "xVirTable-cell",
+      "data-prop": this.prop
+    }, [this.vDomCellContent]);
+  }
+});
+const usefnObserveDomResize = () => {
+  function fnObserveDomResize($el, callback) {
+    this.resizeObserver = new ResizeObserver(callback);
+    this.resizeObserver.observe($el);
+  }
+  function fnUnobserveDomResize($el) {
+    this.resizeObserver.unobserve($el);
+  }
+  return {
+    fnObserveDomResize,
+    fnUnobserveDomResize
+  };
+};
+const xVirTableTd = defineComponent({
+  props: ["column", "data", "rowIndex"],
+  computed: {
+    prop() {
+      var _a;
+      return (_a = this.column) == null ? void 0 : _a.prop;
+    },
+    cell() {
+      return this.data[this.prop];
+    },
+    renderCell() {
+      var _a;
+      return ((_a = this.column) == null ? void 0 : _a.renderCell) || false;
+    },
+    vDomCellContent() {
+      if (this.renderCell) {
+        return this.renderCell({
+          record: this.data,
+          cell: this.cell,
+          index: this.rowIndex
+        });
+      }
+      return this.data[this.prop];
+    }
+  },
+  render() {
+    return createVNode("div", {
+      "role": "td",
+      "class": "xVirTable-cell",
+      "data-prop": this.prop
+    }, [this.vDomCellContent]);
+  }
+});
+const xVirTableBody = defineComponent({
+  props: ["dataSource", "columnOrder", "columns", "rowHeight"],
+  components: {
+    xVirTableTd
+  },
+  setup() {
+    const {
+      fnObserveDomResize,
+      fnUnobserveDomResize
+    } = usefnObserveDomResize();
+    return {
+      fnObserveDomResize,
+      fnUnobserveDomResize
+    };
+  },
+  data(vm) {
+    return {
+      isLoading: false,
+      perBlockHeight: 0,
+      perBlockRowCount: 0,
+      blockInViewCount: 0,
+      styleWrapperAll: {
+        height: 0
+      }
+    };
+  },
+  mounted() {
+    this.fnObserveDomResize(this.$refs.wrapper, () => {
+      this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
+    });
+  },
+  beforeUnmount() {
+    this.fnUnobserveDomResize(this.$refs.wrapper);
+  },
+  computed: {
+    positionBlock() {
+      return this.blockInViewCount % 3;
+    },
+    virs1() {
+      const position = Number(this.styleWrapper1.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      return this.dataSource.slice(start, end).map((i2, index2) => ({
+        ...i2,
+        index: start + 1 + index2
+      }));
+    },
+    virs2() {
+      const position = Number(this.styleWrapper2.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      return this.dataSource.slice(start, end).map((i2, index2) => ({
+        ...i2,
+        index: start + 1 + index2
+      }));
+    },
+    virs3() {
+      const position = Number(this.styleWrapper3.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      return this.dataSource.slice(start, end).map((i2, index2) => ({
+        ...i2,
+        index: start + 1 + index2
+      }));
+    },
+    styleWrapper1() {
+      if (this.positionBlock === 0) {
+        return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
+      }
+      if (this.positionBlock === 1) {
+        return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight}px)`;
+      }
+      return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight}px)`;
+    },
+    styleWrapper2() {
+      if (this.positionBlock === 0) {
+        return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight}px)`;
+      }
+      if (this.positionBlock === 1) {
+        return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
+      }
+      return `transform:translateY(${(this.blockInViewCount - 1) * this.perBlockHeight}px)`;
+    },
+    styleWrapper3() {
+      if (this.positionBlock === 0) {
+        return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight}px)`;
+      }
+      if (this.positionBlock === 1) {
+        return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight}px)`;
+      }
+      return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
+    },
+    vDomBodyTr1() {
+      return mylodash.map(this.virs1, (data2, rowIndex) => {
+        return createVNode("div", {
+          "role": "tr",
+          "class": "xVirTable-row flex horizon",
+          "data-row-key": rowIndex
+        }, [mylodash.map(this.columnOrder, (prop, index2) => {
+          return createVNode(xVirTableTd, {
+            "column": this.columns[prop],
+            "data-index": index2,
+            "rowIndex": rowIndex,
+            "data": data2
+          }, null);
+        })]);
+      });
+    },
+    vDomBodyTr2() {
+      return mylodash.map(this.virs2, (data2, rowIndex) => {
+        return createVNode("div", {
+          "role": "tr",
+          "class": "xVirTable-row flex horizon",
+          "data-row-key": rowIndex
+        }, [mylodash.map(this.columnOrder, (prop, index2) => {
+          return createVNode(xVirTableTd, {
+            "column": this.columns[prop],
+            "data-index": index2,
+            "rowIndex": rowIndex,
+            "data": data2
+          }, null);
+        })]);
+      });
+    },
+    vDomBodyTr3() {
+      return mylodash.map(this.virs3, (data2, rowIndex) => {
+        return createVNode("div", {
+          "role": "tr",
+          "class": "xVirTable-row flex horizon",
+          "data-row-key": rowIndex
+        }, [mylodash.map(this.columnOrder, (prop, index2) => {
+          return createVNode(xVirTableTd, {
+            "column": this.columns[prop],
+            "data-index": index2,
+            "rowIndex": rowIndex,
+            "data": data2
+          }, null);
+        })]);
+      });
+    },
+    vDomBody() {
+      return createVNode("div", {
+        "role": "tbody",
+        "class": "xVirTable-tbody"
+      }, [this.vDomBodyTr]);
+    }
+  },
+  methods: {
+    setPerBlockHeight: mylodash.debounce(function(viewportHeight) {
+      this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
+      this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
+    }, 33),
+    setTop: mylodash.debounce(function() {
+      if (this.$refs.refWrapper) {
+        this.$refs.refWrapper.scrollTo({
+          top: this.top,
+          behavior: "smooth"
+        });
+      }
+    }, 1e3),
+    updateTop(event) {
+      if (event) {
+        const top = event.target.scrollTop;
+        this.blockInViewCount = Math.floor(top / this.perBlockHeight);
+        this.$emit("update:top", top);
+      }
+    },
+    setHeight() {
+      const height = this.dataSource.length * this.rowHeight;
+      this.styleWrapperAll.height = `${height}px`;
+      this.$emit("update:scrollHeight", height);
+    }
+  },
+  watch: {
+    top() {
+      this.setTop();
+    },
+    "allItems.length": {
+      immediate: true,
+      handler() {
+        this.updateTop(false);
+        this.setHeight();
+      }
+    }
+  },
+  render() {
+    return createVNode("div", {
+      "role": "table",
+      "class": "xVirTable-body-wrapper flex1",
+      "ref": "wrapper",
+      "onScroll": this.updateTop
+    }, [createVNode("div", {
+      "style": this.styleWrapperAll
+    }, [createVNode("div", {
+      "class": "xVirTable-body-item item1",
+      "style": this.styleWrapper1
+    }, [this.vDomBodyTr1]), createVNode("div", {
+      "class": "xVirTable-body-item item2",
+      "style": this.styleWrapper2
+    }, [this.vDomBodyTr2]), createVNode("div", {
+      "class": "xVirTable-body-item item3",
+      "style": this.styleWrapper3
+    }, [this.vDomBodyTr3])])]);
+  }
+});
+const xVirTable = defineComponent({
+  props: ["configs"],
+  components: {
+    xVirTableTh,
+    xVirTableBody
+  },
+  mounted() {
+    this.initStyle();
+  },
+  computed: {
+    xVirTableId() {
+      return `xVirTableId_${this._.uid}`;
+    },
+    columnOrder() {
+      var _a, _b, _c;
+      if ((_a = this.configs) == null ? void 0 : _a.columnOrder) {
+        return (_b = this.configs) == null ? void 0 : _b.columnOrder;
+      }
+      return Object.keys(((_c = this.configs) == null ? void 0 : _c.columns) || {});
+    },
+    columnWidthArray() {
+      return mylodash.map(this.columnOrder, (prop) => {
+        return {
+          width: "100px"
+        };
+      });
+    },
+    vDomThead() {
+      return createVNode("div", {
+        "role": "thead",
+        "class": "xVirTable-thead"
+      }, [createVNode("div", {
+        "role": "tr",
+        "class": "flex horizon"
+      }, [mylodash.map(this.columnOrder, (prop, index2) => {
+        var _a;
+        const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
+        return createVNode(xVirTableTh, {
+          "column": column,
+          "data-index": index2,
+          "key": prop
+        }, null);
+      })])]);
+    },
+    vDomMainTable() {
+      var _a;
+      return createVNode("div", {
+        "id": this.xVirTableId,
+        "class": "xVirTable-wrapper flex vertical"
+      }, [createVNode("div", {
+        "role": "table",
+        "class": "xVirTable-header-wrapper",
+        "style": "padding-right: 6px;"
+      }, [this.vDomThead]), createVNode(xVirTableBody, {
+        "dataSource": this.configs.dataSource,
+        "columnOrder": this.columnOrder,
+        "columns": (_a = this.configs) == null ? void 0 : _a.columns,
+        "rowHeight": this.configs.rowHeight
+      }, null)]);
+    },
+    styleContent() {
+      return [
+        `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden; }`,
+        `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`
+      ].join("\n");
+    }
+  },
+  watch: {
+    styleContent() {
+      this.updateStyle(this.styleContent);
+    }
+  },
+  methods: {
+    initStyle() {
+      const $form = $$1(`#${this.xVirTableId}`);
+      const $style = $$1("<style/>", {
+        id: `style_${this.xVirTableId}`
+      }).append(this.styleContent);
+      $form.prepend($style);
+    },
+    updateStyle(styleContent) {
+      const $style = $$1(`#style_${this.xVirTableId}`);
+      $style.html(styleContent);
+    }
+  },
+  render() {
+    return this.vDomMainTable;
+  }
+});
 const {
   $t
 } = State_UI;
@@ -66769,7 +67178,8 @@ const componentMyUI = {
   xColFilter,
   xPagination,
   xCellLabel,
-  xVirScroll
+  xVirScroll,
+  xVirTable
 };
 const components = {
   ...componentMyUI

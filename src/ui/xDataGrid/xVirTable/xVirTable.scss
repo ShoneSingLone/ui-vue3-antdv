@@ -1,8 +1,25 @@
-[id^="xVirTable"] {
-	.xVirTable-wrapper{
+div[id^="xVirTable"].xVirTable-wrapper {
+		width:100%;
+		display: flex;
+		flex-flow: column nowrap;
 		min-width: 500px;
+		height: 100%;
 		overflow: auto;
-	}
+
+		.xVirTable-body-wrapper{
+			overflow: auto;
+			position: relative;
+			.xVirTable-body-item {
+				// &.item1{ outline: 1px solid red; }
+				// &.item2{ outline: 1px solid green; }
+				// &.item3{ outline: 1px solid blue; }
+				position: absolute;
+				width: 100%;
+			}
+		}
+
+
+
 	[role="thead"] {
 		[role="tr"] {
 			[role="th"] {
@@ -20,3 +37,5 @@
 		}
 	}
 }
+
+
