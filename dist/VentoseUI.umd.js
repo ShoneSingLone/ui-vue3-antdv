@@ -48632,7 +48632,14 @@ div[id^=lazy-svg_] {
     }
     return mylodash.isOn(key2) || mylodash.isModelListener(key2);
   };
-  mylodash.isArrayFill = (arr) => mylodash.isArray(arr) && arr.length > 0;
+  mylodash.isArrayFill = (arr) => {
+    if (Object.prototype.toString.call(arr) == "[object Array]") {
+      if (arr.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  };
   mylodash.isObjectFill = (obj) => mylodash.isPlainObject(obj) && Object.keys(obj).length > 0;
   mylodash.safeFirst = (arr, fnCheck) => {
     fnCheck = fnCheck || ((value) => mylodash.isInput(value));
@@ -48678,12 +48685,21 @@ div[id^=lazy-svg_] {
     }
   };
   mylodash.isInput = (val) => {
-    if (val)
+    if (val === void 0) {
+      return false;
+    }
+    val = JSON.parse(JSON.stringify(val));
+    if (val === 0) {
       return true;
-    if (val === 0)
+    }
+    if (val === false) {
       return true;
-    if (val === false)
+    }
+    if (mylodash.isArray(val)) {
+      return val.length > 0;
+    } else if (val) {
       return true;
+    }
     return false;
   };
   mylodash.is$Selected = ($ele) => $ele && $ele.length > 0;
@@ -65304,11 +65320,23 @@ return (${scfObjSourceCode})(argVue,argPayload);
         return Object.keys(((_c = this.configs) == null ? void 0 : _c.columns) || {});
       },
       columnWidthArray() {
-        return mylodash.map(this.columnOrder, (prop) => {
-          return {
-            width: "100px"
-          };
-        });
+        const _columnWidthArray = mylodash.reduce(this.columnOrder, (columnStyle, prop) => {
+          const configsColumn = this.configs.columns[prop] || {};
+          const {
+            width,
+            minWidth
+          } = configsColumn;
+          if (width) {
+            columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; }`);
+            columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; }`);
+          }
+          if (minWidth) {
+            columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ min-width:${minWidth}; }`);
+            columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ min-width:${minWidth}; }`);
+          }
+          return columnStyle;
+        }, []);
+        return _columnWidthArray;
       },
       vDomThead() {
         return vue.createVNode("div", {
@@ -65344,10 +65372,12 @@ return (${scfObjSourceCode})(argVue,argPayload);
         }, null)]);
       },
       styleContent() {
-        return [
-          `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`,
-          `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden;height:${this.rowHeight}px;}`
-        ].join("\n");
+        const allStyleArray = [
+          `#${this.xVirTableId} div[role=tr] >div{ }`,
+          `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
+          `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
+        ].concat(this.columnWidthArray);
+        return allStyleArray.join("\n");
       }
     },
     watch: {

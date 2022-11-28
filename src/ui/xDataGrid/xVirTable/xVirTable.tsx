@@ -33,9 +33,20 @@ export const xVirTable = defineComponent({
 			return Object.keys(this.configs?.columns || {});
 		},
 		columnWidthArray() {
-			return _.map(this.columnOrder, (prop: any) => {
-				return { width: "100px" };
-			});
+			const _columnWidthArray = _.reduce(this.columnOrder, (columnStyle, prop: any) => {
+				const configsColumn = this.configs.columns[prop] || {};
+				const { width, minWidth } = configsColumn;
+				if (width) {
+					columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; }`)
+					columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; }`)
+				}
+				if (minWidth) {
+					columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ min-width:${minWidth}; }`)
+					columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ min-width:${minWidth}; }`)
+				}
+				return columnStyle;
+			}, []);
+			return _columnWidthArray;
 		},
 		vDomThead() {
 			return (
@@ -69,11 +80,13 @@ export const xVirTable = defineComponent({
 			);
 		},
 		styleContent() {
-			return [
+			const allStyleArray = [
 				// `#${this.xVirTableId} *{ outline:1px solid red; }`,
-				`#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`,
-				`#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden;height:${this.rowHeight}px;}`
-			].join("\n");
+				`#${this.xVirTableId} div[role=tr] >div{ }`,
+				`#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
+				`#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
+			].concat(this.columnWidthArray);
+			return allStyleArray.join("\n");
 		}
 	},
 	watch: {
