@@ -1,41 +1,37 @@
 div[id^="xVirTable"].xVirTable-wrapper {
-		width:100%;
-		display: flex;
-		flex-flow: column nowrap;
-		min-width: 500px;
-		height: 100%;
+	width: 100%;
+	display: flex;
+	flex-flow: column nowrap;
+	min-width: 500px;
+	height: 100%;
+	overflow: auto;
+
+	.xVirTable-body-wrapper {
 		overflow: auto;
-
-		.xVirTable-body-wrapper{
-			overflow: auto;
-			position: relative;
-			.xVirTable-body-item {
-				// &.item1{ outline: 1px solid red; }
-				// &.item2{ outline: 1px solid green; }
-				// &.item3{ outline: 1px solid blue; }
-				position: absolute;
-				width: 100%;
-			}
+		position: relative;
+		.xVirTable-body-item {
+			// &.item1{ outline: 1px solid red; }
+			// &.item2{ outline: 1px solid green; }
+			// &.item3{ outline: 1px solid blue; }
+			position: absolute;
+			width: 100%;
 		}
-
-
+	}
 
 	[role="thead"] {
 		[role="tr"] {
 			[role="th"] {
-                color: #000000d9;
-                font-weight: 500;
-                text-align: left;
-                background: #fafafa;
-                border-bottom: 1px solid #f0f0f0;
-                transition: background .3s ease;
+				color: #000000d9;
+				font-weight: 500;
+				text-align: left;
+				background: #fafafa;
+				border-bottom: 1px solid #f0f0f0;
+				transition: background 0.3s ease;
 
-                border-right: 1px solid #f0f0f0;
+				border-right: 1px solid #f0f0f0;
 				padding: 16px;
 				overflow-wrap: break-word;
 			}
 		}
 	}
 }
-
-

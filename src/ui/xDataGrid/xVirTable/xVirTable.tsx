@@ -5,6 +5,9 @@ import $ from "jquery";
 import { xVirTableTh } from "./xVirTableTh";
 import { xVirTableBody } from "./xVirTableBody";
 
+/**
+ * 展示列的顺序
+ */
 export const xVirTable = defineComponent({
 	props: ["configs"],
 	components: {
@@ -22,6 +25,7 @@ export const xVirTable = defineComponent({
 		xVirTableId(): string {
 			return `xVirTableId_${this._.uid}`;
 		},
+		/* 展示列的顺序 */
 		columnOrder() {
 			if (this.configs?.columnOrder) {
 				return this.configs?.columnOrder;
@@ -39,9 +43,7 @@ export const xVirTable = defineComponent({
 					<div role="tr" class="flex horizon">
 						{_.map(this.columnOrder, (prop: string, index: number) => {
 							const column = this.configs?.columns[prop];
-							return (
-								<xVirTableTh column={column} data-index={index} key={prop} />
-							);
+							return <xVirTableTh column={column} index={index} key={prop} />;
 						})}
 					</div>
 				</div>
@@ -69,8 +71,8 @@ export const xVirTable = defineComponent({
 		styleContent() {
 			return [
 				// `#${this.xVirTableId} *{ outline:1px solid red; }`,
-				`#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden;height:${this.rowHeight}px; }`,
-				`#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`
+				`#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`,
+				`#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden;height:${this.rowHeight}px;}`
 			].join("\n");
 		}
 	},

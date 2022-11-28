@@ -64990,7 +64990,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const xVirScroll = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
 const xVirTableTh = defineComponent({
-  props: ["column"],
+  props: ["column", "index"],
   computed: {
     prop() {
       var _a;
@@ -65000,7 +65000,18 @@ const xVirTableTh = defineComponent({
       var _a;
       return (_a = this.column) == null ? void 0 : _a.label;
     },
+    renderHeader() {
+      var _a;
+      return ((_a = this.column) == null ? void 0 : _a.renderHeader) || false;
+    },
     vDomCellContent() {
+      if (this.renderHeader) {
+        return this.renderHeader({
+          label: this.label,
+          prop: this.prop,
+          index: this.index
+        });
+      }
       return this.label;
     }
   },
@@ -65008,7 +65019,8 @@ const xVirTableTh = defineComponent({
     return createVNode("div", {
       "role": "th",
       "class": "xVirTable-cell",
-      "data-prop": this.prop
+      "data-prop": this.prop,
+      "data-index": this.index
     }, [this.vDomCellContent]);
   }
 });
@@ -65235,7 +65247,7 @@ const xVirTableBody = defineComponent({
     top() {
       this.setTop();
     },
-    "allItems.length": {
+    "dataSource.length": {
       immediate: true,
       handler() {
         this.updateTop(false);
@@ -65273,6 +65285,10 @@ const xVirTable = defineComponent({
     this.initStyle();
   },
   computed: {
+    rowHeight() {
+      var _a;
+      return ((_a = this.configs) == null ? void 0 : _a.rowHeight) || 32;
+    },
     xVirTableId() {
       return `xVirTableId_${this._.uid}`;
     },
@@ -65302,7 +65318,7 @@ const xVirTable = defineComponent({
         const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
         return createVNode(xVirTableTh, {
           "column": column,
-          "data-index": index2,
+          "index": index2,
           "key": prop
         }, null);
       })])]);
@@ -65320,13 +65336,13 @@ const xVirTable = defineComponent({
         "dataSource": this.configs.dataSource,
         "columnOrder": this.columnOrder,
         "columns": (_a = this.configs) == null ? void 0 : _a.columns,
-        "rowHeight": this.configs.rowHeight
+        "rowHeight": this.rowHeight
       }, null)]);
     },
     styleContent() {
       return [
-        `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden; }`,
-        `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`
+        `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`,
+        `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden;height:${this.rowHeight}px;}`
       ].join("\n");
     }
   },

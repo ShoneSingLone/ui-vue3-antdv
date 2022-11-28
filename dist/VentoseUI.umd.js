@@ -64994,7 +64994,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
   }
   const xVirScroll = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
   const xVirTableTh = vue.defineComponent({
-    props: ["column"],
+    props: ["column", "index"],
     computed: {
       prop() {
         var _a;
@@ -65004,7 +65004,18 @@ return (${scfObjSourceCode})(argVue,argPayload);
         var _a;
         return (_a = this.column) == null ? void 0 : _a.label;
       },
+      renderHeader() {
+        var _a;
+        return ((_a = this.column) == null ? void 0 : _a.renderHeader) || false;
+      },
       vDomCellContent() {
+        if (this.renderHeader) {
+          return this.renderHeader({
+            label: this.label,
+            prop: this.prop,
+            index: this.index
+          });
+        }
         return this.label;
       }
     },
@@ -65012,7 +65023,8 @@ return (${scfObjSourceCode})(argVue,argPayload);
       return vue.createVNode("div", {
         "role": "th",
         "class": "xVirTable-cell",
-        "data-prop": this.prop
+        "data-prop": this.prop,
+        "data-index": this.index
       }, [this.vDomCellContent]);
     }
   });
@@ -65239,7 +65251,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
       top() {
         this.setTop();
       },
-      "allItems.length": {
+      "dataSource.length": {
         immediate: true,
         handler() {
           this.updateTop(false);
@@ -65277,6 +65289,10 @@ return (${scfObjSourceCode})(argVue,argPayload);
       this.initStyle();
     },
     computed: {
+      rowHeight() {
+        var _a;
+        return ((_a = this.configs) == null ? void 0 : _a.rowHeight) || 32;
+      },
       xVirTableId() {
         return `xVirTableId_${this._.uid}`;
       },
@@ -65306,7 +65322,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
           const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
           return vue.createVNode(xVirTableTh, {
             "column": column,
-            "data-index": index2,
+            "index": index2,
             "key": prop
           }, null);
         })])]);
@@ -65324,13 +65340,13 @@ return (${scfObjSourceCode})(argVue,argPayload);
           "dataSource": this.configs.dataSource,
           "columnOrder": this.columnOrder,
           "columns": (_a = this.configs) == null ? void 0 : _a.columns,
-          "rowHeight": this.configs.rowHeight
+          "rowHeight": this.rowHeight
         }, null)]);
       },
       styleContent() {
         return [
-          `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden; }`,
-          `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`
+          `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`,
+          `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden;height:${this.rowHeight}px;}`
         ].join("\n");
       }
     },
