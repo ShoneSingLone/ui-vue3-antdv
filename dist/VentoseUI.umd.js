@@ -65239,7 +65239,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
       top() {
         this.setTop();
       },
-      "allItems.length": {
+      "dataSource.length": {
         immediate: true,
         handler() {
           this.updateTop(false);
@@ -65277,6 +65277,10 @@ return (${scfObjSourceCode})(argVue,argPayload);
       this.initStyle();
     },
     computed: {
+      rowHeight() {
+        var _a;
+        return ((_a = this.configs) == null ? void 0 : _a.rowHeight) || 32;
+      },
       xVirTableId() {
         return `xVirTableId_${this._.uid}`;
       },
@@ -65288,11 +65292,18 @@ return (${scfObjSourceCode})(argVue,argPayload);
         return Object.keys(((_c = this.configs) == null ? void 0 : _c.columns) || {});
       },
       columnWidthArray() {
-        return mylodash.map(this.columnOrder, (prop) => {
-          return {
-            width: "100px"
-          };
-        });
+        const _columnWidthArray = mylodash.reduce(this.columnOrder, (columnStyle, prop) => {
+          const configsColumn = this.configs.columns[prop] || {};
+          const {
+            width
+          } = configsColumn;
+          if (width) {
+            columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; }`);
+            columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; }`);
+          }
+          return columnStyle;
+        }, []);
+        return _columnWidthArray;
       },
       vDomThead() {
         return vue.createVNode("div", {
@@ -65324,14 +65335,16 @@ return (${scfObjSourceCode})(argVue,argPayload);
           "dataSource": this.configs.dataSource,
           "columnOrder": this.columnOrder,
           "columns": (_a = this.configs) == null ? void 0 : _a.columns,
-          "rowHeight": this.configs.rowHeight
+          "rowHeight": this.rowHeight
         }, null)]);
       },
       styleContent() {
-        return [
-          `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;flex:1;overflow:hidden; }`,
-          `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;flex:1;overflow:hidden; }`
-        ].join("\n");
+        const allStyleArray = [
+          `#${this.xVirTableId} div[role=tr] >div{ }`,
+          `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
+          `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
+        ].concat(this.columnWidthArray);
+        return allStyleArray.join("\n");
       }
     },
     watch: {

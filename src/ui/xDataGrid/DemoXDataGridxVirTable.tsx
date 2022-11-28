@@ -79,6 +79,7 @@ export const DemoXDataGridxVirTable = defineComponent({
 					...defCol({
 						prop: "category",
 						label: vm.$t("类别").label,
+						width: "100px",
 						renderCell({ record }) {
 							if (record.tenant) {
 								return vm.$t("租户").label;
@@ -92,7 +93,9 @@ export const DemoXDataGridxVirTable = defineComponent({
 					...defCol({
 						prop: "upperName",
 						isShow: false,
-						label: vm.$t("上级名称").label
+						label: vm.$t("上级名称").label,
+						width: "160px",
+						minWidth: "160px",
 					}),
 					...defCol({
 						prop: "startDate",
