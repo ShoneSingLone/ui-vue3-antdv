@@ -1993,6 +1993,22 @@ div[id^=xVirTable].xVirTable-wrapper [role=thead] [role=tr] [role=th] {
   border-right: 1px solid #f0f0f0;
   padding: 16px;
   overflow-wrap: break-word;
+}
+
+div.xVirTable-row > div.xVirTable-cell {
+  position: relative;
+}
+
+div.xVirTable-row > div.xVirTable-cell::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0px;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  border-right: 1px solid #f0f0f0;
 }/*!
  * 
  * ant-design-vue v3.2.13
@@ -65319,16 +65335,11 @@ const xVirTable = defineComponent({
       const _columnWidthArray = mylodash.reduce(this.columnOrder, (columnStyle, prop) => {
         const configsColumn = this.configs.columns[prop] || {};
         const {
-          width,
-          minWidth
+          width
         } = configsColumn;
         if (width) {
-          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; }`);
-          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; }`);
-        }
-        if (minWidth) {
-          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ min-width:${minWidth}; }`);
-          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ min-width:${minWidth}; }`);
+          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; min-width:${width}; max-width:${width}; }`);
+          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; min-width:${width}; max-width:${width}; }`);
         }
         return columnStyle;
       }, []);
@@ -65369,7 +65380,7 @@ const xVirTable = defineComponent({
     },
     styleContent() {
       const allStyleArray = [
-        `#${this.xVirTableId} div[role=tr] >div{ }`,
+        `#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
         `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
         `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
       ].concat(this.columnWidthArray);

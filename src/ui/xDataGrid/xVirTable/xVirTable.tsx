@@ -37,21 +37,13 @@ export const xVirTable = defineComponent({
 				this.columnOrder,
 				(columnStyle, prop: any) => {
 					const configsColumn = this.configs.columns[prop] || {};
-					const { width, minWidth } = configsColumn;
+					const { width } = configsColumn;
 					if (width) {
 						columnStyle.push(
-							`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; }`
+							`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; min-width:${width}; max-width:${width}; }`
 						);
 						columnStyle.push(
-							`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; }`
-						);
-					}
-					if (minWidth) {
-						columnStyle.push(
-							`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ min-width:${minWidth}; }`
-						);
-						columnStyle.push(
-							`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ min-width:${minWidth}; }`
+							`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; min-width:${width}; max-width:${width}; }`
 						);
 					}
 					return columnStyle;
@@ -94,7 +86,7 @@ export const xVirTable = defineComponent({
 		styleContent() {
 			const allStyleArray = [
 				// `#${this.xVirTableId} *{ outline:1px solid red; }`,
-				`#${this.xVirTableId} div[role=tr] >div{ }`,
+				`#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
 				`#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
 				`#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
 			].concat(this.columnWidthArray);
