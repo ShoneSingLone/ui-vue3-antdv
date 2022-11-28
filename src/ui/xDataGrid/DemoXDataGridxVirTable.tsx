@@ -6,20 +6,21 @@ import { State_UI } from "../State_UI";
 import { defCol } from "./common";
 const { $t } = State_UI;
 
+const OPTIONS = [
+	{
+		label: $t("ACTIVATION").label,
+		value: "ACTIVATION"
+	},
+	{
+		label: $t("DOWN").label,
+		value: "DOWN"
+	}
+];
 const genConfigsStatus = (value: any) => ({
 	value,
 	prop: "configs_status",
 	itemType: "Select",
-	options: [
-		{
-			label: $t("类型A").label,
-			value: "AAA"
-		},
-		{
-			label: $t("类型B").label,
-			value: "BBB"
-		}
-	],
+	options: OPTIONS,
 	mode: "multiple",
 	maxTagCount: 1,
 	maxTagTextLength: 10,
@@ -29,13 +30,16 @@ const genConfigsStatus = (value: any) => ({
 export const DemoXDataGridxVirTable = defineComponent({
 	data(vm) {
 		return {
+			filter: {
+				status: ""
+			},
 			configs_xVirTable: {
 				rowHeight: 32,
 				dataSource: [...new Array(400000)].map((i, ii) => {
 					return {
 						name: "name" + ii,
 						status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",
-						select: ["AAA"],
+						select: ["ACTIVATION"],
 						category: "category" + ii,
 						upperName:
 							"category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" +
@@ -52,6 +56,19 @@ export const DemoXDataGridxVirTable = defineComponent({
 					...defCol({
 						prop: "status",
 						label: vm.$t("状态").label,
+						renderHeader({ label, index }) {
+							return (
+								<aSelect
+									value={vm.filter.status}
+									onChange={val => (vm.filter.status = val)}
+									mode="multiple"
+									style="width: 100%"
+									placeholder="类型"
+									max-tag-count={1}
+									options={OPTIONS}
+								/>
+							);
+						},
 						renderCell({ record, cell }) {
 							console.log(record.select);
 							record.configsStatus =

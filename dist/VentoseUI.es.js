@@ -48628,7 +48628,14 @@ mylodash.isListener = (key2) => {
   }
   return mylodash.isOn(key2) || mylodash.isModelListener(key2);
 };
-mylodash.isArrayFill = (arr) => mylodash.isArray(arr) && arr.length > 0;
+mylodash.isArrayFill = (arr) => {
+  if (Object.prototype.toString.call(arr) == "[object Array]") {
+    if (arr.length > 0) {
+      return true;
+    }
+  }
+  return false;
+};
 mylodash.isObjectFill = (obj) => mylodash.isPlainObject(obj) && Object.keys(obj).length > 0;
 mylodash.safeFirst = (arr, fnCheck) => {
   fnCheck = fnCheck || ((value) => mylodash.isInput(value));
@@ -48674,12 +48681,21 @@ mylodash.safeDate = function(val) {
   }
 };
 mylodash.isInput = (val) => {
-  if (val)
+  if (val === void 0) {
+    return false;
+  }
+  val = JSON.parse(JSON.stringify(val));
+  if (val === 0) {
     return true;
-  if (val === 0)
+  }
+  if (val === false) {
     return true;
-  if (val === false)
+  }
+  if (mylodash.isArray(val)) {
+    return val.length > 0;
+  } else if (val) {
     return true;
+  }
   return false;
 };
 mylodash.is$Selected = ($ele) => $ele && $ele.length > 0;
@@ -64990,7 +65006,7 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
 }
 const xVirScroll = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
 const xVirTableTh = defineComponent({
-  props: ["column"],
+  props: ["column", "index"],
   computed: {
     prop() {
       var _a;
@@ -65000,7 +65016,18 @@ const xVirTableTh = defineComponent({
       var _a;
       return (_a = this.column) == null ? void 0 : _a.label;
     },
+    renderHeader() {
+      var _a;
+      return ((_a = this.column) == null ? void 0 : _a.renderHeader) || false;
+    },
     vDomCellContent() {
+      if (this.renderHeader) {
+        return this.renderHeader({
+          label: this.label,
+          prop: this.prop,
+          index: this.index
+        });
+      }
       return this.label;
     }
   },
@@ -65008,7 +65035,8 @@ const xVirTableTh = defineComponent({
     return createVNode("div", {
       "role": "th",
       "class": "xVirTable-cell",
-      "data-prop": this.prop
+      "data-prop": this.prop,
+      "data-index": this.index
     }, [this.vDomCellContent]);
   }
 });
@@ -65291,11 +65319,16 @@ const xVirTable = defineComponent({
       const _columnWidthArray = mylodash.reduce(this.columnOrder, (columnStyle, prop) => {
         const configsColumn = this.configs.columns[prop] || {};
         const {
-          width
+          width,
+          minWidth
         } = configsColumn;
         if (width) {
           columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; }`);
           columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; }`);
+        }
+        if (minWidth) {
+          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ min-width:${minWidth}; }`);
+          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ min-width:${minWidth}; }`);
         }
         return columnStyle;
       }, []);
@@ -65313,7 +65346,7 @@ const xVirTable = defineComponent({
         const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
         return createVNode(xVirTableTh, {
           "column": column,
-          "data-index": index2,
+          "index": index2,
           "key": prop
         }, null);
       })])]);
