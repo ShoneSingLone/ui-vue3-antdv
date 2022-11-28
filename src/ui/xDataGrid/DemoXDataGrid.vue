@@ -42,7 +42,7 @@ export default {
 	data() {
 		return {
 			configs_table: defDataGridOption({
-				async queryTableList(params) { },
+				async queryTableList(params) {},
 				dataSource: [],
 				columns: {
 					...defCol({ prop: "name", label: $t("名称").label }),
@@ -107,7 +107,5 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
 >

@@ -29,19 +29,31 @@ export const xVirTable = defineComponent({
 			return Object.keys(this.configs?.columns || {});
 		},
 		columnWidthArray() {
-			const _columnWidthArray = _.reduce(this.columnOrder, (columnStyle, prop: any) => {
-				const configsColumn = this.configs.columns[prop] || {};
-				const { width, minWidth } = configsColumn;
-				if (width) {
-					columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; }`)
-					columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; }`)
-				}
-				if (minWidth) {
-					columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ min-width:${minWidth}; }`)
-					columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ min-width:${minWidth}; }`)
-				}
-				return columnStyle;
-			}, []);
+			const _columnWidthArray = _.reduce(
+				this.columnOrder,
+				(columnStyle, prop: any) => {
+					const configsColumn = this.configs.columns[prop] || {};
+					const { width, minWidth } = configsColumn;
+					if (width) {
+						columnStyle.push(
+							`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; }`
+						);
+						columnStyle.push(
+							`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; }`
+						);
+					}
+					if (minWidth) {
+						columnStyle.push(
+							`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ min-width:${minWidth}; }`
+						);
+						columnStyle.push(
+							`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ min-width:${minWidth}; }`
+						);
+					}
+					return columnStyle;
+				},
+				[]
+			);
 			return _columnWidthArray;
 		},
 		vDomThead() {

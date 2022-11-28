@@ -95,7 +95,7 @@ export const DemoXDataGridxVirTable = defineComponent({
 						isShow: false,
 						label: vm.$t("上级名称").label,
 						width: "160px",
-						minWidth: "160px",
+						minWidth: "160px"
 					}),
 					...defCol({
 						prop: "startDate",

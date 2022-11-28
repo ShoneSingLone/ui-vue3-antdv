@@ -1,10 +1,19 @@
 <template>
-
-	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
-	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
-	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
-	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
-	<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
 	<mkit :md="md_vUiPopover" />
 	<xGap t="10" />
 	<xButton :configs="configs.btn.noBtn" />
@@ -200,6 +209,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
