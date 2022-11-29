@@ -1995,6 +1995,20 @@ div[id^=xVirTable].xVirTable-wrapper [role=thead] [role=tr] [role=th] {
   overflow-wrap: break-word;
 }
 
+div[id^=xVirTable].xVirTable-wrapper [role=body] [role=tr] [role=td] {
+  padding: 0 8px;
+}
+
+div[id^=xVirTable].xVirTable-wrapper div.xVirSelected_inner_element.xVirSelected_inner_element_check[data-prop=xVirSelected] {
+  max-width: 30px;
+  min-width: 30px;
+  padding: 0;
+}
+
+div[id^=xVirTable].xVirTable-wrapper div.xVirSelected_inner_element.xVirSelected_inner_element_check[data-prop=xVirSelected] > label {
+  margin: auto;
+}
+
 div.xVirTable-row > div.xVirTable-cell {
   position: relative;
 }
@@ -30450,12 +30464,12 @@ var jquery = { exports: {} };
             };
           },
           "PSEUDO": function(pseudo, argument) {
-            var args, fn = Expr.pseudos[pseudo] || Expr.setFilters[pseudo.toLowerCase()] || Sizzle2.error("unsupported pseudo: " + pseudo);
+            var args2, fn = Expr.pseudos[pseudo] || Expr.setFilters[pseudo.toLowerCase()] || Sizzle2.error("unsupported pseudo: " + pseudo);
             if (fn[expando]) {
               return fn(argument);
             }
             if (fn.length > 1) {
-              args = [pseudo, pseudo, "", argument];
+              args2 = [pseudo, pseudo, "", argument];
               return Expr.setFilters.hasOwnProperty(pseudo.toLowerCase()) ? markFunction(function(seed2, matches2) {
                 var idx, matched = fn(seed2, argument), i3 = matched.length;
                 while (i3--) {
@@ -30463,7 +30477,7 @@ var jquery = { exports: {} };
                   seed2[idx] = !(matches2[idx] = matched[i3]);
                 }
               }) : function(elem) {
-                return fn(elem, 0, args);
+                return fn(elem, 0, args2);
               };
             }
             return fn;
@@ -31309,8 +31323,8 @@ var jquery = { exports: {} };
               firingIndex = list.length - 1;
               queue.push(memory);
             }
-            (function add(args) {
-              jQuery.each(args, function(_2, arg) {
+            (function add(args2) {
+              jQuery.each(args2, function(_2, arg) {
                 if (isFunction3(arg)) {
                   if (!options.unique || !self2.has(arg)) {
                     list.push(arg);
@@ -31365,11 +31379,11 @@ var jquery = { exports: {} };
         locked: function() {
           return !!locked;
         },
-        fireWith: function(context, args) {
+        fireWith: function(context, args2) {
           if (!locked) {
-            args = args || [];
-            args = [context, args.slice ? args.slice() : args];
-            queue.push(args);
+            args2 = args2 || [];
+            args2 = [context, args2.slice ? args2.slice() : args2];
+            queue.push(args2);
             if (!firing) {
               fire();
             }
@@ -31467,12 +31481,12 @@ var jquery = { exports: {} };
             var maxDepth = 0;
             function resolve(depth, deferred2, handler2, special) {
               return function() {
-                var that = this, args = arguments, mightThrow = function() {
+                var that = this, args2 = arguments, mightThrow = function() {
                   var returned, then;
                   if (depth < maxDepth) {
                     return;
                   }
-                  returned = handler2.apply(that, args);
+                  returned = handler2.apply(that, args2);
                   if (returned === deferred2.promise()) {
                     throw new TypeError("Thenable self-resolution");
                   }
@@ -31501,9 +31515,9 @@ var jquery = { exports: {} };
                   } else {
                     if (handler2 !== Identity) {
                       that = void 0;
-                      args = [returned];
+                      args2 = [returned];
                     }
-                    (special || deferred2.resolveWith)(that, args);
+                    (special || deferred2.resolveWith)(that, args2);
                   }
                 }, process2 = special ? mightThrow : function() {
                   try {
@@ -31518,9 +31532,9 @@ var jquery = { exports: {} };
                     if (depth + 1 >= maxDepth) {
                       if (handler2 !== Thrower) {
                         that = void 0;
-                        args = [e2];
+                        args2 = [e2];
                       }
-                      deferred2.rejectWith(that, args);
+                      deferred2.rejectWith(that, args2);
                     }
                   }
                 };
@@ -32376,10 +32390,10 @@ var jquery = { exports: {} };
         }
       },
       dispatch: function(nativeEvent) {
-        var i2, j2, ret, matched, handleObj, handlerQueue, args = new Array(arguments.length), event = jQuery.event.fix(nativeEvent), handlers = (dataPriv.get(this, "events") || /* @__PURE__ */ Object.create(null))[event.type] || [], special = jQuery.event.special[event.type] || {};
-        args[0] = event;
+        var i2, j2, ret, matched, handleObj, handlerQueue, args2 = new Array(arguments.length), event = jQuery.event.fix(nativeEvent), handlers = (dataPriv.get(this, "events") || /* @__PURE__ */ Object.create(null))[event.type] || [], special = jQuery.event.special[event.type] || {};
+        args2[0] = event;
         for (i2 = 1; i2 < arguments.length; i2++) {
-          args[i2] = arguments[i2];
+          args2[i2] = arguments[i2];
         }
         event.delegateTarget = this;
         if (special.preDispatch && special.preDispatch.call(this, event) === false) {
@@ -32394,7 +32408,7 @@ var jquery = { exports: {} };
             if (!event.rnamespace || handleObj.namespace === false || event.rnamespace.test(handleObj.namespace)) {
               event.handleObj = handleObj;
               event.data = handleObj.data;
-              ret = ((jQuery.event.special[handleObj.origType] || {}).handle || handleObj.handler).apply(matched.elem, args);
+              ret = ((jQuery.event.special[handleObj.origType] || {}).handle || handleObj.handler).apply(matched.elem, args2);
               if (ret !== void 0) {
                 if ((event.result = ret) === false) {
                   event.preventDefault();
@@ -32751,20 +32765,20 @@ var jquery = { exports: {} };
         dest.defaultValue = src.defaultValue;
       }
     }
-    function domManip(collection, args, callback, ignored) {
-      args = flat(args);
-      var fragment, first, scripts, hasScripts, node, doc, i2 = 0, l2 = collection.length, iNoClone = l2 - 1, value = args[0], valueIsFunction = isFunction3(value);
+    function domManip(collection, args2, callback, ignored) {
+      args2 = flat(args2);
+      var fragment, first, scripts, hasScripts, node, doc, i2 = 0, l2 = collection.length, iNoClone = l2 - 1, value = args2[0], valueIsFunction = isFunction3(value);
       if (valueIsFunction || l2 > 1 && typeof value === "string" && !support.checkClone && rchecked.test(value)) {
         return collection.each(function(index2) {
           var self2 = collection.eq(index2);
           if (valueIsFunction) {
-            args[0] = value.call(this, index2, self2.html());
+            args2[0] = value.call(this, index2, self2.html());
           }
-          domManip(self2, args, callback, ignored);
+          domManip(self2, args2, callback, ignored);
         });
       }
       if (l2) {
-        fragment = buildFragment(args, collection[0].ownerDocument, false, collection, ignored);
+        fragment = buildFragment(args2, collection[0].ownerDocument, false, collection, ignored);
         first = fragment.firstChild;
         if (fragment.childNodes.length === 1) {
           fragment = first;
@@ -35544,7 +35558,7 @@ var jquery = { exports: {} };
     );
     var rtrim = /^[\s\uFEFF\xA0]+|([^\s\uFEFF\xA0])[\s\uFEFF\xA0]+$/g;
     jQuery.proxy = function(fn, context) {
-      var tmp, args, proxy;
+      var tmp, args2, proxy;
       if (typeof context === "string") {
         tmp = fn[context];
         context = fn;
@@ -35553,9 +35567,9 @@ var jquery = { exports: {} };
       if (!isFunction3(fn)) {
         return void 0;
       }
-      args = slice.call(arguments, 2);
+      args2 = slice.call(arguments, 2);
       proxy = function() {
-        return fn.apply(context || this, args.concat(slice.call(arguments)));
+        return fn.apply(context || this, args2.concat(slice.call(arguments)));
       };
       proxy.guid = fn.guid = fn.guid || jQuery.guid++;
       return proxy;
@@ -38156,10 +38170,10 @@ function cloneElement(vnode) {
   return node;
 }
 var tuple$1 = function tuple() {
-  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
+  for (var _len = arguments.length, args2 = new Array(_len), _key = 0; _key < _len; _key++) {
+    args2[_key] = arguments[_key];
   }
-  return args;
+  return args2;
 };
 var withInstall = function withInstall2(comp) {
   var c2 = comp;
@@ -39379,21 +39393,21 @@ function setMessageConfig(options) {
     rtl$1 = options.rtl;
   }
 }
-function getMessageInstance(args, callback) {
+function getMessageInstance(args2, callback) {
   if (messageInstance) {
     callback(messageInstance);
     return;
   }
   Notification$1.newInstance({
-    appContext: args.appContext,
-    prefixCls: args.prefixCls || localPrefixCls,
-    rootPrefixCls: args.rootPrefixCls,
+    appContext: args2.appContext,
+    prefixCls: args2.prefixCls || localPrefixCls,
+    rootPrefixCls: args2.rootPrefixCls,
     transitionName,
     hasTransitionName,
     style: {
       top: defaultTop$1
     },
-    getContainer: getContainer$1 || args.getPopupContainer,
+    getContainer: getContainer$1 || args2.getPopupContainer,
     maxCount: maxCount$1,
     name: "message"
   }, function(instance) {
@@ -39412,34 +39426,34 @@ var typeToIcon$1 = {
   warning: ExclamationCircleFilled$1,
   loading: LoadingOutlined$1
 };
-function notice$1(args) {
-  var duration = args.duration !== void 0 ? args.duration : defaultDuration$1;
-  var target = args.key || getKeyThenIncreaseKey();
+function notice$1(args2) {
+  var duration = args2.duration !== void 0 ? args2.duration : defaultDuration$1;
+  var target = args2.key || getKeyThenIncreaseKey();
   var closePromise = new Promise(function(resolve) {
     var callback = function callback2() {
-      if (typeof args.onClose === "function") {
-        args.onClose();
+      if (typeof args2.onClose === "function") {
+        args2.onClose();
       }
       return resolve(true);
     };
-    getMessageInstance(args, function(instance) {
+    getMessageInstance(args2, function(instance) {
       instance.notice({
         key: target,
         duration,
-        style: args.style || {},
-        class: args.class,
+        style: args2.style || {},
+        class: args2.class,
         content: function content(_ref) {
           var _classNames;
           var prefixCls = _ref.prefixCls;
-          var Icon3 = typeToIcon$1[args.type];
+          var Icon3 = typeToIcon$1[args2.type];
           var iconNode = Icon3 ? createVNode(Icon3, null, null) : "";
-          var messageClass = classNames("".concat(prefixCls, "-custom-content"), (_classNames = {}, _defineProperty$m(_classNames, "".concat(prefixCls, "-").concat(args.type), args.type), _defineProperty$m(_classNames, "".concat(prefixCls, "-rtl"), rtl$1 === true), _classNames));
+          var messageClass = classNames("".concat(prefixCls, "-custom-content"), (_classNames = {}, _defineProperty$m(_classNames, "".concat(prefixCls, "-").concat(args2.type), args2.type), _defineProperty$m(_classNames, "".concat(prefixCls, "-rtl"), rtl$1 === true), _classNames));
           return createVNode("div", {
             "class": messageClass
-          }, [typeof args.icon === "function" ? args.icon() : args.icon || iconNode, createVNode("span", null, [typeof args.content === "function" ? args.content() : args.content])]);
+          }, [typeof args2.icon === "function" ? args2.icon() : args2.icon || iconNode, createVNode("span", null, [typeof args2.content === "function" ? args2.content() : args2.content])]);
         },
         onClose: callback,
-        onClick: args.onClick
+        onClick: args2.onClick
       });
     });
   });
@@ -39513,9 +39527,9 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key2, arg) {
 }
 function _asyncToGenerator(fn) {
   return function() {
-    var self2 = this, args = arguments;
+    var self2 = this, args2 = arguments;
     return new Promise(function(resolve, reject) {
-      var gen = fn.apply(self2, args);
+      var gen = fn.apply(self2, args2);
       function _next(value) {
         asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
       }
@@ -40156,10 +40170,10 @@ var typeToIcon = {
   error: CloseCircleOutlined$1,
   warning: ExclamationCircleOutlined$1
 };
-function notice(args) {
-  var icon = args.icon, type2 = args.type, description = args.description, message2 = args.message, btn = args.btn;
-  var duration = args.duration === void 0 ? defaultDuration : args.duration;
-  getNotificationInstance(args, function(notification2) {
+function notice(args2) {
+  var icon = args2.icon, type2 = args2.type, description = args2.description, message2 = args2.message, btn = args2.btn;
+  var duration = args2.duration === void 0 ? defaultDuration : args2.duration;
+  getNotificationInstance(args2, function(notification2) {
     notification2.notice({
       content: function content(_ref3) {
         var outerPrefixCls = _ref3.prefixCls;
@@ -40193,11 +40207,11 @@ function notice(args) {
       },
       duration,
       closable: true,
-      onClose: args.onClose,
-      onClick: args.onClick,
-      key: args.key,
-      style: args.style || {},
-      class: args.class
+      onClose: args2.onClose,
+      onClick: args2.onClick,
+      key: args2.key,
+      style: args2.style || {},
+      class: args2.class
     });
   });
 }
@@ -40222,8 +40236,8 @@ var api = {
 };
 var iconTypes = ["success", "info", "warning", "error"];
 iconTypes.forEach(function(type2) {
-  api[type2] = function(args) {
-    return api.open(_objectSpread2$1(_objectSpread2$1({}, args), {}, {
+  api[type2] = function(args2) {
+    return api.open(_objectSpread2$1(_objectSpread2$1({}, args2), {}, {
       type: type2
     }));
   };
@@ -43321,18 +43335,18 @@ var lodash = { exports: {} };
       }
     }();
     var nodeIsArrayBuffer = nodeUtil2 && nodeUtil2.isArrayBuffer, nodeIsDate = nodeUtil2 && nodeUtil2.isDate, nodeIsMap = nodeUtil2 && nodeUtil2.isMap, nodeIsRegExp = nodeUtil2 && nodeUtil2.isRegExp, nodeIsSet = nodeUtil2 && nodeUtil2.isSet, nodeIsTypedArray2 = nodeUtil2 && nodeUtil2.isTypedArray;
-    function apply(func, thisArg, args) {
-      switch (args.length) {
+    function apply(func, thisArg, args2) {
+      switch (args2.length) {
         case 0:
           return func.call(thisArg);
         case 1:
-          return func.call(thisArg, args[0]);
+          return func.call(thisArg, args2[0]);
         case 2:
-          return func.call(thisArg, args[0], args[1]);
+          return func.call(thisArg, args2[0], args2[1]);
         case 3:
-          return func.call(thisArg, args[0], args[1], args[2]);
+          return func.call(thisArg, args2[0], args2[1], args2[2]);
       }
-      return func.apply(thisArg, args);
+      return func.apply(thisArg, args2);
     }
     function arrayAggregator(array, setter, iteratee, accumulator) {
       var index2 = -1, length = array == null ? 0 : array.length;
@@ -44148,12 +44162,12 @@ var lodash = { exports: {} };
         }
         return true;
       }
-      function baseDelay(func, wait, args) {
+      function baseDelay(func, wait, args2) {
         if (typeof func != "function") {
           throw new TypeError2(FUNC_ERROR_TEXT);
         }
         return setTimeout2(function() {
-          func.apply(undefined$1, args);
+          func.apply(undefined$1, args2);
         }, wait);
       }
       function baseDifference(array, values2, iteratee2, comparator) {
@@ -44334,11 +44348,11 @@ var lodash = { exports: {} };
         });
         return accumulator;
       }
-      function baseInvoke(object, path, args) {
+      function baseInvoke(object, path, args2) {
         path = castPath(path, object);
         object = parent(object, path);
         var func = object == null ? object : object[toKey(last(path))];
-        return func == null ? undefined$1 : apply(func, object, args);
+        return func == null ? undefined$1 : apply(func, object, args2);
       }
       function baseIsArguments2(value) {
         return isObjectLike2(value) && baseGetTag2(value) == argsTag2;
@@ -44991,25 +45005,25 @@ var lodash = { exports: {} };
         }
         return object.index - other.index;
       }
-      function composeArgs(args, partials, holders, isCurried) {
-        var argsIndex = -1, argsLength = args.length, holdersLength = holders.length, leftIndex = -1, leftLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result2 = Array2(leftLength + rangeLength), isUncurried = !isCurried;
+      function composeArgs(args2, partials, holders, isCurried) {
+        var argsIndex = -1, argsLength = args2.length, holdersLength = holders.length, leftIndex = -1, leftLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result2 = Array2(leftLength + rangeLength), isUncurried = !isCurried;
         while (++leftIndex < leftLength) {
           result2[leftIndex] = partials[leftIndex];
         }
         while (++argsIndex < holdersLength) {
           if (isUncurried || argsIndex < argsLength) {
-            result2[holders[argsIndex]] = args[argsIndex];
+            result2[holders[argsIndex]] = args2[argsIndex];
           }
         }
         while (rangeLength--) {
-          result2[leftIndex++] = args[argsIndex++];
+          result2[leftIndex++] = args2[argsIndex++];
         }
         return result2;
       }
-      function composeArgsRight(args, partials, holders, isCurried) {
-        var argsIndex = -1, argsLength = args.length, holdersIndex = -1, holdersLength = holders.length, rightIndex = -1, rightLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result2 = Array2(rangeLength + rightLength), isUncurried = !isCurried;
+      function composeArgsRight(args2, partials, holders, isCurried) {
+        var argsIndex = -1, argsLength = args2.length, holdersIndex = -1, holdersLength = holders.length, rightIndex = -1, rightLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result2 = Array2(rangeLength + rightLength), isUncurried = !isCurried;
         while (++argsIndex < rangeLength) {
-          result2[argsIndex] = args[argsIndex];
+          result2[argsIndex] = args2[argsIndex];
         }
         var offset2 = argsIndex;
         while (++rightIndex < rightLength) {
@@ -45017,7 +45031,7 @@ var lodash = { exports: {} };
         }
         while (++holdersIndex < holdersLength) {
           if (isUncurried || argsIndex < argsLength) {
-            result2[offset2 + holders[holdersIndex]] = args[argsIndex++];
+            result2[offset2 + holders[holdersIndex]] = args2[argsIndex++];
           }
         }
         return result2;
@@ -45131,37 +45145,37 @@ var lodash = { exports: {} };
       }
       function createCtor(Ctor) {
         return function() {
-          var args = arguments;
-          switch (args.length) {
+          var args2 = arguments;
+          switch (args2.length) {
             case 0:
               return new Ctor();
             case 1:
-              return new Ctor(args[0]);
+              return new Ctor(args2[0]);
             case 2:
-              return new Ctor(args[0], args[1]);
+              return new Ctor(args2[0], args2[1]);
             case 3:
-              return new Ctor(args[0], args[1], args[2]);
+              return new Ctor(args2[0], args2[1], args2[2]);
             case 4:
-              return new Ctor(args[0], args[1], args[2], args[3]);
+              return new Ctor(args2[0], args2[1], args2[2], args2[3]);
             case 5:
-              return new Ctor(args[0], args[1], args[2], args[3], args[4]);
+              return new Ctor(args2[0], args2[1], args2[2], args2[3], args2[4]);
             case 6:
-              return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+              return new Ctor(args2[0], args2[1], args2[2], args2[3], args2[4], args2[5]);
             case 7:
-              return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+              return new Ctor(args2[0], args2[1], args2[2], args2[3], args2[4], args2[5], args2[6]);
           }
-          var thisBinding = baseCreate(Ctor.prototype), result2 = Ctor.apply(thisBinding, args);
+          var thisBinding = baseCreate(Ctor.prototype), result2 = Ctor.apply(thisBinding, args2);
           return isObject3(result2) ? result2 : thisBinding;
         };
       }
       function createCurry(func, bitmask, arity) {
         var Ctor = createCtor(func);
         function wrapper() {
-          var length = arguments.length, args = Array2(length), index2 = length, placeholder = getHolder(wrapper);
+          var length = arguments.length, args2 = Array2(length), index2 = length, placeholder = getHolder(wrapper);
           while (index2--) {
-            args[index2] = arguments[index2];
+            args2[index2] = arguments[index2];
           }
-          var holders = length < 3 && args[0] !== placeholder && args[length - 1] !== placeholder ? [] : replaceHolders(args, placeholder);
+          var holders = length < 3 && args2[0] !== placeholder && args2[length - 1] !== placeholder ? [] : replaceHolders(args2, placeholder);
           length -= holders.length;
           if (length < arity) {
             return createRecurry(
@@ -45170,7 +45184,7 @@ var lodash = { exports: {} };
               createHybrid,
               wrapper.placeholder,
               undefined$1,
-              args,
+              args2,
               holders,
               undefined$1,
               undefined$1,
@@ -45178,7 +45192,7 @@ var lodash = { exports: {} };
             );
           }
           var fn = this && this !== root2 && this instanceof wrapper ? Ctor : func;
-          return apply(fn, this, args);
+          return apply(fn, this, args2);
         }
         return wrapper;
       }
@@ -45222,11 +45236,11 @@ var lodash = { exports: {} };
             }
           }
           return function() {
-            var args = arguments, value = args[0];
-            if (wrapper && args.length == 1 && isArray2(value)) {
+            var args2 = arguments, value = args2[0];
+            if (wrapper && args2.length == 1 && isArray2(value)) {
               return wrapper.plant(value).value();
             }
-            var index3 = 0, result2 = length ? funcs[index3].apply(this, args) : value;
+            var index3 = 0, result2 = length ? funcs[index3].apply(this, args2) : value;
             while (++index3 < length) {
               result2 = funcs[index3].call(this, result2);
             }
@@ -45237,29 +45251,29 @@ var lodash = { exports: {} };
       function createHybrid(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary2, arity) {
         var isAry = bitmask & WRAP_ARY_FLAG, isBind = bitmask & WRAP_BIND_FLAG, isBindKey = bitmask & WRAP_BIND_KEY_FLAG, isCurried = bitmask & (WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG), isFlip = bitmask & WRAP_FLIP_FLAG, Ctor = isBindKey ? undefined$1 : createCtor(func);
         function wrapper() {
-          var length = arguments.length, args = Array2(length), index2 = length;
+          var length = arguments.length, args2 = Array2(length), index2 = length;
           while (index2--) {
-            args[index2] = arguments[index2];
+            args2[index2] = arguments[index2];
           }
           if (isCurried) {
-            var placeholder = getHolder(wrapper), holdersCount = countHolders(args, placeholder);
+            var placeholder = getHolder(wrapper), holdersCount = countHolders(args2, placeholder);
           }
           if (partials) {
-            args = composeArgs(args, partials, holders, isCurried);
+            args2 = composeArgs(args2, partials, holders, isCurried);
           }
           if (partialsRight) {
-            args = composeArgsRight(args, partialsRight, holdersRight, isCurried);
+            args2 = composeArgsRight(args2, partialsRight, holdersRight, isCurried);
           }
           length -= holdersCount;
           if (isCurried && length < arity) {
-            var newHolders = replaceHolders(args, placeholder);
+            var newHolders = replaceHolders(args2, placeholder);
             return createRecurry(
               func,
               bitmask,
               createHybrid,
               wrapper.placeholder,
               thisArg,
-              args,
+              args2,
               newHolders,
               argPos,
               ary2,
@@ -45267,19 +45281,19 @@ var lodash = { exports: {} };
             );
           }
           var thisBinding = isBind ? thisArg : this, fn = isBindKey ? thisBinding[func] : func;
-          length = args.length;
+          length = args2.length;
           if (argPos) {
-            args = reorder(args, argPos);
+            args2 = reorder(args2, argPos);
           } else if (isFlip && length > 1) {
-            args.reverse();
+            args2.reverse();
           }
           if (isAry && ary2 < length) {
-            args.length = ary2;
+            args2.length = ary2;
           }
           if (this && this !== root2 && this instanceof wrapper) {
             fn = Ctor || createCtor(fn);
           }
-          return fn.apply(thisBinding, args);
+          return fn.apply(thisBinding, args2);
         }
         return wrapper;
       }
@@ -45316,10 +45330,10 @@ var lodash = { exports: {} };
       function createOver(arrayFunc) {
         return flatRest(function(iteratees) {
           iteratees = arrayMap(iteratees, baseUnary2(getIteratee()));
-          return baseRest(function(args) {
+          return baseRest(function(args2) {
             var thisArg = this;
             return arrayFunc(iteratees, function(iteratee2) {
-              return apply(iteratee2, thisArg, args);
+              return apply(iteratee2, thisArg, args2);
             });
           });
         });
@@ -45336,14 +45350,14 @@ var lodash = { exports: {} };
       function createPartial(func, bitmask, thisArg, partials) {
         var isBind = bitmask & WRAP_BIND_FLAG, Ctor = createCtor(func);
         function wrapper() {
-          var argsIndex = -1, argsLength = arguments.length, leftIndex = -1, leftLength = partials.length, args = Array2(leftLength + argsLength), fn = this && this !== root2 && this instanceof wrapper ? Ctor : func;
+          var argsIndex = -1, argsLength = arguments.length, leftIndex = -1, leftLength = partials.length, args2 = Array2(leftLength + argsLength), fn = this && this !== root2 && this instanceof wrapper ? Ctor : func;
           while (++leftIndex < leftLength) {
-            args[leftIndex] = partials[leftIndex];
+            args2[leftIndex] = partials[leftIndex];
           }
           while (argsLength--) {
-            args[leftIndex++] = arguments[++argsIndex];
+            args2[leftIndex++] = arguments[++argsIndex];
           }
-          return apply(fn, isBind ? thisArg : this, args);
+          return apply(fn, isBind ? thisArg : this, args2);
         }
         return wrapper;
       }
@@ -45949,14 +45963,14 @@ var lodash = { exports: {} };
       function overRest(func, start, transform2) {
         start = nativeMax(start === undefined$1 ? func.length - 1 : start, 0);
         return function() {
-          var args = arguments, index2 = -1, length = nativeMax(args.length - start, 0), array = Array2(length);
+          var args2 = arguments, index2 = -1, length = nativeMax(args2.length - start, 0), array = Array2(length);
           while (++index2 < length) {
-            array[index2] = args[start + index2];
+            array[index2] = args2[start + index2];
           }
           index2 = -1;
           var otherArgs = Array2(start + 1);
           while (++index2 < start) {
-            otherArgs[index2] = args[index2];
+            otherArgs[index2] = args2[index2];
           }
           otherArgs[start] = transform2(array);
           return apply(func, this, otherArgs);
@@ -46097,11 +46111,11 @@ var lodash = { exports: {} };
         if (!length) {
           return [];
         }
-        var args = Array2(length - 1), array = arguments[0], index2 = length;
+        var args2 = Array2(length - 1), array = arguments[0], index2 = length;
         while (index2--) {
-          args[index2 - 1] = arguments[index2];
+          args2[index2 - 1] = arguments[index2];
         }
-        return arrayPush2(isArray2(array) ? copyArray(array) : [array], baseFlatten(args, 1));
+        return arrayPush2(isArray2(array) ? copyArray(array) : [array], baseFlatten(args2, 1));
       }
       var difference = baseRest(function(array, values2) {
         return isArrayLikeObject(array) ? baseDifference(array, baseFlatten(values2, 1, isArrayLikeObject, true)) : [];
@@ -46598,10 +46612,10 @@ var lodash = { exports: {} };
         }
         return isString3(collection) ? fromIndex <= length && collection.indexOf(value, fromIndex) > -1 : !!length && baseIndexOf(collection, value, fromIndex) > -1;
       }
-      var invokeMap = baseRest(function(collection, path, args) {
+      var invokeMap = baseRest(function(collection, path, args2) {
         var index2 = -1, isFunc = typeof path == "function", result2 = isArrayLike2(collection) ? Array2(collection.length) : [];
         baseEach(collection, function(value) {
-          result2[++index2] = isFunc ? apply(path, value, args) : baseInvoke(value, path, args);
+          result2[++index2] = isFunc ? apply(path, value, args2) : baseInvoke(value, path, args2);
         });
         return result2;
       });
@@ -46767,10 +46781,10 @@ var lodash = { exports: {} };
           trailing = "trailing" in options ? !!options.trailing : trailing;
         }
         function invokeFunc(time) {
-          var args = lastArgs, thisArg = lastThis;
+          var args2 = lastArgs, thisArg = lastThis;
           lastArgs = lastThis = undefined$1;
           lastInvokeTime = time;
-          result2 = func.apply(thisArg, args);
+          result2 = func.apply(thisArg, args2);
           return result2;
         }
         function leadingEdge(time) {
@@ -46835,11 +46849,11 @@ var lodash = { exports: {} };
         debounced.flush = flush;
         return debounced;
       }
-      var defer = baseRest(function(func, args) {
-        return baseDelay(func, 1, args);
+      var defer = baseRest(function(func, args2) {
+        return baseDelay(func, 1, args2);
       });
-      var delay = baseRest(function(func, wait, args) {
-        return baseDelay(func, toNumber(wait) || 0, args);
+      var delay = baseRest(function(func, wait, args2) {
+        return baseDelay(func, toNumber(wait) || 0, args2);
       });
       function flip2(func) {
         return createWrap(func, WRAP_FLIP_FLAG);
@@ -46849,11 +46863,11 @@ var lodash = { exports: {} };
           throw new TypeError2(FUNC_ERROR_TEXT);
         }
         var memoized = function() {
-          var args = arguments, key2 = resolver ? resolver.apply(this, args) : args[0], cache2 = memoized.cache;
+          var args2 = arguments, key2 = resolver ? resolver.apply(this, args2) : args2[0], cache2 = memoized.cache;
           if (cache2.has(key2)) {
             return cache2.get(key2);
           }
-          var result2 = func.apply(this, args);
+          var result2 = func.apply(this, args2);
           memoized.cache = cache2.set(key2, result2) || cache2;
           return result2;
         };
@@ -46866,18 +46880,18 @@ var lodash = { exports: {} };
           throw new TypeError2(FUNC_ERROR_TEXT);
         }
         return function() {
-          var args = arguments;
-          switch (args.length) {
+          var args2 = arguments;
+          switch (args2.length) {
             case 0:
               return !predicate.call(this);
             case 1:
-              return !predicate.call(this, args[0]);
+              return !predicate.call(this, args2[0]);
             case 2:
-              return !predicate.call(this, args[0], args[1]);
+              return !predicate.call(this, args2[0], args2[1]);
             case 3:
-              return !predicate.call(this, args[0], args[1], args[2]);
+              return !predicate.call(this, args2[0], args2[1], args2[2]);
           }
-          return !predicate.apply(this, args);
+          return !predicate.apply(this, args2);
         };
       }
       function once(func) {
@@ -46886,12 +46900,12 @@ var lodash = { exports: {} };
       var overArgs = castRest(function(func, transforms) {
         transforms = transforms.length == 1 && isArray2(transforms[0]) ? arrayMap(transforms[0], baseUnary2(getIteratee())) : arrayMap(baseFlatten(transforms, 1), baseUnary2(getIteratee()));
         var funcsLength = transforms.length;
-        return baseRest(function(args) {
-          var index2 = -1, length = nativeMin(args.length, funcsLength);
+        return baseRest(function(args2) {
+          var index2 = -1, length = nativeMin(args2.length, funcsLength);
           while (++index2 < length) {
-            args[index2] = transforms[index2].call(this, args[index2]);
+            args2[index2] = transforms[index2].call(this, args2[index2]);
           }
-          return apply(func, this, args);
+          return apply(func, this, args2);
         });
       });
       var partial = baseRest(function(func, partials) {
@@ -46917,8 +46931,8 @@ var lodash = { exports: {} };
           throw new TypeError2(FUNC_ERROR_TEXT);
         }
         start = start == null ? 0 : nativeMax(toInteger(start), 0);
-        return baseRest(function(args) {
-          var array = args[start], otherArgs = castSlice(args, 0, start);
+        return baseRest(function(args2) {
+          var array = args2[start], otherArgs = castSlice(args2, 0, start);
           if (array) {
             arrayPush2(otherArgs, array);
           }
@@ -47225,9 +47239,9 @@ var lodash = { exports: {} };
         }
         return object;
       });
-      var defaultsDeep = baseRest(function(args) {
-        args.push(undefined$1, customDefaultsMerge);
-        return apply(mergeWith, undefined$1, args);
+      var defaultsDeep = baseRest(function(args2) {
+        args2.push(undefined$1, customDefaultsMerge);
+        return apply(mergeWith, undefined$1, args2);
       });
       function findKey(object, predicate) {
         return baseFindKey(object, getIteratee(predicate, 3), baseForOwn);
@@ -47543,8 +47557,8 @@ var lodash = { exports: {} };
         return baseRepeat(toString2(string), n2);
       }
       function replace() {
-        var args = arguments, string = toString2(args[0]);
-        return args.length < 3 ? string : string.replace(args[1], args[2]);
+        var args2 = arguments, string = toString2(args2[0]);
+        return args2.length < 3 ? string : string.replace(args2[1], args2[2]);
       }
       var snakeCase = createCompounder(function(result2, word, index2) {
         return result2 + (index2 ? "_" : "") + word.toLowerCase();
@@ -47726,9 +47740,9 @@ var lodash = { exports: {} };
         }
         return string.match(pattern) || [];
       }
-      var attempt = baseRest(function(func, args) {
+      var attempt = baseRest(function(func, args2) {
         try {
-          return apply(func, undefined$1, args);
+          return apply(func, undefined$1, args2);
         } catch (e2) {
           return isError(e2) ? e2 : new Error2(e2);
         }
@@ -47748,12 +47762,12 @@ var lodash = { exports: {} };
           }
           return [toIteratee(pair[0]), pair[1]];
         });
-        return baseRest(function(args) {
+        return baseRest(function(args2) {
           var index2 = -1;
           while (++index2 < length) {
             var pair = pairs[index2];
-            if (apply(pair[0], this, args)) {
-              return apply(pair[1], this, args);
+            if (apply(pair[0], this, args2)) {
+              return apply(pair[1], this, args2);
             }
           }
         });
@@ -47783,14 +47797,14 @@ var lodash = { exports: {} };
       function matchesProperty(path, srcValue) {
         return baseMatchesProperty(path, baseClone(srcValue, CLONE_DEEP_FLAG));
       }
-      var method = baseRest(function(path, args) {
+      var method = baseRest(function(path, args2) {
         return function(object) {
-          return baseInvoke(object, path, args);
+          return baseInvoke(object, path, args2);
         };
       });
-      var methodOf = baseRest(function(object, args) {
+      var methodOf = baseRest(function(object, args2) {
         return function(path) {
-          return baseInvoke(object, path, args);
+          return baseInvoke(object, path, args2);
         };
       });
       function mixin(object, source, options) {
@@ -47830,8 +47844,8 @@ var lodash = { exports: {} };
       }
       function nthArg(n2) {
         n2 = toInteger(n2);
-        return baseRest(function(args) {
-          return baseNth(args, n2);
+        return baseRest(function(args2) {
+          return baseNth(args2, n2);
         });
       }
       var over = createOver(arrayMap);
@@ -48295,12 +48309,12 @@ var lodash = { exports: {} };
       LazyWrapper.prototype.findLast = function(predicate) {
         return this.reverse().find(predicate);
       };
-      LazyWrapper.prototype.invokeMap = baseRest(function(path, args) {
+      LazyWrapper.prototype.invokeMap = baseRest(function(path, args2) {
         if (typeof path == "function") {
           return new LazyWrapper(this);
         }
         return this.map(function(value) {
-          return baseInvoke(value, path, args);
+          return baseInvoke(value, path, args2);
         });
       });
       LazyWrapper.prototype.reject = function(predicate) {
@@ -48335,9 +48349,9 @@ var lodash = { exports: {} };
           return;
         }
         lodash2.prototype[methodName] = function() {
-          var value = this.__wrapped__, args = isTaker ? [1] : arguments, isLazy = value instanceof LazyWrapper, iteratee2 = args[0], useLazy = isLazy || isArray2(value);
+          var value = this.__wrapped__, args2 = isTaker ? [1] : arguments, isLazy = value instanceof LazyWrapper, iteratee2 = args2[0], useLazy = isLazy || isArray2(value);
           var interceptor = function(value2) {
-            var result3 = lodashFunc.apply(lodash2, arrayPush2([value2], args));
+            var result3 = lodashFunc.apply(lodash2, arrayPush2([value2], args2));
             return isTaker && chainAll ? result3[0] : result3;
           };
           if (useLazy && checkIteratee && typeof iteratee2 == "function" && iteratee2.length != 1) {
@@ -48346,12 +48360,12 @@ var lodash = { exports: {} };
           var chainAll = this.__chain__, isHybrid = !!this.__actions__.length, isUnwrapped = retUnwrapped && !chainAll, onlyLazy = isLazy && !isHybrid;
           if (!retUnwrapped && useLazy) {
             value = onlyLazy ? value : new LazyWrapper(this);
-            var result2 = func.apply(value, args);
+            var result2 = func.apply(value, args2);
             result2.__actions__.push({ "func": thru, "args": [interceptor], "thisArg": undefined$1 });
             return new LodashWrapper(result2, chainAll);
           }
           if (isUnwrapped && onlyLazy) {
-            return func.apply(this, args);
+            return func.apply(this, args2);
           }
           result2 = this.thru(interceptor);
           return isUnwrapped ? isTaker ? result2.value()[0] : result2.value() : result2;
@@ -48360,13 +48374,13 @@ var lodash = { exports: {} };
       arrayEach(["pop", "push", "shift", "sort", "splice", "unshift"], function(methodName) {
         var func = arrayProto2[methodName], chainName = /^(?:push|sort|unshift)$/.test(methodName) ? "tap" : "thru", retUnwrapped = /^(?:pop|shift)$/.test(methodName);
         lodash2.prototype[methodName] = function() {
-          var args = arguments;
+          var args2 = arguments;
           if (retUnwrapped && !this.__chain__) {
             var value = this.value();
-            return func.apply(isArray2(value) ? value : [], args);
+            return func.apply(isArray2(value) ? value : [], args2);
           }
           return this[chainName](function(value2) {
-            return func.apply(isArray2(value2) ? value2 : [], args);
+            return func.apply(isArray2(value2) ? value2 : [], args2);
           });
         };
       });
@@ -48620,11 +48634,11 @@ mylodash.WORDS = {
   INVALID_DATE: "Invalid Date",
   format_ymd: "YYYY-MM-DD"
 };
-mylodash.doNothing = (...args) => {
+mylodash.doNothing = (...args2) => {
   if (localStorage.isShowDevLog) {
     const e2 = new Error();
     console.log("\u{1F680}:", e2.stack.split("\n")[2].replace("    at ", ""));
-    console.log.apply(console, args);
+    console.log.apply(console, args2);
   }
 };
 mylodash.sleep = (t2) => new Promise((r2) => setTimeout(r2, t2));
@@ -48833,8 +48847,8 @@ async function asyncImportSFC(url) {
   }
   const scfSourceCode = await mylodash.asyncLoadText(url);
   const scfObjSourceCode = VueLoader(scfSourceCode);
-  let scfObjAsyncFn = (...args) => {
-    console.log(args);
+  let scfObjAsyncFn = (...args2) => {
+    console.log(args2);
   };
   try {
     scfObjAsyncFn = new Function(
@@ -50988,10 +51002,10 @@ function leftPad(str, length) {
   return current;
 }
 var tuple2 = function tuple3() {
-  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
+  for (var _len = arguments.length, args2 = new Array(_len), _key = 0; _key < _len; _key++) {
+    args2[_key] = arguments[_key];
   }
-  return args;
+  return args2;
 };
 function toArray$2(val) {
   if (val === null || val === void 0) {
@@ -53322,16 +53336,16 @@ var cssShow = {
   display: "block"
 };
 function getWHIgnoreDisplay() {
-  for (var _len = arguments.length, args = new Array(_len), _key2 = 0; _key2 < _len; _key2++) {
-    args[_key2] = arguments[_key2];
+  for (var _len = arguments.length, args2 = new Array(_len), _key2 = 0; _key2 < _len; _key2++) {
+    args2[_key2] = arguments[_key2];
   }
   var val;
-  var elem = args[0];
+  var elem = args2[0];
   if (elem.offsetWidth !== 0) {
-    val = getWH.apply(void 0, args);
+    val = getWH.apply(void 0, args2);
   } else {
     swap(elem, cssShow, function() {
-      val = getWH.apply(void 0, args);
+      val = getWH.apply(void 0, args2);
     });
   }
   return val;
@@ -54931,17 +54945,17 @@ const BaseMixin = {
       });
     },
     __emit: function __emit() {
-      var args = [].slice.call(arguments, 0);
-      var eventName = args[0];
+      var args2 = [].slice.call(arguments, 0);
+      var eventName = args2[0];
       eventName = "on".concat(eventName[0].toUpperCase()).concat(eventName.substring(1));
       var event = this.$props[eventName] || this.$attrs[eventName];
-      if (args.length && event) {
+      if (args2.length && event) {
         if (Array.isArray(event)) {
           for (var i2 = 0, l2 = event.length; i2 < l2; i2++) {
-            event[i2].apply(event, _toConsumableArray(args.slice(1)));
+            event[i2].apply(event, _toConsumableArray(args2.slice(1)));
           }
         } else {
-          event.apply(void 0, _toConsumableArray(args.slice(1)));
+          event.apply(void 0, _toConsumableArray(args2.slice(1)));
         }
       }
     }
@@ -58443,13 +58457,13 @@ var Input = defineComponent({
           VCSelectContainerEvent === null || VCSelectContainerEvent === void 0 ? void 0 : VCSelectContainerEvent.focus(arguments.length <= 0 ? void 0 : arguments[0]);
         },
         onBlur: function onBlur2() {
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
+          for (var _len = arguments.length, args2 = new Array(_len), _key = 0; _key < _len; _key++) {
+            args2[_key] = arguments[_key];
           }
           blurTimeout = setTimeout(function() {
-            onOriginBlur && onOriginBlur(args[0]);
-            _onBlur && _onBlur(args[0]);
-            VCSelectContainerEvent === null || VCSelectContainerEvent === void 0 ? void 0 : VCSelectContainerEvent.blur(args[0]);
+            onOriginBlur && onOriginBlur(args2[0]);
+            _onBlur && _onBlur(args2[0]);
+            VCSelectContainerEvent === null || VCSelectContainerEvent === void 0 ? void 0 : VCSelectContainerEvent.blur(args2[0]);
           }, 100);
         }
       }), inputNode.type === "textarea" ? {} : {
@@ -61122,11 +61136,11 @@ var OptionList = defineComponent({
     var onListMouseDown = function onListMouseDown2(event) {
       event.preventDefault();
     };
-    var scrollIntoView = function scrollIntoView2(args) {
+    var scrollIntoView = function scrollIntoView2(args2) {
       if (listRef.current) {
-        listRef.current.scrollTo(typeof args === "number" ? {
-          index: args
-        } : args);
+        listRef.current.scrollTo(typeof args2 === "number" ? {
+          index: args2
+        } : args2);
       }
     };
     var getEnabledActiveIndex = function getEnabledActiveIndex2(index2) {
@@ -62278,11 +62292,11 @@ var Select$1 = defineComponent({
       return classNames((_classNames = {}, _defineProperty$m(_classNames, "".concat(prefixCls.value, "-lg"), size2.value === "large"), _defineProperty$m(_classNames, "".concat(prefixCls.value, "-sm"), size2.value === "small"), _defineProperty$m(_classNames, "".concat(prefixCls.value, "-rtl"), direction.value === "rtl"), _defineProperty$m(_classNames, "".concat(prefixCls.value, "-borderless"), !props2.bordered), _classNames));
     });
     var triggerChange = function triggerChange2() {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
+      for (var _len = arguments.length, args2 = new Array(_len), _key = 0; _key < _len; _key++) {
+        args2[_key] = arguments[_key];
       }
-      emit("update:value", args[0]);
-      emit.apply(void 0, ["change"].concat(args));
+      emit("update:value", args2[0]);
+      emit.apply(void 0, ["change"].concat(args2));
       formItemContext.onFieldChange();
     };
     var handleBlur = function handleBlur2(e2) {
@@ -62915,10 +62929,10 @@ const Checkbox = defineComponent({
       }, restAttrs);
       if (checkboxGroup && !skipGroup) {
         checkboxProps3.onChange = function() {
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
+          for (var _len = arguments.length, args2 = new Array(_len), _key = 0; _key < _len; _key++) {
+            args2[_key] = arguments[_key];
           }
-          emit.apply(void 0, ["change"].concat(args));
+          emit.apply(void 0, ["change"].concat(args2));
           checkboxGroup.toggleOption({
             label: children,
             value: props2.value
@@ -63272,7 +63286,7 @@ const _sfc_main$b = defineComponent({
       configs.validate && configs.validate(eventType);
     };
     const listeners = {
-      "onUpdate:value": (val, ...args) => {
+      "onUpdate:value": (val, ...args2) => {
         configs.value = val;
         this.$emit("update:modelValue", val);
         if (mylodash.isFunction(listeners.onAfterValueChange)) {
@@ -63294,9 +63308,9 @@ const _sfc_main$b = defineComponent({
       }
     };
     function initListenerHandler(prop, value) {
-      listeners[prop] = function(...args) {
+      listeners[prop] = function(...args2) {
         mylodash.each(listeners[prop].queue, (listener) => {
-          listener == null ? void 0 : listener.apply(vm.configs, args);
+          listener == null ? void 0 : listener.apply(vm.configs, args2);
         });
       };
       listeners[prop].queue = [value];
@@ -64179,9 +64193,9 @@ function defDataGridOption(options) {
   options.isLoading = Boolean(options.isLoading);
   if (options.queryTableList) {
     options._queryTableList_origin = options.queryTableList;
-    options.queryTableList = async function(...args) {
+    options.queryTableList = async function(...args2) {
       this.isLoading = true;
-      await this._queryTableList_origin.apply(this, args);
+      await this._queryTableList_origin.apply(this, args2);
       this.isLoading = false;
     };
   }
@@ -64502,12 +64516,12 @@ const _sfc_main$4 = defineComponent({
           }, null)])])])]), createVNode("p", {
             "class": "ant-empty-description"
           }, [this.Cpt_UI_locale.Empty.description])]),
-          bodyCell: (args) => {
+          bodyCell: (args2) => {
             const {
               column
-            } = args;
+            } = args2;
             if (column && column.renderCell) {
-              const vNode = column.renderCell(args);
+              const vNode = column.renderCell(args2);
               if (mylodash.isNull(vNode) || mylodash.isUndefined(vNode)) {
                 return "";
               }
@@ -65103,7 +65117,8 @@ const xVirTableTd = defineComponent({
   }
 });
 const xVirTableBody = defineComponent({
-  props: ["dataSource", "columnOrder", "columns", "rowHeight"],
+  props: ["dataSource", "columnOrder", "columns", "rowHeight", "selectedConfigs", "selected"],
+  emits: ["selectedChange", "update:scrollHeight"],
   components: {
     xVirTableTd
   },
@@ -65137,6 +65152,38 @@ const xVirTableBody = defineComponent({
     this.fnUnobserveDomResize(this.$refs.wrapper);
   },
   computed: {
+    fnIsSelected() {
+      const {
+        isSelect,
+        prop
+      } = this.selectedConfigs || {};
+      if (mylodash.isFunction(isSelect)) {
+        return (args2) => {
+          return isSelect.call(this, args2);
+        };
+      } else {
+        return ({
+          rowData
+        }) => {
+          const id = rowData[prop];
+          return this.selected.includes(id);
+        };
+      }
+    },
+    fnIsDisabled() {
+      const {
+        isDisabled
+      } = this.selectedConfigs || {};
+      if (mylodash.isFunction(isDisabled)) {
+        return () => {
+          return isDisabled.call(this, args);
+        };
+      } else {
+        return () => {
+          return false;
+        };
+      }
+    },
     positionBlock() {
       return this.blockInViewCount % 3;
     },
@@ -65200,7 +65247,10 @@ const xVirTableBody = defineComponent({
           "role": "tr",
           "class": "xVirTable-row flex horizon",
           "data-row-key": rowIndex
-        }, [mylodash.map(this.columnOrder, (prop, index2) => {
+        }, [this.genSelectedVDom({
+          rowIndex,
+          rowData: data2
+        }), mylodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -65216,7 +65266,10 @@ const xVirTableBody = defineComponent({
           "role": "tr",
           "class": "xVirTable-row flex horizon",
           "data-row-key": rowIndex
-        }, [mylodash.map(this.columnOrder, (prop, index2) => {
+        }, [this.genSelectedVDom({
+          rowIndex,
+          rowData: data2
+        }), mylodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -65232,7 +65285,10 @@ const xVirTableBody = defineComponent({
           "role": "tr",
           "class": "xVirTable-row flex horizon",
           "data-row-key": rowIndex
-        }, [mylodash.map(this.columnOrder, (prop, index2) => {
+        }, [this.genSelectedVDom({
+          rowIndex,
+          rowData: data2
+        }), mylodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -65250,10 +65306,52 @@ const xVirTableBody = defineComponent({
     }
   },
   methods: {
+    genSelectedVDom(rowInfo) {
+      if (!this.selectedConfigs) {
+        return null;
+      }
+      const isSelected = this.fnIsSelected(rowInfo);
+      let isDisabled = this.fnIsDisabled(rowInfo);
+      const handleChange = (e2) => {
+        const {
+          prop
+        } = this.selectedConfigs;
+        this.emitSelectedChange(e2.target.checked, rowInfo.rowData[prop]);
+      };
+      let vDomChecked;
+      if (mylodash.isString(isDisabled)) {
+        isDisabled = true;
+        const uiPopoverConfigs = {
+          content: isDisabled
+        };
+        vDomChecked = withDirectives(createVNode(resolveComponent("aCheckbox"), {
+          "checked": isSelected,
+          "onChange": handleChange,
+          "disabled": true
+        }, null), [[resolveDirective("uiPopover"), uiPopoverConfigs]]);
+      } else {
+        vDomChecked = createVNode(resolveComponent("aCheckbox"), {
+          "checked": isSelected,
+          "onChange": handleChange,
+          "disabled": isDisabled
+        }, null);
+      }
+      return createVNode("div", {
+        "role": "td",
+        "data-prop": "xVirSelected",
+        "class": "flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check"
+      }, [vDomChecked]);
+    },
+    emitSelectedChange(checked, id) {
+      this.$emit("selectedChange", {
+        checked,
+        id
+      });
+    },
     setPerBlockHeight: mylodash.debounce(function(viewportHeight) {
       this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
       this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
-    }, 33),
+    }, 64),
     setTop: mylodash.debounce(function() {
       if (this.$refs.refWrapper) {
         this.$refs.refWrapper.scrollTo({
@@ -65276,6 +65374,9 @@ const xVirTableBody = defineComponent({
     }
   },
   watch: {
+    rowHeight() {
+      this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
+    },
     top() {
       this.setTop();
     },
@@ -65289,7 +65390,7 @@ const xVirTableBody = defineComponent({
   },
   render() {
     return createVNode("div", {
-      "role": "table",
+      "role": "body",
       "class": "xVirTable-body-wrapper flex1",
       "ref": "wrapper",
       "onScroll": this.updateTop
@@ -65316,7 +65417,50 @@ const xVirTable = defineComponent({
   mounted() {
     this.initStyle();
   },
+  data() {
+    return {
+      selectedAll: false
+    };
+  },
   computed: {
+    selectedIndeterminate() {
+      var _a, _b;
+      const dataLength = ((_b = (_a = this.configs) == null ? void 0 : _a.dataSource) == null ? void 0 : _b.length) || 0;
+      const selectedLength = this.selected.length;
+      if (dataLength == 0 || selectedLength == 0 || dataLength == selectedLength) {
+        return false;
+      }
+      return true;
+    },
+    selected() {
+      var _a;
+      return ((_a = this.configs) == null ? void 0 : _a.selected) || [];
+    },
+    selectedType() {
+      var _a, _b;
+      return ((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.type) || false;
+    },
+    selectedProp() {
+      var _a, _b, _c, _d;
+      if (!this.selectedType) {
+        return false;
+      }
+      if (!((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.prop)) {
+        alert("vVirTable miss this.selected id prop");
+      }
+      return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.prop;
+    },
+    selectedBy() {
+      var _a, _b, _c, _d;
+      if (!this.selectedType) {
+        return false;
+      }
+      if (mylodash.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
+        return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.fn;
+      } else {
+        return false;
+      }
+    },
     rowHeight() {
       var _a;
       return ((_a = this.configs) == null ? void 0 : _a.rowHeight) || 32;
@@ -65345,6 +65489,18 @@ const xVirTable = defineComponent({
       }, []);
       return _columnWidthArray;
     },
+    vDomTheadSelect() {
+      let vDomSeletor = createVNode(resolveComponent("aCheckbox"), {
+        "checked": this.selectedAll,
+        "onUpdate:checked": ($event) => this.selectedAll = $event,
+        "indeterminate": this.selectedIndeterminate,
+        "onChange": this.handleSelectedChangeTh
+      }, null);
+      if (this.selectedType === "one") {
+        vDomSeletor = null;
+      }
+      return vDomSeletor;
+    },
     vDomThead() {
       return createVNode("div", {
         "role": "thead",
@@ -65352,7 +65508,11 @@ const xVirTable = defineComponent({
       }, [createVNode("div", {
         "role": "tr",
         "class": "flex horizon"
-      }, [mylodash.map(this.columnOrder, (prop, index2) => {
+      }, [createVNode("div", {
+        "role": "th",
+        "class": "flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check",
+        "data-prop": "xVirSelected"
+      }, [this.vDomTheadSelect]), mylodash.map(this.columnOrder, (prop, index2) => {
         var _a;
         const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
         return createVNode(xVirTableTh, {
@@ -65363,7 +65523,7 @@ const xVirTable = defineComponent({
       })])]);
     },
     vDomMainTable() {
-      var _a;
+      var _a, _b, _c;
       return createVNode("div", {
         "id": this.xVirTableId,
         "class": "xVirTable-wrapper flex vertical"
@@ -65375,7 +65535,10 @@ const xVirTable = defineComponent({
         "dataSource": this.configs.dataSource,
         "columnOrder": this.columnOrder,
         "columns": (_a = this.configs) == null ? void 0 : _a.columns,
-        "rowHeight": this.rowHeight
+        "rowHeight": this.rowHeight,
+        "onSelectedChange": this.handleSelectedChangeTd,
+        "selectedConfigs": (_b = this.configs) == null ? void 0 : _b.selectedConfigs,
+        "selected": (_c = this.configs) == null ? void 0 : _c.selected
       }, null)]);
     },
     styleContent() {
@@ -65403,6 +65566,38 @@ const xVirTable = defineComponent({
     updateStyle(styleContent) {
       const $style = $$1(`#style_${this.xVirTableId}`);
       $style.html(styleContent);
+    },
+    handleSelectedChange() {
+    },
+    handleSelectedChangeTh(e2) {
+      const {
+        checked
+      } = e2.target;
+      if (checked) {
+        this.configs.selected = mylodash.map(this.configs.dataSource, (i2) => i2[this.selectedProp]);
+      } else {
+        this.configs.selected = [];
+      }
+    },
+    handleSelectedChangeTd({
+      id
+    }) {
+      var _a;
+      const isOnlyOne = this.selectedType === "one";
+      const index2 = mylodash.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i2) => i2 === id);
+      if (index2 > -1) {
+        if (isOnlyOne) {
+          this.configs.selected = [];
+        } else {
+          this.configs.selected.splice(index2, 1);
+        }
+      } else {
+        if (isOnlyOne) {
+          this.configs.selected = [id];
+        } else {
+          this.configs.selected.push(id);
+        }
+      }
     }
   },
   render() {
