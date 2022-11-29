@@ -474,25 +474,28 @@ html #layuicss-layer {
   background: 0 0;
   box-shadow: none;
   border: none;
+
+  .layui-layer-content {
+    position: relative;
+    line-height: 22px;
+    min-width: 12px;
+    padding: 8px 15px;
+    font-size: 12px;
+    border-radius: 2px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    background-color: #000;
+    color: rgb(255, 255, 255);
+  }
 }
 
-.layui-layer-tips .layui-layer-content {
-  position: relative;
-  line-height: 22px;
-  min-width: 12px;
-  padding: 8px 15px;
-  font-size: 12px;
-  border-radius: 2px;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-  background-color: #000;
-  color: #fff;
-}
+
 
 .layui-layer-tips .layui-layer-close {
   right: -2px;
   top: -1px;
 }
 
+/* 三角基本位置 */
 .layui-layer-tips i.layui-layer-TipsG {
   position: absolute;
   width: 0;
@@ -739,11 +742,11 @@ html #layuicss-layer {
 @keyframes layer-bounceOut {
   100% {
     opacity: 0;
-    transform: scale(0.7);
+    transform: scale(0.9);
   }
 
   30% {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 
   0% {
@@ -754,7 +757,7 @@ html #layuicss-layer {
 .layer-anim-close {
   animation-name: layer-bounceOut;
   animation-fill-mode: both;
-  animation-duration: 0.2s;
+  animation-duration: .3s;
 }
 
 @media screen and (max-width: 1100px) {

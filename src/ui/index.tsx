@@ -5,7 +5,6 @@ import "./ui.scss";
 import "ant-design-vue/dist/antd.css";
 import Antd from "ant-design-vue";
 import $ from "jquery";
-import { installPopoverDirective } from "./xSingle/popover";
 import xRender from "./xRender/xRender.jsx";
 import xItem from "./xForm/xItem.vue";
 import xForm from "./xForm/xForm.vue";
@@ -18,16 +17,17 @@ import xIcon from "./xIcon/xIcon.vue";
 import xDataGrid from "./xDataGrid/xDataGrid.vue";
 import xDataGridToolbar from "./xDataGrid/xDataGridToolbar.vue";
 import xCellLabel from "./xDataGrid/xCellLabel.vue";
-import xPagination from "./xDataGrid/xPagination.vue";
+import { xPagination } from "./xDataGrid/xPagination";
 import xColFilter from "./xDataGrid/xColFilter.vue";
-import { installUIDialogComponent } from "./xSingle/dialog/dialog";
 import xVirScroll from "./xSingle/xScroll/xVirScroll.vue";
-import { installDirective } from "./directive";
+import { xVirTable } from "./xDataGrid/xVirTable/xVirTable";
 import { _ as mylodash } from "./loadCommonUtil.js";
 import { State_UI, Cpt_UI_locale } from "./State_UI";
 import dayjs from "dayjs";
 import { RegexFn, FormRules } from "./xForm/FormRules";
-
+import { installPopoverDirective } from "./xSingle/popover";
+import { installUIDialogComponent } from "./xSingle/dialog/dialog";
+import { installDirective } from "./directive";
 import { Utils } from "./common";
 
 /* @ts-ignore */
@@ -51,8 +51,9 @@ import { defItem, vModel, antColKey } from "./xForm/common.jsx";
 import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
 import { setDocumentTitle, setCSSVariables } from "./tools/dom.js";
 import { lStorage } from "./tools/storage.js";
-import { pickValueFrom, resetState_Value } from "./tools/form.js";
+import { pickValueFrom, resetValueOf, setValueTo } from "./tools/form.js";
 import { UI } from "./UI";
+import { VNodeCollection } from "./tools/VNodeRender";
 
 /* my-private-ui-component */
 const componentMyUI = {
@@ -70,13 +71,15 @@ const componentMyUI = {
 	xColFilter,
 	xPagination,
 	xCellLabel,
-	xVirScroll
+	xVirScroll,
+	xVirTable
 };
 
-const components = {
+export const components = {
 	...componentMyUI
 };
 
+export { VNodeCollection as VNodeCollection };
 export { Utils as Utils };
 export { UI as UI };
 export { dayjs as moment };
@@ -106,7 +109,8 @@ export { defItem as defItem };
 export { vModel as vModel };
 export { antColKey as antColKey };
 export { pickValueFrom as pickValueFrom };
-export { resetState_Value as resetState_Value };
+export { resetValueOf as resetValueOf };
+export { setValueTo as setValueTo };
 export { RegexFn as RegexFn };
 export { FormRules as FormRules };
 

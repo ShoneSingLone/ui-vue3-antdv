@@ -14,6 +14,6 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/ui/tools/VNodeRender.tss", "src/ui/compositionAPI/useDomResize.jsx", "src/ui/compositionAPI/useDomResize.jsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

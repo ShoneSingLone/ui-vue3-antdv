@@ -1,5 +1,20 @@
 <template>
-	<xButton :configs="configs.btn.modifyIP" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<xButton
+		:configs="configs.btn.modifyIP"
+		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+	<mkit :md="md_vUiPopover" />
 	<xGap t="10" />
 	<xButton :configs="configs.btn.noBtn" />
 	<xGap t="10" />
@@ -36,6 +51,12 @@ async function log() {
 export default {
 	data() {
 		return {
+			md_vUiPopover: `### 使用v-uiPopover
+\`\`\`js
+/* 一般按钮 hover会有一个tips*/
+<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+\`\`\`
+`,
 			configs: {
 				btn: {
 					modifyIP: {
@@ -124,7 +145,6 @@ export default {
 								}
 							}
 
-
 							let count = 0;
 
 							const dialogOptions = {
@@ -132,22 +152,27 @@ export default {
 								component: defineComponent({
 									methods: {
 										setBtnDefault() {
-											console.log("instance===dialogOptions.__dialogInstance", instance === dialogOptions.__dialogInstance);
+											console.log(
+												"instance===dialogOptions.__dialogInstance",
+												instance === dialogOptions.__dialogInstance
+											);
 											if (count++ % 2 === 0) {
-												instance.options.renderButtons = () => defineComponent({
-													template: `
+												instance.options.renderButtons = () =>
+													defineComponent({
+														template: `
 														<aButton @click="handleClick">${instance.cancelText}${count}</aButton>
 														<xGap l="10" />
 														<aButton @click="handleClick">count: ${count}</aButton>
 													`,
-													methods: {
-														handleClick() {
-															return instance.handleClickCancel();
+														methods: {
+															handleClick() {
+																return instance.handleClickCancel();
+															}
 														}
-													}
-												});
+													});
 											} else {
-												instance.options.renderButtons = instance.vDomDefaultButton;
+												instance.options.renderButtons =
+													instance.vDomDefaultButton;
 											}
 											/*options 本身不是响应式，需要在instance赋值再来触发*/
 											instance.options = { ...instance.options };
@@ -162,7 +187,7 @@ export default {
 											</div>
 										</div>`
 								}),
-								renderButtons: (dialogInstance) => {
+								renderButtons: dialogInstance => {
 									return dialogInstance.vDomDefaultButton;
 								},
 								maxmin: true,

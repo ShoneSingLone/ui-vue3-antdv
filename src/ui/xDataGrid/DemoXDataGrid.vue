@@ -1,9 +1,17 @@
 <template>
+	<DemoXDataGridxVirTable />
+	<mkit md="### xDataGrid" />
 	<xDataGrid :configs="configs_table" />
+	<mkit md="### xPagination" />
+	<xPagination
+		class="table-pagination"
+		:pagination="configs_table.pagination"
+		:onPaginationChange="handlePaginationChange" />
 </template>
 
 <script>
 import { ITEM_OPTIONS } from "../../common/options";
+import { DemoXDataGridxVirTable } from "./DemoXDataGridxVirTable";
 import {
 	defCol,
 	defColActions,
@@ -23,16 +31,24 @@ const { $t } = State_UI;
 
 export default {
 	name: "DemoXDataGrid",
+	components: {
+		DemoXDataGridxVirTable
+	},
+	methods: {
+		handlePaginationChange(pagination) {
+			console.log("🚀:", "pagination", JSON.stringify(pagination, null, 2));
+		}
+	},
 	data() {
 		return {
 			configs_table: defDataGridOption({
 				async queryTableList(params) {},
 				dataSource: [],
 				columns: {
-					...defCol({ prop: "name", label: $t("租户名称").label }),
+					...defCol({ prop: "name", label: $t("名称").label }),
 					...defCol({
 						prop: "status",
-						label: $t("服务状态").label,
+						label: $t("状态").label,
 						renderCell({ record }) {
 							return `${Utils.valueToLabel(
 								record.status,
@@ -42,7 +58,7 @@ export default {
 					}),
 					...defCol({
 						prop: "capacity",
-						label: $t("已用容量总容量").label,
+						label: $t("总容量").label,
 						renderCell({ record }) {
 							const { totalCapacity, usedCapacity, status } = record;
 							/*开通中*/
@@ -66,9 +82,9 @@ export default {
 						}
 					}),
 					...defCol({
-						prop: "upperVdcName",
+						prop: "upperName",
 						isShow: false,
-						label: $t("上级VDC").label
+						label: $t("上级名称").label
 					}),
 					...defCol({
 						prop: "startDate",

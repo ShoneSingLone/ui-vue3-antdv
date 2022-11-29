@@ -12,6 +12,7 @@ import InsideSaveOutlined from "../../assets/svg/SaveOutlined.svg";
 import InsideSearchOutlined from "../../assets/svg/SearchOutlined.svg";
 import InsideSyncOutlined from "../../assets/svg/SyncOutlined.svg";
 import InsideUploadOutlined from "../../assets/svg/UploadOutlined.svg";
+import Insidetips from "../../assets/svg/tips.svg";
 
 /* const icons = import.meta.glob("../../assets/svg/*.svg"); */
 const insideIcons = {
@@ -21,7 +22,8 @@ const insideIcons = {
 	InsideSaveOutlined,
 	InsideSearchOutlined,
 	InsideSyncOutlined,
-	InsideUploadOutlined
+	InsideUploadOutlined,
+	Insidetips
 };
 
 export default defineComponent(

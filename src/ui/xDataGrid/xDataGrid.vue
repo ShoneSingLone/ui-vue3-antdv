@@ -3,7 +3,7 @@ import { Table } from "ant-design-vue";
 import { defineComponent } from "vue";
 import { _ } from "../loadCommonUtil";
 import { filterColIsShow } from "./common";
-import xPagination from "./xPagination.vue";
+import { xPagination } from "./xPagination";
 import { Cpt_UI_locale } from "../State_UI";
 
 export default defineComponent({

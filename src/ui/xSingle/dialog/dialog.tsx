@@ -69,7 +69,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 						contentClass: "flex1",
 						type: 1,
 						title: [title || ""],
-						area: area || ["800px", "520px"],
+						area: area || ["800px"],
 						content: $container,
 						offset: ["160px", null],
 						btn: [
@@ -85,7 +85,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 										},
 										mounted() {
 											if (options.fullscreen) {
-												this.fullDialog()
+												this.fullDialog();
 											}
 										},
 										data() {
@@ -207,7 +207,8 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 							options.close = () => {
 								layer.close(layerIndex);
 							};
-							options.afterOpenDialoag && options.afterOpenDialoag(dialogVueApp);
+							options.afterOpenDialoag &&
+								options.afterOpenDialoag(dialogVueApp);
 						},
 						cancel() {
 							/*点击右上角的关闭按钮*/

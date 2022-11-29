@@ -27,7 +27,7 @@ export default defineComponent({
 		},
 		labelStyleText() {
 			return _.map(
-				_.merge({ width: "120px", "text-align": "left" }, this.labelStyle),
+				_.merge({ width: "120px", "text-align": "right" }, this.labelStyle),
 				(value, prop) => `${prop}: ${value}`
 			).join(";");
 		},

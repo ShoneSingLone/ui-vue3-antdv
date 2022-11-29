@@ -177,4 +177,18 @@ $list: 0 3 4 5 8 9 10 13 14 15 16 20 24 25 30;
 		0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12) !important;
 }
 
+::-webkit-scrollbar {
+	width: 6px;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+	background: rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+}
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset006pxrgba(255, 0, 0, 0.3);
+	background: rgba(255, 255, 255, 0.1);
+}
+
 @import "./MdButton.scss";
+@import "./xDataGrid/xVirTable/xVirTable.scss";

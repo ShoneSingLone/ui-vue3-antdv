@@ -38,9 +38,17 @@ mylodash.isListener = key => {
 	}
 	return mylodash.isOn(key) || mylodash.isModelListener(key);
 };
-/**/
+
 /*是否非空数组*/
-mylodash.isArrayFill = arr => mylodash.isArray(arr) && arr.length > 0;
+mylodash.isArrayFill = arr => {
+	if (Object.prototype.toString.call(arr) == "[object Array]") {
+		if (arr.length > 0) {
+			return true;
+		}
+	}
+	return false;
+};
+
 /*对象至少有一个属性*/
 mylodash.isObjectFill = obj =>
 	mylodash.isPlainObject(obj) && Object.keys(obj).length > 0;
@@ -119,9 +127,21 @@ mylodash.safeDate = function (val) {
  * @returns {boolean}
  */
 mylodash.isInput = val => {
-	if (val) return true;
-	if (val === 0) return true;
-	if (val === false) return true;
+	if (val === undefined) {
+		return false;
+	}
+	val = JSON.parse(JSON.stringify(val));
+	if (val === 0) {
+		return true;
+	}
+	if (val === false) {
+		return true;
+	}
+	if (mylodash.isArray(val)) {
+		return val.length > 0;
+	} else if (val) {
+		return true;
+	}
 	return false;
 };
 /*jquery到底有没有选中目标DOM？*/
