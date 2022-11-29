@@ -240,7 +240,7 @@ export const xVirTableBody = defineComponent({
 		setPerBlockHeight: _.debounce(function (viewportHeight: number) {
 			this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
 			this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
-		}, 33),
+		}, 64),
 		setTop: _.debounce(function () {
 			if (this.$refs.refWrapper) {
 				this.$refs.refWrapper.scrollTo({
@@ -265,6 +265,9 @@ export const xVirTableBody = defineComponent({
 		}
 	},
 	watch: {
+		rowHeight() {
+			this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
+		},
 		top() {
 			this.setTop();
 		},

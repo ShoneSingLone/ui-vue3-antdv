@@ -5,30 +5,29 @@ import $ from "jquery";
 import { xVirTableTh } from "./xVirTableTh";
 import { xVirTableBody } from "./xVirTableBody";
 
-
 export function defineXVirTableConfigs(options) {
 	const required = ["rowHeight", "columns"];
-	if (_.some(required, prop => {
-		if (!options[prop]) {
-			alert("defineXVirTableConfigs miss required " + prop);
-			return true;
-		}
-		return false;
-	})) {
+	if (
+		_.some(required, prop => {
+			if (!options[prop]) {
+				alert("defineXVirTableConfigs miss required " + prop);
+				return true;
+			}
+			return false;
+		})
+	) {
 		throw new Error("defineXVirTableConfigs miss required");
-
 	} else if (options.selectedConfigs) {
 		/* 如果有selectedConfigs  默认多选，one是单选*/
 		options.selected = options.selected || [];
 	}
-	return options
+	return options;
 }
-
 
 defineXVirTableConfigs.type = {
 	many: "many",
-	one: "one",
-}
+	one: "one"
+};
 
 /**
  * 展示列的顺序
@@ -44,15 +43,19 @@ export const xVirTable = defineComponent({
 	},
 	data() {
 		return {
-			selectedAll: false,
-		}
+			selectedAll: false
+		};
 	},
 	computed: {
 		selectedIndeterminate() {
 			const dataLength = this.configs?.dataSource?.length || 0;
 			const selectedLength = this.selected.length;
 
-			if (dataLength == 0 || selectedLength == 0 || dataLength == selectedLength) {
+			if (
+				dataLength == 0 ||
+				selectedLength == 0 ||
+				dataLength == selectedLength
+			) {
 				return false;
 			}
 			return true;
@@ -68,7 +71,7 @@ export const xVirTable = defineComponent({
 				return false;
 			}
 			if (!this.configs?.selectedConfigs?.prop) {
-				alert("vVirTable miss this.selected id prop")
+				alert("vVirTable miss this.selected id prop");
 			}
 			return this.configs?.selectedConfigs?.prop;
 		},
@@ -79,7 +82,7 @@ export const xVirTable = defineComponent({
 			if (_.isFunction(this.configs?.selectedConfigs?.fn)) {
 				return this.configs?.selectedConfigs?.fn;
 			} else {
-				return false
+				return false;
 			}
 		},
 		rowHeight() {
@@ -111,20 +114,35 @@ export const xVirTable = defineComponent({
 						);
 					}
 					return columnStyle;
-				}, []
+				},
+				[]
 			);
 			return _columnWidthArray;
+		},
+		vDomTheadSelect() {
+			/* 单选的时候不显示 */
+			let vDomSeletor = (
+				<aCheckbox
+					v-model:checked={this.selectedAll}
+					indeterminate={this.selectedIndeterminate}
+					onChange={this.handleSelectedChangeTh}
+				/>
+			);
+			if (this.selectedType === "one") {
+				vDomSeletor = null;
+			}
+			return vDomSeletor;
 		},
 		vDomThead() {
 			return (
 				<div role="thead" class="xVirTable-thead">
 					<div role="tr" class="flex horizon">
-						{<div role="th" class="flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check" data-prop="xVirSelected">
-							<aCheckbox
-								v-model:checked={this.selectedAll}
-								indeterminate={this.selectedIndeterminate}
-								onChange={this.handleSelectedChangeTh} />
-						</div>}
+						<div
+							role="th"
+							class="flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check"
+							data-prop="xVirSelected">
+							{this.vDomTheadSelect}
+						</div>
 						{_.map(this.columnOrder, (prop: string, index: number) => {
 							const column = this.configs?.columns[prop];
 							return <xVirTableTh column={column} index={index} key={prop} />;
@@ -182,25 +200,35 @@ export const xVirTable = defineComponent({
 			const $style = $(`#style_${this.xVirTableId}`);
 			$style.html(styleContent);
 		},
-		handleSelectedChange() {
-
-		},
+		handleSelectedChange() {},
 		handleSelectedChangeTh(e) {
 			const { checked } = e.target;
 			if (checked) {
-				this.configs.selected = _.map(this.configs.dataSource, i => i[this.selectedProp])
+				this.configs.selected = _.map(
+					this.configs.dataSource,
+					i => i[this.selectedProp]
+				);
 			} else {
 				this.configs.selected = [];
 			}
 		},
 		handleSelectedChangeTd({ id }) {
+			const isOnlyOne = this.selectedType === "one";
 			const index = _.findIndex(this.configs?.selected, i => i === id);
 			if (index > -1) {
-				this.configs?.selected.splice(index, 1)
+				if (isOnlyOne) {
+					this.configs.selected = [];
+				} else {
+					this.configs.selected.splice(index, 1);
+				}
 			} else {
-				this.configs?.selected.push(id)
+				if (isOnlyOne) {
+					this.configs.selected = [id];
+				} else {
+					this.configs.selected.push(id);
+				}
 			}
-		},
+		}
 	},
 	render() {
 		return this.vDomMainTable;

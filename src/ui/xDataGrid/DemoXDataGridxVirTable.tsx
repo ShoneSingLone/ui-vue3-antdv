@@ -5,6 +5,7 @@ import { Utils } from "../common";
 import { State_UI } from "../State_UI";
 import { defCol } from "./common";
 import { defineXVirTableConfigs } from "./xVirTable/xVirTable";
+import { _ } from "../loadCommonUtil";
 const { $t } = State_UI;
 
 const OPTIONS = [
@@ -29,8 +30,32 @@ const genConfigsStatus = (value: any) => ({
 });
 
 export const DemoXDataGridxVirTable = defineComponent({
+	watch: {
+		total: {
+			immediate: true,
+			handler: _.debounce(function (total) {
+				this.configs_xVirTable.dataSource = [...new Array(total)].map(
+					(i, ii) => {
+						return {
+							id: ii,
+							name: "name" + ii,
+							status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",
+							select: ["ACTIVATION"],
+							category: "category" + ii,
+							upperName:
+								"category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" +
+								ii,
+							startDate: "startDate" + ii,
+							endDate: "endDate" + ii
+						};
+					}
+				);
+			}, 1000)
+		}
+	},
 	data(vm) {
 		return {
+			total: 9999,
 			filter: {
 				status: []
 			},
@@ -38,31 +63,18 @@ export const DemoXDataGridxVirTable = defineComponent({
 				rowHeight: 32,
 				selected: [],
 				selectedConfigs: {
-					type: defineXVirTableConfigs.type.many,
+					type: defineXVirTableConfigs.type.one,
 					prop: "id",
 					disabled({ rowData, rowIndex }) {
 						if (rowIndex % 10 == 0) {
-							return "test"
+							return "test";
 						} else {
-							return false
+							return false;
 						}
 					}
 				},
-				selectedBy: 'id',
-				dataSource: [...new Array(4000)].map((i, ii) => {
-					return {
-						id: ii,
-						name: "name" + ii,
-						status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",
-						select: ["ACTIVATION"],
-						category: "category" + ii,
-						upperName:
-							"category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" +
-							ii,
-						startDate: "startDate" + ii,
-						endDate: "endDate" + ii
-					};
-				}),
+				selectedBy: "id",
+				dataSource: [],
 				columns: {
 					...defCol({
 						prop: "name",
@@ -144,7 +156,42 @@ export const DemoXDataGridxVirTable = defineComponent({
 		return (
 			<>
 				<mkit md="### xVirTable" />
-				{JSON.stringify(this.configs_xVirTable.selected)}
+				<div class="mt10 mb10">
+					<div class="flex middle">
+						<a-radio-group
+							v-model:value={this.configs_xVirTable.selectedConfigs.type}>
+							<a-radio-button value="many">多选</a-radio-button>
+							<a-radio-button value="one">单选</a-radio-button>
+						</a-radio-group>
+						<span class="ml10 flex1" style={{ overflow: "auto" }}>
+							已选择：
+							{JSON.stringify(this.configs_xVirTable.selected)}
+						</span>
+					</div>
+					<div>
+						<div class="flex mt10 middle">
+							<span>总记录数：</span>
+							<aInputNumber
+								id="inputNumber"
+								v-model:value={this.total}
+								min={0}
+							/>
+						</div>
+						10000 以内，性能问题不大
+						<div>
+							增加行高，可以减少viewport内的行数，起到减少计算总量的作用
+						</div>
+						<div class="flex middle mt10">
+							<span>行高：</span>
+							<aInputNumber
+								id="inputNumber"
+								v-model:value={this.configs_xVirTable.rowHeight}
+								min={32}
+								max={100}
+							/>
+						</div>
+					</div>
+				</div>
 				<div style="width:100%;height:300px;">
 					<xVirTable configs={this.configs_xVirTable} />
 				</div>
