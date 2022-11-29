@@ -1,0 +1,17 @@
+import{_ as b,U as p,h as u,r as f,i as v,o as B,c as h,w as m,b as s,F as x,S as y}from"./index.3e50bbdc.js";import{D as _}from"./DemoXFormWithForm.b884150f.js";const{$t:c}=y,k={data(){return{md_vUiPopover:`### \u4F7F\u7528v-uiPopover
+\`\`\`js
+/* \u4E00\u822C\u6309\u94AE hover\u4F1A\u6709\u4E00\u4E2Atips*/
+<xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('\u8FD9\u662F\u4E00\u4E2A\u6D6E\u52A8tips').label }" />
+\`\`\`
+`,configs:{btn:{modifyIP:{text:()=>c("\u4E00\u822C").label,async onClick(){p.dialog.component({title:c("DemoXFormWithForm").label,component:_,maxmin:!0,payload:{row:{name:"name"}},area:["694px","440px"],async onOk(t){var o;const{close:l,payload:n}=t,{Methods:i}=n;try{if(await i.verifyForm()){const e=i.getParams();console.log(e),l()}}catch(e){logError((o=e==null?void 0:e.error)==null?void 0:o.msg)}}})}},noBtn:{text:()=>c("\u65E0\u6309\u94AE").label,async onClick(){p.dialog.component({title:c("DemoXFormWithForm").label,component:u({template:"<p>\u6F14\u793A\u4F7F\u7528bundless\u7684\u5F62\u5F0F\uFF0C\u4F7F\u7528template\uFF0C\u4E0D\u4F7F\u7528jsx</p>"}),hideButtons:!0,hideCancel:!0,hideOk:!0,maxmin:!0,payload:{row:{name:"name"}},area:["694px","440px"],async onOk(t){var o;const{close:l,payload:n}=t,{Methods:i}=n;try{if(await i.verifyForm()){const e=i.getParams();console.log(e),l()}}catch(e){logError((o=e==null?void 0:e.error)==null?void 0:o.msg)}}})}},customBtn:{text:()=>c("\u81EA\u5B9A\u4E49\u6309\u94AE").label,async onClick(){let t=0;const l={title:c("DemoXFormWithForm").label,component:u({methods:{setBtnDefault(){console.log("instance===dialogOptions.__dialogInstance",n===l.__dialogInstance),t++%2===0?n.options.renderButtons=()=>u({template:`
+														<aButton @click="handleClick">${n.cancelText}${t}</aButton>
+														<xGap l="10" />
+														<aButton @click="handleClick">count: ${t}</aButton>
+													`,methods:{handleClick(){return n.handleClickCancel()}}}):n.options.renderButtons=n.vDomDefaultButton,n.options={...n.options}}},template:`
+										<div class="padding20">
+											<p>\u6F14\u793A\u4F7F\u7528bundless\u7684\u5F62\u5F0F\uFF0C\u4F7F\u7528template\uFF0C\u4E0D\u4F7F\u7528jsx</p>
+											<div class="flex">
+												<xGap f="1" />
+												<aButton @click="setBtnDefault">\u6539\u53D8\u6309\u94AE</aButton>
+											</div>
+										</div>`}),renderButtons:i=>i.vDomDefaultButton,maxmin:!0,payload:{row:{name:"name"}},area:["694px","440px"]},n=await p.dialog.component(l)}}}}}}};function D(t,l,n,i,o,e){const a=f("xButton"),g=f("mkit"),d=f("xGap"),r=v("uiPopover");return B(),h(x,null,[m(s(a,{configs:o.configs.btn.modifyIP},null,8,["configs"]),[[r,{content:t.$t("\u8FD9\u662F\u4E00\u4E2A\u6D6E\u52A8tips").label}]]),m(s(a,{configs:o.configs.btn.modifyIP},null,8,["configs"]),[[r,{content:t.$t("\u8FD9\u662F\u4E00\u4E2A\u6D6E\u52A8tips").label}]]),m(s(a,{configs:o.configs.btn.modifyIP},null,8,["configs"]),[[r,{content:t.$t("\u8FD9\u662F\u4E00\u4E2A\u6D6E\u52A8tips").label}]]),m(s(a,{configs:o.configs.btn.modifyIP},null,8,["configs"]),[[r,{content:t.$t("\u8FD9\u662F\u4E00\u4E2A\u6D6E\u52A8tips").label}]]),m(s(a,{configs:o.configs.btn.modifyIP},null,8,["configs"]),[[r,{content:t.$t("\u8FD9\u662F\u4E00\u4E2A\u6D6E\u52A8tips").label}]]),s(g,{md:o.md_vUiPopover},null,8,["md"]),s(d,{t:"10"}),s(a,{configs:o.configs.btn.noBtn},null,8,["configs"]),s(d,{t:"10"}),s(a,{configs:o.configs.btn.customBtn},null,8,["configs"])],64)}const C=b(k,[["render",D]]);export{C as default};
