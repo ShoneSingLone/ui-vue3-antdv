@@ -5,6 +5,31 @@ import $ from "jquery";
 import { xVirTableTh } from "./xVirTableTh";
 import { xVirTableBody } from "./xVirTableBody";
 
+
+export function defineXVirTableConfigs(options) {
+	const required = ["rowHeight", "columns"];
+	if (_.some(required, prop => {
+		if (!options[prop]) {
+			alert("defineXVirTableConfigs miss required " + prop);
+			return true;
+		}
+		return false;
+	})) {
+		throw new Error("defineXVirTableConfigs miss required");
+
+	} else if (options.selectedConfigs) {
+		/* 如果有selectedConfigs  默认多选，one是单选*/
+		options.selected = options.selected || [];
+	}
+	return options
+}
+
+
+defineXVirTableConfigs.type = {
+	many: "many",
+	one: "one",
+}
+
 /**
  * 展示列的顺序
  */
@@ -17,7 +42,46 @@ export const xVirTable = defineComponent({
 	mounted() {
 		this.initStyle();
 	},
+	data() {
+		return {
+			selectedAll: false,
+		}
+	},
 	computed: {
+		selectedIndeterminate() {
+			const dataLength = this.configs?.dataSource?.length || 0;
+			const selectedLength = this.selected.length;
+
+			if (dataLength == 0 || selectedLength == 0 || dataLength == selectedLength) {
+				return false;
+			}
+			return true;
+		},
+		selected() {
+			return this.configs?.selected || [];
+		},
+		selectedType() {
+			return this.configs?.selectedConfigs?.type || false;
+		},
+		selectedProp() {
+			if (!this.selectedType) {
+				return false;
+			}
+			if (!this.configs?.selectedConfigs?.prop) {
+				alert("vVirTable miss this.selected id prop")
+			}
+			return this.configs?.selectedConfigs?.prop;
+		},
+		selectedBy() {
+			if (!this.selectedType) {
+				return false;
+			}
+			if (_.isFunction(this.configs?.selectedConfigs?.fn)) {
+				return this.configs?.selectedConfigs?.fn;
+			} else {
+				return false
+			}
+		},
 		rowHeight() {
 			return this.configs?.rowHeight || 32;
 		},
@@ -47,8 +111,7 @@ export const xVirTable = defineComponent({
 						);
 					}
 					return columnStyle;
-				},
-				[]
+				}, []
 			);
 			return _columnWidthArray;
 		},
@@ -56,6 +119,12 @@ export const xVirTable = defineComponent({
 			return (
 				<div role="thead" class="xVirTable-thead">
 					<div role="tr" class="flex horizon">
+						{<div role="th" class="flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check" data-prop="xVirSelected">
+							<aCheckbox
+								v-model:checked={this.selectedAll}
+								indeterminate={this.selectedIndeterminate}
+								onChange={this.handleSelectedChangeTh} />
+						</div>}
 						{_.map(this.columnOrder, (prop: string, index: number) => {
 							const column = this.configs?.columns[prop];
 							return <xVirTableTh column={column} index={index} key={prop} />;
@@ -79,6 +148,9 @@ export const xVirTable = defineComponent({
 						columnOrder={this.columnOrder}
 						columns={this.configs?.columns}
 						rowHeight={this.rowHeight}
+						onSelectedChange={this.handleSelectedChangeTd}
+						selectedConfigs={this.configs?.selectedConfigs}
+						selected={this.configs?.selected}
 					/>
 				</div>
 			);
@@ -109,7 +181,26 @@ export const xVirTable = defineComponent({
 		updateStyle(styleContent: string) {
 			const $style = $(`#style_${this.xVirTableId}`);
 			$style.html(styleContent);
-		}
+		},
+		handleSelectedChange() {
+
+		},
+		handleSelectedChangeTh(e) {
+			const { checked } = e.target;
+			if (checked) {
+				this.configs.selected = _.map(this.configs.dataSource, i => i[this.selectedProp])
+			} else {
+				this.configs.selected = [];
+			}
+		},
+		handleSelectedChangeTd({ id }) {
+			const index = _.findIndex(this.configs?.selected, i => i === id);
+			if (index > -1) {
+				this.configs?.selected.splice(index, 1)
+			} else {
+				this.configs?.selected.push(id)
+			}
+		},
 	},
 	render() {
 		return this.vDomMainTable;

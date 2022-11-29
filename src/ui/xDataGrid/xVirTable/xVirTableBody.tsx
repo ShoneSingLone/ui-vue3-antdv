@@ -5,7 +5,8 @@ import { usefnObserveDomResize } from "../../compositionAPI/useDomResize";
 import { xVirTableTd } from "./xVirTableTd";
 
 export const xVirTableBody = defineComponent({
-	props: ["dataSource", "columnOrder", "columns", "rowHeight"],
+	props: ["dataSource", "columnOrder", "columns", "rowHeight", 'selectedConfigs', 'selected'],
+	emits: ["selectedChange", "update:scrollHeight"],
 	components: {
 		xVirTableTd
 	},
@@ -37,6 +38,31 @@ export const xVirTableBody = defineComponent({
 		this.fnUnobserveDomResize(this.$refs.wrapper);
 	},
 	computed: {
+		fnIsSelected() {
+			const { isSelect, prop } = this.selectedConfigs || {};
+			if (_.isFunction(isSelect)) {
+				return (args) => {
+					return isSelect.call(this, args)
+				}
+			} else {
+				return ({ rowData }) => {
+					const id = rowData[prop];
+					return this.selected.includes(id);
+				}
+			}
+		},
+		fnIsDisabled() {
+			const { isDisabled } = this.selectedConfigs || {};
+			if (_.isFunction(isDisabled)) {
+				return () => {
+					return isDisabled.call(this, args);
+				}
+			} else {
+				return () => {
+					return false;
+				}
+			}
+		},
 		positionBlock() {
 			return this.blockInViewCount % 3;
 		},
@@ -76,48 +102,39 @@ export const xVirTableBody = defineComponent({
 		/* style */
 		styleWrapper1() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${
-					this.blockInViewCount * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
+					}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${
-					(this.blockInViewCount + 2) * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight
+					}px)`;
 			}
-			return `transform:translateY(${
-				(this.blockInViewCount + 1) * this.perBlockHeight
-			}px)`;
+			return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
+				}px)`;
 		},
 		styleWrapper2() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${
-					(this.blockInViewCount + 1) * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
+					}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${
-					this.blockInViewCount * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
+					}px)`;
 			}
-			return `transform:translateY(${
-				(this.blockInViewCount - 1) * this.perBlockHeight
-			}px)`;
+			return `transform:translateY(${(this.blockInViewCount - 1) * this.perBlockHeight
+				}px)`;
 		},
 		styleWrapper3() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${
-					(this.blockInViewCount + 2) * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight
+					}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${
-					(this.blockInViewCount + 1) * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
+					}px)`;
 			}
-			return `transform:translateY(${
-				this.blockInViewCount * this.perBlockHeight
-			}px)`;
+			return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
+				}px)`;
 		},
 		vDomBodyTr1() {
 			return _.map(this.virs1, (data: object, rowIndex: number) => {
@@ -126,6 +143,7 @@ export const xVirTableBody = defineComponent({
 						role="tr"
 						class="xVirTable-row flex horizon"
 						data-row-key={rowIndex}>
+						{this.genSelectedVDom({ rowIndex, rowData: data })}
 						{_.map(this.columnOrder, (prop: string, index: number) => {
 							return (
 								<xVirTableTd
@@ -147,6 +165,7 @@ export const xVirTableBody = defineComponent({
 						role="tr"
 						class="xVirTable-row flex horizon"
 						data-row-key={rowIndex}>
+						{this.genSelectedVDom({ rowIndex, rowData: data })}
 						{_.map(this.columnOrder, (prop: string, index: number) => {
 							return (
 								<xVirTableTd
@@ -168,6 +187,7 @@ export const xVirTableBody = defineComponent({
 						role="tr"
 						class="xVirTable-row flex horizon"
 						data-row-key={rowIndex}>
+						{this.genSelectedVDom({ rowIndex, rowData: data })}
 						{_.map(this.columnOrder, (prop: string, index: number) => {
 							return (
 								<xVirTableTd
@@ -191,6 +211,32 @@ export const xVirTableBody = defineComponent({
 		}
 	},
 	methods: {
+		genSelectedVDom(rowInfo) {
+			if (!this.selectedConfigs) {
+				return null;
+			}
+			const isSelected = this.fnIsSelected(rowInfo);
+			let isDisabled = this.fnIsDisabled(rowInfo);
+			const handleChange = (e) => {
+				const { prop } = this.selectedConfigs;
+				this.emitSelectedChange(e.target.checked, rowInfo.rowData[prop])
+			}
+			let vDomChecked;
+			if (_.isString(isDisabled)) {
+				isDisabled = true;
+				const uiPopoverConfigs = { content: isDisabled };
+				vDomChecked = <aCheckbox checked={isSelected} onChange={handleChange} disabled={true} v-uiPopover={uiPopoverConfigs} />
+			} else {
+				vDomChecked = <aCheckbox checked={isSelected} onChange={handleChange} disabled={isDisabled} />
+			}
+
+			return <div role="td" data-prop="xVirSelected" class="flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check">
+				{vDomChecked}
+			</div>
+		},
+		emitSelectedChange(checked, id) {
+			this.$emit("selectedChange", { checked, id })
+		},
 		setPerBlockHeight: _.debounce(function (viewportHeight: number) {
 			this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
 			this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
@@ -233,7 +279,7 @@ export const xVirTableBody = defineComponent({
 	render() {
 		return (
 			<div
-				role="table"
+				role="body"
 				class="xVirTable-body-wrapper flex1"
 				ref="wrapper"
 				onScroll={this.updateTop}>

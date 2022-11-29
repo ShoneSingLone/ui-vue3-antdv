@@ -34,6 +34,22 @@ div[id^="xVirTable"].xVirTable-wrapper {
 			}
 		}
 	}
+	[role="body"] {
+		[role="tr"] {
+			[role="td"] {
+				padding: 0 8px;
+			}
+		}
+	}
+
+	div.xVirSelected_inner_element.xVirSelected_inner_element_check[data-prop="xVirSelected"] {
+		max-width: 30px;
+		min-width: 30px;
+		padding: 0;
+		> label {
+			margin: auto;
+		}
+	}
 }
 
 div.xVirTable-row > div.xVirTable-cell {

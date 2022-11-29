@@ -4,6 +4,7 @@ import { ITEM_OPTIONS } from "../../common/options";
 import { Utils } from "../common";
 import { State_UI } from "../State_UI";
 import { defCol } from "./common";
+import { defineXVirTableConfigs } from "./xVirTable/xVirTable";
 const { $t } = State_UI;
 
 const OPTIONS = [
@@ -31,12 +32,26 @@ export const DemoXDataGridxVirTable = defineComponent({
 	data(vm) {
 		return {
 			filter: {
-				status: ""
+				status: []
 			},
-			configs_xVirTable: {
+			configs_xVirTable: defineXVirTableConfigs({
 				rowHeight: 32,
-				dataSource: [...new Array(400000)].map((i, ii) => {
+				selected: [],
+				selectedConfigs: {
+					type: defineXVirTableConfigs.type.many,
+					prop: "id",
+					disabled({ rowData, rowIndex }) {
+						if (rowIndex % 10 == 0) {
+							return "test"
+						} else {
+							return false
+						}
+					}
+				},
+				selectedBy: 'id',
+				dataSource: [...new Array(4000)].map((i, ii) => {
 					return {
+						id: ii,
 						name: "name" + ii,
 						status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",
 						select: ["ACTIVATION"],
@@ -70,7 +85,6 @@ export const DemoXDataGridxVirTable = defineComponent({
 							);
 						},
 						renderCell({ record, cell }) {
-							console.log(record.select);
 							record.configsStatus =
 								record.configsStatus || genConfigsStatus(record.select);
 							return (
@@ -123,13 +137,14 @@ export const DemoXDataGridxVirTable = defineComponent({
 						label: vm.$t("到期时间").label
 					})
 				}
-			}
+			})
 		};
 	},
 	render() {
 		return (
 			<>
 				<mkit md="### xVirTable" />
+				{JSON.stringify(this.configs_xVirTable.selected)}
 				<div style="width:100%;height:300px;">
 					<xVirTable configs={this.configs_xVirTable} />
 				</div>

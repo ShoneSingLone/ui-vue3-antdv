@@ -1,7 +1,7 @@
 <template>
+	<DemoXDataGridxVirTable />
 	<mkit md="### xDataGrid" />
 	<xDataGrid :configs="configs_table" />
-	<DemoXDataGridxVirTable />
 	<mkit md="### xPagination" />
 	<xPagination
 		class="table-pagination"
