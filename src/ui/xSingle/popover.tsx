@@ -55,7 +55,7 @@ $(document).on("click.uiPopver", "[data-follow-id]", function (event) {
 	const followId = ele.dataset["followId"];
 	const appId = ele.dataset["appId"];
 	const popverOptions = popverOptionsCollection[followId];
-	new Popover(ele, popverOptions);
+	// new Popover(ele, popverOptions);
 	/*记录当前的popover 点击到其他位置即消除当前，只允许同时有一个框，添加的是click标识*/
 });
 
@@ -96,7 +96,7 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 			const eleWidth = $ele.width();
 			const text = $ele.text();
 			const $div = $(
-				`<div style="opacity: 1;height:0;line-height: 0;position: fixed;bottom: 111px;letter-spacing: normal;right: 100%;">${text}</div>`
+				`<span style="opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`
 			);
 			$div.appendTo($("body"));
 			const innerWidth = $div.width();
@@ -108,32 +108,36 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 		return;
 	}
 	let app;
-	const tipsContent = _.isPlainObject(options.content)
-		? `<div id="${followId}_content">.</div>`
-		: options.content;
-	const popoverIndex = layer.tips(tipsContent, `#${followId}`, {
+	let tipsContent = options.content;
+	let layerTipsOptions = {
 		tips: [layer.UP, "#000"],
 		/*hover 不允许 同时多个 tips出现*/
 		/*tipsMore: false,*/
-		time: 1000 * 60 * 10,
-		success(indexPanel, layerIndex) {
-			try {
-				app = createApp(options.content);
-				app.use(appAddPlugin[appId], { dependState: appDependState[appId] });
-				app.mount(`#${followId}_content`);
-			} catch (e) {
-				console.error(e);
-			}
+		time: 1000 * 60 * 10
+	};
+	/* TODO:目前只考虑vue组件对象 */
+	if (mylodash.isPlainObject(options.content)) {
+		const id = `${followId}_content`;
+		/* 桩 */
+		tipsContent = `<div id="${id}"></div>`;
+		layerTipsOptions.success = function success(indexPanel, layerIndex) {
+			app = createApp(options.content);
+			app.use(appAddPlugin[appId], { dependState: appDependState[appId] });
+			app.mount(`#${id}`);
 			options.afterOpenDialoag && options.afterOpenDialoag(app);
-		},
-		end() {
+		};
+		layerTipsOptions.end = function end() {
 			if (app) {
 				app.unmount();
 				app = null;
 			}
-		}
-	});
-	popverIndexCollection[followId] = popoverIndex;
+		};
+	}
+	popverIndexCollection[followId] = layer.tips(
+		tipsContent,
+		`#${followId}`,
+		layerTipsOptions
+	);
 });
 
 $(document).on("mouseleave.uiPopver", "[data-follow-id]", function (event) {

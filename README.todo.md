@@ -5,4 +5,6 @@
     - [daimabiji](http://demo.daimabiji.com/1553/)
     - [x] onlyEllipsis:只有在出现省略号的情况下才弹出tips（延迟显示）
     - [ ] 使用组件的时候，rePosition
+    - [ ] click uiPopover 的处理
+- [ ] 虚拟列表 onSelectedChange emit
 

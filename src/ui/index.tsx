@@ -20,7 +20,10 @@ import xCellLabel from "./xDataGrid/xCellLabel.vue";
 import { xPagination } from "./xDataGrid/xPagination";
 import xColFilter from "./xDataGrid/xColFilter.vue";
 import xVirScroll from "./xSingle/xScroll/xVirScroll.vue";
-import { xVirTable } from "./xDataGrid/xVirTable/xVirTable";
+import {
+	defineXVirTableConfigs,
+	xVirTable
+} from "./xDataGrid/xVirTable/xVirTable";
 import { _ as mylodash } from "./loadCommonUtil.js";
 import { State_UI, Cpt_UI_locale } from "./State_UI";
 import dayjs from "dayjs";
@@ -91,6 +94,7 @@ export { defCol as defCol };
 export { defColActions as defColActions };
 export { defColActionsBtnlist as defColActionsBtnlist };
 export { defDataGridOption as defDataGridOption };
+export { defineXVirTableConfigs as defineXVirTableConfigs };
 export { setDataGridInfo as setDataGridInfo };
 /* State_UI作为句柄，与外部通信，$t language 等属性 */
 export { State_UI as State_UI };
