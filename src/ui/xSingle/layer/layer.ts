@@ -81,7 +81,7 @@ const READY = {
 };
 
 //默认内置方法。
-const layer = {
+const layer: any = {
 	MSG: 0,
 	DIALOG: 1,
 	IFRAME: 2,
@@ -411,7 +411,7 @@ src="${config.content[0]}">
 			conType || (config.content = [config.content, "body"]);
 			config.follow = config.content[1];
 			const arrow = '<i class="layui-layer-TipsG"></i>';
-			config.content = `${config.content[0]}${arrow}`;
+			config.content = `<div style="max-width:300px;overflow:auto;">${config.content[0]}<div>${arrow}`;
 			delete config.title;
 			config.tips =
 				typeof config.tips === "object" ? config.tips : [config.tips, true];

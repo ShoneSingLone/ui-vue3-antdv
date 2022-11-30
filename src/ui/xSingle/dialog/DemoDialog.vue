@@ -1,13 +1,19 @@
 <template>
 	<xButton
 		:configs="configs.btn.modifyIP"
-		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
-	<xButton
-		:configs="configs.btn.modifyIP"
-		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
-	<xButton
-		:configs="configs.btn.modifyIP"
-		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
+		v-uiPopover="configs_uiPopoverLongString" />
+	<mkit :md="`## v-uiPopover`" />
+	<mkit :md="md_noEllipsis" />
+	<div v-uiPopover="{ onlyEllipsis: true }">没有省略号，无tips</div>
+	<mkit :md="md_Ellipsis" />
+	<div
+		v-uiPopover="{ onlyEllipsis: true }"
+		class="ellipsis"
+		style="width: 300px">
+		内容太长，有ellipsis，asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf
+	</div>
+
+	<xButton :configs="configs.btn.modifyIP" v-uiPopover="configs_uiPopover" />
 	<xButton
 		:configs="configs.btn.modifyIP"
 		v-uiPopover="{ content: $t('这是一个浮动tips').label }" />
@@ -22,7 +28,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, markRaw } from "vue";
 import {
 	defCol,
 	defColActions,
@@ -48,9 +54,30 @@ async function log() {
 	this.text = text;
 }
 
+const PopoverContent = defineComponent(
+	markRaw({
+		template: `<aCard type="primary"> aCard </aCard>`
+	})
+);
+
 export default {
 	data() {
 		return {
+			md_noEllipsis: `\`\`\`js
+	<div v-uiPopover="{ onlyEllipsis: true }">没有省略号，无tips</div>
+\`\`\``,
+			md_Ellipsis: `\`\`\`js
+	<div
+		v-uiPopover="{ onlyEllipsis: true }"
+		class="ellipsis"
+		style="width: 300px">
+		内容太长，有ellipsis，asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf
+	</div>
+\`\`\``,
+			configs_uiPopoverLongString: {
+				content: `js /* 一般按钮 hover会有一个tips*/ xButton :configs="configs.btn.modifyIP" v-uiPopover="{ content: $t('这是一个浮动tips').label }" `
+			},
+			configs_uiPopover: { content: PopoverContent },
 			md_vUiPopover: `### 使用v-uiPopover
 \`\`\`js
 /* 一般按钮 hover会有一个tips*/

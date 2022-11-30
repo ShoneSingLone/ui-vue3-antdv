@@ -1,134 +1,4 @@
-(function(){"use strict";try{if(typeof document!="undefined"){var n=document.createElement("style");n.appendChild(document.createTextNode(`.flex {
-  display: flex;
-}
-.flex1 {
-  flex: 1;
-}
-.flex2 {
-  flex: 2;
-}
-.flex3 {
-  flex: 3;
-}
-.flex4 {
-  flex: 4;
-}
-.flex5 {
-  flex: 5;
-}
-.flex025 {
-  flex: 0 0 25%;
-}
-.flex024 {
-  flex: 0 0 24%;
-}
-.flex.vertical {
-  flex-flow: column nowrap;
-}
-.flex.horizon {
-  flex-flow: row nowrap;
-}
-.flex.horizon-reverse {
-  flex-flow: row-reverse nowrap;
-}
-.flex.like-float {
-  flex-flow: row wrap;
-}
-.flex.like-float .el-button + .el-button {
-  margin-left: 0;
-}
-.flex.around {
-  justify-content: space-around;
-}
-.flex.between {
-  justify-content: space-between;
-}
-.flex.start {
-  justify-content: flex-start;
-}
-.flex.end {
-  justify-content: flex-end;
-}
-.flex.center {
-  justify-content: center;
-}
-.flex.middle {
-  align-items: center;
-}
-.flex.baseline {
-  align-items: baseline;
-}
-/*SvgIcon start*/
-div[id^="svg-icon_"] {
-  display: flex;
-}
-.next-loading {
-  height: 100%;
-  width: 100%;
-}
-.next-loading.next-open {
-  pointer-events: none;
-}
-.next-loading .next-loading-component {
-  opacity: 0.7;
-  filter: blur(1px);
-  filter: "progid:DXImageTransform.Microsoft.Blur(PixelRadius=1, MakeShadow=false)";
-  position: relative;
-  pointer-events: none;
-}
-.next-loading-masker {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 99;
-  opacity: 0.2;
-  background: #fff;
-}
-.next-loading-inline {
-  display: inline-block;
-}
-.next-loading-tip {
-  display: block;
-  position: absolute;
-  z-index: 4;
-  text-align: center;
-}
-/*SvgIcon end*/
-.icon-svg {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-}
-.pointer:hover {
-  cursor: pointer;
-}
-.pointer.elevation:active {
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12) !important;
-}
-.pointer.elevation:hover {
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12) !important;
-}
-.h100 {
-  height: 100%;
-}
-.w100 {
-  width: 100%;
-}
-.overflow-hidden {
-  overflow: hidden;
-}
-.x-ui-glossy {
-  position: relative;
-  color: #fff;
-  font-size: 30px;
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.2);
-  overflow: hidden;
-  z-index: 10;
-}
-.x-item > .ant-form-item-control {
+(function(){"use strict";try{if(typeof document!="undefined"){var n=document.createElement("style");n.appendChild(document.createTextNode(`.x-item > .ant-form-item-control {
   position: relative;
 }
 .x-item > .ant-form-item-control .ant-input-number {
@@ -1504,6 +1374,181 @@ div[id^="xDialog_"] {
 
 .elevation-24 {
   box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2), 0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12) !important;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+.flex2 {
+  flex: 2;
+}
+
+.flex3 {
+  flex: 3;
+}
+
+.flex4 {
+  flex: 4;
+}
+
+.flex5 {
+  flex: 5;
+}
+
+.flex025 {
+  flex: 0 0 25%;
+}
+
+.flex024 {
+  flex: 0 0 24%;
+}
+
+.flex.vertical {
+  flex-flow: column nowrap;
+}
+
+.flex.horizon {
+  flex-flow: row nowrap;
+}
+
+.flex.horizon-reverse {
+  flex-flow: row-reverse nowrap;
+}
+
+.flex.like-float {
+  flex-flow: row wrap;
+}
+
+.flex.like-float .el-button + .el-button {
+  margin-left: 0;
+}
+
+.flex.around {
+  justify-content: space-around;
+}
+
+.flex.between {
+  justify-content: space-between;
+}
+
+.flex.start {
+  justify-content: flex-start;
+}
+
+.flex.end {
+  justify-content: flex-end;
+}
+
+.flex.center {
+  justify-content: center;
+}
+
+.flex.middle {
+  align-items: center;
+}
+
+.flex.baseline {
+  align-items: baseline;
+}
+
+/*SvgIcon start*/
+
+div[id^=svg-icon_] {
+  display: flex;
+}
+
+.next-loading {
+  height: 100%;
+  width: 100%;
+}
+
+.next-loading.next-open {
+  pointer-events: none;
+}
+
+.next-loading .next-loading-component {
+  opacity: 0.7;
+  filter: blur(1px);
+  filter: "progid:DXImageTransform.Microsoft.Blur(PixelRadius=1, MakeShadow=false)";
+  position: relative;
+  pointer-events: none;
+}
+
+.next-loading-masker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  opacity: 0.2;
+  background: #fff;
+}
+
+.next-loading-inline {
+  display: inline-block;
+}
+
+.next-loading-tip {
+  display: block;
+  position: absolute;
+  z-index: 4;
+  text-align: center;
+}
+
+/*SvgIcon end*/
+
+.icon-svg {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.pointer:hover {
+  cursor: pointer;
+}
+
+.pointer.elevation:active {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.pointer.elevation:hover {
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.h100,
+.height100 {
+  height: 100%;
+}
+
+.w100,
+.width100 {
+  width: 100%;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.x-ui-glossy {
+  position: relative;
+  color: #fff;
+  font-size: 30px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  z-index: 10;
 }
 
 ::-webkit-scrollbar {
@@ -65364,13 +65409,11 @@ const xVirTableBody = defineComponent({
       if (event) {
         const top = event.target.scrollTop;
         this.blockInViewCount = Math.floor(top / this.perBlockHeight);
-        this.$emit("update:top", top);
       }
     },
     setHeight() {
       const height = this.dataSource.length * this.rowHeight;
       this.styleWrapperAll.height = `${height}px`;
-      this.$emit("update:scrollHeight", height);
     }
   },
   watch: {
@@ -65983,7 +66026,7 @@ src="${config.content[0]}">
       conType || (config.content = [config.content, "body"]);
       config.follow = config.content[1];
       const arrow = '<i class="layui-layer-TipsG"></i>';
-      config.content = `${config.content[0]}${arrow}`;
+      config.content = `<div style="max-width:300px;overflow:auto;">${config.content[0]}<div>${arrow}`;
       delete config.title;
       config.tips = typeof config.tips === "object" ? config.tips : [config.tips, true];
       config.tipsMore || layer.closeAll("tips");
@@ -66878,10 +66921,11 @@ function installPopoverDirective(app, appSettings) {
   });
 }
 $$1(document).on("click.uiPopver", "[data-follow-id]", function(event) {
-  const followId = this.dataset["followId"];
-  this.dataset["appId"];
+  const ele = this;
+  const followId = ele.dataset["followId"];
+  ele.dataset["appId"];
   const popverOptions = popverOptionsCollection[followId];
-  new Popover(this, popverOptions);
+  new Popover(ele, popverOptions);
 });
 function inVisibleArea(followId) {
   if (timerCollection[followId]) {
@@ -66907,6 +66951,18 @@ $$1(document).on("mouseenter.uiPopver", "[data-follow-id]", function(event) {
     content: ""
   };
   if (!options.content) {
+    if (options.onlyEllipsis) {
+      const $ele = $$1(this);
+      const eleWidth = $ele.width();
+      const text = $ele.text();
+      const $div = $$1(`<div style="opacity: 1;height:0;line-height: 0;position: fixed;bottom: 111px;letter-spacing: normal;right: 100%;">${text}</div>`);
+      $div.appendTo($$1("body"));
+      const innerWidth = $div.width();
+      $div.remove();
+      if (innerWidth > eleWidth) {
+        options.content = text;
+      }
+    }
     return;
   }
   let app;

@@ -4,23 +4,33 @@ import layer from "./layer/layer";
 import { _ } from "../loadCommonUtil";
 import { createApp, defineComponent } from "vue";
 
+type t_uiPopoverOptions = {
+	content: string;
+	onlyEllipsis?: Boolean;
+};
+
 const timeoutDelay = 400;
 /* 缓存 popover 的配置信息 */
-const popverOptionsCollection = {};
+const popverOptionsCollection: {
+	[prop: string]: t_uiPopoverOptions;
+} = {};
 /**/
-const popverIndexCollection = {};
-const appAddPlugin = {};
-const appDependState = {};
+const popverIndexCollection: {
+	[prop: string]: Number;
+} = {};
+const appAddPlugin: any = {};
+const appDependState: any = {};
 const timerCollection = {};
 const visibleArea = {};
 
 /* 监听 触发popover的事件 hover click */
-export function installPopoverDirective(app, appSettings) {
+export function installPopoverDirective(app: any, appSettings: any) {
 	const appId = _.genId("appId");
 	appAddPlugin[appId] = appSettings.appPlugins;
 	appDependState[appId] = appSettings.dependState;
+
 	app.directive("uiPopover", {
-		mounted(el, binding) {
+		mounted(el: HTMLInputElement, binding) {
 			const followId = _.genId("xPopoverTarget");
 			$(el).addClass("x-ui-popover").attr("id", followId);
 			el.dataset["followId"] = followId;
@@ -30,8 +40,8 @@ export function installPopoverDirective(app, appSettings) {
 				popverOptionsCollection[followId] = binding.value;
 			}
 		},
-		unmounted(el) {
-			const followId = el.dataset["followId"];
+		unmounted(el: HTMLInputElement) {
+			const followId: string = el.dataset["followId"];
 			layer.close(popverIndexCollection[followId]);
 			delete popverOptionsCollection[followId];
 			delete popverIndexCollection[followId];
@@ -41,10 +51,11 @@ export function installPopoverDirective(app, appSettings) {
 
 /* listener */
 $(document).on("click.uiPopver", "[data-follow-id]", function (event) {
-	const followId = this.dataset["followId"];
-	const appId = this.dataset["appId"];
+	const ele: HTMLInputElement = this;
+	const followId = ele.dataset["followId"];
+	const appId = ele.dataset["appId"];
 	const popverOptions = popverOptionsCollection[followId];
-	new Popover(this, popverOptions);
+	new Popover(ele, popverOptions);
 	/*记录当前的popover 点击到其他位置即消除当前，只允许同时有一个框，添加的是click标识*/
 });
 
@@ -77,7 +88,23 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 		return;
 	}
 	const options = popverOptionsCollection[followId] || { content: "" };
+	/* onlyEllipsis,content */
 	if (!options.content) {
+		/* 是不是需要判断内容有省略号 */
+		if (options.onlyEllipsis) {
+			const $ele = $(this);
+			const eleWidth = $ele.width();
+			const text = $ele.text();
+			const $div = $(
+				`<div style="opacity: 1;height:0;line-height: 0;position: fixed;bottom: 111px;letter-spacing: normal;right: 100%;">${text}</div>`
+			);
+			$div.appendTo($("body"));
+			const innerWidth = $div.width();
+			$div.remove();
+			if (innerWidth > eleWidth) {
+				options.content = text;
+			}
+		}
 		return;
 	}
 	let app;
