@@ -111,39 +111,48 @@ export const xVirTableBody = defineComponent({
 		/* style */
 		styleWrapper1() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
-					}px)`;
+				return `transform:translateY(${
+					this.blockInViewCount * this.perBlockHeight
+				}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight
-					}px)`;
-			}
-			return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
+				return `transform:translateY(${
+					(this.blockInViewCount + 2) * this.perBlockHeight
 				}px)`;
+			}
+			return `transform:translateY(${
+				(this.blockInViewCount + 1) * this.perBlockHeight
+			}px)`;
 		},
 		styleWrapper2() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
-					}px)`;
+				return `transform:translateY(${
+					(this.blockInViewCount + 1) * this.perBlockHeight
+				}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
-					}px)`;
-			}
-			return `transform:translateY(${(this.blockInViewCount - 1) * this.perBlockHeight
+				return `transform:translateY(${
+					this.blockInViewCount * this.perBlockHeight
 				}px)`;
+			}
+			return `transform:translateY(${
+				(this.blockInViewCount - 1) * this.perBlockHeight
+			}px)`;
 		},
 		styleWrapper3() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight
-					}px)`;
+				return `transform:translateY(${
+					(this.blockInViewCount + 2) * this.perBlockHeight
+				}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
-					}px)`;
-			}
-			return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
+				return `transform:translateY(${
+					(this.blockInViewCount + 1) * this.perBlockHeight
 				}px)`;
+			}
+			return `transform:translateY(${
+				this.blockInViewCount * this.perBlockHeight
+			}px)`;
 		},
 		vDomBodyTr1() {
 			return _.map(this.virs1, (data: object, rowIndex: number) => {
@@ -210,7 +219,7 @@ export const xVirTableBody = defineComponent({
 					</div>
 				);
 			});
-		},
+		}
 	},
 	methods: {
 		genSelectedVDom(rowInfo) {

@@ -120,10 +120,14 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 										},
 										computed: {
 											okText() {
-												return this.dialogOptions.okText || this.$t("确定").label;
+												return (
+													this.dialogOptions.okText || this.$t("确定").label
+												);
 											},
 											cancelText() {
-												return this.dialogOptions.cancelText || this.$t("取消").label;
+												return (
+													this.dialogOptions.cancelText || this.$t("取消").label
+												);
 											},
 											/* 主要内容 */
 											renderContent() {
@@ -143,7 +147,8 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 												if (_.isFunction(this.dialogOptions.renderButtons)) {
 													/* 提供 handleClickOk、handleClickCancel*/
 													let vDomButtons = (() => {
-														let _vDomButtons = this.dialogOptions.renderButtons(this);
+														let _vDomButtons =
+															this.dialogOptions.renderButtons(this);
 														if (!_vDomButtons) {
 															return null;
 														} else if (_vDomButtons.template) {

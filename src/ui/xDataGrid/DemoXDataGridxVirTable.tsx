@@ -38,7 +38,10 @@ export const DemoXDataGridxVirTable = defineComponent({
 					(i, ii) => {
 						let upperName = ii + " 正常显示";
 						if (ii % 5 === 0) {
-							upperName = ii + " v-uiPopover={{ onlyEllipsis: true }}。 有省略号才显示tips。 category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" + ii;
+							upperName =
+								ii +
+								" v-uiPopover={{ onlyEllipsis: true }}。 有省略号才显示tips。 category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" +
+								ii;
 						}
 
 						return {
@@ -142,14 +145,18 @@ export const DemoXDataGridxVirTable = defineComponent({
 						label: vm.$t("提示").label,
 						width: "200px",
 						renderCell({ record }) {
-							return <div className="ellipsis" v-uiPopover={{ onlyEllipsis: true }}>{record.upperName}</div>;
+							return (
+								<div className="ellipsis" v-uiPopover={{ onlyEllipsis: true }}>
+									{record.upperName}
+								</div>
+							);
 						}
 					}),
 					...defCol({
 						prop: "startDate",
 						label: vm.$t("开始时间").label,
 						renderCell({ record }) {
-							return Utils.dateFormat(record.startDate, 1)
+							return Utils.dateFormat(record.startDate, 1);
 						}
 					}),
 					...defCol({
