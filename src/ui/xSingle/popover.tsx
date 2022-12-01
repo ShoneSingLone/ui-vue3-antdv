@@ -55,6 +55,7 @@ $(document).on("click.uiPopver", "[data-follow-id]", function (event) {
 	const followId = ele.dataset["followId"];
 	const appId = ele.dataset["appId"];
 	const popverOptions = popverOptionsCollection[followId];
+	/* TODO: */
 	// new Popover(ele, popverOptions);
 	/*记录当前的popover 点击到其他位置即消除当前，只允许同时有一个框，添加的是click标识*/
 });
@@ -116,7 +117,7 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 		time: 1000 * 60 * 10
 	};
 	/* TODO:目前只考虑vue组件对象 */
-	if (mylodash.isPlainObject(options.content)) {
+	if (_.isPlainObject(options.content)) {
 		const id = `${followId}_content`;
 		/* 桩 */
 		tipsContent = `<div id="${id}"></div>`;

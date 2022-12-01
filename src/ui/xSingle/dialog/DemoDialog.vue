@@ -4,13 +4,15 @@
 		v-uiPopover="configs_uiPopoverLongString" />
 	<mkit :md="`## v-uiPopover`" />
 	<mkit :md="md_noEllipsis" />
-	<div v-uiPopover="{ onlyEllipsis: true }">没有省略号，无tips</div>
+	<div v-uiPopover="{ onlyEllipsis: true }">
+		<aTag>没有省略号，无tips</aTag>
+	</div>
 	<mkit :md="md_Ellipsis" />
 	<div
 		v-uiPopover="{ onlyEllipsis: true }"
-		class="ellipsis"
+		class="ellipsis mb10"
 		style="width: 300px">
-		内容太长，有ellipsis，asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf
+		<aTag>内容太长，</aTag>有ellipsis，asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf
 	</div>
 
 	<xButton :configs="configs.btn.modifyIP" v-uiPopover="configs_uiPopover" />
@@ -177,6 +179,7 @@ export default {
 							const dialogOptions = {
 								title: $t("DemoXFormWithForm").label,
 								component: defineComponent({
+									props: ["propDialogOptions"],
 									methods: {
 										setBtnDefault() {
 											console.log(
@@ -208,6 +211,11 @@ export default {
 									template: `
 										<div class="padding20">
 											<p>演示使用bundless的形式，使用template，不使用jsx</p>
+											<div>
+												<p>作为弹出的组件，有prop字段propDialogOptions，本身是传入dialog的参数options，经过实例化，添加了实例引用__dialogInstance，和DOM id __elId。当前DOM id {{propDialogOptions.__elId}}</p>
+												<p> this.dialogOptions.__dialogInstance = this;</p>
+												<p>this.dialogOptions.__elId = __elId; </p>
+											</div>
 											<div class="flex">
 												<xGap f="1" />
 												<aButton @click="setBtnDefault">改变按钮</aButton>

@@ -36,17 +36,20 @@ export const DemoXDataGridxVirTable = defineComponent({
 			handler: _.debounce(function (total) {
 				this.configs_xVirTable.dataSource = [...new Array(total)].map(
 					(i, ii) => {
+						let upperName = ii + " 正常显示";
+						if (ii % 5 === 0) {
+							upperName = ii + " v-uiPopover={{ onlyEllipsis: true }}。 有省略号才显示tips。 category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" + ii;
+						}
+
 						return {
+							upperName,
 							id: ii,
 							name: "name" + ii,
 							status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",
 							select: ["ACTIVATION"],
 							category: "category" + ii,
-							upperName:
-								"category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" +
-								ii,
-							startDate: "startDate" + ii,
-							endDate: "endDate" + ii
+							startDate: Date.now(),
+							endDate: Date.now()
 						};
 					}
 				);
@@ -136,13 +139,18 @@ export const DemoXDataGridxVirTable = defineComponent({
 					...defCol({
 						prop: "upperName",
 						isShow: false,
-						label: vm.$t("上级名称").label,
-						width: "160px",
-						minWidth: "160px"
+						label: vm.$t("提示").label,
+						width: "200px",
+						renderCell({ record }) {
+							return <div className="ellipsis" v-uiPopover={{ onlyEllipsis: true }}>{record.upperName}</div>;
+						}
 					}),
 					...defCol({
 						prop: "startDate",
-						label: vm.$t("开始时间").label
+						label: vm.$t("开始时间").label,
+						renderCell({ record }) {
+							return Utils.dateFormat(record.startDate, 1)
+						}
 					}),
 					...defCol({
 						prop: "endDate",

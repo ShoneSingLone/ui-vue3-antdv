@@ -32,11 +32,13 @@ export const xVirTableBody = defineComponent({
 			perBlockRowCount: 0,
 			blockInViewCount: 0,
 			styleWrapperAll: {
-				height: 0
+				height: 0,
+				position: "relative"
 			}
 		};
 	},
 	mounted() {
+		/* 监听body高度变化 */
 		this.fnObserveDomResize(this.$refs.wrapper, () => {
 			this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
 		});
@@ -109,48 +111,39 @@ export const xVirTableBody = defineComponent({
 		/* style */
 		styleWrapper1() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${
-					this.blockInViewCount * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
+					}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${
-					(this.blockInViewCount + 2) * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight
+					}px)`;
 			}
-			return `transform:translateY(${
-				(this.blockInViewCount + 1) * this.perBlockHeight
-			}px)`;
+			return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
+				}px)`;
 		},
 		styleWrapper2() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${
-					(this.blockInViewCount + 1) * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
+					}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${
-					this.blockInViewCount * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
+					}px)`;
 			}
-			return `transform:translateY(${
-				(this.blockInViewCount - 1) * this.perBlockHeight
-			}px)`;
+			return `transform:translateY(${(this.blockInViewCount - 1) * this.perBlockHeight
+				}px)`;
 		},
 		styleWrapper3() {
 			if (this.positionBlock === 0) {
-				return `transform:translateY(${
-					(this.blockInViewCount + 2) * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight
+					}px)`;
 			}
 			if (this.positionBlock === 1) {
-				return `transform:translateY(${
-					(this.blockInViewCount + 1) * this.perBlockHeight
-				}px)`;
+				return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight
+					}px)`;
 			}
-			return `transform:translateY(${
-				this.blockInViewCount * this.perBlockHeight
-			}px)`;
+			return `transform:translateY(${this.blockInViewCount * this.perBlockHeight
+				}px)`;
 		},
 		vDomBodyTr1() {
 			return _.map(this.virs1, (data: object, rowIndex: number) => {
@@ -218,13 +211,6 @@ export const xVirTableBody = defineComponent({
 				);
 			});
 		},
-		vDomBody() {
-			return (
-				<div role="tbody" class="xVirTable-tbody">
-					{this.vDomBodyTr}
-				</div>
-			);
-		}
 	},
 	methods: {
 		genSelectedVDom(rowInfo) {
@@ -272,8 +258,10 @@ export const xVirTableBody = defineComponent({
 			this.$emit("selectedChange", { checked, id });
 		},
 		setPerBlockHeight: _.debounce(function (viewportHeight: number) {
+			this.viewportHeight = viewportHeight;
 			this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
 			this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
+			this.setHeight();
 		}, 64),
 		setTop: _.debounce(function () {
 			if (this.$refs.refWrapper) {
@@ -292,6 +280,12 @@ export const xVirTableBody = defineComponent({
 		},
 		setHeight() {
 			const height = this.dataSource.length * this.rowHeight;
+			if (this.viewportHeight && height < this.viewportHeight) {
+				/* @ts-ignore */
+				this.styleWrapperAll.width = `calc(100% - 6px)`;
+			} else {
+				delete this.styleWrapperAll.width;
+			}
 			/* @ts-ignore */
 			this.styleWrapperAll.height = `${height}px`;
 		}

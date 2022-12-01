@@ -48468,7 +48468,7 @@ var lodash = { exports: {} };
     }
   }).call(commonjsGlobal);
 })(lodash, lodash.exports);
-const mylodash$1 = lodash.exports;
+const mylodash = lodash.exports;
 var dayjs_min = { exports: {} };
 (function(module2, exports2) {
   !function(t2, e2) {
@@ -48675,35 +48675,35 @@ var dayjs_min = { exports: {} };
   });
 })(dayjs_min);
 const dayjs$1 = dayjs_min.exports;
-mylodash$1.WORDS = {
+mylodash.WORDS = {
   INVALID_DATE: "Invalid Date",
   format_ymd: "YYYY-MM-DD"
 };
-mylodash$1.doNothing = (...args2) => {
+mylodash.doNothing = (...args2) => {
   if (localStorage.isShowDevLog) {
     const e2 = new Error();
     console.log("\u{1F680}:", e2.stack.split("\n")[2].replace("    at ", ""));
     console.log.apply(console, args2);
   }
 };
-mylodash$1.sleep = (t2) => new Promise((r2) => setTimeout(r2, t2));
+mylodash.sleep = (t2) => new Promise((r2) => setTimeout(r2, t2));
 const onRE = /^on[^a-z]/;
-mylodash$1.isOn = (key2) => onRE.test(key2);
-mylodash$1.isModelListener = (key2) => {
+mylodash.isOn = (key2) => onRE.test(key2);
+mylodash.isModelListener = (key2) => {
   key2 = String(key2);
   if (!key2) {
     return false;
   }
   return key2.startsWith("onUpdate:");
 };
-mylodash$1.isListener = (key2) => {
+mylodash.isListener = (key2) => {
   key2 = String(key2);
   if (!key2) {
     return false;
   }
-  return mylodash$1.isOn(key2) || mylodash$1.isModelListener(key2);
+  return mylodash.isOn(key2) || mylodash.isModelListener(key2);
 };
-mylodash$1.isArrayFill = (arr) => {
+mylodash.isArrayFill = (arr) => {
   if (Object.prototype.toString.call(arr) == "[object Array]") {
     if (arr.length > 0) {
       return true;
@@ -48711,13 +48711,13 @@ mylodash$1.isArrayFill = (arr) => {
   }
   return false;
 };
-mylodash$1.isObjectFill = (obj) => mylodash$1.isPlainObject(obj) && Object.keys(obj).length > 0;
-mylodash$1.safeFirst = (arr, fnCheck) => {
-  fnCheck = fnCheck || ((value) => mylodash$1.isInput(value));
-  const obj = mylodash$1.first(arr);
+mylodash.isObjectFill = (obj) => mylodash.isPlainObject(obj) && Object.keys(obj).length > 0;
+mylodash.safeFirst = (arr, fnCheck) => {
+  fnCheck = fnCheck || ((value) => mylodash.isInput(value));
+  const obj = mylodash.first(arr);
   return fnCheck(obj) ? obj : false;
 };
-mylodash$1.safeToString = (val, isBeautiful) => {
+mylodash.safeToString = (val, isBeautiful) => {
   if (typeof val === "object") {
     if (isBeautiful) {
       return JSON.stringify(val, null, 2);
@@ -48728,7 +48728,7 @@ mylodash$1.safeToString = (val, isBeautiful) => {
     return String(val);
   }
 };
-mylodash$1.safeParse = (val, defaultObj = {}) => {
+mylodash.safeParse = (val, defaultObj = {}) => {
   let obj = defaultObj;
   try {
     obj = JSON.parse(val);
@@ -48737,25 +48737,25 @@ mylodash$1.safeParse = (val, defaultObj = {}) => {
       throw new Error("json parse error");
     }
   } catch (error) {
-    mylodash$1.doNothing(error);
+    mylodash.doNothing(error);
   }
   return obj;
 };
-mylodash$1.safeSplit = function(target, sp) {
+mylodash.safeSplit = function(target, sp) {
   return (target == null ? void 0 : target.split) ? target.split(sp) : [];
 };
-mylodash$1.safeDate = function(val) {
+mylodash.safeDate = function(val) {
   if (!val) {
     return "";
   }
   let date = dayjs$1(val);
-  if (date === mylodash$1.WORDS.INVALID_DATE) {
+  if (date === mylodash.WORDS.INVALID_DATE) {
     return "";
   } else {
     return date;
   }
 };
-mylodash$1.isInput = (val) => {
+mylodash.isInput = (val) => {
   if (val === void 0) {
     return false;
   }
@@ -48766,23 +48766,23 @@ mylodash$1.isInput = (val) => {
   if (val === false) {
     return true;
   }
-  if (mylodash$1.isArray(val)) {
+  if (mylodash.isArray(val)) {
     return val.length > 0;
   } else if (val) {
     return true;
   }
   return false;
 };
-mylodash$1.is$Selected = ($ele) => $ele && $ele.length > 0;
-mylodash$1.getObjectFirstKeyValue = (obj, defaultValue = "") => {
+mylodash.is$Selected = ($ele) => $ele && $ele.length > 0;
+mylodash.getObjectFirstKeyValue = (obj, defaultValue = "") => {
   if (!obj)
     return defaultValue;
   const keyArray = Object.keys(obj);
-  if (!mylodash$1.isArrayFill(keyArray))
+  if (!mylodash.isArrayFill(keyArray))
     return defaultValue;
-  return mylodash$1.isInput(keyArray[0]) ? obj[keyArray[0]] : defaultValue;
+  return mylodash.isInput(keyArray[0]) ? obj[keyArray[0]] : defaultValue;
 };
-mylodash$1.asyncLoadJS = async (url, globalName) => {
+mylodash.asyncLoadJS = async (url, globalName) => {
   if (window[globalName]) {
     return window[globalName];
   }
@@ -48792,7 +48792,7 @@ mylodash$1.asyncLoadJS = async (url, globalName) => {
   });
   $style.attr("src", url);
 };
-mylodash$1.ensureValueDone = async (fnGetValue) => {
+mylodash.ensureValueDone = async (fnGetValue) => {
   return new Promise(async (resolve) => {
     let exeFnGetValue = async function() {
       const value = await fnGetValue();
@@ -48817,11 +48817,11 @@ function genId(category) {
 genId.idCount = 1;
 genId.ID_COUNT_MAX = 4e4;
 genId.DATE_NOW = Date.now();
-mylodash$1.genId = genId;
-mylodash$1.genProp = (someString) => {
-  return `k${mylodash$1.camelCase(someString)}`;
+mylodash.genId = genId;
+mylodash.genProp = (someString) => {
+  return `k${mylodash.camelCase(someString)}`;
 };
-mylodash$1.preload = (baseModule, deps) => {
+mylodash.preload = (baseModule, deps) => {
   if (!deps || deps.length === 0) {
     return baseModule();
   }
@@ -48858,12 +48858,12 @@ const parseContent = (returnSentence) => {
     return;
   return new Function(`${returnSentence} return module();`);
 };
-mylodash$1.asyncLoadText = function(url) {
-  mylodash$1.asyncLoadText.cache = (() => {
+mylodash.asyncLoadText = function(url) {
+  mylodash.asyncLoadText.cache = (() => {
     if (window.__envMode === "development") {
       return {};
     }
-    return mylodash$1.asyncLoadText.cache || {};
+    return mylodash.asyncLoadText.cache || {};
   })();
   return new Promise(
     (resolve, reject) => $$1.ajax({
@@ -48879,18 +48879,18 @@ mylodash$1.asyncLoadText = function(url) {
 async function asyncExecFnString(url) {
   let data2 = "";
   try {
-    data2 = await mylodash$1.asyncLoadText(url);
+    data2 = await mylodash.asyncLoadText(url);
   } catch (error) {
   }
   return parseContent(data2);
 }
-mylodash$1.asyncExecFnString = asyncExecFnString;
+mylodash.asyncExecFnString = asyncExecFnString;
 const VueComponents = {};
 async function asyncImportSFC(url) {
   if (VueComponents[url]) {
     return VueComponents[url];
   }
-  const scfSourceCode = await mylodash$1.asyncLoadText(url);
+  const scfSourceCode = await mylodash.asyncLoadText(url);
   const scfObjSourceCode = VueLoader(scfSourceCode);
   let scfObjAsyncFn = (...args2) => {
     console.log(args2);
@@ -48912,7 +48912,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
   });
   return scfObj;
 }
-mylodash$1.asyncImportSFC = asyncImportSFC;
+mylodash.asyncImportSFC = asyncImportSFC;
 function VueLoader(code) {
   function getSource(source, type2) {
     var regex = new RegExp("<" + type2 + "[^>]*>");
@@ -48939,7 +48939,7 @@ function VueLoader(code) {
   }
   return splitCode();
 }
-mylodash$1.loadCss = function(cssname) {
+mylodash.loadCss = function(cssname) {
   const cssPath = `${cssname}`;
   let $link = $$1("<link/>", { rel: "stylesheet", type: "text/css" });
   $link.appendTo($$1("head"));
@@ -48949,7 +48949,7 @@ mylodash$1.loadCss = function(cssname) {
     $link = null;
   };
 };
-mylodash$1.dateFormat = function(date, format2) {
+mylodash.dateFormat = function(date, format2) {
   if (!format2) {
     format2 = "YYYY-MM-DD";
   }
@@ -48959,15 +48959,15 @@ mylodash$1.dateFormat = function(date, format2) {
   const label = dayjs$1(date).format(format2);
   return label === "Invalid Date" ? "--" : label;
 };
-mylodash$1.keepDecimals = function(val, fractionDigits = 2) {
+mylodash.keepDecimals = function(val, fractionDigits = 2) {
   let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
   if (num === "NaN") {
     num = "-";
   }
   return num;
 };
-mylodash$1.valueToLabel = function(value, options) {
-  const target = mylodash$1.find(options, {
+mylodash.valueToLabel = function(value, options) {
+  const target = mylodash.find(options, {
     value
   });
   if (target) {
@@ -48976,7 +48976,7 @@ mylodash$1.valueToLabel = function(value, options) {
     return "--";
   }
 };
-mylodash$1.timego = function(timestamp) {
+mylodash.timego = function(timestamp) {
   let minutes, hours, days, seconds, mouth, year;
   const timeNow = parseInt(new Date().getTime() / 1e3);
   seconds = timeNow - timestamp;
@@ -49021,7 +49021,7 @@ mylodash$1.timego = function(timestamp) {
     return "\u521A\u521A";
   }
 };
-mylodash$1.htmlFilter = (html) => {
+mylodash.htmlFilter = (html) => {
   if (!html)
     return;
   let reg = /<\/?.+?\/?>/g;
@@ -49272,7 +49272,7 @@ var enAu = { exports: {} };
 })(enAu);
 const lStorage = new Proxy(localStorage, {
   set(_localStorage, prop, value) {
-    if (mylodash$1.isPlainObject(value)) {
+    if (mylodash.isPlainObject(value)) {
       _localStorage[prop] = JSON.stringify(value);
     } else {
       _localStorage[prop] = value;
@@ -49349,11 +49349,11 @@ let _State_UI = {
       label: prop,
       prop
     };
-    mylodash$1.templateSettings.interpolate = /{([\s\S]+?)}/g;
+    mylodash.templateSettings.interpolate = /{([\s\S]+?)}/g;
     if (State_UI.i18nMessage) {
       const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
       if (temp) {
-        result.label = mylodash$1.template(temp)(payload);
+        result.label = mylodash.template(temp)(payload);
         if (!result.label) {
           result.label = prop;
           console.error(`i18n:${prop} "NOT_FOUND"`);
@@ -49374,7 +49374,7 @@ watch(() => State_UI.language, (language) => {
   immediate: true
 });
 const Cpt_UI_locale = computed(() => {
-  const currentLanguage = mylodash$1.camelCase(State_UI.language);
+  const currentLanguage = mylodash.camelCase(State_UI.language);
   const locale2 = State_UI.LANGUAGE[currentLanguage];
   return locale2;
 });
@@ -49386,9 +49386,9 @@ const DatePicker$1 = ({
   let value = "";
   if (property.value) {
     value = dayjs$1(property.value);
-    mylodash$1.doNothing(value, property.value);
+    mylodash.doNothing(value, property.value);
     if (value === "Invalid Date") {
-      mylodash$1.doNothing("property.value", property.value);
+      mylodash.doNothing("property.value", property.value);
       value = "";
     }
   }
@@ -57989,15 +57989,15 @@ const TIPS_TYPE = {
 };
 async function validateForm(configsForm) {
   return Promise.all(
-    mylodash$1.map(
+    mylodash.map(
       configsForm,
       (configs, prop) => new Promise((resolve) => {
-        if (mylodash$1.isInput(configs.isShow)) {
+        if (mylodash.isInput(configs.isShow)) {
           const isFalse = !configs.isShow;
           if (isFalse) {
             return resolve();
           }
-          const isResFalse = mylodash$1.isFunction(configs.isShow) && !configs.isShow();
+          const isResFalse = mylodash.isFunction(configs.isShow) && !configs.isShow();
           if (isResFalse) {
             return resolve();
           }
@@ -58021,7 +58021,7 @@ async function validateForm(configsForm) {
   });
 }
 const AllWasWell = (res) => {
-  return mylodash$1.isArray(res) && res.length === 0;
+  return mylodash.isArray(res) && res.length === 0;
 };
 const checkXItem = async (xItemConfigs, handlerResult) => {
   xItemConfigs.checking = true;
@@ -58041,7 +58041,7 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
               return true;
             }
             const isInTrigger = (eventName) => xItemConfigs.validate.triggerEventsObj[eventName];
-            if (mylodash$1.some(trigger2, isInTrigger)) {
+            if (mylodash.some(trigger2, isInTrigger)) {
               trigBy = `triggerEvent ${trigger2.toString()}`;
               return true;
             }
@@ -58051,14 +58051,14 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
                 EVENT_TYPE.input,
                 EVENT_TYPE.blur
               ];
-              if (mylodash$1.some(updateTrigger, isInTrigger)) {
+              if (mylodash.some(updateTrigger, isInTrigger)) {
                 trigBy = "update";
                 return true;
               }
             }
             return false;
           })();
-          trigBy && mylodash$1.doNothing(
+          trigBy && mylodash.doNothing(
             `%cValidate trigger off by [${trigBy}]`,
             "color:yellow;background:green;"
           );
@@ -58092,7 +58092,7 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
   } catch (error) {
     console.error(error);
   } finally {
-    if (mylodash$1.isFunction(xItemConfigs.__onAfterValidate)) {
+    if (mylodash.isFunction(xItemConfigs.__onAfterValidate)) {
       xItemConfigs.__onAfterValidate.call(xItemConfigs, result);
     }
     xItemConfigs.validate.triggerEventsObj = {};
@@ -62422,9 +62422,9 @@ const Select = ({
   property,
   listeners
 }) => {
-  const _property = mylodash$1.omit(property, ["options"]);
+  const _property = mylodash.omit(property, ["options"]);
   const renderOptions = () => {
-    return mylodash$1.map(property.options, (option) => {
+    return mylodash.map(property.options, (option) => {
       return createVNode(SelectOption, {
         "value": option.value
       }, {
@@ -62810,10 +62810,10 @@ const RadioGroup = ({
   slots,
   listeners
 }) => {
-  mylodash$1.omit(property, ["options"]);
+  mylodash.omit(property, ["options"]);
   const renderOptions = () => {
     if (property.isButton) {
-      return mylodash$1.map(property.options, (option) => {
+      return mylodash.map(property.options, (option) => {
         return createVNode(RadioButton, {
           "value": option.value
         }, {
@@ -62821,7 +62821,7 @@ const RadioGroup = ({
         });
       });
     }
-    return mylodash$1.map(property.options, (option) => {
+    return mylodash.map(property.options, (option) => {
       return createVNode(Radio, {
         "value": option.value
       }, {
@@ -63201,13 +63201,13 @@ const Switch = ({
   slots,
   listeners
 }) => {
-  const _property = mylodash$1.merge({}, property, {
+  const _property = mylodash.merge({}, property, {
     checked: property.value,
     onClick() {
       listeners["onUpdate:value"](!_property.value);
     }
   });
-  return createVNode("span", null, [h$1(Switch$1, mylodash$1.omit(_property, ["value"]))]);
+  return createVNode("span", null, [h$1(Switch$1, mylodash.omit(_property, ["value"]))]);
 };
 const itemRenders = {
   Input: Input$2,
@@ -63256,7 +63256,7 @@ const MutatingProps = (item, prop, val = null) => {
     }
     return nextItem;
   };
-  if (val || mylodash$1.isString(val) || mylodash$1.isBoolean(val) || mylodash$1.isNumber(val) && !mylodash$1.isNaN(val)) {
+  if (val || mylodash.isString(val) || mylodash.isBoolean(val) || mylodash.isNumber(val) && !mylodash.isNaN(val)) {
     setVal();
   } else {
     return getVal();
@@ -63279,7 +63279,7 @@ const Utils = {
     return num;
   },
   valueToLabel(value, options) {
-    const target = mylodash$1.find(options, {
+    const target = mylodash.find(options, {
       value
     });
     if (target) {
@@ -63309,14 +63309,14 @@ const _sfc_main$b = defineComponent({
   setup(props2) {
     let Cpt_isShowXItem = true;
     let Cpt_isDisabled = false;
-    if (mylodash$1.isFunction(props2.configs.isShow)) {
+    if (mylodash.isFunction(props2.configs.isShow)) {
       Cpt_isShowXItem = computed(props2.configs.isShow);
-    } else if (mylodash$1.isBoolean(props2.configs.isShow)) {
+    } else if (mylodash.isBoolean(props2.configs.isShow)) {
       Cpt_isShowXItem = props2.configs.isShow;
     }
-    if (mylodash$1.isFunction(props2.configs.disabled)) {
+    if (mylodash.isFunction(props2.configs.disabled)) {
       Cpt_isDisabled = computed(props2.configs.disabled);
-    } else if (mylodash$1.isBoolean(props2.configs.disabled)) {
+    } else if (mylodash.isBoolean(props2.configs.disabled)) {
       Cpt_isDisabled = props2.configs.disabled;
     }
     return {
@@ -63334,7 +63334,7 @@ const _sfc_main$b = defineComponent({
       "onUpdate:value": (val, ...args2) => {
         configs.value = val;
         this.$emit("update:modelValue", val);
-        if (mylodash$1.isFunction(listeners.onAfterValueChange)) {
+        if (mylodash.isFunction(listeners.onAfterValueChange)) {
           listeners.onAfterValueChange.call(configs, val);
         }
         handleConfigsValidate(EVENT_TYPE.update);
@@ -63354,7 +63354,7 @@ const _sfc_main$b = defineComponent({
     };
     function initListenerHandler(prop, value) {
       listeners[prop] = function(...args2) {
-        mylodash$1.each(listeners[prop].queue, (listener) => {
+        mylodash.each(listeners[prop].queue, (listener) => {
           listener == null ? void 0 : listener.apply(vm.configs, args2);
         });
       };
@@ -63362,8 +63362,8 @@ const _sfc_main$b = defineComponent({
     }
     function addListenerFromConfigs(currentConfigs) {
       const propsWillDeleteFromConfigs = [];
-      mylodash$1.each(currentConfigs, (value, prop) => {
-        if (mylodash$1.isListener(prop)) {
+      mylodash.each(currentConfigs, (value, prop) => {
+        if (mylodash.isListener(prop)) {
           propsWillDeleteFromConfigs.push(prop);
           if (listeners[prop]) {
             listeners[prop].queue.push(value);
@@ -63374,12 +63374,12 @@ const _sfc_main$b = defineComponent({
           }
         }
       });
-      mylodash$1.each(propsWillDeleteFromConfigs, (prop) => {
+      mylodash.each(propsWillDeleteFromConfigs, (prop) => {
         delete currentConfigs[prop];
       });
       return listeners;
     }
-    mylodash$1.each(listeners, (value, prop) => initListenerHandler(prop, value));
+    mylodash.each(listeners, (value, prop) => initListenerHandler(prop, value));
     addListenerFromConfigs(vm.configs);
     return {
       listeners,
@@ -63402,7 +63402,7 @@ const _sfc_main$b = defineComponent({
       if ((_b = (_a = this.configs) == null ? void 0 : _a.itemTips) == null ? void 0 : _b.type) {
         return {
           type: this.configs.itemTips.type,
-          msg: mylodash$1.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
+          msg: mylodash.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
         };
       } else {
         this.configs.itemTips = _itemTips;
@@ -63423,12 +63423,12 @@ const _sfc_main$b = defineComponent({
       const property = {};
       let slots = {};
       const pickAttrs2 = (properties) => {
-        mylodash$1.each(properties, (value, prop) => {
+        mylodash.each(properties, (value, prop) => {
           if ("slots" === prop) {
             slots = value;
             return;
           }
-          if (["placeholder"].includes(prop) && mylodash$1.isFunction(value)) {
+          if (["placeholder"].includes(prop) && mylodash.isFunction(value)) {
             property[prop] = value(vm);
             return;
           }
@@ -63484,10 +63484,10 @@ const _sfc_main$b = defineComponent({
       let label = (() => {
         const _label = this.configs.label;
         if (_label) {
-          if (mylodash$1.isFunction(_label)) {
+          if (mylodash.isFunction(_label)) {
             return _label();
           }
-          if (mylodash$1.isString(_label) || _label.__v_isVNode) {
+          if (mylodash.isString(_label) || _label.__v_isVNode) {
             return _label;
           }
         }
@@ -63531,8 +63531,8 @@ const _sfc_main$b = defineComponent({
     },
     setValidateInfo(rules) {
       let isRequired = false;
-      if (mylodash$1.isArrayFill(rules)) {
-        isRequired = mylodash$1.some(rules, {
+      if (mylodash.isArrayFill(rules)) {
+        isRequired = mylodash.some(rules, {
           name: "required"
         });
         const handleAfterCheck = ([prop, msg]) => {
@@ -63540,7 +63540,7 @@ const _sfc_main$b = defineComponent({
           if (prop) {
             if (msg) {
               this.setTips(TIPS_TYPE.error, msg);
-              if (mylodash$1.isFunction(this.configs.onValidateFail)) {
+              if (mylodash.isFunction(this.configs.onValidateFail)) {
                 this.configs.onValidateFail(this.configs);
               }
             } else {
@@ -63548,7 +63548,7 @@ const _sfc_main$b = defineComponent({
             }
           }
         };
-        const debounceCheckXItem = mylodash$1.debounce(checkXItem, 300);
+        const debounceCheckXItem = mylodash.debounce(checkXItem, 300);
         MutatingProps(this, "configs.validate", (eventType) => {
           const prop = `configs.validate.triggerEventsObj.${eventType}`;
           MutatingProps(this, prop, true);
@@ -63556,7 +63556,7 @@ const _sfc_main$b = defineComponent({
         });
         MutatingProps(this, "configs.validate.triggerEventsObj", {});
       } else {
-        if (mylodash$1.isFunction(this.configs.validate)) {
+        if (mylodash.isFunction(this.configs.validate)) {
           delete this.configs.validate;
         }
       }
@@ -63568,7 +63568,7 @@ const _sfc_main$b = defineComponent({
       return null;
     }
     const CurrentXItem = (() => {
-      if (mylodash$1.isFunction(this.configs.itemType)) {
+      if (mylodash.isFunction(this.configs.itemType)) {
         return this.configs.itemType;
       }
       return itemRenders[this.configs.itemType] || itemRenders.Input;
@@ -63600,7 +63600,7 @@ const _sfc_main$a = defineComponent({
       return `xForm_${this._.uid}`;
     },
     labelStyleText() {
-      return mylodash$1.map(mylodash$1.merge({
+      return mylodash.map(mylodash.merge({
         width: "120px",
         "text-align": "right"
       }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
@@ -63725,29 +63725,29 @@ const xButton = defineComponent({
       return this.configs.type;
     },
     title() {
-      if (mylodash$1.isString(this.disabled) && this.disabled.length > 0) {
+      if (mylodash.isString(this.disabled) && this.disabled.length > 0) {
         return this.disabled;
       }
-      if (mylodash$1.isString(this.configs.title) && this.configs.title.length > 0) {
+      if (mylodash.isString(this.configs.title) && this.configs.title.length > 0) {
         return this.configs.title;
       }
       return false;
     },
     disabled() {
-      if (mylodash$1.isBoolean(this.configs.disabled)) {
+      if (mylodash.isBoolean(this.configs.disabled)) {
         return this.configs.disabled;
       }
-      if (mylodash$1.isFunction(this.configs.disabled)) {
+      if (mylodash.isFunction(this.configs.disabled)) {
         return this.configs.disabled(this);
       }
       return false;
     },
     text() {
       var _a;
-      if (mylodash$1.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
+      if (mylodash.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
         return this.$slots.default(this);
       }
-      if (mylodash$1.isFunction(this.configs.text)) {
+      if (mylodash.isFunction(this.configs.text)) {
         return this.configs.text(this) || "";
       }
       return this.configs.text || "";
@@ -63766,7 +63766,7 @@ const xButton = defineComponent({
   methods: {
     async onClick() {
       var _a;
-      if (mylodash$1.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
+      if (mylodash.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
         this.loading = true;
         try {
           await this.configs.onClick.call(this.configs, this);
@@ -63779,7 +63779,7 @@ const xButton = defineComponent({
     }
   },
   render(h2) {
-    const configs = mylodash$1.omit(this.configs, ["text", "onClick", "disabled"]);
+    const configs = mylodash.omit(this.configs, ["text", "onClick", "disabled"]);
     if (this.title) {
       configs.title = this.title;
     }
@@ -63819,7 +63819,7 @@ const _sfc_main$9 = defineComponent({
         class: "center",
         text: vm.configs.text.normal,
         async onClick() {
-          if (mylodash$1.isFunction(vm.configs.onClick)) {
+          if (mylodash.isFunction(vm.configs.onClick)) {
             await vm.configs.onClick({
               countDown: vm.countDown
             });
@@ -63893,7 +63893,7 @@ const _sfc_main$8 = defineComponent({
         if (this.a) {
           gapStyle.margin = `${this.a}px`;
         } else {
-          mylodash$1.map(POSITION_MAP, (prop, key2) => {
+          mylodash.map(POSITION_MAP, (prop, key2) => {
             const value = this[key2];
             if (value) {
               gapStyle[`margin-${prop}`] = `${value}px`;
@@ -63934,14 +63934,14 @@ const _sfc_main$7 = defineComponent({
     }
   },
   data() {
-    const id = mylodash$1.genId("xChart");
+    const id = mylodash.genId("xChart");
     return {
       id
     };
   },
   computed: {
     helper() {
-      if (mylodash$1.isPlainObject(this.configs)) {
+      if (mylodash.isPlainObject(this.configs)) {
         return this.configs;
       }
       return CONFIGS_MAP[this.configs];
@@ -64166,7 +64166,7 @@ const _sfc_main$5 = defineComponent(markRaw({
       };
     },
     iconKey() {
-      const _iconKey = mylodash$1.camelCase(this.getIconPath()).replace(/\s/, "");
+      const _iconKey = mylodash.camelCase(this.getIconPath()).replace(/\s/, "");
       return _iconKey;
     }
   },
@@ -64188,12 +64188,12 @@ const _sfc_main$5 = defineComponent(markRaw({
             return _SvgIconAny;
           }
           try {
-            _SvgIconAny = await mylodash$1.asyncLoadText(this.getIconPath());
+            _SvgIconAny = await mylodash.asyncLoadText(this.getIconPath());
           } catch (error) {
           }
           return _SvgIconAny;
         })();
-        if (mylodash$1.isString(SvgIconAny) && SvgIconAny.length > 0) {
+        if (mylodash.isString(SvgIconAny) && SvgIconAny.length > 0) {
           const SvgComponentByString = {
             name: this.icon,
             template: SvgIconAny
@@ -64265,7 +64265,7 @@ function defPagination(num_page = 1, num_size = 10, num_total = 0) {
 }
 function setPagination(StateTable, pagination) {
   const PAGINATION_MAP = lStorage.appConfigs.pagination;
-  mylodash$1.each(pagination, (value, prop) => {
+  mylodash.each(pagination, (value, prop) => {
     StateTable.pagination[PAGINATION_MAP[prop]] = value;
   });
 }
@@ -64293,7 +64293,7 @@ function defCol(options) {
 }
 function defColActions(options) {
   return {
-    [static_word.operation]: mylodash$1.merge({
+    [static_word.operation]: mylodash.merge({
       title: State_UI.$t("\u64CD\u4F5C").label,
       key: static_word.operation,
       prop: static_word.operation,
@@ -64318,8 +64318,8 @@ function defColActionsBtnlist(options) {
     "class": "flex middle"
   }, [createVNode(resolveComponent("xGap"), {
     "l": "4"
-  }, null), mylodash$1.map(always, (btn) => {
-    const configs = mylodash$1.merge({
+  }, null), mylodash.map(always, (btn) => {
+    const configs = mylodash.merge({
       type: "link",
       size: "small"
     }, btn);
@@ -64342,8 +64342,8 @@ function defColActionsBtnlist(options) {
       },
       overlay: () => {
         let _slot;
-        return createVNode(Fragment, null, [createVNode(resolveComponent("aMenu"), null, _isSlot$1(_slot = mylodash$1.map(more, (btn) => {
-          const configs = mylodash$1.merge({
+        return createVNode(Fragment, null, [createVNode(resolveComponent("aMenu"), null, _isSlot$1(_slot = mylodash.map(more, (btn) => {
+          const configs = mylodash.merge({
             type: "link",
             size: "small"
           }, btn);
@@ -64364,7 +64364,7 @@ function defColActionsBtnlist(options) {
   })()]);
 }
 function filterColIsShow(isShow, prop) {
-  if (mylodash$1.isBoolean(isShow)) {
+  if (mylodash.isBoolean(isShow)) {
     return isShow;
   } else {
     return true;
@@ -64426,7 +64426,7 @@ const xPagination = defineComponent({
     };
   },
   methods: {
-    onShowSizeChange: mylodash$1.debounce(function(page2, size2) {
+    onShowSizeChange: mylodash.debounce(function(page2, size2) {
       setPagination(this, {
         page: page2,
         size: size2
@@ -64488,7 +64488,7 @@ const _sfc_main$4 = defineComponent({
   data() {
     return {
       State: {
-        id: mylodash$1.genId("xDataGrid")
+        id: mylodash.genId("xDataGrid")
       }
     };
   },
@@ -64498,10 +64498,10 @@ const _sfc_main$4 = defineComponent({
         return this.configs.columns;
       }
       let columns = null;
-      columns = mylodash$1.map(this.Cpt_ColumnsOrder, (prop) => mylodash$1.find(this.configs.columns, {
+      columns = mylodash.map(this.Cpt_ColumnsOrder, (prop) => mylodash.find(this.configs.columns, {
         prop
       }));
-      columns = mylodash$1.filter(columns, (i2) => filterColIsShow(i2 == null ? void 0 : i2.isShow, i2 == null ? void 0 : i2.prop));
+      columns = mylodash.filter(columns, (i2) => filterColIsShow(i2 == null ? void 0 : i2.isShow, i2 == null ? void 0 : i2.prop));
       return columns;
     },
     Cpt_ColumnsOrder() {
@@ -64509,10 +64509,10 @@ const _sfc_main$4 = defineComponent({
         if (this.configs.columns_order) {
           return this.configs.columns_order;
         } else {
-          return mylodash$1.map(this.configs.columns, (i2) => i2.prop);
+          return mylodash.map(this.configs.columns, (i2) => i2.prop);
         }
       })();
-      return mylodash$1.filter(order, (i2) => !!i2);
+      return mylodash.filter(order, (i2) => !!i2);
     },
     Cpt_AntTableProperty() {
       if (this.configs.antTableProperty) {
@@ -64567,7 +64567,7 @@ const _sfc_main$4 = defineComponent({
             } = args2;
             if (column && column.renderCell) {
               const vNode = column.renderCell(args2);
-              if (mylodash$1.isNull(vNode) || mylodash$1.isUndefined(vNode)) {
+              if (mylodash.isNull(vNode) || mylodash.isUndefined(vNode)) {
                 return "";
               }
               return vNode;
@@ -64639,10 +64639,10 @@ const _sfc_main$3 = defineComponent({
   },
   methods: {
     handleChecked(col) {
-      const target = mylodash$1.find(this.configs.columns, {
+      const target = mylodash.find(this.configs.columns, {
         key: col.key
       });
-      target.isShow = mylodash$1.isBoolean(target.isShow) ? !target.isShow : false;
+      target.isShow = mylodash.isBoolean(target.isShow) ? !target.isShow : false;
     }
   },
   computed: {
@@ -64651,18 +64651,18 @@ const _sfc_main$3 = defineComponent({
         if (this.configs.columns_order) {
           return this.configs.columns_order;
         } else {
-          return mylodash$1.map(this.configs.columns, (i2) => i2.prop);
+          return mylodash.map(this.configs.columns, (i2) => i2.prop);
         }
       })();
-      return mylodash$1.filter(order, (i2) => !!i2);
+      return mylodash.filter(order, (i2) => !!i2);
     },
     Cpt_Columns() {
-      return mylodash$1.map(this.Cpt_ColumnsOrder, (prop) => mylodash$1.find(this.configs.columns, {
+      return mylodash.map(this.Cpt_ColumnsOrder, (prop) => mylodash.find(this.configs.columns, {
         prop
       }));
     },
     checkedList() {
-      return mylodash$1.filter(this.Cpt_ColumnsOrder, (prop) => {
+      return mylodash.filter(this.Cpt_ColumnsOrder, (prop) => {
         const {
           isShow
         } = this.configs.columns[prop];
@@ -65002,7 +65002,7 @@ const _sfc_main = defineComponent({
     this.$wrapperEle.off("scroll");
   },
   methods: {
-    setTop: mylodash$1.debounce(function() {
+    setTop: mylodash.debounce(function() {
       if (this.$refs.refWrapper) {
         this.$refs.refWrapper.scrollTo({
           top: this.top,
@@ -65184,7 +65184,8 @@ const xVirTableBody = defineComponent({
       perBlockRowCount: 0,
       blockInViewCount: 0,
       styleWrapperAll: {
-        height: 0
+        height: 0,
+        position: "relative"
       }
     };
   },
@@ -65202,7 +65203,7 @@ const xVirTableBody = defineComponent({
         isSelect,
         prop
       } = this.selectedConfigs || {};
-      if (mylodash$1.isFunction(isSelect)) {
+      if (mylodash.isFunction(isSelect)) {
         return (args2) => {
           return isSelect.call(this, args2);
         };
@@ -65219,7 +65220,7 @@ const xVirTableBody = defineComponent({
       const {
         isDisabled
       } = this.selectedConfigs || {};
-      if (mylodash$1.isFunction(isDisabled)) {
+      if (mylodash.isFunction(isDisabled)) {
         return () => {
           return isDisabled.call(this, args);
         };
@@ -65287,7 +65288,7 @@ const xVirTableBody = defineComponent({
       return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
     },
     vDomBodyTr1() {
-      return mylodash$1.map(this.virs1, (data2, rowIndex) => {
+      return mylodash.map(this.virs1, (data2, rowIndex) => {
         return createVNode("div", {
           "role": "tr",
           "class": "xVirTable-row flex horizon",
@@ -65295,7 +65296,7 @@ const xVirTableBody = defineComponent({
         }, [this.genSelectedVDom({
           rowIndex,
           rowData: data2
-        }), mylodash$1.map(this.columnOrder, (prop, index2) => {
+        }), mylodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -65306,7 +65307,7 @@ const xVirTableBody = defineComponent({
       });
     },
     vDomBodyTr2() {
-      return mylodash$1.map(this.virs2, (data2, rowIndex) => {
+      return mylodash.map(this.virs2, (data2, rowIndex) => {
         return createVNode("div", {
           "role": "tr",
           "class": "xVirTable-row flex horizon",
@@ -65314,7 +65315,7 @@ const xVirTableBody = defineComponent({
         }, [this.genSelectedVDom({
           rowIndex,
           rowData: data2
-        }), mylodash$1.map(this.columnOrder, (prop, index2) => {
+        }), mylodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -65325,7 +65326,7 @@ const xVirTableBody = defineComponent({
       });
     },
     vDomBodyTr3() {
-      return mylodash$1.map(this.virs3, (data2, rowIndex) => {
+      return mylodash.map(this.virs3, (data2, rowIndex) => {
         return createVNode("div", {
           "role": "tr",
           "class": "xVirTable-row flex horizon",
@@ -65333,7 +65334,7 @@ const xVirTableBody = defineComponent({
         }, [this.genSelectedVDom({
           rowIndex,
           rowData: data2
-        }), mylodash$1.map(this.columnOrder, (prop, index2) => {
+        }), mylodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -65342,12 +65343,6 @@ const xVirTableBody = defineComponent({
           }, null);
         })]);
       });
-    },
-    vDomBody() {
-      return createVNode("div", {
-        "role": "tbody",
-        "class": "xVirTable-tbody"
-      }, [this.vDomBodyTr]);
     }
   },
   methods: {
@@ -65364,7 +65359,7 @@ const xVirTableBody = defineComponent({
         this.emitSelectedChange(e2.target.checked, rowInfo.rowData[prop]);
       };
       let vDomChecked;
-      if (mylodash$1.isString(isDisabled)) {
+      if (mylodash.isString(isDisabled)) {
         isDisabled = true;
         const uiPopoverConfigs = {
           content: isDisabled
@@ -65393,11 +65388,13 @@ const xVirTableBody = defineComponent({
         id
       });
     },
-    setPerBlockHeight: mylodash$1.debounce(function(viewportHeight) {
+    setPerBlockHeight: mylodash.debounce(function(viewportHeight) {
+      this.viewportHeight = viewportHeight;
       this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
       this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
+      this.setHeight();
     }, 64),
-    setTop: mylodash$1.debounce(function() {
+    setTop: mylodash.debounce(function() {
       if (this.$refs.refWrapper) {
         this.$refs.refWrapper.scrollTo({
           top: this.top,
@@ -65413,6 +65410,11 @@ const xVirTableBody = defineComponent({
     },
     setHeight() {
       const height = this.dataSource.length * this.rowHeight;
+      if (this.viewportHeight && height < this.viewportHeight) {
+        this.styleWrapperAll.width = `calc(100% - 6px)`;
+      } else {
+        delete this.styleWrapperAll.width;
+      }
       this.styleWrapperAll.height = `${height}px`;
     }
   },
@@ -65453,7 +65455,7 @@ const xVirTableBody = defineComponent({
 });
 function defineXVirTableConfigs(options) {
   const required = ["rowHeight", "columns"];
-  if (mylodash$1.some(required, (prop) => {
+  if (mylodash.some(required, (prop) => {
     if (!options[prop]) {
       alert("defineXVirTableConfigs miss required " + prop);
       return true;
@@ -65521,7 +65523,7 @@ const xVirTable = defineComponent({
       if (!this.selectedType) {
         return false;
       }
-      if (mylodash$1.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
+      if (mylodash.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
         return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.fn;
       } else {
         return false;
@@ -65542,7 +65544,7 @@ const xVirTable = defineComponent({
       return Object.keys(((_c = this.configs) == null ? void 0 : _c.columns) || {});
     },
     columnWidthArray() {
-      const _columnWidthArray = mylodash$1.reduce(this.columnOrder, (columnStyle, prop) => {
+      const _columnWidthArray = mylodash.reduce(this.columnOrder, (columnStyle, prop) => {
         const configsColumn = this.configs.columns[prop] || {};
         const {
           width
@@ -65581,7 +65583,7 @@ const xVirTable = defineComponent({
       }, [createVNode("div", {
         "role": "tr",
         "class": "flex horizon"
-      }, [this.vDomTheadSelect, mylodash$1.map(this.columnOrder, (prop, index2) => {
+      }, [this.vDomTheadSelect, mylodash.map(this.columnOrder, (prop, index2) => {
         var _a;
         const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
         return createVNode(xVirTableTh, {
@@ -65643,7 +65645,7 @@ const xVirTable = defineComponent({
         checked
       } = e2.target;
       if (checked) {
-        this.configs.selected = mylodash$1.map(this.configs.dataSource, (i2) => i2[this.selectedProp]);
+        this.configs.selected = mylodash.map(this.configs.dataSource, (i2) => i2[this.selectedProp]);
       } else {
         this.configs.selected = [];
       }
@@ -65653,7 +65655,7 @@ const xVirTable = defineComponent({
     }) {
       var _a;
       const isOnlyOne = this.selectedType === "one";
-      const index2 = mylodash$1.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i2) => i2 === id);
+      const index2 = mylodash.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i2) => i2 === id);
       if (index2 > -1) {
         if (isOnlyOne) {
           this.configs.selected = [];
@@ -65696,7 +65698,7 @@ const FormRules = {
       msg: msg || $t("\u5FC5\u586B\u9879").label,
       async validator(value) {
         if (value) {
-          if (mylodash$1.isArray(value)) {
+          if (mylodash.isArray(value)) {
             if (value.length > 0) {
               return SUCCESS;
             } else {
@@ -65705,9 +65707,9 @@ const FormRules = {
           }
           return SUCCESS;
         }
-        if (mylodash$1.isBoolean(value))
+        if (mylodash.isBoolean(value))
           return SUCCESS;
-        if (mylodash$1.isNumber(value) && !mylodash$1.isNaN(value))
+        if (mylodash.isNumber(value) && !mylodash.isNaN(value))
           return SUCCESS;
         return FAIL;
       },
@@ -65719,7 +65721,7 @@ const FormRules = {
       name: "Demo",
       msg: "Demo",
       async validator(value) {
-        await mylodash$1.sleep(1e3);
+        await mylodash.sleep(1e3);
         return FAIL;
       },
       trigger: [EVENT_TYPE.update, EVENT_TYPE.input, EVENT_TYPE.change, EVENT_TYPE.blur]
@@ -65854,7 +65856,7 @@ const layer = {
     );
   },
   confirm: function(content, options, yes, cancel) {
-    if (mylodash$1.isFunction(options)) {
+    if (mylodash.isFunction(options)) {
       cancel = yes;
       yes = options;
     }
@@ -65871,7 +65873,7 @@ const layer = {
     );
   },
   msg: function(content, options, end) {
-    var isOptionsIsFunction = mylodash$1.isFunction(options), rskin = READY.config.skin;
+    var isOptionsIsFunction = mylodash.isFunction(options), rskin = READY.config.skin;
     var skin2 = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
     var anim = DOMS_ANIM.length - 1;
     if (isOptionsIsFunction)
@@ -66925,12 +66927,12 @@ const appAddPlugin = {};
 const appDependState = {};
 const timerCollection = {};
 function installPopoverDirective(app, appSettings) {
-  const appId = mylodash$1.genId("appId");
+  const appId = mylodash.genId("appId");
   appAddPlugin[appId] = appSettings.appPlugins;
   appDependState[appId] = appSettings.dependState;
   app.directive("uiPopover", {
     mounted(el, binding) {
-      const followId = mylodash$1.genId("xPopoverTarget");
+      const followId = mylodash.genId("xPopoverTarget");
       $$1(el).addClass("x-ui-popover").attr("id", followId);
       el.dataset["followId"] = followId;
       el.dataset["appId"] = appId;
@@ -67029,21 +67031,21 @@ const installUIDialogComponent = (UI2, {
   appPlugins,
   dependState
 }) => {
-  UI2.dialog.component = async (options) => new Promise((resolve, reject) => {
+  UI2.dialog.component = async (dialogOptions) => new Promise((resolve, reject) => {
     const {
-      component,
+      component: BussinessComponent,
       title,
       area
-    } = options;
+    } = dialogOptions;
     const id = `xDialog_${Date.now()}`;
     let $container = $$1("<div/>", {
       id
     });
     $container.appendTo($$1("body"));
     const __elId = `#${id}`;
-    if (options.yes) {
-      options._yes = options.yes;
-      delete options.yes;
+    if (dialogOptions.yes) {
+      dialogOptions._yes = dialogOptions.yes;
+      delete dialogOptions.yes;
     }
     let dialogVueApp = null;
     let handleEcsPress = {
@@ -67064,7 +67066,7 @@ const installUIDialogComponent = (UI2, {
         handleEcsPress = null;
       }
     };
-    layer.open(mylodash$1.merge({
+    layer.open(mylodash.merge({
       contentClass: "flex1",
       type: 1,
       title: [title || ""],
@@ -67079,16 +67081,18 @@ const installUIDialogComponent = (UI2, {
             beforeMount() {
               resolve(this);
             },
+            created() {
+              this.dialogOptions.__dialogInstance = this;
+              this.dialogOptions.__elId = __elId;
+            },
             mounted() {
-              if (options.fullscreen) {
+              if (this.dialogOptions.fullscreen) {
                 this.fullDialog();
               }
             },
             data() {
-              options.__dialogInstance = this;
-              options.__elId = __elId;
               return {
-                options
+                dialogOptions
               };
             },
             methods: {
@@ -67096,16 +67100,16 @@ const installUIDialogComponent = (UI2, {
                 layer.full(layerIndex);
               },
               async handleClickOk() {
-                if (options.onOk) {
-                  await options.onOk(options);
+                if (dialogOptions.onOk) {
+                  await dialogOptions.onOk(dialogOptions);
                 } else {
                   await this.handleClickCancel();
                 }
               },
               async handleClickCancel() {
                 let isClose = true;
-                if (options.beforeCancel) {
-                  isClose = await options.beforeCancel();
+                if (dialogOptions.beforeCancel) {
+                  isClose = await dialogOptions.beforeCancel();
                 }
                 if (isClose) {
                   layer.close(layerIndex);
@@ -67116,25 +67120,25 @@ const installUIDialogComponent = (UI2, {
             },
             computed: {
               okText() {
-                return this.options.okText || this.$t("\u786E\u5B9A").label;
+                return this.dialogOptions.okText || this.$t("\u786E\u5B9A").label;
               },
               cancelText() {
-                return this.options.cancelText || this.$t("\u53D6\u6D88").label;
+                return this.dialogOptions.cancelText || this.$t("\u53D6\u6D88").label;
               },
               renderContent() {
-                return createVNode(component, {
-                  "options": options,
+                return createVNode(BussinessComponent, {
+                  "propDialogOptions": dialogOptions,
                   "class": "flex1",
                   "style": "overflow:auto;"
                 }, null);
               },
               renderButtons() {
-                if (this.options.hideButtons) {
+                if (this.dialogOptions.hideButtons) {
                   return null;
                 }
-                if (mylodash$1.isFunction(this.options.renderButtons)) {
+                if (mylodash.isFunction(this.dialogOptions.renderButtons)) {
                   let vDomButtons = (() => {
-                    let _vDomButtons = this.options.renderButtons(this);
+                    let _vDomButtons = this.dialogOptions.renderButtons(this);
                     if (!_vDomButtons) {
                       return null;
                     } else if (_vDomButtons.template) {
@@ -67149,7 +67153,7 @@ const installUIDialogComponent = (UI2, {
               },
               vDomDefaultButton() {
                 const [isShowCancel, isShowOk] = (() => {
-                  return [!this.options.hideCancel || null, !this.options.hideOk || null];
+                  return [!this.dialogOptions.hideCancel || null, !this.dialogOptions.hideOk || null];
                 })();
                 return createVNode(Fragment, null, [isShowCancel && createVNode(resolveComponent("xButton"), {
                   "configs": {
@@ -67185,11 +67189,11 @@ const installUIDialogComponent = (UI2, {
         } catch (e2) {
           console.error(e2);
         }
-        options.layerIndex = layerIndex;
-        options.close = () => {
+        dialogOptions.layerIndex = layerIndex;
+        dialogOptions.close = () => {
           layer.close(layerIndex);
         };
-        options.afterOpenDialoag && options.afterOpenDialoag(dialogVueApp);
+        dialogOptions.afterOpenDialoag && dialogOptions.afterOpenDialoag(dialogVueApp);
       },
       cancel() {
         var _a, _b;
@@ -67206,11 +67210,11 @@ const installUIDialogComponent = (UI2, {
           dialogVueApp.unmount();
           dialogVueApp = null;
         }
-        options.payload = null;
-        options.__dialogInstance = null;
-        options = null;
+        dialogOptions.payload = null;
+        dialogOptions.__dialogInstance = null;
+        dialogOptions = null;
       }
-    }, options));
+    }, dialogOptions));
   });
 };
 function installLoading(app, options = {}) {
@@ -67236,10 +67240,10 @@ function defItem(options) {
     options.prop = `xItem${xItemNoPropCount++}`;
     console.error(`no xItem prop replace by ${options.prop}`);
   }
-  if (!mylodash$1.isInput(options.isShow)) {
+  if (!mylodash.isInput(options.isShow)) {
     options.isShow = true;
   }
-  const configs = reactive(mylodash$1.merge({
+  const configs = reactive(mylodash.merge({
     itemTips: {},
     itemType: options.itemType || "Input"
   }, {
@@ -67291,7 +67295,7 @@ function antColKey(prop, makeRenderCell) {
 }
 const get$head = () => {
   let $head = $$1("html head");
-  if (!mylodash$1.is$Selected($head)) {
+  if (!mylodash.is$Selected($head)) {
     $head = $$1("<head/>");
     $head.prependTo($$1("html"));
   }
@@ -67300,7 +67304,7 @@ const get$head = () => {
 const get$title = () => {
   let $head = get$head();
   let $title = $head.find("title");
-  if (!mylodash$1.is$Selected($title)) {
+  if (!mylodash.is$Selected($title)) {
     $title = $$1("<title/>");
     $title.prependTo($head);
   }
@@ -67309,7 +67313,7 @@ const get$title = () => {
 const get$cssVariables = () => {
   let $head = get$head();
   let $cssVariables = $head.find("#cssVariables");
-  if (!mylodash$1.is$Selected($cssVariables)) {
+  if (!mylodash.is$Selected($cssVariables)) {
     $cssVariables = $$1("<style/>", { id: "cssVariables" });
     $cssVariables.appendTo($head);
   }
@@ -67320,13 +67324,13 @@ const setDocumentTitle = (title) => {
 };
 const setCSSVariables = (colors) => {
   let $cssVariables = get$cssVariables();
-  const cssContent = mylodash$1.map(colors, (value, prop) => `--${prop}:${value}`).join(
+  const cssContent = mylodash.map(colors, (value, prop) => `--${prop}:${value}`).join(
     ";"
   );
   $cssVariables.text(`:root{${cssContent}}`);
 };
 const pickValueFrom = (configs) => {
-  return mylodash$1.reduce(
+  return mylodash.reduce(
     configs,
     (target, config, prop) => {
       try {
@@ -67340,7 +67344,7 @@ const pickValueFrom = (configs) => {
   );
 };
 const setValueTo = (configs, values) => {
-  return mylodash$1.map(
+  return mylodash.map(
     values,
     (value, prop) => {
       configs[prop].value = value;
@@ -67349,7 +67353,7 @@ const setValueTo = (configs, values) => {
   );
 };
 const resetValueOf = (state, initState) => {
-  mylodash$1.each(initState, (value, prop) => {
+  mylodash.each(initState, (value, prop) => {
     state[prop] = JSON.parse(JSON.stringify(value));
   });
   return state;
@@ -67460,7 +67464,7 @@ const UI = {
       return new Proxy(m2, {
         apply(target2, thisArg, argArray) {
           if (typeof argArray[0] === "string") {
-            argArray[0] = mylodash$1.merge({
+            argArray[0] = mylodash.merge({
               message: argArray[0]
             }, argArray[1] || {});
           }
@@ -67522,11 +67526,11 @@ const VentoseUIWithInstall = {
     installDirective(app);
     installPopoverDirective(app, options);
     installUIDialogComponent(UI, options);
-    mylodash$1.each(components, (component, name) => {
+    mylodash.each(components, (component, name) => {
       if (component.name) {
         name = component.name;
       } else {
-        mylodash$1.doNothing(name, `miss name`);
+        mylodash.doNothing(name, `miss name`);
       }
       app.component(component.name || name, component);
     });
@@ -67545,7 +67549,7 @@ export {
   Utils,
   VNodeCollection,
   VentoseUIWithInstall,
-  mylodash$1 as _,
+  mylodash as _,
   antColKey,
   components,
   dayjs$1 as dayjs,
