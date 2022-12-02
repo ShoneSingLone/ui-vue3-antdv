@@ -1,0 +1,16 @@
+<template>
+	<h1>boundless vue sfc</h1>
+</template>
+
+<script>
+async function sfc({ defineComponent }) {
+	return defineComponent({
+		TEMPLATE_PLACEHOLDER,
+		setup() {},
+		data() {
+			return {};
+		},
+		methods: {}
+	});
+}
+</script>
