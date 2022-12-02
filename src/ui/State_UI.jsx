@@ -22,12 +22,14 @@ let _State_UI = {
 	i18nMessage: {},
 	/* 放svg文件的文件夹路径*/
 	assetsSvgPath: "",
+	assetsPath: "",
 	setAssetsBaseById(eleId) {
 		const img = document.getElementById(eleId);
 		if (img) {
 			const src = String(img.src);
 			const index = src.match(/assets(.*)/)?.index || 0;
 			this.assetsSvgPath = src.substring(0, index) + "assets/svg";
+			this.assetsPath = src.substring(0, index) + "assets";
 		}
 	},
 	/*i18n  使用 {变量名} 赋值 */

@@ -134,11 +134,26 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 			}
 		};
 	}
-	popverIndexCollection[followId] = layer.tips(
-		tipsContent,
-		`#${followId}`,
-		layerTipsOptions
-	);
+
+	if (options.delay) {
+		setTimeout(() => {
+			/* 如果delay之后还存在，再展示 */
+			if (visibleArea[followId]) {
+				popverIndexCollection[followId] = layer.tips(
+					tipsContent,
+					`#${followId}`,
+					layerTipsOptions
+				);
+			}
+		}, options.delay);
+	} else {
+		/* 立即展示 */
+		popverIndexCollection[followId] = layer.tips(
+			tipsContent,
+			`#${followId}`,
+			layerTipsOptions
+		);
+	}
 });
 
 $(document).on("mouseleave.uiPopver", "[data-follow-id]", function (event) {
