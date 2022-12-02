@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { defineComponent, h, markRaw } from "vue";
 import { State_UI, _, UI } from "../ui";
 import { DialogSourceCode } from "./DialogSourceCode";

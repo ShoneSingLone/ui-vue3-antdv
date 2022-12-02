@@ -9,7 +9,7 @@ type t_uiPopoverOptions = {
 	onlyEllipsis?: Boolean;
 };
 
-const timeoutDelay = 400;
+const TIMEOUT_DELAY = 200;
 /* 缓存 popover 的配置信息 */
 const popverOptionsCollection: {
 	[prop: string]: t_uiPopoverOptions;
@@ -74,7 +74,7 @@ function closeTips(followId) {
 	timerCollection[followId] = setTimeout(() => {
 		layer.close(popverIndexCollection[followId]);
 		delete popverIndexCollection[followId];
-	}, timeoutDelay);
+	}, TIMEOUT_DELAY);
 }
 
 /* 鼠标hover处理 */
@@ -111,7 +111,7 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 	let app;
 	let tipsContent = options.content;
 	let layerTipsOptions = {
-		tips: [layer.UP, "#000"],
+		tips: [layer.UP, "#fff"],
 		/*hover 不允许 同时多个 tips出现*/
 		/*tipsMore: false,*/
 		time: 1000 * 60 * 10
