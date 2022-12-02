@@ -18,7 +18,9 @@ export const setValueTo = (configs, values) => {
 	return _.map(
 		values,
 		(value, prop) => {
-			configs[prop].value = value;
+			if (configs[prop]) {
+				configs[prop].value = value;
+			}
 		},
 		{}
 	);

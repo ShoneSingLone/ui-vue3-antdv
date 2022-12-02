@@ -4,7 +4,6 @@
 			<xIcon icon="unknown" class="auto-size" />
 			未加载出来默认图标
 		</div>
-
 		<div class="">
 			<h2>
 				ventoseUI 内置svg,在预置按钮里面用。以Inside作为前缀,一般不需要用到

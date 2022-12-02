@@ -17,6 +17,8 @@ export const KEY = {
 const $win = $(window);
 const $html = $("html");
 
+const LAYUI_LAYER_CONTENT = "layui-layer-content";
+const LAYUI_LAYER_CONTENT_CLASS_NAME = ".layui-layer-content";
 //缓存常用字符
 const DOMS = [
 	"layui-layer",
@@ -81,7 +83,7 @@ const READY = {
 };
 
 //默认内置方法。
-const layer = {
+const layer: any = {
 	MSG: 0,
 	DIALOG: 1,
 	IFRAME: 2,
@@ -205,7 +207,6 @@ const layer = {
 			)
 		);
 	},
-
 	tips(content, follow, options) {
 		return layer.open(
 			$.extend(
@@ -292,63 +293,78 @@ ClassLayer.pt.vessel = function (conType, callback) {
 						zIndex - 1
 				  };"></div>`
 				: "",
-
 			//主体
-			`<div class="flex vertical ${DOMS[0]} layui-layer-${
-				READY.type[config.type]
-			} ${
-				(config.type == 0 || config.type == 2) && !config.shade
-					? " layui-layer-border"
-					: ""
-			} ${config.skin || ""}"
-				  id="${DOMS[0]}${times}"
-				  type="${READY.type[config.type]}"
-				  times="${times}"
-				  showtime="${config.time}"
-				  conType="${conType ? "object" : "string"}"
-				  style="z-index:${zIndex};
-					  width:${config.area[0]};
-					  height:${config.area[1]};
-					  position:${config.fixed ? "fixed;" : "absolute;"}">
-				${conType && config.type != 2 ? "" : titleHTML}
-				<div id="${config.id || ""}" class="${classContent}">` +
-				(config.type == 0 && config.icon !== -1
-					? '<i class="layui-layer-ico layui-layer-ico' + config.icon + '"></i>'
-					: "") +
-				(config.type == 1 && conType ? "" : config.content || "") +
-				"</div>" +
-				'<span class="layui-layer-setwin">' +
-				(function () {
-					var closebtn = ismax
-						? '<a class="layui-layer-min" href="javascript:;"><cite></cite></a><a class="layui-layer-ico layui-layer-max" href="javascript:;"></a>'
+			(() => {
+				const layerInvvisibleClassName =
+					config.type === layer.TIPS ? " invisible" : "";
+				const layerTypeClassName = ` layui-layer-${READY.type[config.type]}`;
+				const layerBoderClassName =
+					(config.type == 0 || config.type == 2) && !config.shade
+						? " layui-layer-border"
 						: "";
-					config.closeBtn &&
-						(closebtn +=
-							'<a class="layui-layer-ico ' +
-							DOMS[7] +
-							" " +
-							DOMS[7] +
-							(config.title ? config.closeBtn : config.type == 4 ? "1" : "2") +
-							'" href="javascript:;"></a>');
-					return closebtn;
-				})() +
-				"</span>" +
-				(config.btn
-					? (function () {
-							var button = "";
-							typeof config.btn === "string" && (config.btn = [config.btn]);
-							/* NOTICE:[]不渲染按钮区域 */
-							if (config.btn.length === 0) return "";
-							for (var i = 0, len = config.btn.length; i < len; i++) {
-								button += `<a class="${DOMS[6]}">${config.btn[i]}</a>`;
-							}
-							return `<div class="${DOMS[6]} layui-layer-btn-${
-								config.btnAlign || ""
-							}">${button}</div>`;
-					  })()
-					: "") +
-				(config.resize ? '<span class="layui-layer-resize"></span>' : "") +
-				"</div>"
+				const layerSkinClassName = config.skin || "";
+
+				return (
+					`<div class="flex vertical ${
+						DOMS[0]
+					}${layerTypeClassName}${layerInvvisibleClassName}${layerBoderClassName}${layerSkinClassName}" id="${
+						DOMS[0]
+					}${times}"
+					  type="${READY.type[config.type]}"
+					  times="${times}"
+					  showtime="${config.time}"
+					  conType="${conType ? "object" : "string"}"
+					  style="z-index:${zIndex};
+						  width:${config.area[0]};
+						  height:${config.area[1]};
+						  position:${config.fixed ? "fixed;" : "absolute;"}">
+					${conType && config.type != 2 ? "" : titleHTML}
+					<div id="${config.id || ""}" class="${classContent}">` +
+					(config.type == 0 && config.icon !== -1
+						? '<i class="layui-layer-ico layui-layer-ico' +
+						  config.icon +
+						  '"></i>'
+						: "") +
+					(config.type == 1 && conType ? "" : config.content || "") +
+					"</div>" +
+					'<span class="layui-layer-setwin">' +
+					(function () {
+						var closebtn = ismax
+							? '<a class="layui-layer-min" href="javascript:;"><cite></cite></a><a class="layui-layer-ico layui-layer-max" href="javascript:;"></a>'
+							: "";
+						config.closeBtn &&
+							(closebtn +=
+								'<a class="layui-layer-ico ' +
+								DOMS[7] +
+								" " +
+								DOMS[7] +
+								(config.title
+									? config.closeBtn
+									: config.type == 4
+									? "1"
+									: "2") +
+								'" href="javascript:;"></a>');
+						return closebtn;
+					})() +
+					"</span>" +
+					(config.btn
+						? (function () {
+								var button = "";
+								typeof config.btn === "string" && (config.btn = [config.btn]);
+								/* NOTICE:[]不渲染按钮区域 */
+								if (config.btn.length === 0) return "";
+								for (var i = 0, len = config.btn.length; i < len; i++) {
+									button += `<a class="${DOMS[6]}">${config.btn[i]}</a>`;
+								}
+								return `<div class="${DOMS[6]} layui-layer-btn-${
+									config.btnAlign || ""
+								}">${button}</div>`;
+						  })()
+						: "") +
+					(config.resize ? '<span class="layui-layer-resize"></span>' : "") +
+					"</div>"
+				);
+			})()
 		],
 		titleHTML,
 		$(`<div class="${DOMS_MOVE}" id="${DOMS_MOVE}"></div>`)
@@ -392,7 +408,7 @@ ClassLayer.pt.creat = function () {
 				: [config.content || "", "auto"]);
 			config.content = `<iframe 
 	scrolling="${config.content[1] || "auto"}" 
-	allowtransparency="true" id="${DOMS[4] + times}" 
+	allowtransparency="true" id="${LAYUI_LAYER_CONTENT + times}" 
 	onload="this.className=''" 
 	style="height:100%;" 
 	class="layui-layer-load" 
@@ -411,7 +427,7 @@ src="${config.content[0]}">
 			conType || (config.content = [config.content, "body"]);
 			config.follow = config.content[1];
 			const arrow = '<i class="layui-layer-TipsG"></i>';
-			config.content = `${config.content[0]}${arrow}`;
+			config.content = `<div style="max-width:300px;overflow:auto;">${config.content[0]}<div>${arrow}`;
 			delete config.title;
 			config.tips =
 				typeof config.tips === "object" ? config.tips : [config.tips, true];
@@ -424,31 +440,33 @@ src="${config.content[0]}">
 	that
 		.vessel(conType, function (html, titleHTML, moveElem) {
 			body.append(html[0]);
-			conType
-				? (function () {
-						config.type == 2 || config.type == 4
-							? (function () {
-									$("body").append(html[1]);
-							  })()
-							: (function () {
-									if (!content.parents("." + DOMS[0])[0]) {
-										content
-											.data("display", content.css("display"))
-											.show()
-											.addClass("layui-layer-wrap")
-											.wrap(html[1]);
-										$("#" + DOMS[0] + times)
-											.find("." + DOMS[5])
-											.before(titleHTML);
-									}
-							  })();
-				  })()
-				: body.append(html[1]);
+
+			const layeroId = DOMS[0] + times;
+			if (conType) {
+				if (config.type == 2) {
+					$("body").append(html[1]);
+				} else if (config.type == layer.TIPS) {
+					const $tips = $(html[1]);
+					$("body").append($tips);
+				} else {
+					if (!content.parents("." + DOMS[0])[0]) {
+						content
+							.data("display", content.css("display"))
+							.show()
+							.addClass("layui-layer-wrap")
+							.wrap(html[1]);
+						$("#" + DOMS[0] + times)
+							.find("." + DOMS[5])
+							.before(titleHTML);
+					}
+				}
+			} else {
+				body.append(html[1]);
+			}
+
 			$("#" + DOMS_MOVE)[0] || body.append((READY.moveElem = moveElem));
-
-			that.layero = $("#" + DOMS[0] + times);
+			that.layero = $(`#${layeroId}`);
 			that.shadeo = $("#" + DOMS_SHADE + times);
-
 			config.scrollbar ||
 				$html.css("overflow", "hidden").attr("layer-full", times);
 		})
@@ -460,27 +478,26 @@ src="${config.content[0]}">
 		opacity: config.shade[0] || config.shade
 	});
 
-	config.type == 2 &&
+	config.type == layer.IFRAME &&
 		layer.ie == 6 &&
 		that.layero.find("iframe").attr("src", content[0]);
 
 	//坐标自适应浏览器窗口尺寸
-	config.type == 4
-		? that.tips()
-		: (function () {
-				that.offset();
-				//首次弹出时，若 css 尚未加载，则等待 css 加载完毕后，重新设定尺寸
-				parseInt(
-					READY.getStyle(document.getElementById(DOMS_MOVE), "z-index")
-				) ||
-					(function () {
-						that.layero.css("visibility", "hidden");
-						layer.ready(function () {
-							that.offset();
-							that.layero.css("visibility", "visible");
-						});
-					})();
-		  })();
+	if (config.type == layer.TIPS) {
+		/* 642 */
+		that.tips();
+	} else {
+		that.offset();
+		//首次弹出时，若 css 尚未加载，则等待 css 加载完毕后，重新设定尺寸
+		parseInt(READY.getStyle(document.getElementById(DOMS_MOVE), "z-index")) ||
+			(function () {
+				that.layero.css("visibility", "hidden");
+				layer.ready(function () {
+					that.offset();
+					that.layero.css("visibility", "visible");
+				});
+			})();
+	}
 
 	//如果是固定定位
 	if (config.fixed) {
@@ -628,49 +645,60 @@ ClassLayer.pt.offset = function () {
 		that.offsetTop = $win.height() - (layero.find(DOMS[1]).outerHeight() || 0);
 		that.offsetLeft = layero.css("left");
 	}
-
 	layero.css({
 		top: that.offsetTop,
 		left: that.offsetLeft
 	});
 };
 
-//Tips
-ClassLayer.pt.tips = function () {
-	var that = this,
-		config = that.config,
-		layero = that.layero;
-	var layArea = [layero.outerWidth(), layero.outerHeight()],
-		follow = $(config.follow);
-	if (!follow[0]) follow = $("body");
+//Tips=================470
+ClassLayer.pt.tips = async function () {
+	var that = this;
+	var config = that.config;
+	var layero = that.layero;
+	await new Promise(r => {
+		/* 延迟 经验时间 */
+		setTimeout(r, 34);
+	});
+	var layArea = [layero.outerWidth(), layero.outerHeight()];
+	var follow = $(config.follow);
+
+	if (!follow[0]) {
+		follow = $("body");
+	}
+
 	var goal = {
-			width: follow.outerWidth(),
-			height: follow.outerHeight(),
-			top: follow.offset().top,
-			left: follow.offset().left
-		},
-		tipsG = layero.find(".layui-layer-TipsG");
+		width: follow.outerWidth(),
+		height: follow.outerHeight(),
+		top: follow.offset().top,
+		left: follow.offset().left
+	};
 
+	var tipsG = layero.find(".layui-layer-TipsG");
+
+	/* 1,2,3,4 */
 	var guide = config.tips[0];
-	config.tips[1] || tipsG.remove();
+	if (!config.tips[1]) {
+		tipsG.remove();
+	}
 
-	goal.autoLeft = function () {
+	function makeLeftAuto() {
+		/* 如果超出边界，位置需要偏移 */
+		/* 起始位置+tips宽度 比 视口 宽 */
 		if (goal.left + layArea[0] - $win.width() > 0) {
+			/* 向左偏移为超出的宽度 */
 			goal.tipLeft = goal.left + goal.width - layArea[0];
-			tipsG.css({
-				right: 12,
-				left: "auto"
-			});
+			tipsG.css({ right: 12, left: "auto" });
 		} else {
 			goal.tipLeft = goal.left;
 		}
-	};
+	}
 
 	//辨别tips的方位
 	goal.where = [
 		function () {
 			//上
-			goal.autoLeft();
+			makeLeftAuto();
 			goal.tipTop = goal.top - layArea[1] - 10;
 			tipsG
 				.removeClass("layui-layer-TipsB")
@@ -688,7 +716,7 @@ ClassLayer.pt.tips = function () {
 		},
 		function () {
 			//下
-			goal.autoLeft();
+			makeLeftAuto();
 			goal.tipTop = goal.top + goal.height + 10;
 			tipsG
 				.removeClass("layui-layer-TipsT")
@@ -706,7 +734,6 @@ ClassLayer.pt.tips = function () {
 		}
 	];
 	goal.where[guide - 1]();
-
 	/* 8*2为小三角形占据的空间 */
 	if (guide === 1) {
 		goal.top - ($win.scrollTop() + layArea[1] + 8 * 2) < 0 && goal.where[2]();
@@ -730,10 +757,14 @@ ClassLayer.pt.tips = function () {
 		"background-color": config.tips[1],
 		"padding-right": config.closeBtn ? "30px" : ""
 	});
-	layero.css({
-		left: goal.tipLeft - (config.fixed ? $win.scrollLeft() : 0),
-		top: goal.tipTop - (config.fixed ? $win.scrollTop() : 0)
-	});
+
+	const layeroPosition = {
+		left: goal.tipLeft - (config.fixed ? win.scrollLeft() : 0),
+		top: goal.tipTop - (config.fixed ? win.scrollTop() : 0)
+	};
+
+	layero.css(layeroPosition);
+	layero.removeClass("invisible");
 };
 
 //拖拽层
@@ -980,7 +1011,7 @@ READY.rescollbar = function (index) {
 
 //获取子iframe的DOM
 layer.getChildFrame = function (selector, index) {
-	index = index || $("." + DOMS[4]).attr("times");
+	index = index || $("." + LAYUI_LAYER_CONTENT).attr("times");
 	return $("#" + DOMS[0] + index)
 		.find("iframe")
 		.contents()
@@ -990,7 +1021,7 @@ layer.getChildFrame = function (selector, index) {
 //得到当前iframe层的索引，子iframe时使用
 layer.getFrameIndex = function (name) {
 	return $("#" + name)
-		.parents("." + DOMS[4])
+		.parents("." + LAYUI_LAYER_CONTENT)
 		.attr("times");
 };
 
@@ -1019,7 +1050,7 @@ layer.iframeSrc = function (index, url) {
 //设定层的样式
 layer.style = function (index, options, limit) {
 	var $layero = $("#" + DOMS[0] + index),
-		contElem = $layero.find(".layui-layer-content"),
+		contElem = $layero.find(LAYUI_LAYER_CONTENT_CLASS_NAME),
 		type = $layero.attr("type"),
 		titHeight = $layero.find(DOMS[1]).outerHeight() || 0,
 		btnHeight = $layero.find("." + DOMS[6]).outerHeight() || 0,
@@ -1093,7 +1124,7 @@ layer.min = function (index, options) {
 	layer.style(index, settings, true);
 
 	layero.find(".layui-layer-min").hide();
-	layero.attr("type") === "page" && layero.find(DOMS[4]).hide();
+	layero.attr("type") === "page" && layero.find(LAYUI_LAYER_CONTENT).hide();
 	READY.rescollbar(index);
 
 	//隐藏遮罩
@@ -1123,7 +1154,7 @@ layer.restore = function (index) {
 
 	layero.find(".layui-layer-max").removeClass("layui-layer-maxmin");
 	layero.find(".layui-layer-min").show();
-	layero.attr("type") === "page" && layero.find(DOMS[4]).show();
+	layero.attr("type") === "page" && layero.find(LAYUI_LAYER_CONTENT).show();
 	READY.rescollbar(index);
 
 	//恢复遮罩
@@ -1180,7 +1211,7 @@ layer.close = function (index, callback) {
 				//低版本IE 回收 iframe
 				if (type === READY.type[2]) {
 					try {
-						var iframe = $("#" + DOMS[4] + index)[0];
+						var iframe = $("#" + LAYUI_LAYER_CONTENT + index)[0];
 						iframe.contentWindow.document.write("");
 						iframe.contentWindow.close();
 						layero.find("." + DOMS[5])[0].removeChild(iframe);
@@ -1645,7 +1676,10 @@ layer.photos = function (options, loop, key) {
 	);
 };
 
-layer.open = deliver => new ClassLayer(deliver).index;
+layer.open = deliver => {
+	const res = new ClassLayer(deliver);
+	return res.index;
+};
 
 //暴露模块
 export default layer;

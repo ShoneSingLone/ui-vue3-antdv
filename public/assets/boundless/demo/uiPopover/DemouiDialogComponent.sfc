@@ -1,0 +1,120 @@
+<template>
+	<mkit md="## UI.dialog.component" />
+	<xButton :configs="configs.btn.noBtn" />
+	<xGap t="10" />
+	<xButton :configs="configs.btn.customBtn" />
+</template>
+
+<script>
+async function sfc({ defineComponent, State_UI, UI }) {
+	const { $t } = State_UI;
+
+	return defineComponent({
+		TEMPLATE_PLACEHOLDER,
+		setup() {},
+		data() {
+			return {
+				configs: {
+					btn: {
+						noBtn: {
+							text: () => {
+								return $t("无按钮").label;
+							},
+							async onClick() {
+								const dialogOptions = await UI.dialog.component({
+									title: $t("DemoXFormWithForm").label,
+									component: defineComponent({
+										template: `<p>演示使用bundless的形式，使用template，不使用jsx</p>`
+									}),
+									hideButtons: true,
+									hideCancel: true,
+									hideOk: true,
+									maxmin: true,
+									payload: {
+										row: {
+											name: "name"
+										}
+									},
+									area: ["694px", "440px"]
+								});
+							}
+						},
+						customBtn: {
+							text: () => {
+								return $t("自定义按钮").label;
+							},
+							async onClick() {
+								let count = 0;
+								UI.dialog.component({
+									title: $t("DemoXFormWithForm").label,
+									component: defineComponent({
+										props: ["propDialogOptions"],
+										methods: {
+											/**
+											 * 这个例子有点绕，目的只是表达可以这样引用。
+											 * 实际上，隐藏了按钮：hideButtons 之后，可以直接在组件里面添加footer里面的内容
+											 */
+											setBtnDefault() {
+												const dialogInstance = this.dialogInstance;
+												if (count++ % 2 === 0) {
+													/* renderButtons是组件内部实现的属性 */
+													this.propDialogOptions.renderButtons = () =>
+														defineComponent({
+															template: `<aButton @click="handleClick">${dialogInstance.cancelText}${count}</aButton>
+														<xGap l="10" />
+														<aButton @click="handleClick">count: ${count}</aButton>
+													`,
+															methods: {
+																handleClick() {
+																	return dialogInstance.handleClickCancel();
+																}
+															}
+														});
+												} else {
+													this.propDialogOptions.renderButtons =
+														dialogInstance.vDomDefaultButton;
+												}
+												/*options 本身不是响应式，需要在instance赋值再来触发*/
+												this.dialogInstance.dialogOptions = {
+													...this.propDialogOptions
+												};
+											}
+										},
+										computed: {
+											dialogInstance() {
+												return his.propDialogOptions.__dialogInstance;
+											}
+										},
+										template: `<div class="padding20">
+											<p>演示使用bundless的形式，使用template，不使用jsx</p>
+											<div>
+												<p>作为弹出的组件，有prop字段propDialogOptions，本身是传入dialog的参数options，经过实例化，添加了实例引用__dialogInstance，和DOM id __elId。当前DOM id {{propDialogOptions.__elId}}</p>
+												<p>this.propDialogOptions.__dialogInstance = this;</p>
+												<p>this.propDialogOptions.__elId = __elId; </p>
+											</div>
+											<div class="flex">
+												<xGap f="1" />
+												<aButton @click="setBtnDefault">改变按钮</aButton>
+											</div>
+										</div>`
+									}),
+									renderButtons: dialogInstance => {
+										return dialogInstance.vDomDefaultButton;
+									},
+									maxmin: true,
+									payload: {
+										row: {
+											name: "name"
+										}
+									}
+								});
+							}
+						}
+					}
+				}
+			};
+		},
+		methods: {}
+	});
+}
+</script>

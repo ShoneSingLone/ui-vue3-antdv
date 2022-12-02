@@ -2,6 +2,7 @@
 import mylodash from "lodash";
 import dayjs from "dayjs";
 import $ from "jquery";
+import { get as idbGet, set as idbSet } from "idb-keyval";
 
 mylodash.WORDS = {
 	INVALID_DATE: "Invalid Date",
@@ -262,13 +263,14 @@ const parseContent = returnSentence => {
  * @param {*} url
  * @returns
  */
-mylodash.asyncLoadText = function (url) {
-	mylodash.asyncLoadText.cache = (() => {
-		if (window.__envMode === "development") {
-			return {};
+mylodash.asyncLoadText = async function (url) {
+	/* 在开发模式下App.vue 会设置这个对象 */
+	if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+		const res = await idbGet(url);
+		if (res) {
+			return res;
 		}
-		return mylodash.asyncLoadText.cache || {};
-	})();
+	}
 	/* https://learn.jquery.com/ */
 	/* https://api.jquery.com/jQuery.ajax/  */
 	return new Promise((resolve, reject) =>
@@ -277,7 +279,12 @@ mylodash.asyncLoadText = function (url) {
 			async: true,
 			url,
 			dataType: "text",
-			success: resolve,
+			success(...args) {
+				if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+					idbSet(url, args[0]);
+				}
+				resolve.apply(null, args);
+			},
 			error: reject
 		})
 	);
@@ -299,7 +306,7 @@ mylodash.asyncExecFnString = asyncExecFnString;
 
 const VueComponents = {};
 
-async function asyncImportSFC(url) {
+async function asyncImportSFC(url, __Vue /* window.Vue */) {
 	if (VueComponents[url]) {
 		return VueComponents[url];
 	}
@@ -319,7 +326,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
 	} catch (e) {
 		console.error(e);
 	}
-	const scfObj = await scfObjAsyncFn(window.Vue, {
+	const scfObj = await scfObjAsyncFn(__Vue, {
 		url
 	});
 	return scfObj;

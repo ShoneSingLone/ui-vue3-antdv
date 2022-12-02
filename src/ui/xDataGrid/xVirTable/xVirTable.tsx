@@ -17,8 +17,10 @@ export function defineXVirTableConfigs(options) {
 		})
 	) {
 		throw new Error("defineXVirTableConfigs miss required");
-	} else if (options.selectedConfigs) {
-		/* 如果有selectedConfigs  默认多选，one是单选*/
+	}
+
+	if (options.selectedConfigs) {
+		/* 如果有selectedConfigs  one是单选*/
 		options.selected = options.selected || [];
 	}
 	return options;
@@ -64,7 +66,14 @@ export const xVirTable = defineComponent({
 			return this.configs?.selected || [];
 		},
 		selectedType() {
-			return this.configs?.selectedConfigs?.type || false;
+			/* 如果没有selectedConfigs则不显示多选列 */
+			if (!this.configs?.selectedConfigs) {
+				return false;
+			}
+			/* 如果有selectedConfigs，默认是many */
+			return (
+				this.configs?.selectedConfigs?.type || defineXVirTableConfigs.type.many
+			);
 		},
 		selectedProp() {
 			if (!this.selectedType) {
@@ -120,29 +129,35 @@ export const xVirTable = defineComponent({
 			return _columnWidthArray;
 		},
 		vDomTheadSelect() {
-			/* 单选的时候不显示 */
-			let vDomSeletor = (
+			/* 没有this.selectedConfigs配置项连 空位都不要 */
+			if (!this.selectedType) {
+				return null;
+			}
+			let vDomTheadSelect = (
 				<aCheckbox
 					v-model:checked={this.selectedAll}
 					indeterminate={this.selectedIndeterminate}
 					onChange={this.handleSelectedChangeTh}
 				/>
 			);
-			if (this.selectedType === "one") {
-				vDomSeletor = null;
+			/* 单选的时候不显示 */
+			if (this.selectedType == "one") {
+				vDomTheadSelect = null;
 			}
-			return vDomSeletor;
+			return (
+				<div
+					role="th"
+					class="flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check"
+					data-prop="xVirSelected">
+					{vDomTheadSelect}
+				</div>
+			);
 		},
 		vDomThead() {
 			return (
 				<div role="thead" class="xVirTable-thead">
 					<div role="tr" class="flex horizon">
-						<div
-							role="th"
-							class="flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check"
-							data-prop="xVirSelected">
-							{this.vDomTheadSelect}
-						</div>
+						{this.vDomTheadSelect}
 						{_.map(this.columnOrder, (prop: string, index: number) => {
 							const column = this.configs?.columns[prop];
 							return <xVirTableTh column={column} index={index} key={prop} />;

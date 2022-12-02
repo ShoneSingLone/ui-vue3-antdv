@@ -25,9 +25,9 @@ export type t_dialogOptions = {
 	renderButtons?: Function;
 };
 export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
-	UI.dialog.component = async (options: t_dialogOptions) =>
+	UI.dialog.component = async (dialogOptions: t_dialogOptions) =>
 		new Promise((resolve, reject) => {
-			const { component, title, area } = options;
+			const { component: BussinessComponent, title, area } = dialogOptions;
 			const id = `xDialog_${Date.now()}`;
 			let $container = $("<div/>", {
 				id
@@ -35,9 +35,9 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 			$container.appendTo($("body"));
 			const __elId = `#${id}`;
 			/* FIXED: */
-			if (options.yes) {
-				options._yes = options.yes;
-				delete options.yes;
+			if (dialogOptions.yes) {
+				dialogOptions._yes = dialogOptions.yes;
+				delete dialogOptions.yes;
 			}
 			/*dialog 的vue app*/
 			let dialogVueApp = null;
@@ -83,31 +83,33 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 										beforeMount() {
 											resolve(this);
 										},
+										created() {
+											this.dialogOptions.__dialogInstance = this;
+											this.dialogOptions.__elId = __elId;
+										},
 										mounted() {
-											if (options.fullscreen) {
+											if (this.dialogOptions.fullscreen) {
 												this.fullDialog();
 											}
 										},
 										data() {
-											options.__dialogInstance = this;
-											options.__elId = __elId;
-											return { options };
+											return { dialogOptions };
 										},
 										methods: {
 											fullDialog() {
 												layer.full(layerIndex);
 											},
 											async handleClickOk() {
-												if (options.onOk) {
-													await options.onOk(options);
+												if (dialogOptions.onOk) {
+													await dialogOptions.onOk(dialogOptions);
 												} else {
 													await this.handleClickCancel();
 												}
 											},
 											async handleClickCancel() {
 												let isClose = true;
-												if (options.beforeCancel) {
-													isClose = await options.beforeCancel();
+												if (dialogOptions.beforeCancel) {
+													isClose = await dialogOptions.beforeCancel();
 												}
 												if (isClose) {
 													layer.close(layerIndex);
@@ -118,16 +120,20 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 										},
 										computed: {
 											okText() {
-												return this.options.okText || this.$t("确定").label;
+												return (
+													this.dialogOptions.okText || this.$t("确定").label
+												);
 											},
 											cancelText() {
-												return this.options.cancelText || this.$t("取消").label;
+												return (
+													this.dialogOptions.cancelText || this.$t("取消").label
+												);
 											},
 											/* 主要内容 */
 											renderContent() {
 												return (
-													<component
-														options={options}
+													<BussinessComponent
+														propDialogOptions={dialogOptions}
 														class="flex1"
 														style="overflow:auto;"
 													/>
@@ -135,13 +141,14 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 											},
 											/* 下方按钮 */
 											renderButtons() {
-												if (this.options.hideButtons) {
+												if (this.dialogOptions.hideButtons) {
 													return null;
 												}
-												if (_.isFunction(this.options.renderButtons)) {
+												if (_.isFunction(this.dialogOptions.renderButtons)) {
 													/* 提供 handleClickOk、handleClickCancel*/
 													let vDomButtons = (() => {
-														let _vDomButtons = this.options.renderButtons(this);
+														let _vDomButtons =
+															this.dialogOptions.renderButtons(this);
 														if (!_vDomButtons) {
 															return null;
 														} else if (_vDomButtons.template) {
@@ -158,8 +165,8 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 											vDomDefaultButton() {
 												const [isShowCancel, isShowOk] = (() => {
 													return [
-														!this.options.hideCancel || null,
-														!this.options.hideOk || null
+														!this.dialogOptions.hideCancel || null,
+														!this.dialogOptions.hideOk || null
 													];
 												})();
 												return (
@@ -203,12 +210,12 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 							} catch (e) {
 								console.error(e);
 							}
-							options.layerIndex = layerIndex;
-							options.close = () => {
+							dialogOptions.layerIndex = layerIndex;
+							dialogOptions.close = () => {
 								layer.close(layerIndex);
 							};
-							options.afterOpenDialoag &&
-								options.afterOpenDialoag(dialogVueApp);
+							dialogOptions.afterOpenDialoag &&
+								dialogOptions.afterOpenDialoag(dialogVueApp);
 						},
 						cancel() {
 							/*点击右上角的关闭按钮*/
@@ -225,12 +232,12 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 								dialogVueApp.unmount();
 								dialogVueApp = null;
 							}
-							options.payload = null;
-							options.__dialogInstance = null;
-							options = null;
+							dialogOptions.payload = null;
+							dialogOptions.__dialogInstance = null;
+							dialogOptions = null;
 						}
 					},
-					options
+					dialogOptions
 				)
 			);
 		});
