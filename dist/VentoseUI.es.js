@@ -66110,9 +66110,7 @@ src="${config.content[0]}">
     that.tips();
   } else {
     that.offset();
-    parseInt(
-      READY.getStyle(document.getElementById(DOMS_MOVE), "z-index")
-    ) || function() {
+    parseInt(READY.getStyle(document.getElementById(DOMS_MOVE), "z-index")) || function() {
       that.layero.css("visibility", "hidden");
       layer.ready(function() {
         that.offset();
