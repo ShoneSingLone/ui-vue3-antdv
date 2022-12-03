@@ -3,10 +3,12 @@
 </template>
 
 <script>
-async function sfc({ defineComponent }) {
+async function sfc({ defineComponent, markRaw, State_UI, _, UI }) {
+	const { $t } = State_UI;
+
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
-		setup() {},
+		setup() { },
 		data() {
 			return {};
 		},

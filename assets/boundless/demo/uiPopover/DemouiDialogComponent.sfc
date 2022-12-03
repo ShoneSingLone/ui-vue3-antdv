@@ -82,7 +82,7 @@ async function sfc({ defineComponent, State_UI, UI }) {
 										},
 										computed: {
 											dialogInstance() {
-												return his.propDialogOptions.__dialogInstance;
+												return this.propDialogOptions.__dialogInstance;
 											}
 										},
 										template: `<div class="padding20">
