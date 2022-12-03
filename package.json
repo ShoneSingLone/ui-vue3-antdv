@@ -1,6 +1,6 @@
 {
   "name": "@ventose/ui",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "main": "./dist/VentoseUI.es.js",
   "module": "./dist/VentoseUI.es.js",
   "unpkg": "./dist/VentoseUI.umd.js",

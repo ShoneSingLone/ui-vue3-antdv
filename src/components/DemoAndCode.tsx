@@ -1,7 +1,8 @@
 //@ts-nocheck
-import { defineComponent, h, markRaw } from "vue";
-import { State_UI, _, UI } from "../ui";
+import { defineComponent, h, reactive, markRaw } from "vue";
+import { State_UI, _, UI, compileVNode, defCol, Utils } from "../ui";
 import { DialogSourceCode } from "./DialogSourceCode";
+import { defineXVirTableConfigs } from "./../ui/xDataGrid/xVirTable/xVirTable";
 const { $t } = State_UI;
 
 export const DemoAndCode = defineComponent({
@@ -16,21 +17,39 @@ export const DemoAndCode = defineComponent({
 	},
 	data() {
 		return {
+			isLoading: true,
 			BussinessComponent: false,
 			BussinessComponentSourceCode: ""
 		};
 	},
 	methods: {
+		async reurn(scfObjSourceCode) {
+			/* TODO: 弹窗修改加载的代码 */
+			/* 重新运行 */
+			const _BussinessComponent = await _.getVueComponentBySourceCode(
+				this.sfcURL,
+				scfObjSourceCode,
+				{
+					reactive,
+					defineComponent,
+					markRaw,
+					State_UI,
+					_,
+					UI,
+					compileVNode,
+					defineXVirTableConfigs,
+					defCol,
+					Utils
+				}
+			);
+
+			this.BussinessComponent = markRaw(_BussinessComponent);
+			this.isLoading = false;
+		},
 		async getBussinessComponent() {
 			this.BussinessComponentSourceCode = await _.asyncLoadText(this.sfcURL);
-			const _BussinessComponent = await _.asyncImportSFC(this.sfcURL, {
-				defineComponent,
-				markRaw,
-				State_UI,
-				_,
-				UI
-			});
-			this.BussinessComponent = markRaw(_BussinessComponent);
+			const scfObjSourceCode = _.VueLoader(this.BussinessComponentSourceCode);
+			this.reurn(scfObjSourceCode);
 		},
 		showSourceCodeDialog() {
 			UI.dialog.component({
@@ -49,7 +68,23 @@ ${this.BussinessComponentSourceCode}
 	render() {
 		if (this.BussinessComponent) {
 			return (
-				<div class="padding10" style={{ position: "relative" }}>
+				<div
+					class="padding10"
+					style={{ position: "relative" }}
+					v-loading={this.isLoading}>
+					<xIcon
+						icon="rerun"
+						onClick={this.getBussinessComponent}
+						class="mb10 pointer"
+						style={{
+							position: "absolute",
+							right: "32px",
+							width: "32px",
+							height: "32px",
+							zIndex: 999999
+						}}>
+						rerun
+					</xIcon>
 					<xIcon
 						icon="sourcecode"
 						onClick={this.showSourceCodeDialog}
@@ -59,7 +94,7 @@ ${this.BussinessComponentSourceCode}
 							right: 0,
 							width: "32px",
 							height: "32px",
-							zIndex: 2
+							zIndex: 999999
 						}}>
 						SourceCode
 					</xIcon>

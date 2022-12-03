@@ -1,5 +1,5 @@
 <template>
-	<DemoXDataGridxVirTable />
+	<DemoAndCode path="/boundless/demo/table/DemoXDataGridxVirTable.sfc" />
 	<mkit md="### xDataGrid" />
 	<xDataGrid :configs="configs_table" />
 	<mkit md="### xPagination" />
@@ -11,7 +11,6 @@
 
 <script>
 import { ITEM_OPTIONS } from "../../common/options";
-import { DemoXDataGridxVirTable } from "./DemoXDataGridxVirTable";
 import {
 	defCol,
 	defColActions,
@@ -31,9 +30,6 @@ const { $t } = State_UI;
 
 export default {
 	name: "DemoXDataGrid",
-	components: {
-		DemoXDataGridxVirTable
-	},
 	methods: {
 		handlePaginationChange(pagination) {
 			console.log("🚀:", "pagination", JSON.stringify(pagination, null, 2));
@@ -42,7 +38,7 @@ export default {
 	data() {
 		return {
 			configs_table: defDataGridOption({
-				async queryTableList(params) {},
+				async queryTableList(params) { },
 				dataSource: [],
 				columns: {
 					...defCol({ prop: "name", label: $t("名称").label }),
@@ -107,5 +103,7 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>
 >

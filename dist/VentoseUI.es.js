@@ -1556,6 +1556,7 @@ div[id^=svg-icon_] {
 
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -29547,7 +29548,7 @@ div[id^=lazy-svg_] {
   margin: 10px 10px 0;
 }`)),document.head.appendChild(n)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})();
 import Antd, { Input as Input$4, InputNumber, DatePicker as DatePicker$3, Checkbox as Checkbox$2, Select as Select$3, Switch as Switch$1, Button as Button$1, Pagination as Pagination$2, Table, Modal, message as message$1, notification as notification$1 } from "ant-design-vue";
-import { defineComponent, markRaw, h as h$1, Fragment, isVNode, Comment, Text, nextTick, createVNode, cloneVNode, ref, computed, inject, getCurrentInstance, onBeforeUnmount, provide, unref, reactive, watch, Transition, onMounted, onUnmounted, Teleport, TransitionGroup, render as render$8, watchEffect, withDirectives, onUpdated, mergeProps, useAttrs, createTextVNode, onBeforeUpdate, toRaw, toRef, resolveDirective, withModifiers, vShow, onBeforeMount, isRef, toRefs, shallowRef, openBlock, createElementBlock, renderSlot, resolveComponent, createBlock, createElementVNode, withCtx, renderList, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, createApp } from "vue";
+import { defineComponent, markRaw, h as h$1, Fragment, isVNode, Comment, Text, nextTick, createVNode, cloneVNode, ref, computed, inject, getCurrentInstance, onBeforeUnmount, provide, unref, reactive, watch, Transition, onMounted, onUnmounted, Teleport, TransitionGroup, render as render$8, watchEffect, withDirectives, onUpdated, mergeProps, useAttrs, createTextVNode, onBeforeUpdate, toRaw, toRef, resolveDirective, withModifiers, vShow, onBeforeMount, isRef, toRefs, shallowRef, openBlock, createElementBlock, renderSlot, resolveComponent, createBlock, createElementVNode, withCtx, renderList, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, createApp, compile } from "vue";
 const index$1 = "";
 const ui = "";
 const antd = "";
@@ -29848,7 +29849,7 @@ var jquery = { exports: {} };
       return type2 === "array" || length === 0 || typeof length === "number" && length > 0 && length - 1 in obj;
     }
     var Sizzle = function(window3) {
-      var i2, support2, Expr, getText, isXML, tokenize, compile, select, outermostContext, sortInput, hasDuplicate, setDocument, document3, docElem, documentIsHTML, rbuggyQSA, rbuggyMatches, matches, contains2, expando = "sizzle" + 1 * new Date(), preferredDoc = window3.document, dirruns = 0, done = 0, classCache = createCache(), tokenCache = createCache(), compilerCache = createCache(), nonnativeSelectorCache = createCache(), sortOrder = function(a2, b2) {
+      var i2, support2, Expr, getText, isXML, tokenize, compile2, select, outermostContext, sortInput, hasDuplicate, setDocument, document3, docElem, documentIsHTML, rbuggyQSA, rbuggyMatches, matches, contains2, expando = "sizzle" + 1 * new Date(), preferredDoc = window3.document, dirruns = 0, done = 0, classCache = createCache(), tokenCache = createCache(), compilerCache = createCache(), nonnativeSelectorCache = createCache(), sortOrder = function(a2, b2) {
         if (a2 === b2) {
           hasDuplicate = true;
         }
@@ -30533,7 +30534,7 @@ var jquery = { exports: {} };
         },
         pseudos: {
           "not": markFunction(function(selector) {
-            var input = [], results = [], matcher = compile(selector.replace(rtrim2, "$1"));
+            var input = [], results = [], matcher = compile2(selector.replace(rtrim2, "$1"));
             return matcher[expando] ? markFunction(function(seed2, matches2, _context, xml) {
               var elem, unmatched = matcher(seed2, null, xml, []), i3 = seed2.length;
               while (i3--) {
@@ -30948,7 +30949,7 @@ var jquery = { exports: {} };
         };
         return bySet ? markFunction(superMatcher) : superMatcher;
       }
-      compile = Sizzle2.compile = function(selector, match2) {
+      compile2 = Sizzle2.compile = function(selector, match2) {
         var i3, setMatchers = [], elementMatchers = [], cached = compilerCache[selector + " "];
         if (!cached) {
           if (!match2) {
@@ -31007,7 +31008,7 @@ var jquery = { exports: {} };
             }
           }
         }
-        (compiled || compile(selector, match2))(
+        (compiled || compile2(selector, match2))(
           seed2,
           context,
           !documentIsHTML,
@@ -48922,31 +48923,27 @@ async function asyncExecFnString(url) {
 }
 mylodash.asyncExecFnString = asyncExecFnString;
 const VueComponents = {};
+async function getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
+  const scfObjAsyncFn = new Function(
+    "argVue",
+    "argPayload",
+    `console.log(\`${url}\`)
+return (${scfObjSourceCode})(argVue,argPayload);`
+  );
+  const scfObj = await scfObjAsyncFn(__Vue, {
+    url
+  });
+  return scfObj;
+}
+mylodash.getVueComponentBySourceCode = getVueComponentBySourceCode;
 async function asyncImportSFC(url, __Vue) {
   if (VueComponents[url]) {
     return VueComponents[url];
   }
   const scfSourceCode = await mylodash.asyncLoadText(url);
   const scfObjSourceCode = VueLoader(scfSourceCode);
-  let scfObjAsyncFn = (...args2) => {
-    console.log(args2);
-  };
-  try {
-    scfObjAsyncFn = new Function(
-      "argVue",
-      "argPayload",
-      `
-
-return (${scfObjSourceCode})(argVue,argPayload);
-`
-    );
-  } catch (e2) {
-    console.error(e2);
-  }
-  const scfObj = await scfObjAsyncFn(__Vue, {
-    url
-  });
-  return scfObj;
+  VueComponents[url] = await getVueComponentBySourceCode(url, scfObjSourceCode, __Vue);
+  return VueComponents[url];
 }
 mylodash.asyncImportSFC = asyncImportSFC;
 function VueLoader(code) {
@@ -48975,6 +48972,7 @@ function VueLoader(code) {
   }
   return splitCode();
 }
+mylodash.VueLoader = VueLoader;
 mylodash.loadCss = function(cssname) {
   const cssPath = `${cssname}`;
   let $link = $$1("<link/>", { rel: "stylesheet", type: "text/css" });
@@ -65573,7 +65571,6 @@ const xVirTable = defineComponent({
       }
       let vDomTheadSelect = createVNode(resolveComponent("aCheckbox"), {
         "checked": this.selectedAll,
-        "onUpdate:checked": ($event) => this.selectedAll = $event,
         "indeterminate": this.selectedIndeterminate,
         "onChange": this.handleSelectedChangeTh
       }, null);
@@ -65603,25 +65600,6 @@ const xVirTable = defineComponent({
         }, null);
       })])]);
     },
-    vDomMainTable() {
-      var _a, _b, _c;
-      return createVNode("div", {
-        "id": this.xVirTableId,
-        "class": "xVirTable-wrapper flex vertical"
-      }, [createVNode("div", {
-        "role": "table",
-        "class": "xVirTable-header-wrapper",
-        "style": "padding-right: 6px;"
-      }, [this.vDomThead]), createVNode(xVirTableBody, {
-        "dataSource": this.configs.dataSource,
-        "columnOrder": this.columnOrder,
-        "columns": (_a = this.configs) == null ? void 0 : _a.columns,
-        "rowHeight": this.rowHeight,
-        "onSelectedChange": this.handleSelectedChangeTd,
-        "selectedConfigs": (_b = this.configs) == null ? void 0 : _b.selectedConfigs,
-        "selected": (_c = this.configs) == null ? void 0 : _c.selected
-      }, null)]);
-    },
     styleContent() {
       const allStyleArray = [
         `#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
@@ -65632,6 +65610,11 @@ const xVirTable = defineComponent({
     }
   },
   watch: {
+    "configs.selected"(selected) {
+      if ((selected == null ? void 0 : selected.length) === 0) {
+        this.selectedAll = false;
+      }
+    },
     styleContent() {
       this.updateStyle(this.styleContent);
     }
@@ -65655,6 +65638,7 @@ const xVirTable = defineComponent({
         checked
       } = e2.target;
       if (checked) {
+        this.selectedAll = true;
         this.configs.selected = mylodash.map(this.configs.dataSource, (i2) => i2[this.selectedProp]);
       } else {
         this.configs.selected = [];
@@ -65682,7 +65666,23 @@ const xVirTable = defineComponent({
     }
   },
   render() {
-    return this.vDomMainTable;
+    var _a, _b, _c;
+    return createVNode("div", {
+      "id": this.xVirTableId,
+      "class": "xVirTable-wrapper flex vertical"
+    }, [createVNode("div", {
+      "role": "table",
+      "class": "xVirTable-header-wrapper",
+      "style": "padding-right: 6px;"
+    }, [this.vDomThead]), createVNode(xVirTableBody, {
+      "dataSource": this.configs.dataSource,
+      "columnOrder": this.columnOrder,
+      "columns": (_a = this.configs) == null ? void 0 : _a.columns,
+      "rowHeight": this.rowHeight,
+      "onSelectedChange": this.handleSelectedChangeTd,
+      "selectedConfigs": (_b = this.configs) == null ? void 0 : _b.selectedConfigs,
+      "selected": (_c = this.configs) == null ? void 0 : _c.selected
+    }, null)]);
   }
 });
 const {
@@ -67545,6 +67545,10 @@ const VNodeCollection = {
     })])]);
   }
 };
+function compileVNode(template, state) {
+  const render5 = compile(template);
+  return render5.call(state, state);
+}
 window.dayjs = dayjs$1;
 window.moment = dayjs$1;
 window.jquery = $$1;
@@ -67599,6 +67603,7 @@ export {
   VentoseUIWithInstall,
   mylodash as _,
   antColKey,
+  compileVNode,
   components,
   dayjs$1 as dayjs,
   defCol,
