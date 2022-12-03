@@ -57,6 +57,7 @@ import { lStorage } from "./tools/storage.js";
 import { pickValueFrom, resetValueOf, setValueTo } from "./tools/form.js";
 import { UI } from "./UI";
 import { VNodeCollection } from "./tools/VNodeRender";
+import { compileVNode } from "./tools/framework";
 
 /* my-private-ui-component */
 const componentMyUI = {
@@ -117,6 +118,8 @@ export { resetValueOf as resetValueOf };
 export { setValueTo as setValueTo };
 export { RegexFn as RegexFn };
 export { FormRules as FormRules };
+export { compileVNode as compileVNode };
+
 
 export const VentoseUIWithInstall = {
 	install: (app, options /* {appPlugins,dependState} */) => {

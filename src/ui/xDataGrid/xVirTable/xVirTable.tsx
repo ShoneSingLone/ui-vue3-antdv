@@ -135,7 +135,7 @@ export const xVirTable = defineComponent({
 			}
 			let vDomTheadSelect = (
 				<aCheckbox
-					v-model:checked={this.selectedAll}
+					checked={this.selectedAll}
 					indeterminate={this.selectedIndeterminate}
 					onChange={this.handleSelectedChangeTh}
 				/>
@@ -166,28 +166,6 @@ export const xVirTable = defineComponent({
 				</div>
 			);
 		},
-		vDomMainTable() {
-			return (
-				<div id={this.xVirTableId} class="xVirTable-wrapper flex vertical">
-					{/* 滑动条有6px  */}
-					<div
-						role="table"
-						class="xVirTable-header-wrapper"
-						style="padding-right: 6px;">
-						{this.vDomThead}
-					</div>
-					<xVirTableBody
-						dataSource={this.configs.dataSource}
-						columnOrder={this.columnOrder}
-						columns={this.configs?.columns}
-						rowHeight={this.rowHeight}
-						onSelectedChange={this.handleSelectedChangeTd}
-						selectedConfigs={this.configs?.selectedConfigs}
-						selected={this.configs?.selected}
-					/>
-				</div>
-			);
-		},
 		styleContent() {
 			const allStyleArray = [
 				// `#${this.xVirTableId} *{ outline:1px solid red; }`,
@@ -199,6 +177,11 @@ export const xVirTable = defineComponent({
 		}
 	},
 	watch: {
+		"configs.selected"(selected) {
+			if (selected?.length === 0) {
+				this.selectedAll = false;
+			}
+		},
 		styleContent() {
 			this.updateStyle(this.styleContent);
 		}
@@ -219,6 +202,7 @@ export const xVirTable = defineComponent({
 		handleSelectedChangeTh(e) {
 			const { checked } = e.target;
 			if (checked) {
+				this.selectedAll = true;
 				this.configs.selected = _.map(
 					this.configs.dataSource,
 					i => i[this.selectedProp]
@@ -246,6 +230,25 @@ export const xVirTable = defineComponent({
 		}
 	},
 	render() {
-		return this.vDomMainTable;
+		return (
+			<div id={this.xVirTableId} class="xVirTable-wrapper flex vertical">
+				{/* 滑动条有6px  */}
+				<div
+					role="table"
+					class="xVirTable-header-wrapper"
+					style="padding-right: 6px;">
+					{this.vDomThead}
+				</div>
+				<xVirTableBody
+					dataSource={this.configs.dataSource}
+					columnOrder={this.columnOrder}
+					columns={this.configs?.columns}
+					rowHeight={this.rowHeight}
+					onSelectedChange={this.handleSelectedChangeTd}
+					selectedConfigs={this.configs?.selectedConfigs}
+					selected={this.configs?.selected}
+				/>
+			</div>
+		);
 	}
 });

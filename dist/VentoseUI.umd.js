@@ -1556,6 +1556,7 @@ div[id^=svg-icon_] {
 
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -48926,31 +48927,27 @@ div[id^=lazy-svg_] {
   }
   mylodash.asyncExecFnString = asyncExecFnString;
   const VueComponents = {};
+  async function getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
+    const scfObjAsyncFn = new Function(
+      "argVue",
+      "argPayload",
+      `console.log(\`${url}\`)
+return (${scfObjSourceCode})(argVue,argPayload);`
+    );
+    const scfObj = await scfObjAsyncFn(__Vue, {
+      url
+    });
+    return scfObj;
+  }
+  mylodash.getVueComponentBySourceCode = getVueComponentBySourceCode;
   async function asyncImportSFC(url, __Vue) {
     if (VueComponents[url]) {
       return VueComponents[url];
     }
     const scfSourceCode = await mylodash.asyncLoadText(url);
     const scfObjSourceCode = VueLoader(scfSourceCode);
-    let scfObjAsyncFn = (...args2) => {
-      console.log(args2);
-    };
-    try {
-      scfObjAsyncFn = new Function(
-        "argVue",
-        "argPayload",
-        `
-
-return (${scfObjSourceCode})(argVue,argPayload);
-`
-      );
-    } catch (e2) {
-      console.error(e2);
-    }
-    const scfObj = await scfObjAsyncFn(__Vue, {
-      url
-    });
-    return scfObj;
+    VueComponents[url] = await getVueComponentBySourceCode(url, scfObjSourceCode, __Vue);
+    return VueComponents[url];
   }
   mylodash.asyncImportSFC = asyncImportSFC;
   function VueLoader(code) {
@@ -48979,6 +48976,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
     }
     return splitCode();
   }
+  mylodash.VueLoader = VueLoader;
   mylodash.loadCss = function(cssname) {
     const cssPath = `${cssname}`;
     let $link = $$1("<link/>", { rel: "stylesheet", type: "text/css" });
@@ -65577,7 +65575,6 @@ return (${scfObjSourceCode})(argVue,argPayload);
         }
         let vDomTheadSelect = vue.createVNode(vue.resolveComponent("aCheckbox"), {
           "checked": this.selectedAll,
-          "onUpdate:checked": ($event) => this.selectedAll = $event,
           "indeterminate": this.selectedIndeterminate,
           "onChange": this.handleSelectedChangeTh
         }, null);
@@ -65607,25 +65604,6 @@ return (${scfObjSourceCode})(argVue,argPayload);
           }, null);
         })])]);
       },
-      vDomMainTable() {
-        var _a, _b, _c;
-        return vue.createVNode("div", {
-          "id": this.xVirTableId,
-          "class": "xVirTable-wrapper flex vertical"
-        }, [vue.createVNode("div", {
-          "role": "table",
-          "class": "xVirTable-header-wrapper",
-          "style": "padding-right: 6px;"
-        }, [this.vDomThead]), vue.createVNode(xVirTableBody, {
-          "dataSource": this.configs.dataSource,
-          "columnOrder": this.columnOrder,
-          "columns": (_a = this.configs) == null ? void 0 : _a.columns,
-          "rowHeight": this.rowHeight,
-          "onSelectedChange": this.handleSelectedChangeTd,
-          "selectedConfigs": (_b = this.configs) == null ? void 0 : _b.selectedConfigs,
-          "selected": (_c = this.configs) == null ? void 0 : _c.selected
-        }, null)]);
-      },
       styleContent() {
         const allStyleArray = [
           `#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
@@ -65636,6 +65614,11 @@ return (${scfObjSourceCode})(argVue,argPayload);
       }
     },
     watch: {
+      "configs.selected"(selected) {
+        if ((selected == null ? void 0 : selected.length) === 0) {
+          this.selectedAll = false;
+        }
+      },
       styleContent() {
         this.updateStyle(this.styleContent);
       }
@@ -65659,6 +65642,7 @@ return (${scfObjSourceCode})(argVue,argPayload);
           checked
         } = e2.target;
         if (checked) {
+          this.selectedAll = true;
           this.configs.selected = mylodash.map(this.configs.dataSource, (i2) => i2[this.selectedProp]);
         } else {
           this.configs.selected = [];
@@ -65686,7 +65670,23 @@ return (${scfObjSourceCode})(argVue,argPayload);
       }
     },
     render() {
-      return this.vDomMainTable;
+      var _a, _b, _c;
+      return vue.createVNode("div", {
+        "id": this.xVirTableId,
+        "class": "xVirTable-wrapper flex vertical"
+      }, [vue.createVNode("div", {
+        "role": "table",
+        "class": "xVirTable-header-wrapper",
+        "style": "padding-right: 6px;"
+      }, [this.vDomThead]), vue.createVNode(xVirTableBody, {
+        "dataSource": this.configs.dataSource,
+        "columnOrder": this.columnOrder,
+        "columns": (_a = this.configs) == null ? void 0 : _a.columns,
+        "rowHeight": this.rowHeight,
+        "onSelectedChange": this.handleSelectedChangeTd,
+        "selectedConfigs": (_b = this.configs) == null ? void 0 : _b.selectedConfigs,
+        "selected": (_c = this.configs) == null ? void 0 : _c.selected
+      }, null)]);
     }
   });
   const {
@@ -66114,9 +66114,7 @@ src="${config.content[0]}">
       that.tips();
     } else {
       that.offset();
-      parseInt(
-        READY.getStyle(document.getElementById(DOMS_MOVE), "z-index")
-      ) || function() {
+      parseInt(READY.getStyle(document.getElementById(DOMS_MOVE), "z-index")) || function() {
         that.layero.css("visibility", "hidden");
         layer.ready(function() {
           that.offset();
@@ -67551,6 +67549,10 @@ src="${config.content[0]}">
       })])]);
     }
   };
+  function compileVNode(template, state) {
+    const render2 = vue.compile(template);
+    return render2.call(state, state);
+  }
   window.dayjs = dayjs$1;
   window.moment = dayjs$1;
   window.jquery = $$1;
@@ -67604,6 +67606,7 @@ src="${config.content[0]}">
   exports2.VentoseUIWithInstall = VentoseUIWithInstall;
   exports2._ = mylodash;
   exports2.antColKey = antColKey;
+  exports2.compileVNode = compileVNode;
   exports2.components = components;
   exports2.dayjs = dayjs$1;
   exports2.defCol = defCol;
