@@ -2,7 +2,7 @@
 
 import { _ } from "../../loadCommonUtil";
 import $ from "jquery";
-import layer, { KEY } from "../../xSingle/layer/layer";
+import { LayerUtils, KEY } from "../layer/LayerUtils";
 import { createApp, defineComponent, reactive, h } from "vue";
 
 export type t_dialogOptions = {
@@ -49,7 +49,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 					const code = event.keyCode;
 					event.preventDefault();
 					if (code === KEY.esc) {
-						layer.close(handleEcsPress.layerIndex);
+						LayerUtils.close(handleEcsPress.layerIndex);
 					}
 				},
 				on(layerIndex) {
@@ -62,7 +62,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 				}
 			};
 
-			layer.open(
+			LayerUtils.open(
 				_.merge(
 					{
 						/* 传入自定义样式 */
@@ -97,7 +97,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 										},
 										methods: {
 											fullDialog() {
-												layer.full(layerIndex);
+												LayerUtils.full(layerIndex);
 											},
 											async handleClickOk() {
 												if (dialogOptions.onOk) {
@@ -112,7 +112,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 													isClose = await dialogOptions.beforeCancel();
 												}
 												if (isClose) {
-													layer.close(layerIndex);
+													LayerUtils.close(layerIndex);
 												} else {
 													return false;
 												}
@@ -212,7 +212,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 							}
 							dialogOptions.layerIndex = layerIndex;
 							dialogOptions.close = () => {
-								layer.close(layerIndex);
+								LayerUtils.close(layerIndex);
 							};
 							dialogOptions.afterOpenDialoag &&
 								dialogOptions.afterOpenDialoag(dialogVueApp);

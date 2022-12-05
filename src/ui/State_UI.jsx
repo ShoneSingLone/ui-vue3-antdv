@@ -1,6 +1,4 @@
 import { computed, reactive, watch } from "vue";
-// import zhCn from "ant-design-vue/es/date-picker/locale/zh_CN";
-// import enUs from "ant-design-vue/es/date-picker/locale/en_US";
 import enUs from "ant-design-vue/es/locale/en_US";
 import zhCn from "ant-design-vue/es/locale/zh_CN";
 import _ from "lodash";
@@ -8,7 +6,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import "dayjs/locale/en-au";
 import { lStorage } from "./tools/storage";
-import { get, set } from "idb-keyval";
 
 /* 可以与外部通信，可以增改 */
 

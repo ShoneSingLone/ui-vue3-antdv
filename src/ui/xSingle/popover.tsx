@@ -1,6 +1,6 @@
 //@ts-nocheck
 import $ from "jquery";
-import layer from "./layer/layer";
+import { LayerUtils } from "./layer/LayerUtils";
 import { _ } from "../loadCommonUtil";
 import { createApp, defineComponent } from "vue";
 
@@ -42,7 +42,7 @@ export function installPopoverDirective(app: any, appSettings: any) {
 		},
 		unmounted(el: HTMLInputElement) {
 			const followId: string = el.dataset["followId"];
-			layer.close(popverIndexCollection[followId]);
+			LayerUtils.close(popverIndexCollection[followId]);
 			delete popverOptionsCollection[followId];
 			delete popverIndexCollection[followId];
 		}
@@ -72,7 +72,7 @@ function inVisibleArea(followId) {
 function closeTips(followId) {
 	delete visibleArea[followId];
 	timerCollection[followId] = setTimeout(() => {
-		layer.close(popverIndexCollection[followId]);
+		LayerUtils.close(popverIndexCollection[followId]);
 		delete popverIndexCollection[followId];
 	}, TIMEOUT_DELAY);
 }
@@ -111,7 +111,7 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 	let app;
 	let tipsContent = options.content;
 	let layerTipsOptions = {
-		tips: [layer.UP, "#fff"],
+		tips: [LayerUtils.UP, "#fff"],
 		/*hover 不允许 同时多个 tips出现*/
 		/*tipsMore: false,*/
 		time: 1000 * 60 * 10
@@ -139,7 +139,7 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 		setTimeout(() => {
 			/* 如果delay之后还存在，再展示 */
 			if (visibleArea[followId]) {
-				popverIndexCollection[followId] = layer.tips(
+				popverIndexCollection[followId] = LayerUtils.tips(
 					tipsContent,
 					`#${followId}`,
 					layerTipsOptions
@@ -148,7 +148,7 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 		}, options.delay);
 	} else {
 		/* 立即展示 */
-		popverIndexCollection[followId] = layer.tips(
+		popverIndexCollection[followId] = LayerUtils.tips(
 			tipsContent,
 			`#${followId}`,
 			layerTipsOptions

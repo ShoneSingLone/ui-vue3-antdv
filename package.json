@@ -3,6 +3,7 @@
   "version": "0.0.15",
   "main": "./dist/VentoseUI.es.js",
   "module": "./dist/VentoseUI.es.js",
+  "types": "./src/ui/index.tsx",
   "unpkg": "./dist/VentoseUI.umd.js",
   "repository": {
     "type": "git",
@@ -27,11 +28,12 @@
     "idb-keyval": "^6.2.0",
     "jquery": "^3.6.1",
     "lodash": "^4.17.21",
-    "moment": "^2.29.4",
     "vue": "^3.2.37",
     "vue-router": "4"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.14",
+    "@types/lodash": "^4.14.191",
     "@ventose/utils-node": "^0.0.11",
     "@vitejs/plugin-vue": "^3.1.0",
     "@vitejs/plugin-vue-jsx": "^2.0.1",

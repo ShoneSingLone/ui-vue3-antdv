@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { t_dialogOptions } from "./xSingle/dialog/dialog";
 import { State_UI } from "./State_UI";
-import layer from "./xSingle/layer/layer";
+import { LayerUtils } from "./xSingle/layer/LayerUtils";
 import {
 	Modal,
 	/* global */
@@ -53,7 +53,7 @@ const useModel = type => {
 	};
 };
 
-layer.loading = function (indexDelete) {
+LayerUtils.loading = function (indexDelete) {
 	this.loading.count = this.loading.count || 1;
 	this.loading.deep = this.loading.deep || new Set();
 	$("body").trigger("click");
@@ -62,7 +62,7 @@ layer.loading = function (indexDelete) {
 			/* 如果size不是一，则不需要消失 */
 			this.loading.deep.delete(indexDelete);
 			if (this.loading.deep.size === 0) {
-				layer.close(this.loading.index);
+				LayerUtils.close(this.loading.index);
 			}
 		} else {
 			console.error("loading", indexDelete);
@@ -71,7 +71,7 @@ layer.loading = function (indexDelete) {
 		/* 全局单例，如果有一个，如果loading，不需要new loading */
 		let indexAdd = this.loading.count++;
 		if (this.loading.deep.size === 0) {
-			this.loading.index = layer.load(1);
+			this.loading.index = LayerUtils.load(1);
 		}
 		this.loading.deep.add(indexAdd);
 		return indexAdd;
@@ -127,5 +127,5 @@ export const UI = {
 			});
 		}
 	}),
-	layer
+	layer: LayerUtils
 };

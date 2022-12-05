@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<dl>
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="type">type</a> - 基本层类型</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Number，<span>默认</span>：0</p>
+				<p>
+					layer提供了5种层类型。可传入的值有：<em>0</em>（信息框，默认）<em>1</em>（页面层）<em>2</em>（iframe层）<em>3</em>（加载层）<em>4</em>（tips层）。
+					若你采用<em>layer.open({type: 1})</em
+					>方式调用，则type为必填项（信息框除外）
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="title">title</a> - 标题</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p>
+					<span>类型</span>：String/Array/Boolean，<span>默认</span>：'信息'
+				</p>
+				<p>
+					title支持三种类型的值，若你传入的是普通的字符串，如<em
+						>title :'我是标题'</em
+					>，那么只会改变标题文本；若你还需要自定义标题区域样式，那么你可以<em
+						>title: ['文本', 'font-size:18px;']</em
+					>，数组第二项可以写任意css样式；如果你不想显示标题栏，你可以<em
+						>title: false</em
+					>
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="content">content</a> - 内容</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String/DOM/Array，<span>默认</span>：''</p>
+				<p>
+					content可传入的值是灵活多变的，不仅可以传入普通的html内容，还可以指定DOM，更可以随着type的不同而不同。譬如：
+				</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>/!*</li><li> 如果是页面层</li><li> */</li><li>layer.open({</li><li>  type: 1, </li><li>  content: '传入任意的文本或html' //这里content是一个普通的String</li><li>});</li><li>layer.open({</li><li>  type: 1,</li><li>  content: $('#id') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响</li><li>});</li><li>//Ajax获取</li><li>$.post('url', {}, function(str){</li><li>  layer.open({</li><li>    type: 1,</li><li>    content: str //注意，如果str是object，那么需要字符拼接。</li><li>  });</li><li>});</li><li>/!*</li><li> 如果是iframe层</li><li> */</li><li>layer.open({</li><li>  type: 2, </li><li>  content: 'http://sentsin.com' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以<em>content: ['http://sentsin.com', 'no']</em></li><li>}); </li><li>/!*</li><li> 如果是用layer.open执行tips层</li><li> */</li><li>layer.open({</li><li>  type: 4,</li><li>  content: ['内容', '#id'] //数组第二项即吸附元素选择器或者DOM</li><li>});</li></ol></pre>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="skin">skin</a> - 样式类名</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String，<span>默认</span>：''</p>
+				<p>
+					skin不仅允许你传入layer内置的样式class名，还可以传入您自定义的class名。这是一个很好的切入点，意味着你可以借助skin轻松完成不同的风格定制。目前layer内置的skin有：<em
+						>layui-layer-lan</em
+					><em>layui-layer-molv</em
+					>，未来我们还会选择性地内置更多，但更推荐您自己来定义。以下是一个自定义风格的简单例子
+				</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>//单个使用</li><li>layer.open({</li><li>  skin: 'demo-class'</li><li>});</li><li>//全局使用。即所有弹出层都默认采用，但是单个配置skin的优先级更高</li><li>layer.config({</li><li>  skin: 'demo-class'</li><li>})</li><li>//CSS </li><li>body .demo-class .layui-layer-title{background:#c00; color:#fff; border: none;}</li><li>body .demo-class .layui-layer-btn{border-top:1px solid #E9E7E7}</li><li>body .demo-class .layui-layer-btn a{background:#333;}</li><li>body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999;}</li><li>…</li><li>加上body是为了保证优先级。你可以借助Chrome调试工具，定义更多样式控制层更多的区域。</li></ol></pre>
+				<p>
+					你也可以<a
+						class="layer-btn"
+						href="http://www.layuiweb.com/layer/skin.html#publish"
+						target="_blank"
+						>去查看layer皮肤制作说明</a
+					>
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="area">area</a> - 宽高</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String/Array，<span>默认</span>：'auto'</p>
+				<p>
+					在默认状态下，layer是宽高都自适应的，但当你只想定义宽度时，你可以<em
+						>area: '500px'</em
+					>，高度仍然是自适应的。当你宽高都要定义时，你可以<em
+						>area: ['500px', '300px']</em
+					>
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="offset">offset</a> - 坐标</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String/Array，<span>默认</span>：垂直水平居中</p>
+				<p>
+					offset默认情况下不用设置。但如果你不想垂直水平居中，你还可以进行以下赋值：
+				</p>
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th>值</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>offset: 'auto'</td>
+							<td>默认坐标，即垂直水平居中</td>
+						</tr>
+						<tr>
+							<td>offset: '100px'</td>
+							<td>只定义top坐标，水平保持居中</td>
+						</tr>
+						<tr>
+							<td>offset: ['100px', '50px']</td>
+							<td>同时定义top、left坐标</td>
+						</tr>
+						<tr>
+							<td>offset: 't'</td>
+							<td>快捷设置顶部坐标</td>
+						</tr>
+						<tr>
+							<td>offset: 'r'</td>
+							<td>快捷设置右边缘坐标</td>
+						</tr>
+						<tr>
+							<td>offset: 'b'</td>
+							<td>快捷设置底部坐标</td>
+						</tr>
+						<tr>
+							<td>offset: 'l'</td>
+							<td>快捷设置左边缘坐标</td>
+						</tr>
+						<tr>
+							<td>offset: 'lt'</td>
+							<td>快捷设置左上角</td>
+						</tr>
+						<tr>
+							<td>offset: 'lb'</td>
+							<td>快捷设置左下角</td>
+						</tr>
+						<tr>
+							<td>offset: 'rt'</td>
+							<td>快捷设置右上角</td>
+						</tr>
+						<tr>
+							<td>offset: 'rb'</td>
+							<td>快捷设置右下角</td>
+						</tr>
+					</tbody>
+				</table>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend>
+						<a name="icon">icon</a> - 图标。信息框和加载层的私有参数
+					</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p>
+					<span>类型</span>：Number，<span>默认</span>：-1（信息框）/0（加载层）
+				</p>
+				<p>
+					信息框默认不显示图标。当你想显示图标时，默认皮肤可以传入<em>0-6</em>如果是加载层，可以传入<em>0-2</em>。如：
+				</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>//eg1</li><li>layer.alert('酷毙了', {icon: 1});</li><li>//eg2</li><li>layer.msg('不开心。。', {icon: 5});</li><li>//eg3</li><li>layer.load(1); //风格1的加载</li></ol></pre>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="btn">btn</a> - 按钮</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String/Array，<span>默认</span>：'确认'</p>
+				<p>
+					信息框模式时，btn默认是一个确认按钮，其它层类型则默认不显示，加载层和tips层则无效。当您只想自定义一个按钮时，你可以<em
+						>btn: '我知道了'</em
+					>，当你要定义两个按钮时，你可以<em>btn: ['yes', 'no']</em
+					>。当然，你也可以定义更多按钮，比如：<em
+						>btn: ['按钮1', '按钮2', '按钮3', …]</em
+					>，按钮1的回调是yes，而从按钮2开始，则回调为btn2:
+					function(){}，以此类推。如：
+				</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>//eg1       </li><li>layer.confirm('纳尼？', {</li><li>  btn: ['按钮一', '按钮二', '按钮三'] //可以无限个按钮</li><li>  ,btn3: function(index, layero){</li><li>    //按钮【按钮三】的回调</li><li>  }</li><li>}, function(index, layero){</li><li>  //按钮【按钮一】的回调</li><li>}, function(index){</li><li>  //按钮【按钮二】的回调</li><li>});</li><li> </li><li>//eg2</li><li>layer.open({</li><li>  content: 'test'</li><li>  ,btn: ['按钮一', '按钮二', '按钮三']</li><li>  ,yes: function(index, layero){</li><li>    //按钮【按钮一】的回调</li><li>  }</li><li>  ,btn2: function(index, layero){</li><li>    //按钮【按钮二】的回调</li><li>    </li><li>    //return false 开启该代码可禁止点击该按钮关闭</li><li>  }</li><li>  ,btn3: function(index, layero){</li><li>    //按钮【按钮三】的回调</li><li>    </li><li>    //return false 开启该代码可禁止点击该按钮关闭</li><li>  }</li><li>  ,cancel: function(){ </li><li>    //右上角关闭回调</li><li>    </li><li>    //return false 开启该代码可禁止点击该按钮关闭</li><li>  }</li><li>});</li></ol></pre>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="btnAlign">btnAlign</a> - 按钮排列</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String，<span>默认</span>：r</p>
+				<p>
+					你可以快捷定义按钮的排列位置，btnAlign的默认值为r，即右对齐。该参数可支持的赋值如下：
+				</p>
+				<table class="layui-table">
+					<thead>
+						<tr>
+							<th>值</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>btnAlign: 'l'</td>
+							<td>按钮左对齐</td>
+						</tr>
+						<tr>
+							<td>btnAlign: 'c'</td>
+							<td>按钮居中对齐</td>
+						</tr>
+						<tr>
+							<td>btnAlign: 'r'</td>
+							<td>按钮右对齐。默认值，不用设置</td>
+						</tr>
+						<tr></tr>
+					</tbody>
+				</table>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="closeBtn">closeBtn</a> - 关闭按钮</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String/Boolean，<span>默认</span>：1</p>
+				<p>
+					layer提供了两种风格的关闭按钮，可通过配置<em>1</em>和<em>2</em>来展示，如果不显示，则<em
+						>closeBtn: 0</em
+					>
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="shade">shade</a> - 遮罩</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String/Array/Boolean，<span>默认</span>：0.3</p>
+				<p>
+					即弹层外区域。默认是0.3透明度的黑色背景（'#000'）。如果你想定义别的颜色，可以<em
+						>shade: [0.8, '#393D49']</em
+					>；如果你不想显示遮罩，可以<em>shade: 0</em>
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend>
+						<a name="shadeClose">shadeClose</a> - 是否点击遮罩关闭
+					</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：false</p>
+				<p>
+					如果你的shade是存在的，那么你可以设定shadeClose来控制点击弹层外区域关闭。
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="time">time</a> - 自动关闭所需毫秒</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Number，<span>默认</span>：0</p>
+				<p>
+					默认不会自动关闭。当你想自动关闭时，可以<em>time: 5000</em
+					>，即代表5秒后自动关闭，注意单位是毫秒（1秒=1000毫秒）
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="id">id</a> - 用于控制弹层唯一标识</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：String，<span>默认</span>：空字符</p>
+				<p>
+					设置该值后，不管是什么类型的层，都只允许同时弹出一个。一般用于页面层和iframe层模式
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="anim">anim</a> - 弹出动画</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Number，<span>默认</span>：0</p>
+				<p>
+					我们的出场动画全部采用CSS3。这意味着除了ie6-9，其它所有浏览器都是支持的。目前anim可支持的动画类型有<em
+						>0-6</em
+					>
+					如果不想显示动画，设置 anim: -1
+					即可。另外需要注意的是，3.0之前的版本用的是 <em>shift</em> 参数
+				</p>
+			</dd>
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>值</th>
+						<th>备注</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>anim: 0</td>
+						<td>平滑放大。默认</td>
+					</tr>
+					<tr>
+						<td>anim: 1</td>
+						<td>从上掉落</td>
+					</tr>
+					<tr>
+						<td>anim: 2</td>
+						<td>从最底部往上滑入</td>
+					</tr>
+					<tr>
+						<td>anim: 3</td>
+						<td>从左滑入</td>
+					</tr>
+					<tr>
+						<td>anim: 4</td>
+						<td>从左翻滚</td>
+					</tr>
+					<tr>
+						<td>anim: 5</td>
+						<td>渐显</td>
+					</tr>
+					<tr>
+						<td>anim: 6</td>
+						<td>抖动</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="site-title">
+				<fieldset>
+					<legend>
+						<a name="isOutAnim">isOutAnim</a> - 关闭动画 （layer 3.0.3新增）
+					</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：true</p>
+				<p>
+					默认情况下，关闭层时会有一个过度动画。如果你不想开启，设置 isOutAnim:
+					false 即可
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="maxmin">maxmin</a> - 最大最小化。</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：false</p>
+				<p>
+					该参数值对<em>type:1</em>和<em>type:2</em>有效。默认不显示最大小化按钮。需要显示配置<em
+						>maxmin: true</em
+					>即可
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="fixed">fixed</a> - 固定</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：true</p>
+				<p>
+					即鼠标滚动时，层是否固定在可视区域。如果不想，设置<em>fixed: false</em
+					>即可
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="resize">resize</a> - 是否允许拉伸</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：true</p>
+				<p>
+					默认情况下，你可以在弹层右下角拖动来拉伸尺寸。如果对指定的弹层屏蔽该功能，设置
+					false即可。该参数对loading、tips层无效
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="resizing">resizing</a> - 监听窗口拉伸动作</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Function，<span>默认</span>：null</p>
+				<p>
+					当你拖拽弹层右下角对窗体进行尺寸调整时，如果你设定了该回调，则会执行。回调返回一个参数：当前层的DOM对象
+				</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>resizing: function(layero){</li><li>  console.log(layero);</li><li>}</li></ol></pre>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend>
+						<a name="scrollbar">scrollbar</a> - 是否允许浏览器出现滚动条
+					</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：true</p>
+				<p>默认允许浏览器滚动，如果设定<em>scrollbar: false</em>，则屏蔽</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="maxWidth">maxWidth</a> - 最大宽度</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Number，<span>默认</span>：360</p>
+				<p>请注意：只有当<em>area: 'auto'</em>时，maxWidth的设定才有效。</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="maxHeight">maxHeight</a> - 最大高度</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Number，<span>默认</span>：无</p>
+				<p>请注意：只有当高度自适应时，maxHeight的设定才有效。</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="zIndex">zIndex</a> - 层叠顺序</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：，<span>默认</span>：19891014（贤心生日 0.0）</p>
+				<p>一般用于解决和其它组件的层叠冲突。</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="move">move</a> - 触发拖动的元素</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p>
+					<span>类型</span
+					>：String/DOM/Boolean，<span>默认</span>：'.layui-layer-title'
+				</p>
+				<p>
+					默认是触发标题区域拖拽。如果你想单独定义，指向元素的选择器或者DOM即可。如<em
+						>move: '.mine-move'</em
+					>。你还配置设定<em>move: false</em>来禁止拖拽
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="moveOut">moveOut</a> - 是否允许拖拽到窗口外</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：false</p>
+				<p>
+					默认只能在窗口内拖拽，如果你想让拖到窗外，那么设定<em
+						>moveOut: true</em
+					>即可
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="moveEnd">moveEnd</a> - 拖动完毕后的回调方法</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Function，<span>默认</span>：null</p>
+				<p>
+					默认不会触发moveEnd，如果你需要，设定<em
+						>moveEnd: function(layero){}</em
+					>即可。其中layero为当前层的DOM对象
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="tips">tips</a> - tips方向和颜色</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Number/Array，<span>默认</span>：2</p>
+				<p>
+					tips层的私有参数。支持<em>上</em><em>右</em><em>下</em
+					><em>左</em>四个方向，通过<em>1-4</em>进行方向设定。如<em>tips: 3</em
+					>则表示在元素的下面出现。有时你还可能会定义一些颜色，可以设定<em
+						>tips: [1, '#c00']</em
+					>
+				</p>
+			</dd>
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="tipsMore">tipsMore</a> - 是否允许多个tips</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：false</p>
+				<p>
+					允许多个意味着不会销毁之前的tips层。通过<em>tipsMore: true</em>开启
+				</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend>
+						<a name="success">success</a> - 层弹出后的成功回调方法
+					</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Function，<span>默认</span>：null</p>
+				<p>
+					当你需要在层创建完毕时即执行一些语句，可以通过该回调。success会携带两个参数，分别是<em
+						>当前层DOM</em
+					><em>当前层索引</em>。如：
+				</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>layer.open({</li><li>  content: '测试回调',</li><li>  success: function(layero, index){</li><li>    console.log(layero, index);</li><li>  }</li><li>});</li></ol></pre>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="yes">yes</a> - 确定按钮回调方法</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Function，<span>默认</span>：null</p>
+				<p>该回调携带两个参数，分别为当前层索引、当前层DOM对象。如：</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>layer.open({</li><li>  content: '测试回调',</li><li>  yes: function(index, layero){</li><li>    //do something</li><li>    layer.close(index); //如果设定了yes回调，需进行手工关闭</li><li>  }</li><li>});</li></ol></pre>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend>
+						<a name="cancel">cancel</a> - 右上角关闭按钮触发的回调
+					</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Function，<span>默认</span>：null</p>
+				<p>
+					该回调携带两个参数，分别为：当前层索引参数（index）、当前层的DOM对象（layero），默认会自动触发关闭。如果不想关闭，<em
+						>return false</em
+					>即可，如；
+				</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>cancel: function(index, layero){ </li><li>  if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭</li><li>    layer.close(index)</li><li>  }</li><li>  return false; </li><li>}</li></ol></pre>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend><a name="end">end</a> - 层销毁后触发的回调</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Function，<span>默认</span>：null</p>
+				<p>无论是确认还是取消，只要层被销毁了，end都会执行，不携带任何参数。</p>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend>
+						<a name="full">full/min/restore</a> -分别代表最大化、最小化、还原
+						后触发的回调
+					</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Function，<span>默认</span>：null</p>
+				<p>携带两个参数，即当前层 DOM、当前层索引</p>
+				<pre
+					class="layui-code layui-code-view layui-box"><div class="layui-code-title">&lt;/&gt;</div><ol class="layui-code-ol"><li>min: function(layero, index){ //<span class="layui-font-red">index 参数为 layui 2.6.6 或独立版 layer 3.5.0 开始新增</span></li><li>  //当层最小化时触发</li><li>  </li><li>  //自定义操作，并阻止默认最小化</li><li>  //layer.min(index); //单独执行最小化</li><li>  //return false; //阻止默认最小化</li><li>}</li></ol></pre>
+			</dd>
+
+			<div class="site-title">
+				<fieldset>
+					<legend>
+						<a name="minStack">minStack</a> - 是否默认堆叠在左下角
+					</legend>
+				</fieldset>
+			</div>
+			<dd class="site-text">
+				<p><span>类型</span>：Boolean，<span>默认</span>：true</p>
+				<p class="layui-font-red">layui 2.6.6 或独立版 layer 3.5.0 开始新增</p>
+			</dd>
+		</dl>
+	</body>
+</html>

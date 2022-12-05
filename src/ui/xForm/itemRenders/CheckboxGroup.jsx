@@ -1,5 +1,3 @@
-import { CheckboxGroup } from "ant-design-vue/es/checkbox";
-
 /**
  * @Description
  * @date 2021-11-09
@@ -8,5 +6,5 @@ import { CheckboxGroup } from "ant-design-vue/es/checkbox";
  * @returns {any}
  */
 export default ({ property, slots, listeners }) => {
-	return <CheckboxGroup {...property} {...listeners} v-slots={slots} />;
+	return <aCheckboxGroup {...property} {...listeners} v-slots={slots} />;
 };
