@@ -81,7 +81,7 @@ ${this.BussinessComponentSourceCode}
 							right: "32px",
 							width: "32px",
 							height: "32px",
-							zIndex: 999999
+							zIndex: 2
 						}}>
 						rerun
 					</xIcon>
@@ -94,7 +94,7 @@ ${this.BussinessComponentSourceCode}
 							right: 0,
 							width: "32px",
 							height: "32px",
-							zIndex: 999999
+							zIndex: 2
 						}}>
 						SourceCode
 					</xIcon>

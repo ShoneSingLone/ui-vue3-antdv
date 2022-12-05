@@ -8,7 +8,7 @@
 			</aRadioGroup>
 			<span class="ml10 flex1" style="overflow:auto;">
 				已选择：
-				{JSON.stringify(this.configs_xVirTable.selected)}
+				{{JSON.stringify(this.configs_xVirTable.selected)}}
 			</span>
 		</div>
 		<div>

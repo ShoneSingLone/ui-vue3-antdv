@@ -120,7 +120,6 @@ export { RegexFn as RegexFn };
 export { FormRules as FormRules };
 export { compileVNode as compileVNode };
 
-
 export const VentoseUIWithInstall = {
 	install: (app, options /* {appPlugins,dependState} */) => {
 		installDirective(app, options);
