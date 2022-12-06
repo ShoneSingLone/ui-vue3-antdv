@@ -298,7 +298,7 @@ async function asyncExecFnString(url) {
 	let data = "";
 	try {
 		data = await mylodash.asyncLoadText(url);
-	} catch (error) { }
+	} catch (error) {}
 	return parseContent(data);
 }
 
@@ -307,7 +307,9 @@ mylodash.asyncExecFnString = asyncExecFnString;
 const VueComponents = {};
 
 async function getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
-	const scfObjAsyncFn = new Function("argVue", "argPayload",
+	const scfObjAsyncFn = new Function(
+		"argVue",
+		"argPayload",
 		`console.log(\`${url}\`)\nreturn (${scfObjSourceCode})(argVue,argPayload);`
 	);
 	const scfObj = await scfObjAsyncFn(__Vue, {
@@ -324,7 +326,11 @@ async function asyncImportSFC(url, __Vue /* window.Vue */) {
 	}
 	const scfSourceCode = await mylodash.asyncLoadText(url);
 	const scfObjSourceCode = VueLoader(scfSourceCode);
-	VueComponents[url] = await getVueComponentBySourceCode(url, scfObjSourceCode, __Vue);
+	VueComponents[url] = await getVueComponentBySourceCode(
+		url,
+		scfObjSourceCode,
+		__Vue
+	);
 	return VueComponents[url];
 }
 

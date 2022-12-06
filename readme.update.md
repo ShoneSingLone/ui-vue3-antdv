@@ -1,5 +1,9 @@
 # 更新记录
 
+## 20221205153416
+- layer.ts rename LayerUtils
+- 开始重构function Class prototype 的形式为 ES6 Class 写法
+
 ## 20221126234135
 
 - 增加虚拟列表
