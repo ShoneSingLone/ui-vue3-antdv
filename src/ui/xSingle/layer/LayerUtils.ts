@@ -873,9 +873,7 @@ const LayerUtils = {
 		if (domsElem.length === 0) typeof callback === "function" && callback();
 	}
 };
-/***
- * TODO: class 语法
- */
+
 class ClassLayer {
 	/* 在 constructor 和 init方法里面完成 init */
 	_layerIndex = 0;
@@ -885,6 +883,7 @@ class ClassLayer {
 	zIndex = 0;
 	type = "";
 	ismax = false;
+	isNeedTitle = false;
 	isContentTypeObject = false;
 	$eleLayer: any = null;
 	$eleShade: any = null;
@@ -941,10 +940,10 @@ class ClassLayer {
 		/* shade 会-1 */
 		this.zIndex = this.config.zIndex || 2;
 		this.type = READY.type[config.type || 0];
-		this.ismax = Boolean(
-			config.maxmin &&
-				(config.type === LayerUtils.DIALOG || config.type === LayerUtils.IFRAME)
+		this.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
+			Number(config.type)
 		);
+		this.ismax = Boolean(config.maxmin && this.isNeedTitle);
 		this.isContentTypeObject = typeof config.content === "object";
 		this.init();
 	}
@@ -961,13 +960,17 @@ class ClassLayer {
 
 	get cptDomTitle() {
 		const { config } = this;
-		if (!config.title) {
-			return "";
-		}
+		debugger;
 
-		if (this.isContentTypeObject && config.type != 2) {
+		if (this.isContentTypeObject && !this.isNeedTitle) {
 			return "";
 		}
+		debugger;
+
+		// if (!config.title) {
+		// 	return "";
+		// }
+
 		var isTitleObject = typeof config.title === "object";
 		if (!isTitleObject) {
 			config.title = [String(config.title), ""];
@@ -1136,12 +1139,12 @@ class ClassLayer {
 
 				config.content = `
 <iframe id="${_IDContent}" 
+	class="layui-layer-load" 
 	scrolling="${scrolling}" 
 	src="${src}"
 	allowtransparency="true"
 	onload="this.className=''" 
 	style="height:100%;" 
-	class="layui-layer-load" 
 	frameborder="0">
 </iframe>`;
 				break;
@@ -1211,10 +1214,14 @@ class ClassLayer {
 			});
 		}
 
-		setTimeout(function () {
-			LayerUtils.close(layerInstance._layerIndex);
-		}, config.during || 0);
+		if (typeof config.during === "number" && config.during > 0) {
+			setTimeout(function () {
+				LayerUtils.close(layerInstance._layerIndex);
+			}, config.during);
+		}
+
 		layerInstance.move().callback();
+
 		/* 为兼容jQuery3.0的css动画影响元素尺寸计算 */
 		if (DOMS_ANIM[config.anim]) {
 			var animClass = "layer-anim " + DOMS_ANIM[config.anim];
@@ -1236,26 +1243,24 @@ class ClassLayer {
 	initContainer() {
 		/* 容器 */
 		var layerInstance = this;
-		const {
-			config,
-			isContentTypeObject,
-			_layerIndex,
-			_IDLayer: _idSelector
-		} = layerInstance;
+		const { config, isContentTypeObject, _layerIndex, _IDLayer, _IDShade } =
+			layerInstance;
 		$body.append(layerInstance.cptDomShade);
 		if (isContentTypeObject) {
 			if ([LayerUtils.IFRAME, LayerUtils.TIPS].includes(config.type || 0)) {
 				$body.append(layerInstance.cptDomContainer);
 			} else {
-				debugger;
+				const content = $(config.content);
 				/* TODO: */
-				if (!content.parents("." + LAYUI_LAYER)[0]) {
+				const _$layerWrapper = content.parents(`.${LAYUI_LAYER}`);
+				if (_$layerWrapper.length === 0) {
 					content
 						.data("display", content.css("display"))
 						.show()
 						.addClass("layui-layer-wrap")
 						.wrap(layerInstance.cptDomContainer);
-					$(`#${_idSelector}`)
+					debugger;
+					$(`#${_IDLayer}`)
 						.find(`.${LAYUI_LAYER_IFRAME}`)
 						.before(layerInstance.cptDomTitle);
 				}
@@ -1264,14 +1269,17 @@ class ClassLayer {
 			$body.append(layerInstance.cptDomContainer);
 		}
 
-		if (!$("#" + LAYUI_LAYER_MOVE)[0]) {
-			$body.append((READY.moveElem = layerInstance.cptDomMoveBar));
+		const _$layerMoveBar = $(`#${LAYUI_LAYER_MOVE}`);
+		if (_$layerMoveBar.length === 0) {
+			READY.moveElem = layerInstance.cptDomMoveBar;
+			$body.append(READY.moveElem);
 		}
 
-		layerInstance.$eleLayer = $(`#${_idSelector}`);
-		layerInstance.$eleShade = $("#" + LAYUI_LAYER_SHADE + _layerIndex);
-		config.scrollbar ||
+		layerInstance.$eleLayer = $(`#${_IDLayer}`);
+		layerInstance.$eleShade = $(`#${_IDShade}`);
+		if (!config.scrollbar) {
 			$html.css("overflow", "hidden").attr("layer-full", _layerIndex);
+		}
 		return layerInstance;
 	}
 
