@@ -250,60 +250,64 @@ const LayerUtils = {
 			)
 		);
 	},
-	close(index: number, callback?: () => null) {
-		/* 关闭layer核心方法 */
-		var $eleLayer = $("#" + LAYUI_LAYER + index),
-			type = $eleLayer.attr("type"),
-			closeAnim = "layer-anim-close";
-		if (!$eleLayer[0]) return;
-		var WRAP = "layui-layer-wrap",
-			remove = function () {
-				if (
-					type === READY.type[1] &&
-					$eleLayer.attr("data-content-type") === "object"
-				) {
-					$eleLayer.children(":not(." + LAYUI_LAYER_IFRAME + ")").remove();
-					var wrap = $eleLayer.find("." + WRAP);
-					for (var i = 0; i < 2; i++) {
-						wrap.unwrap();
+	close(index: number) {
+		return new Promise((resolve, reject) => {
+			try {
+				/* 关闭layer核心方法 */
+				var $eleLayer = $(`#${LAYUI_LAYER}${index}`);
+				var type = $eleLayer.attr("type");
+				var closeAnim = "layer-anim-close";
+				if ($eleLayer.length === 0) {
+					return;
+				}
+				function remove() {
+					if (
+						type === "dialog" &&
+						$eleLayer.attr("data-content-type") === "object"
+					) {
+						$eleLayer.children(`:not(.${LAYUI_LAYER_IFRAME})`).remove();
+					} else {
+						/* 低版本IE 回收 iframe */
+						if (type === READY.type[2]) {
+							try {
+								var iframe = $(`#${LAYUI_LAYER_CONTENT}${index}`)[0];
+								iframe.contentWindow.document.write("");
+								iframe.contentWindow.close();
+								$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
+							} catch (e) {}
+						}
 					}
-					wrap.css("display", wrap.data("display")).removeClass(WRAP);
-				} else {
-					/* 低版本IE 回收 iframe */
-					if (type === READY.type[2]) {
-						try {
-							var iframe = $("#" + LAYUI_LAYER_CONTENT + index)[0];
-							iframe.contentWindow.document.write("");
-							iframe.contentWindow.close();
-							$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
-						} catch (e) {}
-					}
+
 					$eleLayer[0].innerHTML = "";
 					$eleLayer.remove();
+
+					try {
+						READY.end[index] && READY.end[index]();
+						delete READY.end[index];
+					} catch (e) {
+						/* end就是beforeUnmount 的回调函数，如果有，就执行 */
+					}
 				}
-				typeof READY.end[index] === "function" && READY.end[index]();
-				delete READY.end[index];
-				callback && callback();
-			};
-		if ($eleLayer.data("isOutAnim")) {
-			$eleLayer.addClass("layer-anim " + closeAnim);
-		}
+				if ($eleLayer.data("isOutAnim")) {
+					$eleLayer.addClass("layer-anim " + closeAnim);
+				}
 
-		$("#layui-layer-moves, #" + LAYUI_LAYER_SHADE + index).remove();
-		LayerUtils.ie == 6 && READY.reselect();
-		READY.rescollbar(index);
-		if ($eleLayer.attr("minLeft")) {
-			READY.minIndex--;
-			READY.minLeft.push($eleLayer.attr("minLeft"));
-		}
-
-		if ((LayerUtils.ie && LayerUtils.ie < 10) || !$eleLayer.data("isOutAnim")) {
-			remove();
-		} else {
-			setTimeout(function () {
-				remove();
-			}, 200);
-		}
+				$(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${index}`).remove();
+				LayerUtils.ie == 6 && READY.reselect();
+				READY.rescollbar(index);
+				if ($eleLayer.attr("minLeft")) {
+					READY.minIndex--;
+					READY.minLeft.push($eleLayer.attr("minLeft"));
+				}
+				setTimeout(function () {
+					remove();
+					resolve(true);
+				}, 200);
+			} catch (error) {
+				console.log(error);
+				reject(false);
+			}
+		});
 	},
 	photos(options, loop, key) {
 		/* 相册层 */
@@ -945,6 +949,7 @@ class ClassLayer {
 		);
 		this.ismax = Boolean(config.maxmin && this.isNeedTitle);
 		this.isContentTypeObject = typeof config.content === "object";
+		console.log(this.config.content);
 		this.init();
 	}
 
@@ -960,23 +965,17 @@ class ClassLayer {
 
 	get cptDomTitle() {
 		const { config } = this;
-		debugger;
 
 		if (this.isContentTypeObject && !this.isNeedTitle) {
 			return "";
 		}
-		debugger;
-
-		// if (!config.title) {
-		// 	return "";
-		// }
 
 		var isTitleObject = typeof config.title === "object";
 		if (!isTitleObject) {
 			config.title = [String(config.title), ""];
 		}
-		const [title, styleString]: any = config.title;
-		return `<div lass="layui-layer-title" style="${styleString}"> ${title} </div >`;
+		const [title, styleString]: any = config.title || ["", ""];
+		return `<div class="layui-layer-title" style="${styleString}"> ${title} </div >`;
 	}
 
 	get cptDomIcon() {
@@ -994,7 +993,7 @@ class ClassLayer {
 	}
 
 	get cptDomSetDialogOperations() {
-		const { config, ismax } = this;
+		const { config, ismax, _IDLayer } = this;
 		return (
 			'<span class="layui-layer-setwin">' +
 			(function () {
@@ -1003,8 +1002,7 @@ class ClassLayer {
 					: "";
 				if (config.closeBtn) {
 					closebtn +=
-						`<a class="layui-layer-ico ${LAYUI_LAYER_CLOSE} ` +
-						" " +
+						`<a data-layer-id="${_IDLayer}" class="layui-layer-ico ${LAYUI_LAYER_CLOSE} ` +
 						LAYUI_LAYER_CLOSE +
 						(config.title
 							? config.closeBtn
@@ -1053,8 +1051,15 @@ class ClassLayer {
 	}
 
 	get cptDomContainer() {
-		const { config, type, isContentTypeObject, zIndex, _layerIndex, _IDLayer } =
-			this;
+		const {
+			config,
+			type,
+			isContentTypeObject,
+			zIndex,
+			_layerIndex,
+			_IDLayer,
+			_IDContent
+		} = this;
 		const layerInvisibleClassName =
 			config.type === LayerUtils.TIPS ? " invisible" : "";
 		const layerTypeClassName = ` layui-layer-${type}`;
@@ -1087,7 +1092,7 @@ class ClassLayer {
 		height:${config.area[1]};
 		position:${config.fixed ? "fixed;" : "absolute;"}">
 			${this.cptDomTitle}
-			<div id="${config.id || ""}" class="${classContent}">
+			<div class="${classContent}" id="${_IDContent}">
 				${this.cptDomIcon}
 				${this.cptDomContent}
 			</div>
@@ -1138,8 +1143,7 @@ class ClassLayer {
 				}
 
 				config.content = `
-<iframe id="${_IDContent}" 
-	class="layui-layer-load" 
+<iframe class="layui-layer-load" 
 	scrolling="${scrolling}" 
 	src="${src}"
 	allowtransparency="true"
@@ -1250,19 +1254,12 @@ class ClassLayer {
 			if ([LayerUtils.IFRAME, LayerUtils.TIPS].includes(config.type || 0)) {
 				$body.append(layerInstance.cptDomContainer);
 			} else {
-				const content = $(config.content);
-				/* TODO: */
-				const _$layerWrapper = content.parents(`.${LAYUI_LAYER}`);
+				const $content = $(config.content);
+				const _$layerWrapper = $content.parents(`.${LAYUI_LAYER}`);
 				if (_$layerWrapper.length === 0) {
-					content
-						.data("display", content.css("display"))
-						.show()
-						.addClass("layui-layer-wrap")
-						.wrap(layerInstance.cptDomContainer);
-					debugger;
-					$(`#${_IDLayer}`)
-						.find(`.${LAYUI_LAYER_IFRAME}`)
-						.before(layerInstance.cptDomTitle);
+					const $container = $(layerInstance.cptDomContainer);
+					$content.replaceWith($container);
+					$container.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
 				}
 			}
 		} else {
@@ -1309,7 +1306,7 @@ class ClassLayer {
 				);
 			};
 		switch (config.type) {
-			case 2: {
+			case LayerUtils.IFRAME: {
 				setHeight("iframe");
 				break;
 			}
@@ -1426,8 +1423,8 @@ class ClassLayer {
 		};
 		var tipsG = $eleLayer.find(".layui-layer-TipsG");
 		/* 1,2,3,4 */
-		var guide = config.tips[0];
-		if (!config.tips[1]) {
+		const [guide, customColor]: any = config.tips || ["1", ""];
+		if (!customColor) {
 			tipsG.remove();
 		}
 
@@ -1452,7 +1449,7 @@ class ClassLayer {
 				tipsG
 					.removeClass("layui-layer-TipsB")
 					.addClass("layui-layer-TipsT")
-					.css("border-right-color", config.tips[1]);
+					.css("border-right-color", customColor);
 			},
 			function () {
 				/* 右 */
@@ -1461,7 +1458,7 @@ class ClassLayer {
 				tipsG
 					.removeClass("layui-layer-TipsL")
 					.addClass("layui-layer-TipsR")
-					.css("border-bottom-color", config.tips[1]);
+					.css("border-bottom-color", customColor);
 			},
 			function () {
 				/* 下 */
@@ -1470,7 +1467,7 @@ class ClassLayer {
 				tipsG
 					.removeClass("layui-layer-TipsT")
 					.addClass("layui-layer-TipsB")
-					.css("border-right-color", config.tips[1]);
+					.css("border-right-color", customColor);
 			},
 			function () {
 				/* 左 */
@@ -1479,7 +1476,7 @@ class ClassLayer {
 				tipsG
 					.removeClass("layui-layer-TipsR")
 					.addClass("layui-layer-TipsL")
-					.css("border-bottom-color", config.tips[1]);
+					.css("border-bottom-color", customColor);
 			}
 		];
 		goal.where[guide - 1]();
@@ -1501,8 +1498,8 @@ class ClassLayer {
 			layArea[0] + 8 * 2 - goal.left > 0 && goal.where[1]();
 		}
 		$eleLayer.attr(DATA_TIPS_FOLLOW_ID, config.follow.substring(1));
-		$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`).css({
-			"background-color": config.tips[1],
+		$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).css({
+			"background-color": customColor,
 			"padding-right": config.closeBtn ? "30px" : ""
 		});
 		const layeroPosition = {
@@ -1634,15 +1631,22 @@ class ClassLayer {
 					close === false || LayerUtils.close(layerInstance._layerIndex);
 				}
 			});
-		/* 取消 */
-		function cancel() {
-			var close =
-				config.cancel && config.cancel(layerInstance._layerIndex, $eleLayer);
-			close === false || LayerUtils.close(layerInstance._layerIndex);
-		}
-
 		/* 右上角关闭回调 */
-		$eleLayer.find("." + LAYUI_LAYER_CLOSE).on("click", cancel);
+		$eleLayer
+			.find(`.${LAYUI_LAYER_CLOSE}`)
+			.on("click", async function handleClickCloseBtn() {
+				/* 关闭 */
+				var isClosed = false;
+				if (config.cancel) {
+					isClosed = config.cancel(layerInstance._layerIndex, $eleLayer);
+				}
+				if (!isClosed) {
+					isClosed = await LayerUtils.close(layerInstance._layerIndex);
+				}
+				if (!isClosed) {
+					await LayerUtils.close($(this).attr("data-layer-id"));
+				}
+			});
 		/* 点遮罩关闭 */
 		if (config.shadeClose) {
 			layerInstance.$eleShade.on("click", function () {

@@ -81,7 +81,7 @@ function fnShowTips({ $ele, followId, appId }: any) {
 			);
 		}
 		/* 如果delay之后还存在，再展示 */
-	}, options.delay || 0);
+	}, options.delay || 240);
 }
 
 /* 监听 触发popover的事件 hover click */
