@@ -9,7 +9,8 @@
     "type": "git",
     "url": "https://github.com/ShoneSingLone/ui-vue3-antdv.git"
   },
-  "homepage": "https://shonesinglone.github.io/ui-vue3-antdv/",
+  "homepage_github": "https://shonesinglone.github.io/ui-vue3-antdv/",
+  "homepage": "https://shonesinglone.gitee.io/ui-vue3-antdv/",
   "scripts": {
     "bs": "npm i --legacy-peer-deps",
     "npmpatch": "npm version patch",
@@ -19,8 +20,8 @@
     "build": "npm run build:app && npm run build:lib",
     "build:lib": "vue-tsc --noEmit && vite build && npm run cleandist",
     "build:app": "cross-env NODE_ENV=production cross-env type=app vite build",
-    "git:pull": "git pull gitee dev & git pull github dev",
-    "git:push": "git push gitee dev & git push github dev",
+    "git:pull": "git pull gitee dev",
+    "git:push": "git push gitee dev",
     "lint": "prettier --write ./src"
   },
   "dependencies": {
