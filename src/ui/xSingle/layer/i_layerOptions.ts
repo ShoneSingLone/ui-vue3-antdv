@@ -1,8 +1,8 @@
-type t_anyStringString = [string, string];
-type t_subfix<TKey, TSubfix extends string> = TKey extends number
+export type t_anyStringString = [string, string];
+export type t_subfix<TKey, TSubfix extends string> = TKey extends number
 	? `${TKey}${TSubfix}`
 	: never;
-type t_offsetString =
+export type t_offsetString =
 	| "auto"
 	| "t"
 	| "r"
@@ -14,6 +14,7 @@ type t_offsetString =
 	| "rb";
 
 export interface i_layerOptions {
+	contentClass?: string;
 	/* type - 基本层类型;
     类型：number，默认：0
     layer提供了5种层类型。可传入的值有：0（信息框，默认）1（页面层）2（iframe层）3（加载层）4（tips层）。 若你采用layer.open({type: 1})方式调用，则type为必填项（信息框除外）
@@ -115,7 +116,7 @@ export interface i_layerOptions {
     
     默认不会自动关闭。当你想自动关闭时，可以time: 5000，即代表5秒后自动关闭，注意单位是毫秒（1秒=1000毫秒）
      */
-	time?: number;
+	during?: number;
 	/* id - 用于控制弹层唯一标识;
     类型：string，默认：空字符
     
