@@ -20,8 +20,8 @@
     "build": "npm run build:app && npm run build:lib",
     "build:lib": "vue-tsc --noEmit && vite build && npm run cleandist",
     "build:app": "cross-env NODE_ENV=production cross-env type=app vite build",
-    "git:pull": "git pull gitee dev",
-    "git:push": "git push gitee dev",
+    "git:pull": "git pull gitee dev & git pull github dev",
+    "git:push": "git push gitee dev & git push github dev",
     "lint": "prettier --write ./src"
   },
   "dependencies": {
