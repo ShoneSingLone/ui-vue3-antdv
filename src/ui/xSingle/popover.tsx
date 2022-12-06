@@ -1,8 +1,8 @@
-//@ts-nocheck
 import $ from "jquery";
-import { LayerUtils } from "./layer/LayerUtils";
+import { LayerUtils, DATA_TIPS_FOLLOW_ID } from "./layer/LayerUtils";
+import { i_layerOptions } from "./layer/i_layerOptions";
 import { _ } from "../loadCommonUtil";
-import { createApp, defineComponent } from "vue";
+import { createApp } from "vue";
 
 type t_uiPopoverOptions = {
 	content: string;
@@ -20,87 +20,25 @@ const popverIndexCollection: {
 } = {};
 const appAddPlugin: any = {};
 const appDependState: any = {};
-const timerCollection = {};
-const visibleArea = {};
+const timer4CloseTips: any = {};
+const visibleArea: any = {};
 
-/* 监听 触发popover的事件 hover click */
-export function installPopoverDirective(app: any, appSettings: any) {
-	const appId = _.genId("appId");
-	appAddPlugin[appId] = appSettings.appPlugins;
-	appDependState[appId] = appSettings.dependState;
+const DATA_APP_ID = "data-app-id";
+const DATA_FOLLOW_ID = "data-follow-id";
 
-	app.directive("uiPopover", {
-		mounted(el: HTMLInputElement, binding) {
-			const followId = _.genId("xPopoverTarget");
-			$(el).addClass("x-ui-popover").attr("id", followId);
-			el.dataset["followId"] = followId;
-			el.dataset["appId"] = appId;
-
-			if (binding.value) {
-				popverOptionsCollection[followId] = binding.value;
-			}
-		},
-		unmounted(el: HTMLInputElement) {
-			const followId: string = el.dataset["followId"];
-			LayerUtils.close(popverIndexCollection[followId]);
-			delete popverOptionsCollection[followId];
-			delete popverIndexCollection[followId];
-		}
-	});
-}
-
-/* listener */
-$(document).on("click.uiPopver", "[data-follow-id]", function (event) {
-	const ele: HTMLInputElement = this;
-	const followId = ele.dataset["followId"];
-	const appId = ele.dataset["appId"];
-	const popverOptions = popverOptionsCollection[followId];
-	/* TODO: */
-	// new Popover(ele, popverOptions);
-	/*记录当前的popover 点击到其他位置即消除当前，只允许同时有一个框，添加的是click标识*/
-});
-
-function inVisibleArea(followId) {
-	/*不关闭，取消定时器*/
-	if (timerCollection[followId]) {
-		clearTimeout(timerCollection[followId]);
-		delete timerCollection[followId];
-	}
-	visibleArea[followId] = true;
-}
-
-function closeTips(followId) {
-	delete visibleArea[followId];
-	timerCollection[followId] = setTimeout(() => {
-		LayerUtils.close(popverIndexCollection[followId]);
-		delete popverIndexCollection[followId];
-	}, TIMEOUT_DELAY);
-}
-
-/* 鼠标hover处理 */
-$(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
-	console.log("hover.uiPopver,this", this.dataset);
-	const followId = this.dataset.followId;
-	const appId = this.dataset["appId"];
-
-	inVisibleArea(followId);
-	/*如果存在，不重复添加*/
-	if (popverIndexCollection[followId]) {
-		return;
-	}
+function fnShowTips({ $ele, followId, appId }: any) {
 	const options = popverOptionsCollection[followId] || { content: "" };
 	/* onlyEllipsis,content */
 	if (!options.content) {
 		/* 是不是需要判断内容有省略号 */
 		if (options.onlyEllipsis) {
-			const $ele = $(this);
-			const eleWidth = $ele.width();
+			const eleWidth = $ele.width() || 0;
 			const text = $ele.text();
 			const $div = $(
 				`<span style="opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`
 			);
 			$div.appendTo($("body"));
-			const innerWidth = $div.width();
+			const innerWidth = $div.width() || 0;
 			$div.remove();
 			if (innerWidth > eleWidth) {
 				options.content = text;
@@ -108,13 +46,13 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 		}
 		return;
 	}
-	let app;
+	let app: any;
 	let tipsContent = options.content;
-	let layerTipsOptions = {
+	let layerTipsOptions: i_layerOptions = {
 		tips: [LayerUtils.UP, "#fff"],
 		/*hover 不允许 同时多个 tips出现*/
 		/*tipsMore: false,*/
-		time: 1000 * 60 * 10
+		during: 1000 * 60 * 10
 	};
 	/* TODO:目前只考虑vue组件对象 */
 	if (_.isPlainObject(options.content)) {
@@ -134,47 +72,130 @@ $(document).on("mouseenter.uiPopver", "[data-follow-id]", function (event) {
 			}
 		};
 	}
+	setTimeout(() => {
+		if (visibleArea[followId]) {
+			popverIndexCollection[followId] = LayerUtils.tips(
+				tipsContent,
+				`#${followId}`,
+				layerTipsOptions
+			);
+		}
+		/* 如果delay之后还存在，再展示 */
+	}, options.delay || 0);
+}
 
-	if (options.delay) {
-		setTimeout(() => {
-			/* 如果delay之后还存在，再展示 */
-			if (visibleArea[followId]) {
-				popverIndexCollection[followId] = LayerUtils.tips(
-					tipsContent,
-					`#${followId}`,
-					layerTipsOptions
-				);
+/* 监听 触发popover的事件 hover click */
+export function installPopoverDirective(app: any, appSettings: any) {
+	const appId = _.genId("appId");
+	appAddPlugin[appId] = appSettings.appPlugins;
+	appDependState[appId] = appSettings.dependState;
+
+	app.directive("uiPopover", {
+		mounted(el: HTMLInputElement, binding) {
+			const followId = _.genId("xPopoverTarget");
+			const $ele = $(el);
+			$ele
+				.addClass("x-ui-popover")
+				.attr("id", followId)
+				.attr(DATA_APP_ID, appId)
+				.attr(DATA_FOLLOW_ID, followId);
+			if (binding.value) {
+				popverOptionsCollection[followId] = binding.value;
+				if (binding.value?.trigger) {
+					$ele.attr("data-trigger", binding.value?.trigger);
+					$ele.addClass("pointer");
+				}
 			}
-		}, options.delay);
-	} else {
-		/* 立即展示 */
-		popverIndexCollection[followId] = LayerUtils.tips(
-			tipsContent,
-			`#${followId}`,
-			layerTipsOptions
-		);
+		},
+		unmounted(el: HTMLInputElement) {
+			const followId: any = $(el).attr(DATA_FOLLOW_ID);
+			LayerUtils.close(popverIndexCollection[followId] as number);
+			delete popverOptionsCollection[followId];
+			delete popverIndexCollection[followId];
+		}
+	});
+}
+
+function inVisibleArea(followId: string) {
+	/*不关闭，取消定时器*/
+	if (timer4CloseTips[followId]) {
+		clearTimeout(timer4CloseTips[followId]);
+		delete timer4CloseTips[followId];
 	}
+	visibleArea[followId] = true;
+}
+
+function closeTips(followId: string, options = {}) {
+	delete visibleArea[followId];
+	timer4CloseTips[followId] = setTimeout(() => {
+		LayerUtils.close(popverIndexCollection[followId] as number);
+		delete popverIndexCollection[followId];
+	}, TIMEOUT_DELAY);
+}
+
+/* listener */
+
+/* 鼠标click处理 */
+$(document).on(
+	"click.uiPopver",
+	`[${DATA_FOLLOW_ID}][data-trigger=click]`,
+	function (event) {
+		const $ele: any = $(this);
+		const followId = $ele.attr(DATA_FOLLOW_ID);
+		const appId = $ele.attr(DATA_APP_ID);
+		visibleArea[followId] = true;
+
+		if (popverIndexCollection[followId]) {
+			closeTips(followId);
+		} else {
+			fnShowTips({ $ele, followId, appId });
+		}
+	}
+);
+
+/* 鼠标hover处理 */
+$(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
+	const $ele: any = $(this);
+	const followId = $ele.attr(DATA_FOLLOW_ID);
+	const appId = $ele.attr(DATA_APP_ID);
+	inVisibleArea(followId);
+	/*如果存在，不重复添加*/
+	if (popverIndexCollection[followId]) {
+		return;
+	}
+
+	if ($ele.attr("data-trigger") === "click") {
+		return;
+	}
+
+	fnShowTips({ $ele, followId, appId });
 });
 
-$(document).on("mouseleave.uiPopver", "[data-follow-id]", function (event) {
+$(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
+	const followId = $(this).attr(DATA_FOLLOW_ID);
 	/*如果鼠标又移动到TIPS范围内，则不close*/
-	closeTips(this.dataset.followId);
+	closeTips(followId);
 });
 
-/*鼠标滑动到弹出的tips上，不关闭tips*/
+/*
+ * 鼠标滑动到弹出的tips上，
+ * 不关闭附着的tips
+ */
 $(document).on(
 	"mouseenter.uiPopverTips",
-	"[data-layer-tips-id]",
+	`[${DATA_TIPS_FOLLOW_ID}]`,
 	function (event) {
-		inVisibleArea(this.dataset.layerTipsId);
+		const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
+		inVisibleArea(followId);
 	}
 );
 
 $(document).on(
 	"mouseleave.uiPopverTips",
-	"[data-layer-tips-id]",
+	`[${DATA_TIPS_FOLLOW_ID}]`,
 	function (event) {
+		const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
 		/*如果鼠标又移动到TIPS范围内，则不close*/
-		closeTips(this.dataset.layerTipsId);
+		closeTips(followId);
 	}
 );

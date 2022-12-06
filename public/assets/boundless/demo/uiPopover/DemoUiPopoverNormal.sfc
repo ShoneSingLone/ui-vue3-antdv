@@ -1,6 +1,8 @@
 <template>
-	<mkit md="## v-uiPopover" />	
-	<aTag v-uiPopover="configsUiPopoverNormal">添加v-uiPopover 指定content就行</aTag>
+	<mkit md="## v-uiPopover" />
+	<aTag v-uiPopover="configsUiPopoverNormal"
+		>添加v-uiPopover 指定content就行</aTag
+	>
 	<xGap t="10" />
 	<aTag v-uiPopover="configsUiPopoverComponent">使用Vue组件</aTag>
 	<xGap t="10" />
@@ -19,6 +21,10 @@
 	<xGap t="10" />
 	<aTag v-uiPopover="{ delay: 3000, content: '有些图标用不着每次都提醒' }">
 		延迟3s再展示tips
+	</aTag>
+	<xGap t="10" />
+	<aTag v-uiPopover="{ trigger: 'click', content: '点击触发' }">
+		trigger:click
 	</aTag>
 </template>
 
