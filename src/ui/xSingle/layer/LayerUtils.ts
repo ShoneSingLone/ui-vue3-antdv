@@ -1,5 +1,5 @@
 //@ts-nocheck
-import $ from "jquery";k
+import $ from "jquery";
 import _ from "lodash";
 import { i_layerOptions } from "./i_layerOptions";
 export const KEY = {
