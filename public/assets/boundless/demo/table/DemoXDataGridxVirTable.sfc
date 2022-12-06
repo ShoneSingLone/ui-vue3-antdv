@@ -119,14 +119,15 @@ async function sfc({
 						...defCol({
 							prop: "capacity_editor",
 							label: vm.$t("总容量输入框").label,
-							renderCell({ record, cell, index }) {
-								return compileVNode(`<aInput v-model:value="record.capacity"/>`, {
+							renderCell({ record, cell }) {
+								return compileVNode(`{{key}}<aInput v-model:value="record.capacity" :key="key"/>`, {
+									key:record._index,
 									record: new Proxy(record, {
 										get(obj, prop) {
 											return obj.capacity;
 										},
 										set(obj, prop, val) {
-											vm.configs_xVirTable.dataSource[index].capacity = val;
+											vm.configs_xVirTable.dataSource[obj._index].capacity = val;
 											return true;
 										}
 									})
@@ -208,6 +209,7 @@ async function sfc({
 							return {
 								upperName,
 								id: ii,
+								_index:ii,
 								capacity: ii,
 								name: "name" + ii,
 								status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",

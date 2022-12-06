@@ -73,8 +73,7 @@ export interface i_layerOptions {
 	icon?: number;
 	/* btn - 按钮;
     类型：string/Array，默认：'确认'
-    
-    信息框模式时，btn默认是一个确认按钮，其它层类型则默认不显示，加载层和tips层则无效。
+    MSG模式时，btn默认是一个确认按钮，其它层类型则默认不显示，加载层loading和tips层则无效。
     当您只想自定义一个按钮时，你可以btn: '我知道了'，
     当你要定义两个按钮时，你可以btn: ['yes', 'no']。
     你也可以定义更多按钮，比如：btn: ['按钮1', '按钮2', '按钮3', …]，

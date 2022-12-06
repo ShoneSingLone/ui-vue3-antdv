@@ -340,7 +340,6 @@
 			: "";
 
 		config.zIndex = zIndex;
-		debugger;
 		callback(
 			[
 				//遮罩
