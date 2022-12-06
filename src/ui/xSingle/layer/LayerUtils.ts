@@ -873,9 +873,8 @@ const LayerUtils = {
 		if (domsElem.length === 0) typeof callback === "function" && callback();
 	}
 };
-/***
- * TODO: class 语法
- */
+
+/* */
 class ClassLayer {
 	/* 在 constructor 和 init方法里面完成 init */
 	_layerIndex = 0;
