@@ -37,18 +37,19 @@ const DOMS_ANIM = [
 ];
 
 const READY: {
-	$layerMoveBar: JQuery;
-	basePath: string;
-	$eleMove: JQuery | false;
-	$eleResize: JQuery | false;
+	zIndex: number;
+	$moveMask: JQuery;
+	/* layerInstanceForMoveOrResize */
+	moveOrResizeInstance: any;
+	moveOrResizeWH: any[];
+	moveOrResizeType: "resize" | "move";
 	pointMousedown: number[];
+	basePath: string;
 } = {
-	/* move resize */
-	$eleMove: false,
-	$eleResize: false,
+	zIndex: 0,
+	/* 默认zIndex从2开始 */
 	pointMousedown: [],
 	/*  */
-	$layerMoveBar: $(),
 	basePath: (function () {
 		var jsPath = document.currentScript
 			? document.currentScript.src
@@ -124,14 +125,17 @@ const LayerUtils = {
 	/* 使用Object.defineProperty 劫持，不会实际用到，但是方便重构 */
 	lastIndex: 0,
 	/* 动态决定index，不能一直往上加，lastIndex是 indexRecordArray的最后一个元素*/
-	_indexArray: [
+	layerIndexArray: [
 		/* 至少是1，shade是index-1 */
 	],
-	_removeIndex(layerIndex: number) {
-		const currentIndex = _.findIndex(this._indexArray, i => i === layerIndex);
+	removeIndexFromLayerIndexArray(layerIndex: number) {
+		let currentIndex = _.findIndex(this.layerIndexArray, i => i === layerIndex);
 		if (currentIndex > -1) {
-			this._indexArray.splice(currentIndex, 1);
+			this.layerIndexArray.splice(currentIndex, 1);
 		}
+	},
+	setZIndex(zIndex: number) {
+		READY.zIndex = zIndex;
 	},
 	/*  */
 	MSG: 0,
@@ -258,12 +262,12 @@ const LayerUtils = {
 			)
 		);
 	},
-	tips(content, follow, options) {
+	tips(content, followSelector, options) {
 		return LayerUtils.open(
 			$.extend(
 				{
 					type: LayerUtils.TIPS,
-					content: [content, follow],
+					content: [content, followSelector],
 					closeBtn: false,
 					time: 3000,
 					shade: false,
@@ -329,7 +333,7 @@ const LayerUtils = {
 				}
 				setTimeout(function () {
 					removeLayerDomFromHtml();
-					LayerUtils._removeIndex(layerIndex);
+					LayerUtils.removeIndexFromLayerIndexArray(layerIndex);
 					resolve(true);
 				}, 200);
 			} catch (error) {
@@ -717,7 +721,7 @@ const LayerUtils = {
 	},
 	getChildFrame(selector, index) {
 		/* 获取子iframe的DOM */
-		index = index || $(`.${LAYUI_LAYER_CONTENT}`).attr("times");
+		index = index || $(`.${LAYUI_LAYER_CONTENT}`).attr("data-index");
 		return $("#" + LAYUI_LAYER + index)
 			.find("iframe")
 			.contents()
@@ -727,7 +731,7 @@ const LayerUtils = {
 		/* 得到当前iframe层的索引，子iframe时使用 */
 		return $("#" + name)
 			.parents(`.${LAYUI_LAYER_CONTENT}`)
-			.attr("times");
+			.attr("data-index");
 	},
 	iframeAuto(index) {
 		/* iframe层自适应宽高 */
@@ -886,43 +890,48 @@ const LayerUtils = {
 		);
 		$title.html(name);
 	},
-	closeAll(type, callback) {
+	async closeAll(type: string) {
 		/* 关闭所有层 */
-		if (typeof type === "function") {
-			callback = type;
-			type = null;
-		}
-		var domsElem = $("." + LAYUI_LAYER);
-		$.each(domsElem, function (_index) {
-			var othis = $(this);
-			var is = type ? othis.attr("type") === type : 1;
-			is &&
-				LayerUtils.close(
-					othis.attr("times"),
-					_index === domsElem.length - 1 ? callback : null
-				);
-			is = null;
+		const needClose: any = [];
+		$(`.${LAYUI_LAYER}`).each(function () {
+			const $ele = $(this);
+			if (type) {
+				if ($ele.attr("type") === type) {
+					needClose.push($ele.attr("data-index"));
+				}
+			} else {
+				needClose.push($ele.attr("data-index"));
+			}
 		});
-		if (domsElem.length === 0) typeof callback === "function" && callback();
+		return await Promise.all(needClose.map(LayerUtils.close));
+	},
+	setLayerTop($current: JQuery) {
+		console.log("setLayerTop");
+		if ($current.hasClass("set-layer-top")) {
+			return;
+		} else {
+			$(".set-layer-top").removeClass("set-layer-top");
+			$current.addClass("set-layer-top").appendTo($body);
+		}
 	}
 };
 
 Object.defineProperty(LayerUtils, "lastIndex", {
 	get() {
-		const lastIndex = _.last(LayerUtils._indexArray);
+		const lastIndex = _.last(LayerUtils.layerIndexArray);
 		console.log("get", lastIndex);
 		if (lastIndex) {
 			return lastIndex;
 		} else {
-			(LayerUtils._indexArray as number[]) = [1];
+			(LayerUtils.layerIndexArray as number[]) = [1];
 			return 1;
 		}
 	},
 	set(newIndex) {
-		const lastIndex = _.last(LayerUtils._indexArray);
-		console.log("set", lastIndex, LayerUtils._indexArray);
+		const lastIndex = _.last(LayerUtils.layerIndexArray);
+		console.log("set", lastIndex, LayerUtils.layerIndexArray);
 		if (lastIndex) {
-			(LayerUtils._indexArray as number[]).push(newIndex as number);
+			(LayerUtils.layerIndexArray as number[]).push(newIndex as number);
 		} else {
 			return;
 		}
@@ -962,14 +971,14 @@ class ClassLayer {
 		maxmin: false,
 		fixed: true,
 		resize: true,
-		resizing: false,
+		onResizing: false,
 		scrollbar: true,
 		maxWidth: 360,
 		maxHeight: 0,
 		zIndex: 1,
 		move: ".layui-layer-title",
 		moveOut: false,
-		moveEnd: false,
+		onMoveEnd: false,
 		tips: 2,
 		tipsMore: false,
 		success: false,
@@ -985,7 +994,7 @@ class ClassLayer {
 			.insertContainerAfterInitConfig()
 			.setPosition()
 			.setLayerSize()
-			.addResizeListener()
+			.onMoveOrResize()
 			.addOperationListener()
 			.handleAnimation();
 	}
@@ -1098,8 +1107,6 @@ class ClassLayer {
 			_IDContent
 		} = this;
 
-		const invisibleClassname =
-			config.type == LayerUtils.TIPS ? " invisible" : "";
 		const typeClassname = ` layui-layer-${type}`;
 		const boderClassname =
 			(config.type == 0 || config.type == 2) && !config.shade
@@ -1125,14 +1132,13 @@ class ClassLayer {
 		layer-wrapper="${_IDLayer}"
 		data-z-index="${zIndex}"
 		type="${type}"
-		class="flex vertical ${LAYUI_LAYER}${typeClassname}${invisibleClassname}${boderClassname}${skinClassname}" 
-		times="${_layerIndex}"
+		class="flex vertical elevation-4 ${LAYUI_LAYER}${typeClassname}${boderClassname}${skinClassname}" 
+		data-index="${_layerIndex}"
 		data-during-time="${config.during}"
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
-		style="z-index:${zIndex};
-		width:${config.area[0]};
-		height:${config.area[1]};
-		position:${config.fixed ? "fixed;" : "absolute;"}">
+		style="z-index:${zIndex}; width:${config.area[0]}; height:${
+			config.area[1]
+		}; position:fixed;">
 			${this.cptDomTitle}
 			<div class="${classContent}" id="${_IDContent}">
 				${this.cptDomIcon}
@@ -1144,7 +1150,7 @@ class ClassLayer {
 </div>`;
 	}
 
-	get cptDomMoveBar() {
+	get cptDomMoveMask() {
 		return $(
 			`<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
 		);
@@ -1152,19 +1158,12 @@ class ClassLayer {
 
 	initConfig(custumSettings: i_layerOptions) {
 		const layerInstance = this;
-		layerInstance.config = Object.assign(
-			layerInstance.config,
-			READY.config,
-			custumSettings
-		);
+		layerInstance.config = Object.assign(layerInstance.config, custumSettings);
 		/* icon - 图标。信息框和加载层的私有参数; 类型：number，默认：-1（信息框）/0（加载层） */
 		layerInstance.config.icon =
 			custumSettings.type === LayerUtils.LOADING ? 0 : -1;
 		/* 初始最大宽度：当前屏幕宽，左右留 15px 边距 */
 		layerInstance.config.maxWidth = ($win.width() as number) - 15 * 2;
-		layerInstance.config.zIndex = !!layerInstance.config.zIndex
-			? layerInstance.config.zIndex
-			: 1;
 
 		const { config } = layerInstance;
 		/* 随layer 的增减变动 */
@@ -1174,7 +1173,8 @@ class ClassLayer {
 		layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerIndex}`;
 
 		/* shade 会-1 */
-		layerInstance.zIndex = layerInstance.config.zIndex || 2;
+		layerInstance.zIndex =
+			READY.zIndex + (layerInstance.config.zIndex as number);
 		layerInstance.type = READY.type[config.type || 0];
 		layerInstance.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
 			Number(config.type)
@@ -1318,13 +1318,24 @@ class ClassLayer {
 
 	insertContainerAfterInitConfig() {
 		/* 容器 */
-		var layerInstance = this;
+		const layerInstance = this;
+		if (!READY.$moveMask) {
+			READY.$moveMask = $(layerInstance.cptDomMoveMask);
+			$body.append(READY.$moveMask);
+		}
 		const { config, isContentTypeObject, _layerIndex, _IDLayer, _IDShade } =
 			layerInstance;
 		$body.append(layerInstance.cptDomShade);
 		if (isContentTypeObject) {
-			if ([LayerUtils.IFRAME, LayerUtils.TIPS].includes(config.type || 0)) {
+			if ([LayerUtils.IFRAME].includes(config.type || 0)) {
 				$body.append(layerInstance.cptDomContainer);
+			} else if ([LayerUtils.TIPS].includes(config.type || 0)) {
+				const $follow = $(config.follow);
+				const { top, left } = $follow.offset();
+				const point = [parseFloat(left), parseFloat(top)];
+				const $domContainer = $(layerInstance.cptDomContainer);
+				/* $domContainer.css({ position: "fixed", top: `${top}px`, left: `${left}px` }); */
+				$body.append($domContainer);
 			} else {
 				const $content = $(config.content);
 				const _$layerWrapper = $content.parents(`.${LAYUI_LAYER}`);
@@ -1338,17 +1349,14 @@ class ClassLayer {
 			$body.append(layerInstance.cptDomContainer);
 		}
 
-		const _$layerMoveBar = $(`#${LAYUI_LAYER_MOVE}`);
-		if (_$layerMoveBar.length === 0) {
-			READY.$layerMoveBar = $(layerInstance.cptDomMoveBar);
-			$body.append(READY.$layerMoveBar);
-		}
-
 		layerInstance.$eleLayer = $(`#${_IDLayer}`);
 		layerInstance.$eleShade = $(`#${_IDShade}`);
 		if (!config.scrollbar) {
 			$html.css("overflow", "hidden").attr("layer-full", _layerIndex);
 		}
+
+		/* 最后一个 */
+		LayerUtils.setLayerTop(layerInstance.$eleLayer);
 
 		/* 遮罩 */
 		layerInstance.$eleShade.css({
@@ -1588,15 +1596,22 @@ class ClassLayer {
 			"background-color": customColor,
 			"padding-right": config.closeBtn ? "30px" : ""
 		});
-		const layeroPosition = {
-			left: goal.tipLeft - (config.fixed ? win.scrollLeft() : 0),
-			top: goal.tipTop - (config.fixed ? win.scrollTop() : 0)
-		};
-		$eleLayer.css(layeroPosition);
-		$eleLayer.removeClass("invisible");
+		$eleLayer.css({
+			left: goal.tipLeft - $win.scrollLeft(),
+			top: goal.tipTop - $win.scrollTop(),
+			transform: "scale(0)"
+		});
+
+		setTimeout(() => {
+			$eleLayer.css({
+				transform: "scale(1)",
+				visibility: "unset",
+				"z-index": 1
+			});
+		}, 200);
 	}
 
-	addResizeListener() {
+	onMoveOrResize() {
 		/* 拖拽层 */
 		var layerInstance = this;
 		const { config, $eleLayer } = layerInstance;
@@ -1606,24 +1621,30 @@ class ClassLayer {
 		/*  */
 		$eleMove.css("cursor", "move");
 		$eleMove.on("mousedown", function (e) {
+			LayerUtils.setLayerTop($eleLayer);
 			e.preventDefault();
 			if (config.move) {
-				READY.$eleMove = $(e);
+				// READY.$eleMoveOrResize = $(e.currentTarget).parent(`[layer-wrapper]`);
+				READY.moveOrResizeInstance = layerInstance;
+				READY.moveOrResizeType = "move";
 				READY.pointMousedown = [
 					e.clientX - parseFloat($eleLayer.css("left")),
 					e.clientY - parseFloat($eleLayer.css("top"))
 				];
-				READY.$layerMoveBar.css("cursor", "move").show();
+				READY.$moveMask.css("cursor", "move").show();
 			}
 		});
 
 		$eleResize.on("mousedown", function (e) {
+			LayerUtils.setLayerTop($eleLayer);
 			e.preventDefault();
-			READY.$eleResize = $(e);
+			READY.moveOrResizeInstance = layerInstance;
+			READY.moveOrResizeType = "resize";
 			READY.pointMousedown = [e.clientX, e.clientY];
-			READY.area = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-			READY.$layerMoveBar.css("cursor", "se-resize").show();
+			READY.moveOrResizeWH = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
+			READY.$moveMask.css("cursor", "se-resize").show();
 		});
+
 		return layerInstance;
 	}
 
@@ -1631,7 +1652,6 @@ class ClassLayer {
 		const layerInstance = this;
 		const { $eleLayer, config } = layerInstance;
 
-		layerInstance.openLayer();
 		if (config.success) {
 			if (config.type == LayerUtils.IFRAME) {
 				$eleLayer.find("iframe").on("load", function () {
@@ -1725,21 +1745,6 @@ class ClassLayer {
 			sthis = null;
 		});
 	}
-	openLayer() {
-		/* 需依赖原型的对外方法 */
-		var layerInstance = this;
-		/* 置顶当前窗口 */
-		LayerUtils.zIndex = layerInstance.config.zIndex;
-		LayerUtils.setTop = function ($eleLayer) {
-			var setZindex = function () {
-				LayerUtils.zIndex++;
-				$eleLayer.css("z-index", LayerUtils.zIndex + 1);
-			};
-			LayerUtils.zIndex = parseInt($eleLayer[0].style.zIndex);
-			$eleLayer.on("mousedown", setZindex);
-			return LayerUtils.zIndex;
-		};
-	}
 }
 
 var cache = LayerUtils.cache || {};
@@ -1749,72 +1754,79 @@ var skin = function (type) {
 
 /* 点击层zIndex在最上层 */
 $document
-	.on("click.setLayerTop", `[layer-wrapper^=${LAYUI_LAYER}]`, function (event) {
+	.on("click.setLayerTop", "[layer-wrapper]", event => {
 		const { currentTarget } = event;
-		const zIndexTop =
-			(_.last(LayerUtils._indexArray as number[]) as number) + 1;
 		const $currentTarget = $(currentTarget);
-		const isCurrentLayerTop =
-			$currentTarget.css("z-index") == String(zIndexTop);
-		if (isCurrentLayerTop) {
-			return;
-		}
-		$(`[layer-wrapper^=${LAYUI_LAYER}]`).each(function (index, ele) {
-			const $ele = $(ele);
-			const zIndexDefault = $ele.attr("data-z-index") || "1";
-			$ele.css("z-index", zIndexDefault);
-		});
-		$currentTarget.css("z-index", zIndexTop);
+		LayerUtils.setLayerTop($currentTarget);
 	})
 	.on(
 		"mousemove",
+		".layui-layer-move",
 		_.throttle(function (e) {
+			console.log(e);
 			/* 拖拽移动 */
-			if (READY.$eleMove) {
-				var X = e.clientX - READY.pointMousedown[0],
-					Y = e.clientY - READY.pointMousedown[1],
-					fixed = $eleLayer.css("position") === "fixed";
+			if (READY.moveOrResizeInstance instanceof ClassLayer) {
+				const { $eleLayer, config } = READY.moveOrResizeInstance;
+				if (READY.moveOrResizeType === "move") {
+					e.preventDefault();
+					let X = e.clientX - READY.pointMousedown[0];
+					let Y = e.clientY - READY.pointMousedown[1];
+					const fixed = $eleLayer.css("position") === "fixed";
 
-				e.preventDefault();
-				READY.stX = fixed ? 0 : $win.scrollLeft();
-				READY.stY = fixed ? 0 : $win.scrollTop();
-				/* 控制元素不被拖出窗口外 */
-				if (!config.moveOut) {
-					var setRig = $win.width() - $eleLayer.outerWidth() + READY.stX,
-						setBot = $win.height() - $eleLayer.outerHeight() + READY.stY;
-					X < READY.stX && (X = READY.stX);
-					X > setRig && (X = setRig);
-					Y < READY.stY && (Y = READY.stY);
-					Y > setBot && (Y = setBot);
+					READY.stX = fixed ? 0 : $win.scrollLeft();
+					READY.stY = fixed ? 0 : $win.scrollTop();
+					/* 控制元素不被拖出窗口外 */
+					if (!config.moveOut) {
+						let setRig = $win.width() - $eleLayer.outerWidth() + READY.stX;
+						let setBot = $win.height() - $eleLayer.outerHeight() + READY.stY;
+
+						if (X < READY.stX) {
+							X = READY.stX;
+						}
+
+						if (X > setRig) {
+							X = setRig;
+						}
+
+						if (Y < READY.stY) {
+							Y = READY.stY;
+						}
+
+						if (Y > setBot) {
+							Y = setBot;
+						}
+					}
+
+					$eleLayer.css({ left: X, top: Y });
 				}
 
-				$eleLayer.css({ left: X, top: Y });
+				if (config.resize) {
+					if (READY.moveOrResizeType === "resize") {
+						e.preventDefault();
+						const X = e.clientX - READY.pointMousedown[0];
+						const Y = e.clientY - READY.pointMousedown[1];
+
+						$eleLayer.css({
+							width: READY.moveOrResizeWH[0] + X,
+							height: READY.moveOrResizeWH[1] + Y
+						});
+
+						config.onResizing && config.onResizing($eleLayer);
+					}
+				}
 			}
 
 			/* Resize */
-			if (config.resize && READY.$eleResize) {
-				debugger;
-				var X = e.clientX - READY.pointMousedown[0],
-					Y = e.clientY - READY.pointMousedown[1];
-				e.preventDefault();
-				LayerUtils.style(layerInstance._layerIndex, {
-					width: READY.area[0] + X,
-					height: READY.area[1] + Y
-				});
-				READY.isResize = true;
-				config.resizing && config.resizing($eleLayer);
-			}
 		}, 100)
 	)
-	.on("mouseup", function (e) {
-		if (READY.$eleMove) {
-			READY.$eleMove = false;
-			READY.$layerMoveBar.hide();
-			config.moveEnd && config.moveEnd($eleLayer);
-		}
-		if (READY.$eleResize) {
-			READY.$eleResize = false;
-			READY.$layerMoveBar.hide();
+	.on("mouseup", ".layui-layer-move", function (e) {
+		if (READY.moveOrResizeInstance instanceof ClassLayer) {
+			const { config } = READY.moveOrResizeInstance;
+			if (config.onMoveEnd) {
+				config.onMoveEnd(READY.moveOrResizeInstance);
+			}
+			READY.moveOrResizeInstance = false;
+			READY.$moveMask.hide();
 		}
 	});
 

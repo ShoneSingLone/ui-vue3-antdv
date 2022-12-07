@@ -26,7 +26,7 @@ const visibleArea: any = {};
 const DATA_APP_ID = "data-app-id";
 const DATA_FOLLOW_ID = "data-follow-id";
 
-function fnShowTips({ $ele, followId, appId }: any) {
+function fnShowTips({ $ele, followId, appId, event }: any) {
 	const options = popverOptionsCollection[followId] || { content: "" };
 	/* onlyEllipsis,content */
 	if (!options.content) {
@@ -152,7 +152,7 @@ $(document).on(
 		if (popverIndexCollection[followId]) {
 			closeTips(followId);
 		} else {
-			fnShowTips({ $ele, followId, appId });
+			fnShowTips({ $ele, followId, appId, event });
 		}
 	}
 );
@@ -172,7 +172,7 @@ $(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
 		return;
 	}
 
-	fnShowTips({ $ele, followId, appId });
+	fnShowTips({ $ele, followId, appId, event });
 });
 
 $(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
