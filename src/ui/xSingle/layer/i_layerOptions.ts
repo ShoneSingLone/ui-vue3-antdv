@@ -166,7 +166,7 @@ export interface i_layerOptions {
     
     当你拖拽弹层右下角对窗体进行尺寸调整时，如果你设定了该回调，则会执行。回调返回一个参数：当前层的DOM对象
      */
-	resizing?: Function | false;
+	onResizing?: Function | false;
 	/* scrollbar - 是否允许浏览器出现滚动条;
     类型：boolean，默认：true
     
@@ -208,7 +208,7 @@ export interface i_layerOptions {
     
     默认不会触发moveEnd，如果你需要，设定moveEnd: function(layero){}即可。其中layero为当前层的DOM对象
      */
-	moveEnd?: Function | false;
+	onMoveEnd?: Function | false;
 	/* tips - tips方向和颜色;
     类型：number/Array，默认：2
     

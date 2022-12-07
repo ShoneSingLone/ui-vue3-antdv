@@ -73,7 +73,7 @@ export default {
 	.markdown-theme {
 		display: none;
 		position: absolute;
-		right: 0;
+		right: 100px;
 		top: 0;
 		z-index: 1;
 	}

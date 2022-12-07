@@ -1,4 +1,3 @@
-//@ts-nocheck
 import $ from "jquery";
 import _ from "lodash";
 import { i_layerOptions } from "./i_layerOptions";
@@ -15,6 +14,7 @@ export const KEY = {
  * */
 const $win = $(window);
 const $html = $("html");
+const $document = $(document);
 const $body = $("body");
 /* 缓存常用字符 */
 
@@ -35,8 +35,22 @@ const DOMS_ANIM = [
 	"layer-anim-05",
 	"layer-anim-06"
 ];
-const READY = {
-	getPath: (function () {
+
+const READY: {
+	zIndex: number;
+	$moveMask: JQuery;
+	/* layerInstanceForMoveOrResize */
+	moveOrResizeInstance: any;
+	moveOrResizeWH: any[];
+	moveOrResizeType: "resize" | "move";
+	pointMousedown: number[];
+	basePath: string;
+} = {
+	zIndex: 0,
+	/* 默认zIndex从2开始 */
+	pointMousedown: [],
+	/*  */
+	basePath: (function () {
 		var jsPath = document.currentScript
 			? document.currentScript.src
 			: (function () {
@@ -108,6 +122,22 @@ const READY = {
 };
 /* 默认内置方法。 */
 const LayerUtils = {
+	/* 使用Object.defineProperty 劫持，不会实际用到，但是方便重构 */
+	lastIndex: 0,
+	/* 动态决定index，不能一直往上加，lastIndex是 indexRecordArray的最后一个元素*/
+	layerIndexArray: [
+		/* 至少是1，shade是index-1 */
+	],
+	removeIndexFromLayerIndexArray(layerIndex: number) {
+		let currentIndex = _.findIndex(this.layerIndexArray, i => i === layerIndex);
+		if (currentIndex > -1) {
+			this.layerIndexArray.splice(currentIndex, 1);
+		}
+	},
+	setZIndex(zIndex: number) {
+		READY.zIndex = zIndex;
+	},
+	/*  */
 	MSG: 0,
 	DIALOG: 1,
 	IFRAME: 2,
@@ -131,8 +161,7 @@ const LayerUtils = {
 		}
 		return 0;
 	})(),
-	index: 1,
-	path: READY.getPath,
+	path: READY.basePath,
 	config: function (options: i_layerOptions, fn) {
 		options = options || {};
 		LayerUtils.cache = READY.config = $.extend({}, READY.config, options);
@@ -233,12 +262,12 @@ const LayerUtils = {
 			)
 		);
 	},
-	tips(content, follow, options) {
+	tips(content, followSelector, options) {
 		return LayerUtils.open(
 			$.extend(
 				{
 					type: LayerUtils.TIPS,
-					content: [content, follow],
+					content: [content, followSelector],
 					closeBtn: false,
 					time: 3000,
 					shade: false,
@@ -250,17 +279,20 @@ const LayerUtils = {
 			)
 		);
 	},
-	close(index: number) {
+	close(layerIndex: number) {
+		if (layerIndex <= 0) {
+			return Promise.reject();
+		}
 		return new Promise((resolve, reject) => {
 			try {
 				/* 关闭layer核心方法 */
-				var $eleLayer = $(`#${LAYUI_LAYER}${index}`);
+				var $eleLayer = $(`#${LAYUI_LAYER}${layerIndex}`);
 				var type = $eleLayer.attr("type");
 				var closeAnim = "layer-anim-close";
 				if ($eleLayer.length === 0) {
 					return;
 				}
-				function remove() {
+				function removeLayerDomFromHtml() {
 					if (
 						type === "dialog" &&
 						$eleLayer.attr("data-content-type") === "object"
@@ -270,7 +302,7 @@ const LayerUtils = {
 						/* 低版本IE 回收 iframe */
 						if (type === READY.type[2]) {
 							try {
-								var iframe = $(`#${LAYUI_LAYER_CONTENT}${index}`)[0];
+								var iframe = $(`#${LAYUI_LAYER_CONTENT}${layerIndex}`)[0];
 								iframe.contentWindow.document.write("");
 								iframe.contentWindow.close();
 								$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
@@ -282,8 +314,8 @@ const LayerUtils = {
 					$eleLayer.remove();
 
 					try {
-						READY.end[index] && READY.end[index]();
-						delete READY.end[index];
+						READY.end[layerIndex] && READY.end[layerIndex]();
+						delete READY.end[layerIndex];
 					} catch (e) {
 						/* end就是beforeUnmount 的回调函数，如果有，就执行 */
 					}
@@ -292,15 +324,16 @@ const LayerUtils = {
 					$eleLayer.addClass("layer-anim " + closeAnim);
 				}
 
-				$(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${index}`).remove();
+				$(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerIndex}`).remove();
 				LayerUtils.ie == 6 && READY.reselect();
-				READY.rescollbar(index);
+				READY.rescollbar(layerIndex);
 				if ($eleLayer.attr("minLeft")) {
 					READY.minIndex--;
 					READY.minLeft.push($eleLayer.attr("minLeft"));
 				}
 				setTimeout(function () {
-					remove();
+					removeLayerDomFromHtml();
+					LayerUtils.removeIndexFromLayerIndexArray(layerIndex);
 					resolve(true);
 				}, 200);
 			} catch (error) {
@@ -428,7 +461,7 @@ const LayerUtils = {
 				event.preventDefault();
 				dict.imgnext(true);
 			});
-			$(document).on("keyup", dict.keyup);
+			$document.on("keyup", dict.keyup);
 		};
 		/* 图片预加载 */
 		function loadImage(url, callback, error) {
@@ -539,7 +572,7 @@ const LayerUtils = {
 							},
 							end() {
 								dict.end = true;
-								$(document).off("keyup", dict.keyup);
+								$document.off("keyup", dict.keyup);
 							}
 						},
 						options
@@ -688,7 +721,7 @@ const LayerUtils = {
 	},
 	getChildFrame(selector, index) {
 		/* 获取子iframe的DOM */
-		index = index || $(`.${LAYUI_LAYER_CONTENT}`).attr("times");
+		index = index || $(`.${LAYUI_LAYER_CONTENT}`).attr("data-index");
 		return $("#" + LAYUI_LAYER + index)
 			.find("iframe")
 			.contents()
@@ -698,7 +731,7 @@ const LayerUtils = {
 		/* 得到当前iframe层的索引，子iframe时使用 */
 		return $("#" + name)
 			.parents(`.${LAYUI_LAYER_CONTENT}`)
-			.attr("times");
+			.attr("data-index");
 	},
 	iframeAuto(index) {
 		/* iframe层自适应宽高 */
@@ -852,31 +885,58 @@ const LayerUtils = {
 	},
 	title(name, index) {
 		/* 改变title */
-		var $title = $("#" + LAYUI_LAYER + (index || LayerUtils.index)).find(
+		var $title = $("#" + LAYUI_LAYER + (index || LayerUtils.lastIndex)).find(
 			`.${LAYUI_LAYER_TITLE}`
 		);
 		$title.html(name);
 	},
-	closeAll(type, callback) {
+	async closeAll(type: string) {
 		/* 关闭所有层 */
-		if (typeof type === "function") {
-			callback = type;
-			type = null;
-		}
-		var domsElem = $("." + LAYUI_LAYER);
-		$.each(domsElem, function (_index) {
-			var othis = $(this);
-			var is = type ? othis.attr("type") === type : 1;
-			is &&
-				LayerUtils.close(
-					othis.attr("times"),
-					_index === domsElem.length - 1 ? callback : null
-				);
-			is = null;
+		const needClose: any = [];
+		$(`.${LAYUI_LAYER}`).each(function () {
+			const $ele = $(this);
+			if (type) {
+				if ($ele.attr("type") === type) {
+					needClose.push($ele.attr("data-index"));
+				}
+			} else {
+				needClose.push($ele.attr("data-index"));
+			}
 		});
-		if (domsElem.length === 0) typeof callback === "function" && callback();
+		return await Promise.all(needClose.map(LayerUtils.close));
+	},
+	setLayerTop($current: JQuery) {
+		console.log("setLayerTop");
+		if ($current.hasClass("set-layer-top")) {
+			return;
+		} else {
+			$(".set-layer-top").removeClass("set-layer-top");
+			$current.addClass("set-layer-top").appendTo($body);
+		}
 	}
 };
+
+Object.defineProperty(LayerUtils, "lastIndex", {
+	get() {
+		const lastIndex = _.last(LayerUtils.layerIndexArray);
+		console.log("get", lastIndex);
+		if (lastIndex) {
+			return lastIndex;
+		} else {
+			(LayerUtils.layerIndexArray as number[]) = [1];
+			return 1;
+		}
+	},
+	set(newIndex) {
+		const lastIndex = _.last(LayerUtils.layerIndexArray);
+		console.log("set", lastIndex, LayerUtils.layerIndexArray);
+		if (lastIndex) {
+			(LayerUtils.layerIndexArray as number[]).push(newIndex as number);
+		} else {
+			return;
+		}
+	}
+});
 
 class ClassLayer {
 	/* 在 constructor 和 init方法里面完成 init */
@@ -911,14 +971,14 @@ class ClassLayer {
 		maxmin: false,
 		fixed: true,
 		resize: true,
-		resizing: false,
+		onResizing: false,
 		scrollbar: true,
 		maxWidth: 360,
 		maxHeight: 0,
 		zIndex: 1,
 		move: ".layui-layer-title",
 		moveOut: false,
-		moveEnd: false,
+		onMoveEnd: false,
 		tips: 2,
 		tipsMore: false,
 		success: false,
@@ -928,29 +988,15 @@ class ClassLayer {
 		full: false,
 		minStack: true
 	};
+
 	constructor(custumSettings: i_layerOptions) {
-		/* 随layer 的增减变动 */
-		this._layerIndex = ++LayerUtils.index;
-		this._IDLayer = `${LAYUI_LAYER}${this._layerIndex}`;
-		this._IDShade = `${LAYUI_LAYER_SHADE}${this._layerIndex}`;
-		this._IDContent = `${LAYUI_LAYER_CONTENT}${this._layerIndex}`;
-		this.config = Object.assign(this.config, READY.config, custumSettings);
-		/* 初始最大宽度：当前屏幕宽，左右留 15px 边距 */
-		this.config.maxWidth = ($win.width() as number) - 15 * 2;
-		/* icon - 图标。信息框和加载层的私有参数; 类型：number，默认：-1（信息框）/0（加载层） */
-		this.config.icon = custumSettings.type === LayerUtils.LOADING ? 0 : -1;
-		this.config.zIndex = !!this.config.zIndex ? this.config.zIndex : 1;
-		const { config } = this;
-		/* shade 会-1 */
-		this.zIndex = this.config.zIndex || 2;
-		this.type = READY.type[config.type || 0];
-		this.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
-			Number(config.type)
-		);
-		this.ismax = Boolean(config.maxmin && this.isNeedTitle);
-		this.isContentTypeObject = typeof config.content === "object";
-		console.log(this.config.content);
-		this.init();
+		this.initConfig(custumSettings)
+			.insertContainerAfterInitConfig()
+			.setPosition()
+			.setLayerSize()
+			.onMoveOrResize()
+			.addOperationListener()
+			.handleAnimation();
 	}
 
 	get cptDomShade() {
@@ -964,7 +1010,7 @@ class ClassLayer {
 	}
 
 	get cptDomTitle() {
-		const { config } = this;
+		const { config, _IDLayer } = this;
 
 		if (this.isContentTypeObject && !this.isNeedTitle) {
 			return "";
@@ -975,7 +1021,7 @@ class ClassLayer {
 			config.title = [String(config.title), ""];
 		}
 		const [title, styleString]: any = config.title || ["", ""];
-		return `<div class="layui-layer-title" style="${styleString}"> ${title} </div >`;
+		return `<div class="${LAYUI_LAYER_TITLE}" style="${styleString}" data-layer-id="${_IDLayer}"> ${title} </div >`;
 	}
 
 	get cptDomIcon() {
@@ -1060,14 +1106,14 @@ class ClassLayer {
 			_IDLayer,
 			_IDContent
 		} = this;
-		const layerInvisibleClassName =
-			config.type === LayerUtils.TIPS ? " invisible" : "";
-		const layerTypeClassName = ` layui-layer-${type}`;
-		const layerBoderClassName =
+
+		const typeClassname = ` layui-layer-${type}`;
+		const boderClassname =
 			(config.type == 0 || config.type == 2) && !config.shade
 				? " layui-layer-border"
 				: "";
-		const layerSkinClassName = config.skin || "";
+
+		const skinClassname = config.skin || "";
 		const classContent = [
 			LAYUI_LAYER_CONTENT,
 			config.contentClass,
@@ -1080,17 +1126,19 @@ class ClassLayer {
 		]
 			.filter(i => !!i)
 			.join(" ");
+
 		return `
-<div id="${_IDLayer}"
+<div id="${_IDLayer}" 
+		layer-wrapper="${_IDLayer}"
+		data-z-index="${zIndex}"
 		type="${type}"
-		class="flex vertical ${LAYUI_LAYER}${layerTypeClassName}${layerInvisibleClassName}${layerBoderClassName}${layerSkinClassName}" 
-		times="${_layerIndex}"
+		class="flex vertical elevation-4 ${LAYUI_LAYER}${typeClassname}${boderClassname}${skinClassname}" 
+		data-index="${_layerIndex}"
 		data-during-time="${config.during}"
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
-		style="z-index:${zIndex};
-		width:${config.area[0]};
-		height:${config.area[1]};
-		position:${config.fixed ? "fixed;" : "absolute;"}">
+		style="z-index:${zIndex}; width:${config.area[0]}; height:${
+			config.area[1]
+		}; position:fixed;">
 			${this.cptDomTitle}
 			<div class="${classContent}" id="${_IDContent}">
 				${this.cptDomIcon}
@@ -1102,18 +1150,40 @@ class ClassLayer {
 </div>`;
 	}
 
-	get cptDomMoveBar() {
+	get cptDomMoveMask() {
 		return $(
 			`<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
 		);
 	}
 
-	init() {
-		/* 创建骨架 */
-		var layerInstance = this;
-		const { config, _IDContent, content, isContentTypeObject } = layerInstance;
-		/* 提供了ID，首先弹出layer 再替换content */
-		if (config.id && $("#" + config.id)[0]) return;
+	initConfig(custumSettings: i_layerOptions) {
+		const layerInstance = this;
+		layerInstance.config = Object.assign(layerInstance.config, custumSettings);
+		/* icon - 图标。信息框和加载层的私有参数; 类型：number，默认：-1（信息框）/0（加载层） */
+		layerInstance.config.icon =
+			custumSettings.type === LayerUtils.LOADING ? 0 : -1;
+		/* 初始最大宽度：当前屏幕宽，左右留 15px 边距 */
+		layerInstance.config.maxWidth = ($win.width() as number) - 15 * 2;
+
+		const { config } = layerInstance;
+		/* 随layer 的增减变动 */
+		layerInstance._layerIndex = ++LayerUtils.lastIndex;
+		layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerIndex}`;
+		layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerIndex}`;
+		layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerIndex}`;
+
+		/* shade 会-1 */
+		layerInstance.zIndex =
+			READY.zIndex + (layerInstance.config.zIndex as number);
+		layerInstance.type = READY.type[config.type || 0];
+		layerInstance.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
+			Number(config.type)
+		);
+		layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
+		layerInstance.isContentTypeObject = typeof config.content === "object";
+
+		const { isContentTypeObject } = layerInstance;
+
 		if (typeof config.area === "string") {
 			config.area = config.area === "auto" ? ["", ""] : [config.area, ""];
 		}
@@ -1127,12 +1197,12 @@ class ClassLayer {
 			config.fixed = false;
 		}
 
-		switch (config.type) {
-			case LayerUtils.MSG:
+		const processContentStrategy = {
+			[LayerUtils.MSG]() {
 				config.btn = "btn" in config ? config.btn : READY.btn[0];
 				LayerUtils.closeAll("dialog");
-				break;
-			case LayerUtils.IFRAME: {
+			},
+			[LayerUtils.IFRAME]() {
 				let scrolling = "auto";
 				let src = "";
 				if (isContentTypeObject) {
@@ -1144,23 +1214,21 @@ class ClassLayer {
 
 				config.content = `
 <iframe class="layui-layer-load" 
-	scrolling="${scrolling}" 
-	src="${src}"
-	allowtransparency="true"
-	onload="this.className=''" 
-	style="height:100%;" 
-	frameborder="0">
+		scrolling="${scrolling}" 
+		src="${src}"
+		allowtransparency="true"
+		onload="this.className=''" 
+		style="height:100%;" 
+		frameborder="0">
 </iframe>`;
-				break;
-			}
-			case LayerUtils.LOADING: {
+			},
+			[LayerUtils.LOADING]() {
 				delete config.title;
 				delete config.closeBtn;
 				config.icon === -1 && config.icon === 0;
 				LayerUtils.closeAll("loading");
-				break;
-			}
-			case LayerUtils.TIPS: {
+			},
+			[LayerUtils.TIPS]() {
 				if (!isContentTypeObject) {
 					config.content = [config.content, "body"];
 				}
@@ -1172,22 +1240,18 @@ class ClassLayer {
 				config.tips =
 					typeof config.tips === "object" ? config.tips : [config.tips, true];
 				config.tipsMore || LayerUtils.closeAll("tips");
-				break;
 			}
-		}
+		};
 
-		/* 建立容器 */
-		layerInstance.initContainer();
-		layerInstance.auto();
-		/* 遮罩 */
-		layerInstance.$eleShade.css({
-			"background-color": config.shade[1] || "#000",
-			opacity: config.shade[0] || config.shade
-		});
-		/* IE6 bug */
-		if (config.type == LayerUtils.IFRAME && LayerUtils.ie == 6) {
-			layerInstance.$eleLayer.find("iframe").attr("src", content[0]);
-		}
+		const processContentFn = processContentStrategy[config.type as any];
+		processContentFn && processContentFn();
+
+		return layerInstance;
+	}
+
+	setLayerSize() {
+		const layerInstance = this;
+		const { config } = layerInstance;
 
 		/* 坐标自适应浏览器窗口尺寸 */
 		if (config.type == LayerUtils.TIPS) {
@@ -1212,9 +1276,12 @@ class ClassLayer {
 		if (config.fixed) {
 			$win.on("resize", function () {
 				layerInstance.offset();
-				(/^\d+%$/.test(config.area[0]) || /^\d+%$/.test(config.area[1])) &&
-					layerInstance.auto();
-				config.type == 4 && layerInstance.tips();
+				if (/^\d+%$/.test(config.area[0]) || /^\d+%$/.test(config.area[1])) {
+					layerInstance.setPosition();
+				}
+				if (config.type == LayerUtils.tips) {
+					layerInstance.tips();
+				}
 			});
 		}
 
@@ -1224,9 +1291,13 @@ class ClassLayer {
 			}, config.during);
 		}
 
-		layerInstance.move().callback();
+		return layerInstance;
+	}
 
+	handleAnimation() {
 		/* 为兼容jQuery3.0的css动画影响元素尺寸计算 */
+		const layerInstance = this;
+		const { config } = layerInstance;
 		if (DOMS_ANIM[config.anim]) {
 			var animClass = "layer-anim " + DOMS_ANIM[config.anim];
 			layerInstance.$eleLayer
@@ -1242,17 +1313,29 @@ class ClassLayer {
 		if (config.isOutAnim) {
 			layerInstance.$eleLayer.data("isOutAnim", true);
 		}
+		return layerInstance;
 	}
 
-	initContainer() {
+	insertContainerAfterInitConfig() {
 		/* 容器 */
-		var layerInstance = this;
+		const layerInstance = this;
+		if (!READY.$moveMask) {
+			READY.$moveMask = $(layerInstance.cptDomMoveMask);
+			$body.append(READY.$moveMask);
+		}
 		const { config, isContentTypeObject, _layerIndex, _IDLayer, _IDShade } =
 			layerInstance;
 		$body.append(layerInstance.cptDomShade);
 		if (isContentTypeObject) {
-			if ([LayerUtils.IFRAME, LayerUtils.TIPS].includes(config.type || 0)) {
+			if ([LayerUtils.IFRAME].includes(config.type || 0)) {
 				$body.append(layerInstance.cptDomContainer);
+			} else if ([LayerUtils.TIPS].includes(config.type || 0)) {
+				const $follow = $(config.follow);
+				const { top, left } = $follow.offset();
+				const point = [parseFloat(left), parseFloat(top)];
+				const $domContainer = $(layerInstance.cptDomContainer);
+				/* $domContainer.css({ position: "fixed", top: `${top}px`, left: `${left}px` }); */
+				$body.append($domContainer);
 			} else {
 				const $content = $(config.content);
 				const _$layerWrapper = $content.parents(`.${LAYUI_LAYER}`);
@@ -1266,21 +1349,30 @@ class ClassLayer {
 			$body.append(layerInstance.cptDomContainer);
 		}
 
-		const _$layerMoveBar = $(`#${LAYUI_LAYER_MOVE}`);
-		if (_$layerMoveBar.length === 0) {
-			READY.moveElem = layerInstance.cptDomMoveBar;
-			$body.append(READY.moveElem);
-		}
-
 		layerInstance.$eleLayer = $(`#${_IDLayer}`);
 		layerInstance.$eleShade = $(`#${_IDShade}`);
 		if (!config.scrollbar) {
 			$html.css("overflow", "hidden").attr("layer-full", _layerIndex);
 		}
+
+		/* 最后一个 */
+		LayerUtils.setLayerTop(layerInstance.$eleLayer);
+
+		/* 遮罩 */
+		layerInstance.$eleShade.css({
+			"background-color": config.shade[1] || "#000",
+			opacity: config.shade[0] || config.shade
+		});
+
+		/* IE6 bug */
+		if (config.type == LayerUtils.IFRAME && LayerUtils.ie == 6) {
+			layerInstance.$eleLayer.find("iframe").attr("src", content[0]);
+		}
+
 		return layerInstance;
 	}
 
-	auto() {
+	setPosition() {
 		/* 自适应 */
 		var layerInstance = this;
 		const { $eleLayer, config } = layerInstance;
@@ -1328,6 +1420,7 @@ class ClassLayer {
 				break;
 			}
 		}
+
 		return layerInstance;
 	}
 
@@ -1398,6 +1491,7 @@ class ClassLayer {
 			top: layerInstance.offsetTop,
 			left: layerInstance.offsetLeft
 		});
+		return layerInstance;
 	}
 
 	async tips() {
@@ -1502,106 +1596,64 @@ class ClassLayer {
 			"background-color": customColor,
 			"padding-right": config.closeBtn ? "30px" : ""
 		});
-		const layeroPosition = {
-			left: goal.tipLeft - (config.fixed ? win.scrollLeft() : 0),
-			top: goal.tipTop - (config.fixed ? win.scrollTop() : 0)
-		};
-		$eleLayer.css(layeroPosition);
-		$eleLayer.removeClass("invisible");
+		$eleLayer.css({
+			left: goal.tipLeft - $win.scrollLeft(),
+			top: goal.tipTop - $win.scrollTop(),
+			transform: "scale(0)"
+		});
+
+		setTimeout(() => {
+			$eleLayer.css({
+				transform: "scale(1)",
+				visibility: "unset",
+				"z-index": 1
+			});
+		}, 200);
 	}
 
-	move() {
+	onMoveOrResize() {
 		/* 拖拽层 */
-		var layerInstance = this,
-			config = layerInstance.config,
-			_DOC = $(document),
-			$eleLayer = layerInstance.$eleLayer,
-			moveElem = $eleLayer.find(config.move),
-			resizeElem = $eleLayer.find(".layui-layer-resize"),
-			dict = {};
-		if (config.move) {
-			moveElem.css("cursor", "move");
-		}
+		var layerInstance = this;
+		const { config, $eleLayer } = layerInstance;
+		const $eleMove = $eleLayer.find(config.move);
+		const $eleResize = $eleLayer.find(".layui-layer-resize");
 
-		moveElem.on("mousedown", function (e) {
+		/*  */
+		$eleMove.css("cursor", "move");
+		$eleMove.on("mousedown", function (e) {
+			LayerUtils.setLayerTop($eleLayer);
 			e.preventDefault();
 			if (config.move) {
-				dict.moveStart = true;
-				dict.offset = [
+				// READY.$eleMoveOrResize = $(e.currentTarget).parent(`[layer-wrapper]`);
+				READY.moveOrResizeInstance = layerInstance;
+				READY.moveOrResizeType = "move";
+				READY.pointMousedown = [
 					e.clientX - parseFloat($eleLayer.css("left")),
 					e.clientY - parseFloat($eleLayer.css("top"))
 				];
-				READY.moveElem.css("cursor", "move").show();
+				READY.$moveMask.css("cursor", "move").show();
 			}
 		});
-		resizeElem.on("mousedown", function (e) {
+
+		$eleResize.on("mousedown", function (e) {
+			LayerUtils.setLayerTop($eleLayer);
 			e.preventDefault();
-			dict.resizeStart = true;
-			dict.offset = [e.clientX, e.clientY];
-			dict.area = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-			READY.moveElem.css("cursor", "se-resize").show();
+			READY.moveOrResizeInstance = layerInstance;
+			READY.moveOrResizeType = "resize";
+			READY.pointMousedown = [e.clientX, e.clientY];
+			READY.moveOrResizeWH = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
+			READY.$moveMask.css("cursor", "se-resize").show();
 		});
-		_DOC
-			.on("mousemove", function (e) {
-				/* 拖拽移动 */
-				if (dict.moveStart) {
-					var X = e.clientX - dict.offset[0],
-						Y = e.clientY - dict.offset[1],
-						fixed = $eleLayer.css("position") === "fixed";
-					e.preventDefault();
-					dict.stX = fixed ? 0 : $win.scrollLeft();
-					dict.stY = fixed ? 0 : $win.scrollTop();
-					/* 控制元素不被拖出窗口外 */
-					if (!config.moveOut) {
-						var setRig = $win.width() - $eleLayer.outerWidth() + dict.stX,
-							setBot = $win.height() - $eleLayer.outerHeight() + dict.stY;
-						X < dict.stX && (X = dict.stX);
-						X > setRig && (X = setRig);
-						Y < dict.stY && (Y = dict.stY);
-						Y > setBot && (Y = setBot);
-					}
 
-					$eleLayer.css({
-						left: X,
-						top: Y
-					});
-				}
-
-				/* Resize */
-				if (config.resize && dict.resizeStart) {
-					var X = e.clientX - dict.offset[0],
-						Y = e.clientY - dict.offset[1];
-					e.preventDefault();
-					LayerUtils.style(layerInstance._layerIndex, {
-						width: dict.area[0] + X,
-						height: dict.area[1] + Y
-					});
-					dict.isResize = true;
-					config.resizing && config.resizing($eleLayer);
-				}
-			})
-			.on("mouseup", function (e) {
-				if (dict.moveStart) {
-					delete dict.moveStart;
-					READY.moveElem.hide();
-					config.moveEnd && config.moveEnd($eleLayer);
-				}
-				if (dict.resizeStart) {
-					delete dict.resizeStart;
-					READY.moveElem.hide();
-				}
-			});
 		return layerInstance;
 	}
 
-	callback() {
-		/* CALLBACK */
-		var layerInstance = this,
-			$eleLayer = layerInstance.$eleLayer,
-			config = layerInstance.config;
-		layerInstance.openLayer();
+	addOperationListener() {
+		const layerInstance = this;
+		const { $eleLayer, config } = layerInstance;
+
 		if (config.success) {
-			if (config.type == 2) {
+			if (config.type == LayerUtils.IFRAME) {
 				$eleLayer.find("iframe").on("load", function () {
 					config.success.call(this, $eleLayer, layerInstance._layerIndex);
 				});
@@ -1609,7 +1661,10 @@ class ClassLayer {
 				config.success($eleLayer, layerInstance._layerIndex);
 			}
 		}
-		LayerUtils.ie == 6 && layerInstance.IE6($eleLayer);
+
+		if (LayerUtils.ie == 6) {
+			layerInstance.IE6($eleLayer);
+		}
 		/* 按钮 */
 		$eleLayer
 			.find(`.${LAYUI_LAYER_CONTENT}`)
@@ -1653,7 +1708,6 @@ class ClassLayer {
 				LayerUtils.close(layerInstance._layerIndex);
 			});
 		}
-
 		/* 最小化 */
 		$eleLayer.find(".layui-layer-min").on("click", function () {
 			var min = config.min && config.min($eleLayer, layerInstance._layerIndex);
@@ -1672,6 +1726,7 @@ class ClassLayer {
 			}
 		});
 		config.end && (READY.end[layerInstance._layerIndex] = config.end);
+		return layerInstance;
 	}
 
 	IE6($eleLayer) {
@@ -1690,27 +1745,90 @@ class ClassLayer {
 			sthis = null;
 		});
 	}
-
-	openLayer() {
-		/* 需依赖原型的对外方法 */
-		var layerInstance = this;
-		/* 置顶当前窗口 */
-		LayerUtils.zIndex = layerInstance.config.zIndex;
-		LayerUtils.setTop = function ($eleLayer) {
-			var setZindex = function () {
-				LayerUtils.zIndex++;
-				$eleLayer.css("z-index", LayerUtils.zIndex + 1);
-			};
-			LayerUtils.zIndex = parseInt($eleLayer[0].style.zIndex);
-			$eleLayer.on("mousedown", setZindex);
-			return LayerUtils.zIndex;
-		};
-	}
 }
 
 var cache = LayerUtils.cache || {};
 var skin = function (type) {
 	return cache.skin ? " " + cache.skin + " " + cache.skin + "-" + type : "";
 };
+
+/* 点击层zIndex在最上层 */
+$document
+	.on("click.setLayerTop", "[layer-wrapper]", event => {
+		const { currentTarget } = event;
+		const $currentTarget = $(currentTarget);
+		LayerUtils.setLayerTop($currentTarget);
+	})
+	.on(
+		"mousemove",
+		".layui-layer-move",
+		_.throttle(function (e) {
+			console.log(e);
+			/* 拖拽移动 */
+			if (READY.moveOrResizeInstance instanceof ClassLayer) {
+				const { $eleLayer, config } = READY.moveOrResizeInstance;
+				if (READY.moveOrResizeType === "move") {
+					e.preventDefault();
+					let X = e.clientX - READY.pointMousedown[0];
+					let Y = e.clientY - READY.pointMousedown[1];
+					const fixed = $eleLayer.css("position") === "fixed";
+
+					READY.stX = fixed ? 0 : $win.scrollLeft();
+					READY.stY = fixed ? 0 : $win.scrollTop();
+					/* 控制元素不被拖出窗口外 */
+					if (!config.moveOut) {
+						let setRig = $win.width() - $eleLayer.outerWidth() + READY.stX;
+						let setBot = $win.height() - $eleLayer.outerHeight() + READY.stY;
+
+						if (X < READY.stX) {
+							X = READY.stX;
+						}
+
+						if (X > setRig) {
+							X = setRig;
+						}
+
+						if (Y < READY.stY) {
+							Y = READY.stY;
+						}
+
+						if (Y > setBot) {
+							Y = setBot;
+						}
+					}
+
+					$eleLayer.css({ left: X, top: Y });
+				}
+
+				if (config.resize) {
+					if (READY.moveOrResizeType === "resize") {
+						e.preventDefault();
+						const X = e.clientX - READY.pointMousedown[0];
+						const Y = e.clientY - READY.pointMousedown[1];
+
+						$eleLayer.css({
+							width: READY.moveOrResizeWH[0] + X,
+							height: READY.moveOrResizeWH[1] + Y
+						});
+
+						config.onResizing && config.onResizing($eleLayer);
+					}
+				}
+			}
+
+			/* Resize */
+		}, 100)
+	)
+	.on("mouseup", ".layui-layer-move", function (e) {
+		if (READY.moveOrResizeInstance instanceof ClassLayer) {
+			const { config } = READY.moveOrResizeInstance;
+			if (config.onMoveEnd) {
+				config.onMoveEnd(READY.moveOrResizeInstance);
+			}
+			READY.moveOrResizeInstance = false;
+			READY.$moveMask.hide();
+		}
+	});
+
 /* 暴露模块 */
 export { LayerUtils as LayerUtils };

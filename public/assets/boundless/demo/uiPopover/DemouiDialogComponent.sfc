@@ -24,7 +24,7 @@ async function sfc({ defineComponent, State_UI, UI }) {
 								const dialogOptions = await UI.dialog.component({
 									title: $t("DemoXFormWithForm").label,
 									component: defineComponent({
-										template: `<p>演示使用bundless的形式，使用template，不使用jsx</p>`
+										template: `<p class="padding20">演示使用bundless的形式，使用template，不使用jsx</p>`
 									}),
 									hideButtons: true,
 									hideCancel: true,
