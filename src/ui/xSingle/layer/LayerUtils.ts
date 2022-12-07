@@ -42,7 +42,6 @@ const READY: {
 	$eleMove: JQuery | false;
 	$eleResize: JQuery | false;
 	pointMousedown: number[];
-
 } = {
 	/* move resize */
 	$eleMove: false,
@@ -54,17 +53,17 @@ const READY: {
 		var jsPath = document.currentScript
 			? document.currentScript.src
 			: (function () {
-				var js = document.scripts,
-					last = js.length - 1,
-					src;
-				for (var i = last; i > 0; i--) {
-					if (js[i].readyState === "interactive") {
-						src = js[i].src;
-						break;
+					var js = document.scripts,
+						last = js.length - 1,
+						src;
+					for (var i = last; i > 0; i--) {
+						if (js[i].readyState === "interactive") {
+							src = js[i].src;
+							break;
+						}
 					}
-				}
-				return src || js[last].src;
-			})();
+					return src || js[last].src;
+			  })();
 		const GLOBAL = {};
 		return GLOBAL.layer_dir || jsPath.substring(0, jsPath.lastIndexOf("/") + 1);
 	})(),
@@ -125,9 +124,11 @@ const LayerUtils = {
 	/* 使用Object.defineProperty 劫持，不会实际用到，但是方便重构 */
 	lastIndex: 0,
 	/* 动态决定index，不能一直往上加，lastIndex是 indexRecordArray的最后一个元素*/
-	_indexArray: [/* 至少是1，shade是index-1 */],
+	_indexArray: [
+		/* 至少是1，shade是index-1 */
+	],
 	_removeIndex(layerIndex: number) {
-		const currentIndex = _.findIndex(this._indexArray, i => i === layerIndex)
+		const currentIndex = _.findIndex(this._indexArray, i => i === layerIndex);
 		if (currentIndex > -1) {
 			this._indexArray.splice(currentIndex, 1);
 		}
@@ -228,19 +229,19 @@ const LayerUtils = {
 				},
 				isOptionsIsFunction && !READY.config.skin
 					? {
-						skin: skin + " layui-layer-hui",
-						anim: anim
-					}
+							skin: skin + " layui-layer-hui",
+							anim: anim
+					  }
 					: (function () {
-						options = options || {};
-						if (
-							options.icon === -1 ||
-							(options.icon === undefined && !READY.config.skin)
-						) {
-							options.skin = skin + " " + (options.skin || "layui-layer-hui");
-						}
-						return options;
-					})()
+							options = options || {};
+							if (
+								options.icon === -1 ||
+								(options.icon === undefined && !READY.config.skin)
+							) {
+								options.skin = skin + " " + (options.skin || "layui-layer-hui");
+							}
+							return options;
+					  })()
 			)
 		);
 	},
@@ -276,7 +277,7 @@ const LayerUtils = {
 	},
 	close(layerIndex: number) {
 		if (layerIndex <= 0) {
-			return Promise.reject()
+			return Promise.reject();
 		}
 		return new Promise((resolve, reject) => {
 			try {
@@ -301,7 +302,7 @@ const LayerUtils = {
 								iframe.contentWindow.document.write("");
 								iframe.contentWindow.close();
 								$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
-							} catch (e) { }
+							} catch (e) {}
 						}
 					}
 
@@ -344,8 +345,8 @@ const LayerUtils = {
 		if (!options.photos) return;
 		/* 若 photos 并非选择器或 jQuery 对象，则为普通 object */
 		var isObject = !(
-			typeof options.photos === "string" || options.photos instanceof $
-		),
+				typeof options.photos === "string" || options.photos instanceof $
+			),
 			photos = isObject ? options.photos : {},
 			data = photos.data || [],
 			start = photos.start || 0;
@@ -672,8 +673,9 @@ const LayerUtils = {
 		var content =
 			options.formType == 2
 				? `<textarea class="layui-layer-input" ${style}></textarea>`
-				: `<input type="${options.formType === 1 ? "password" : "text"
-				}" class="layui-layer-input">`;
+				: `<input type="${
+						options.formType === 1 ? "password" : "text"
+				  }" class="layui-layer-input">`;
 		var success = options.success;
 		delete options.success;
 		return LayerUtils.open(
@@ -697,8 +699,8 @@ const LayerUtils = {
 						} else if (value.length > (options.maxlength || 500)) {
 							LayerUtils.tips(
 								"&#x6700;&#x591A;&#x8F93;&#x5165;" +
-								(options.maxlength || 500) +
-								"&#x4E2A;&#x5B57;&#x6570;",
+									(options.maxlength || 500) +
+									"&#x4E2A;&#x5B57;&#x6570;",
 								prompt,
 								{
 									tips: 1
@@ -905,13 +907,12 @@ const LayerUtils = {
 	}
 };
 
-
 Object.defineProperty(LayerUtils, "lastIndex", {
 	get() {
 		const lastIndex = _.last(LayerUtils._indexArray);
 		console.log("get", lastIndex);
 		if (lastIndex) {
-			return lastIndex
+			return lastIndex;
 		} else {
 			(LayerUtils._indexArray as number[]) = [1];
 			return 1;
@@ -921,12 +922,12 @@ Object.defineProperty(LayerUtils, "lastIndex", {
 		const lastIndex = _.last(LayerUtils._indexArray);
 		console.log("set", lastIndex, LayerUtils._indexArray);
 		if (lastIndex) {
-			(LayerUtils._indexArray as number[]).push((newIndex as number))
+			(LayerUtils._indexArray as number[]).push(newIndex as number);
 		} else {
-			return
+			return;
 		}
 	}
-})
+});
 
 class ClassLayer {
 	/* 在 constructor 和 init方法里面完成 init */
@@ -994,8 +995,9 @@ class ClassLayer {
 		if (!config.shade) {
 			return "";
 		}
-		return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${this.zIndex - 1
-			};"></div>`;
+		return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${
+			this.zIndex - 1
+		};"></div>`;
 	}
 
 	get cptDomTitle() {
@@ -1042,8 +1044,8 @@ class ClassLayer {
 						(config.title
 							? config.closeBtn
 							: config.type == LayerUtils.TIPS
-								? "1"
-								: "2") +
+							? "1"
+							: "2") +
 						'" href="javascript:;"></a>';
 				}
 				return closebtn;
@@ -1074,8 +1076,9 @@ class ClassLayer {
 				},
 				""
 			);
-			return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${config.btnAlign || ""
-				}">${domButtons}</div>`;
+			return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${
+				config.btnAlign || ""
+			}">${domButtons}</div>`;
 		}
 		return "";
 	}
@@ -1381,9 +1384,9 @@ class ClassLayer {
 				elem = $eleLayer.find(elem);
 				elem.height(
 					area[1] -
-					titHeight -
-					btnHeight -
-					2 * (parseFloat(elem.css("padding-top")) | 0)
+						titHeight -
+						btnHeight -
+						2 * (parseFloat(elem.css("padding-top")) | 0)
 				);
 			};
 		switch (config.type) {
@@ -1746,63 +1749,63 @@ var skin = function (type) {
 
 /* 点击层zIndex在最上层 */
 $document
+	.on("click.setLayerTop", `[layer-wrapper^=${LAYUI_LAYER}]`, function (event) {
+		const { currentTarget } = event;
+		const zIndexTop =
+			(_.last(LayerUtils._indexArray as number[]) as number) + 1;
+		const $currentTarget = $(currentTarget);
+		const isCurrentLayerTop =
+			$currentTarget.css("z-index") == String(zIndexTop);
+		if (isCurrentLayerTop) {
+			return;
+		}
+		$(`[layer-wrapper^=${LAYUI_LAYER}]`).each(function (index, ele) {
+			const $ele = $(ele);
+			const zIndexDefault = $ele.attr("data-z-index") || "1";
+			$ele.css("z-index", zIndexDefault);
+		});
+		$currentTarget.css("z-index", zIndexTop);
+	})
 	.on(
-		"click.setLayerTop",
-		`[layer-wrapper^=${LAYUI_LAYER}]`,
-		function (event) {
-			const { currentTarget } = event;
-			const zIndexTop = (_.last(LayerUtils._indexArray as number[]) as number) + 1;
-			const $currentTarget = $(currentTarget);
-			const isCurrentLayerTop = $currentTarget.css("z-index") == String(zIndexTop);
-			if (isCurrentLayerTop) {
-				return;
+		"mousemove",
+		_.throttle(function (e) {
+			/* 拖拽移动 */
+			if (READY.$eleMove) {
+				var X = e.clientX - READY.pointMousedown[0],
+					Y = e.clientY - READY.pointMousedown[1],
+					fixed = $eleLayer.css("position") === "fixed";
+
+				e.preventDefault();
+				READY.stX = fixed ? 0 : $win.scrollLeft();
+				READY.stY = fixed ? 0 : $win.scrollTop();
+				/* 控制元素不被拖出窗口外 */
+				if (!config.moveOut) {
+					var setRig = $win.width() - $eleLayer.outerWidth() + READY.stX,
+						setBot = $win.height() - $eleLayer.outerHeight() + READY.stY;
+					X < READY.stX && (X = READY.stX);
+					X > setRig && (X = setRig);
+					Y < READY.stY && (Y = READY.stY);
+					Y > setBot && (Y = setBot);
+				}
+
+				$eleLayer.css({ left: X, top: Y });
 			}
-			$(`[layer-wrapper^=${LAYUI_LAYER}]`)
-				.each(function (index, ele) {
-					const $ele = $(ele);
-					const zIndexDefault = $ele.attr("data-z-index") || "1";
-					$ele.css("z-index", zIndexDefault);
+
+			/* Resize */
+			if (config.resize && READY.$eleResize) {
+				debugger;
+				var X = e.clientX - READY.pointMousedown[0],
+					Y = e.clientY - READY.pointMousedown[1];
+				e.preventDefault();
+				LayerUtils.style(layerInstance._layerIndex, {
+					width: READY.area[0] + X,
+					height: READY.area[1] + Y
 				});
-			$currentTarget.css("z-index", zIndexTop)
-		}
-	)
-	.on("mousemove", _.throttle(function (e) {
-		/* 拖拽移动 */
-		if (READY.$eleMove) {
-			var X = e.clientX - READY.pointMousedown[0],
-				Y = e.clientY - READY.pointMousedown[1],
-				fixed = $eleLayer.css("position") === "fixed";
-
-			e.preventDefault();
-			READY.stX = fixed ? 0 : $win.scrollLeft();
-			READY.stY = fixed ? 0 : $win.scrollTop();
-			/* 控制元素不被拖出窗口外 */
-			if (!config.moveOut) {
-				var setRig = $win.width() - $eleLayer.outerWidth() + READY.stX,
-					setBot = $win.height() - $eleLayer.outerHeight() + READY.stY;
-				X < READY.stX && (X = READY.stX);
-				X > setRig && (X = setRig);
-				Y < READY.stY && (Y = READY.stY);
-				Y > setBot && (Y = setBot);
+				READY.isResize = true;
+				config.resizing && config.resizing($eleLayer);
 			}
-
-			$eleLayer.css({ left: X, top: Y });
-		}
-
-		/* Resize */
-		if (config.resize && READY.$eleResize) {
-			debugger;
-			var X = e.clientX - READY.pointMousedown[0],
-				Y = e.clientY - READY.pointMousedown[1];
-			e.preventDefault();
-			LayerUtils.style(layerInstance._layerIndex, {
-				width: READY.area[0] + X,
-				height: READY.area[1] + Y
-			});
-			READY.isResize = true;
-			config.resizing && config.resizing($eleLayer);
-		}
-	}, 100))
+		}, 100)
+	)
 	.on("mouseup", function (e) {
 		if (READY.$eleMove) {
 			READY.$eleMove = false;

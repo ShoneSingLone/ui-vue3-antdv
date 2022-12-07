@@ -130,11 +130,9 @@ function closeTips(followId: string, options = {}) {
 	timer4CloseTips[followId] = setTimeout(() => {
 		const layerIndex = popverIndexCollection[followId];
 		if (typeof layerIndex === "number") {
-			LayerUtils
-				.close(layerIndex)
-				.then(() => {
-					delete popverIndexCollection[followId];
-				});
+			LayerUtils.close(layerIndex).then(() => {
+				delete popverIndexCollection[followId];
+			});
 		}
 	}, TIMEOUT_DELAY);
 }
