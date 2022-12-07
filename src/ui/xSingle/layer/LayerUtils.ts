@@ -1,4 +1,3 @@
-//@ts-nocheck
 import $ from "jquery";
 import _ from "lodash";
 import { i_layerOptions } from "./i_layerOptions";
@@ -928,29 +927,15 @@ class ClassLayer {
 		full: false,
 		minStack: true
 	};
+
 	constructor(custumSettings: i_layerOptions) {
-		/* 随layer 的增减变动 */
-		this._layerIndex = ++LayerUtils.index;
-		this._IDLayer = `${LAYUI_LAYER}${this._layerIndex}`;
-		this._IDShade = `${LAYUI_LAYER_SHADE}${this._layerIndex}`;
-		this._IDContent = `${LAYUI_LAYER_CONTENT}${this._layerIndex}`;
-		this.config = Object.assign(this.config, READY.config, custumSettings);
-		/* 初始最大宽度：当前屏幕宽，左右留 15px 边距 */
-		this.config.maxWidth = ($win.width() as number) - 15 * 2;
-		/* icon - 图标。信息框和加载层的私有参数; 类型：number，默认：-1（信息框）/0（加载层） */
-		this.config.icon = custumSettings.type === LayerUtils.LOADING ? 0 : -1;
-		this.config.zIndex = !!this.config.zIndex ? this.config.zIndex : 1;
-		const { config } = this;
-		/* shade 会-1 */
-		this.zIndex = this.config.zIndex || 2;
-		this.type = READY.type[config.type || 0];
-		this.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
-			Number(config.type)
-		);
-		this.ismax = Boolean(config.maxmin && this.isNeedTitle);
-		this.isContentTypeObject = typeof config.content === "object";
-		console.log(this.config.content);
-		this.init();
+		this.initConfig(custumSettings)
+			.initContainerAfterInitConfig()
+			.autoPosition()
+			.autoLayerSize()
+			.addResizeListener()
+			.addOperationListener()
+			.handleAnimation();
 	}
 
 	get cptDomShade() {
@@ -1060,14 +1045,16 @@ class ClassLayer {
 			_IDLayer,
 			_IDContent
 		} = this;
-		const layerInvisibleClassName =
-			config.type === LayerUtils.TIPS ? " invisible" : "";
-		const layerTypeClassName = ` layui-layer-${type}`;
-		const layerBoderClassName =
+
+		const invisibleClassname =
+			config.type == LayerUtils.TIPS ? " invisible" : "";
+		const typeClassname = ` layui-layer-${type}`;
+		const boderClassname =
 			(config.type == 0 || config.type == 2) && !config.shade
 				? " layui-layer-border"
 				: "";
-		const layerSkinClassName = config.skin || "";
+
+		const skinClassname = config.skin || "";
 		const classContent = [
 			LAYUI_LAYER_CONTENT,
 			config.contentClass,
@@ -1080,10 +1067,11 @@ class ClassLayer {
 		]
 			.filter(i => !!i)
 			.join(" ");
+
 		return `
 <div id="${_IDLayer}"
 		type="${type}"
-		class="flex vertical ${LAYUI_LAYER}${layerTypeClassName}${layerInvisibleClassName}${layerBoderClassName}${layerSkinClassName}" 
+		class="flex vertical ${LAYUI_LAYER}${typeClassname}${invisibleClassname}${boderClassname}${skinClassname}" 
 		times="${_layerIndex}"
 		data-during-time="${config.during}"
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
@@ -1108,12 +1096,41 @@ class ClassLayer {
 		);
 	}
 
-	init() {
-		/* 创建骨架 */
-		var layerInstance = this;
-		const { config, _IDContent, content, isContentTypeObject } = layerInstance;
-		/* 提供了ID，首先弹出layer 再替换content */
-		if (config.id && $("#" + config.id)[0]) return;
+	initConfig(custumSettings: i_layerOptions) {
+		const layerInstance = this;
+		layerInstance.config = Object.assign(
+			layerInstance.config,
+			READY.config,
+			custumSettings
+		);
+		/* icon - 图标。信息框和加载层的私有参数; 类型：number，默认：-1（信息框）/0（加载层） */
+		layerInstance.config.icon =
+			custumSettings.type === LayerUtils.LOADING ? 0 : -1;
+		/* 初始最大宽度：当前屏幕宽，左右留 15px 边距 */
+		layerInstance.config.maxWidth = ($win.width() as number) - 15 * 2;
+		layerInstance.config.zIndex = !!layerInstance.config.zIndex
+			? layerInstance.config.zIndex
+			: 1;
+
+		const { config } = layerInstance;
+		/* 随layer 的增减变动 */
+		layerInstance._layerIndex = ++LayerUtils.index;
+		layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerIndex}`;
+		layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerIndex}`;
+		layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerIndex}`;
+
+		/* shade 会-1 */
+		layerInstance.zIndex = layerInstance.config.zIndex || 2;
+		layerInstance.type = READY.type[config.type || 0];
+		layerInstance.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
+			Number(config.type)
+		);
+		layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
+		layerInstance.isContentTypeObject = typeof config.content === "object";
+
+		console.log(layerInstance.config.content);
+		const { isContentTypeObject } = layerInstance;
+
 		if (typeof config.area === "string") {
 			config.area = config.area === "auto" ? ["", ""] : [config.area, ""];
 		}
@@ -1127,12 +1144,12 @@ class ClassLayer {
 			config.fixed = false;
 		}
 
-		switch (config.type) {
-			case LayerUtils.MSG:
+		const processContentStrategy = {
+			[LayerUtils.MSG]() {
 				config.btn = "btn" in config ? config.btn : READY.btn[0];
 				LayerUtils.closeAll("dialog");
-				break;
-			case LayerUtils.IFRAME: {
+			},
+			[LayerUtils.IFRAME]() {
 				let scrolling = "auto";
 				let src = "";
 				if (isContentTypeObject) {
@@ -1144,23 +1161,21 @@ class ClassLayer {
 
 				config.content = `
 <iframe class="layui-layer-load" 
-	scrolling="${scrolling}" 
-	src="${src}"
-	allowtransparency="true"
-	onload="this.className=''" 
-	style="height:100%;" 
-	frameborder="0">
+		scrolling="${scrolling}" 
+		src="${src}"
+		allowtransparency="true"
+		onload="this.className=''" 
+		style="height:100%;" 
+		frameborder="0">
 </iframe>`;
-				break;
-			}
-			case LayerUtils.LOADING: {
+			},
+			[LayerUtils.LOADING]() {
 				delete config.title;
 				delete config.closeBtn;
 				config.icon === -1 && config.icon === 0;
 				LayerUtils.closeAll("loading");
-				break;
-			}
-			case LayerUtils.TIPS: {
+			},
+			[LayerUtils.TIPS]() {
 				if (!isContentTypeObject) {
 					config.content = [config.content, "body"];
 				}
@@ -1172,22 +1187,18 @@ class ClassLayer {
 				config.tips =
 					typeof config.tips === "object" ? config.tips : [config.tips, true];
 				config.tipsMore || LayerUtils.closeAll("tips");
-				break;
 			}
-		}
+		};
 
-		/* 建立容器 */
-		layerInstance.initContainer();
-		layerInstance.auto();
-		/* 遮罩 */
-		layerInstance.$eleShade.css({
-			"background-color": config.shade[1] || "#000",
-			opacity: config.shade[0] || config.shade
-		});
-		/* IE6 bug */
-		if (config.type == LayerUtils.IFRAME && LayerUtils.ie == 6) {
-			layerInstance.$eleLayer.find("iframe").attr("src", content[0]);
-		}
+		const processContentFn = processContentStrategy[config.type as any];
+		processContentFn && processContentFn();
+
+		return layerInstance;
+	}
+
+	autoLayerSize() {
+		const layerInstance = this;
+		const { config } = layerInstance;
 
 		/* 坐标自适应浏览器窗口尺寸 */
 		if (config.type == LayerUtils.TIPS) {
@@ -1212,9 +1223,12 @@ class ClassLayer {
 		if (config.fixed) {
 			$win.on("resize", function () {
 				layerInstance.offset();
-				(/^\d+%$/.test(config.area[0]) || /^\d+%$/.test(config.area[1])) &&
-					layerInstance.auto();
-				config.type == 4 && layerInstance.tips();
+				if (/^\d+%$/.test(config.area[0]) || /^\d+%$/.test(config.area[1])) {
+					layerInstance.autoPosition();
+				}
+				if (config.type == LayerUtils.tips) {
+					layerInstance.tips();
+				}
 			});
 		}
 
@@ -1224,9 +1238,13 @@ class ClassLayer {
 			}, config.during);
 		}
 
-		layerInstance.move().callback();
+		return layerInstance;
+	}
 
+	handleAnimation() {
 		/* 为兼容jQuery3.0的css动画影响元素尺寸计算 */
+		const layerInstance = this;
+		const { config } = layerInstance;
 		if (DOMS_ANIM[config.anim]) {
 			var animClass = "layer-anim " + DOMS_ANIM[config.anim];
 			layerInstance.$eleLayer
@@ -1242,9 +1260,10 @@ class ClassLayer {
 		if (config.isOutAnim) {
 			layerInstance.$eleLayer.data("isOutAnim", true);
 		}
+		return layerInstance;
 	}
 
-	initContainer() {
+	initContainerAfterInitConfig() {
 		/* 容器 */
 		var layerInstance = this;
 		const { config, isContentTypeObject, _layerIndex, _IDLayer, _IDShade } =
@@ -1277,10 +1296,22 @@ class ClassLayer {
 		if (!config.scrollbar) {
 			$html.css("overflow", "hidden").attr("layer-full", _layerIndex);
 		}
+
+		/* 遮罩 */
+		layerInstance.$eleShade.css({
+			"background-color": config.shade[1] || "#000",
+			opacity: config.shade[0] || config.shade
+		});
+
+		/* IE6 bug */
+		if (config.type == LayerUtils.IFRAME && LayerUtils.ie == 6) {
+			layerInstance.$eleLayer.find("iframe").attr("src", content[0]);
+		}
+
 		return layerInstance;
 	}
 
-	auto() {
+	autoPosition() {
 		/* 自适应 */
 		var layerInstance = this;
 		const { $eleLayer, config } = layerInstance;
@@ -1328,6 +1359,7 @@ class ClassLayer {
 				break;
 			}
 		}
+
 		return layerInstance;
 	}
 
@@ -1398,6 +1430,7 @@ class ClassLayer {
 			top: layerInstance.offsetTop,
 			left: layerInstance.offsetLeft
 		});
+		return layerInstance;
 	}
 
 	async tips() {
@@ -1510,7 +1543,7 @@ class ClassLayer {
 		$eleLayer.removeClass("invisible");
 	}
 
-	move() {
+	addResizeListener() {
 		/* 拖拽层 */
 		var layerInstance = this,
 			config = layerInstance.config,
@@ -1594,14 +1627,13 @@ class ClassLayer {
 		return layerInstance;
 	}
 
-	callback() {
-		/* CALLBACK */
-		var layerInstance = this,
-			$eleLayer = layerInstance.$eleLayer,
-			config = layerInstance.config;
+	addOperationListener() {
+		const layerInstance = this;
+		const { $eleLayer, config } = layerInstance;
+
 		layerInstance.openLayer();
 		if (config.success) {
-			if (config.type == 2) {
+			if (config.type == LayerUtils.IFRAME) {
 				$eleLayer.find("iframe").on("load", function () {
 					config.success.call(this, $eleLayer, layerInstance._layerIndex);
 				});
@@ -1609,7 +1641,10 @@ class ClassLayer {
 				config.success($eleLayer, layerInstance._layerIndex);
 			}
 		}
-		LayerUtils.ie == 6 && layerInstance.IE6($eleLayer);
+
+		if (LayerUtils.ie == 6) {
+			layerInstance.IE6($eleLayer);
+		}
 		/* 按钮 */
 		$eleLayer
 			.find(`.${LAYUI_LAYER_CONTENT}`)
@@ -1653,7 +1688,6 @@ class ClassLayer {
 				LayerUtils.close(layerInstance._layerIndex);
 			});
 		}
-
 		/* 最小化 */
 		$eleLayer.find(".layui-layer-min").on("click", function () {
 			var min = config.min && config.min($eleLayer, layerInstance._layerIndex);
@@ -1672,6 +1706,7 @@ class ClassLayer {
 			}
 		});
 		config.end && (READY.end[layerInstance._layerIndex] = config.end);
+		return layerInstance;
 	}
 
 	IE6($eleLayer) {
@@ -1690,7 +1725,6 @@ class ClassLayer {
 			sthis = null;
 		});
 	}
-
 	openLayer() {
 		/* 需依赖原型的对外方法 */
 		var layerInstance = this;
