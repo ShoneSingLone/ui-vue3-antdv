@@ -128,8 +128,14 @@ function inVisibleArea(followId: string) {
 function closeTips(followId: string, options = {}) {
 	delete visibleArea[followId];
 	timer4CloseTips[followId] = setTimeout(() => {
-		LayerUtils.close(popverIndexCollection[followId] as number);
-		delete popverIndexCollection[followId];
+		const layerIndex = popverIndexCollection[followId];
+		if (typeof layerIndex === "number") {
+			LayerUtils
+				.close(layerIndex)
+				.then(() => {
+					delete popverIndexCollection[followId];
+				});
+		}
 	}, TIMEOUT_DELAY);
 }
 

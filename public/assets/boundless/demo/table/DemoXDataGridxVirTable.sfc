@@ -6,33 +6,32 @@
 				<aRadioButton value="many">多选</aRadioButton>
 				<aRadioButton value="one">单选</aRadioButton>
 			</aRadioGroup>
-			<span class="ml10 flex1" style="overflow:auto;">
+			<span class="ml10 flex1" style="overflow: auto">
 				已选择：
-				{{JSON.stringify(this.configs_xVirTable.selected)}}
+				{{ JSON.stringify(this.configs_xVirTable.selected) }}
 			</span>
 		</div>
 		<div>
 			<div class="flex mt10 middle">
 				<span>总记录数：</span>
-				<aInputNumber
-					id="inputNumber"
-					v-model:value="total"
-					:min="0" />
+				<aInputNumber id="inputNumber" v-model:value="total" :min="0" />
 			</div>
 			10000 以内，性能问题不大
-			<div>
-				增加行高，可以减少viewport内的行数，起到减少计算总量的作用
-			</div>
+			<div>增加行高，可以减少viewport内的行数，起到减少计算总量的作用</div>
 			<div class="flex middle mt10">
 				<span>行高：</span>
-				<aInputNumber id="inputNumber" v-model:value="configs_xVirTable.rowHeight" :min="32" :max="100" />
+				<aInputNumber
+					id="inputNumber"
+					v-model:value="configs_xVirTable.rowHeight"
+					:min="32"
+					:max="100" />
 			</div>
 		</div>
 	</div>
 	<div>
 		{{ filter.status }}
 	</div>
-	<div style="width:100%;height:300px;">
+	<div style="width: 100%; height: 300px">
 		<xVirTable :configs="configs_xVirTable" />
 	</div>
 </template>
@@ -48,7 +47,8 @@ async function sfc({
 	compileVNode,
 	defineXVirTableConfigs,
 	defCol,
-	Utils }) {
+	Utils
+}) {
 	const { $t } = State_UI;
 
 	const OPTIONS = [
@@ -64,10 +64,10 @@ async function sfc({
 
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
-		setup() { },
+		setup() {},
 		data(vm) {
 			return {
-				dataSource:[],
+				dataSource: [],
 				total: 9999,
 				filter: {
 					status: []
@@ -96,21 +96,23 @@ async function sfc({
 							prop: "status",
 							label: vm.$t("状态").label,
 							renderHeader({ label, index }) {
-								return compileVNode(`<aSelect v-model:value="filter.status" mode="multiple" style="width: 100%" placeholder="类型" max-tag-count="1" :options="OPTIONS" allowClear />`,
+								return compileVNode(
+									`<aSelect v-model:value="filter.status" mode="multiple" style="width: 100%" placeholder="类型" max-tag-count="1" :options="OPTIONS" allowClear />`,
 									{
 										OPTIONS,
-										filter: new Proxy({},{
-											get(obj,prop){
-												return vm.filter.status
-											},
-											set(obj,prop,val){
-												vm.filter.status=val;
-												return true;
-												
-											},
-										})
-									});
-							},
+										filter: new Proxy(
+											{},
+											{
+												get: () => vm.filter.status,
+												set(obj, prop, val) {
+													vm.filter.status = val;
+													return true;
+												}
+											}
+										)
+									}
+								);
+							}
 						}),
 						...defCol({
 							prop: "capacity",
@@ -120,18 +122,26 @@ async function sfc({
 							prop: "capacity_editor",
 							label: vm.$t("总容量输入框").label,
 							renderCell({ record, cell }) {
-								return compileVNode(`{{key}}<aInput v-model:value="record.capacity" :key="key"/>`, {
-									key:record._index,
-									record: new Proxy(record, {
-										get(obj, prop) {
-											return obj.capacity;
-										},
-										set(obj, prop, val) {
-											vm.configs_xVirTable.dataSource[obj._index].capacity = val;
-											return true;
-										}
-									})
-								});
+								return compileVNode(
+									`{{key}}<aInput v-model:value="record.capacity" :key="key"/>`,
+									{
+										key: record._index,
+										record: new Proxy(record, {
+											get: obj => obj.capacity,
+											set(obj, prop, val) {
+												const currentItemIndex = _.findIndex(
+													vm.configs_xVirTable.dataSource,
+													{ _index: obj._index }
+												);
+												/* TODO: 主要是Boundless模式下 `compileVNode` 没有做成响应式，目前这个写法有点尴尬，暂时没想好怎么处理 */
+												vm.configs_xVirTable.dataSource[
+													currentItemIndex
+												].capacity = val;
+												return true;
+											}
+										})
+									}
+								);
 							}
 						}),
 						...defCol({
@@ -154,9 +164,12 @@ async function sfc({
 							label: vm.$t("提示").label,
 							width: "200px",
 							renderCell({ record }) {
-								return compileVNode(`<div class="ellipsis" v-uiPopover="{ onlyEllipsis: true }"> {{upperName}} </div>`, {
-									upperName: record.upperName
-								});
+								return compileVNode(
+									`<div class="ellipsis" v-uiPopover="{ onlyEllipsis: true }"> {{upperName}} </div>`,
+									{
+										upperName: record.upperName
+									}
+								);
 							}
 						}),
 						...defCol({
@@ -175,52 +188,55 @@ async function sfc({
 			};
 		},
 		watch: {
-			filter:{
-				deep:true,
+			filter: {
+				deep: true,
 				immediate: true,
-				handler(){
+				handler() {
 					this.updateData();
 				}
 			},
 			total: {
 				immediate: true,
-				handler(total){
+				handler(total) {
 					this.genNewData(total);
 				}
 			}
 		},
 		methods: {
-			updateData:_.debounce(function(){
-					if(_.isArrayFill(this.filter.status)){
-						this.configs_xVirTable.dataSource = _.filter(this.dataSource,i=>this.filter.status.includes(i.status))
-					}else{
-						this.configs_xVirTable.dataSource = this.dataSource;
-					}
-			},300),
-			genNewData:_.debounce(function (total) {
-					this.configs_xVirTable.selected = [];
-					this.filter.status = [];
-					this.dataSource = [...new Array(total)].map(
-						(i, ii) => {
-							let upperName = ii + " 正常显示";
-							if (ii % 5 === 0) {
-								upperName = ii + " v-uiPopover={{ onlyEllipsis: true }}。 有省略号才显示tips。 category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" + ii;
-							}
-							return {
-								upperName,
-								id: ii,
-								_index:ii,
-								capacity: ii,
-								name: "name" + ii,
-								status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",
-								select: ["ACTIVATION"],
-								category: "category" + ii,
-								startDate: Date.now(),
-								endDate: Date.now()
-							};
-						}
+			updateData: _.debounce(function () {
+				if (_.isArrayFill(this.filter.status)) {
+					this.configs_xVirTable.dataSource = _.filter(this.dataSource, i =>
+						this.filter.status.includes(i.status)
 					);
-				}, 1000)
+				} else {
+					this.configs_xVirTable.dataSource = this.dataSource;
+				}
+			}, 300),
+			genNewData: _.debounce(function (total) {
+				this.configs_xVirTable.selected = [];
+				this.filter.status = [];
+				this.dataSource = [...new Array(total)].map((i, ii) => {
+					let upperName = ii + " 正常显示";
+					if (ii % 5 === 0) {
+						upperName =
+							ii +
+							" v-uiPopover={{ onlyEllipsis: true }}。 有省略号才显示tips。 category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" +
+							ii;
+					}
+					return {
+						upperName,
+						id: ii,
+						_index: ii,
+						capacity: ii,
+						name: "name" + ii,
+						status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",
+						select: ["ACTIVATION"],
+						category: "category" + ii,
+						startDate: Date.now(),
+						endDate: Date.now()
+					};
+				});
+			}, 1000)
 		}
 	});
 }

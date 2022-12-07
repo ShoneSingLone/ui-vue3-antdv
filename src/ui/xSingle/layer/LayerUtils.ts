@@ -39,17 +39,17 @@ const READY = {
 		var jsPath = document.currentScript
 			? document.currentScript.src
 			: (function () {
-					var js = document.scripts,
-						last = js.length - 1,
-						src;
-					for (var i = last; i > 0; i--) {
-						if (js[i].readyState === "interactive") {
-							src = js[i].src;
-							break;
-						}
+				var js = document.scripts,
+					last = js.length - 1,
+					src;
+				for (var i = last; i > 0; i--) {
+					if (js[i].readyState === "interactive") {
+						src = js[i].src;
+						break;
 					}
-					return src || js[last].src;
-			  })();
+				}
+				return src || js[last].src;
+			})();
 		const GLOBAL = {};
 		return GLOBAL.layer_dir || jsPath.substring(0, jsPath.lastIndexOf("/") + 1);
 	})(),
@@ -107,6 +107,17 @@ const READY = {
 };
 /* 默认内置方法。 */
 const LayerUtils = {
+	/* 使用Object.defineProperty 劫持，不会实际用到，但是方便重构 */
+	lastIndex: 0,
+	/* 动态决定index，不能一直往上加，lastIndex是 indexRecordArray的最后一个元素*/
+	_indexArray: [/* 至少是1，shade是index-1 */],
+	_removeIndex(layerIndex: number) {
+		const currentIndex = _.findIndex(this._indexArray, i => i === layerIndex)
+		if (currentIndex > -1) {
+			this._indexArray.splice(currentIndex, 1);
+		}
+	},
+	/*  */
 	MSG: 0,
 	DIALOG: 1,
 	IFRAME: 2,
@@ -130,7 +141,6 @@ const LayerUtils = {
 		}
 		return 0;
 	})(),
-	index: 1,
 	path: READY.getPath,
 	config: function (options: i_layerOptions, fn) {
 		options = options || {};
@@ -203,19 +213,19 @@ const LayerUtils = {
 				},
 				isOptionsIsFunction && !READY.config.skin
 					? {
-							skin: skin + " layui-layer-hui",
-							anim: anim
-					  }
+						skin: skin + " layui-layer-hui",
+						anim: anim
+					}
 					: (function () {
-							options = options || {};
-							if (
-								options.icon === -1 ||
-								(options.icon === undefined && !READY.config.skin)
-							) {
-								options.skin = skin + " " + (options.skin || "layui-layer-hui");
-							}
-							return options;
-					  })()
+						options = options || {};
+						if (
+							options.icon === -1 ||
+							(options.icon === undefined && !READY.config.skin)
+						) {
+							options.skin = skin + " " + (options.skin || "layui-layer-hui");
+						}
+						return options;
+					})()
 			)
 		);
 	},
@@ -249,17 +259,20 @@ const LayerUtils = {
 			)
 		);
 	},
-	close(index: number) {
+	close(layerIndex: number) {
+		if (layerIndex <= 0) {
+			return Promise.reject()
+		}
 		return new Promise((resolve, reject) => {
 			try {
 				/* 关闭layer核心方法 */
-				var $eleLayer = $(`#${LAYUI_LAYER}${index}`);
+				var $eleLayer = $(`#${LAYUI_LAYER}${layerIndex}`);
 				var type = $eleLayer.attr("type");
 				var closeAnim = "layer-anim-close";
 				if ($eleLayer.length === 0) {
 					return;
 				}
-				function remove() {
+				function removeLayerDomFromHtml() {
 					if (
 						type === "dialog" &&
 						$eleLayer.attr("data-content-type") === "object"
@@ -269,11 +282,11 @@ const LayerUtils = {
 						/* 低版本IE 回收 iframe */
 						if (type === READY.type[2]) {
 							try {
-								var iframe = $(`#${LAYUI_LAYER_CONTENT}${index}`)[0];
+								var iframe = $(`#${LAYUI_LAYER_CONTENT}${layerIndex}`)[0];
 								iframe.contentWindow.document.write("");
 								iframe.contentWindow.close();
 								$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
-							} catch (e) {}
+							} catch (e) { }
 						}
 					}
 
@@ -281,8 +294,8 @@ const LayerUtils = {
 					$eleLayer.remove();
 
 					try {
-						READY.end[index] && READY.end[index]();
-						delete READY.end[index];
+						READY.end[layerIndex] && READY.end[layerIndex]();
+						delete READY.end[layerIndex];
 					} catch (e) {
 						/* end就是beforeUnmount 的回调函数，如果有，就执行 */
 					}
@@ -291,15 +304,16 @@ const LayerUtils = {
 					$eleLayer.addClass("layer-anim " + closeAnim);
 				}
 
-				$(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${index}`).remove();
+				$(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerIndex}`).remove();
 				LayerUtils.ie == 6 && READY.reselect();
-				READY.rescollbar(index);
+				READY.rescollbar(layerIndex);
 				if ($eleLayer.attr("minLeft")) {
 					READY.minIndex--;
 					READY.minLeft.push($eleLayer.attr("minLeft"));
 				}
 				setTimeout(function () {
-					remove();
+					removeLayerDomFromHtml();
+					LayerUtils._removeIndex(layerIndex);
 					resolve(true);
 				}, 200);
 			} catch (error) {
@@ -315,8 +329,8 @@ const LayerUtils = {
 		if (!options.photos) return;
 		/* 若 photos 并非选择器或 jQuery 对象，则为普通 object */
 		var isObject = !(
-				typeof options.photos === "string" || options.photos instanceof $
-			),
+			typeof options.photos === "string" || options.photos instanceof $
+		),
 			photos = isObject ? options.photos : {},
 			data = photos.data || [],
 			start = photos.start || 0;
@@ -643,9 +657,8 @@ const LayerUtils = {
 		var content =
 			options.formType == 2
 				? `<textarea class="layui-layer-input" ${style}></textarea>`
-				: `<input type="${
-						options.formType === 1 ? "password" : "text"
-				  }" class="layui-layer-input">`;
+				: `<input type="${options.formType === 1 ? "password" : "text"
+				}" class="layui-layer-input">`;
 		var success = options.success;
 		delete options.success;
 		return LayerUtils.open(
@@ -669,8 +682,8 @@ const LayerUtils = {
 						} else if (value.length > (options.maxlength || 500)) {
 							LayerUtils.tips(
 								"&#x6700;&#x591A;&#x8F93;&#x5165;" +
-									(options.maxlength || 500) +
-									"&#x4E2A;&#x5B57;&#x6570;",
+								(options.maxlength || 500) +
+								"&#x4E2A;&#x5B57;&#x6570;",
 								prompt,
 								{
 									tips: 1
@@ -851,7 +864,7 @@ const LayerUtils = {
 	},
 	title(name, index) {
 		/* 改变title */
-		var $title = $("#" + LAYUI_LAYER + (index || LayerUtils.index)).find(
+		var $title = $("#" + LAYUI_LAYER + (index || LayerUtils.lastIndex)).find(
 			`.${LAYUI_LAYER_TITLE}`
 		);
 		$title.html(name);
@@ -876,6 +889,29 @@ const LayerUtils = {
 		if (domsElem.length === 0) typeof callback === "function" && callback();
 	}
 };
+
+
+Object.defineProperty(LayerUtils, "lastIndex", {
+	get() {
+		const lastIndex = _.last(LayerUtils._indexArray);
+		console.log("get", lastIndex);
+		if (lastIndex) {
+			return lastIndex
+		} else {
+			(LayerUtils._indexArray as number[]) = [1];
+			return 1;
+		}
+	},
+	set(newIndex) {
+		const lastIndex = _.last(LayerUtils._indexArray);
+		console.log("set", lastIndex, LayerUtils._indexArray);
+		if (lastIndex) {
+			(LayerUtils._indexArray as number[]).push((newIndex as number))
+		} else {
+			return
+		}
+	}
+})
 
 class ClassLayer {
 	/* 在 constructor 和 init方法里面完成 init */
@@ -930,9 +966,9 @@ class ClassLayer {
 
 	constructor(custumSettings: i_layerOptions) {
 		this.initConfig(custumSettings)
-			.initContainerAfterInitConfig()
-			.autoPosition()
-			.autoLayerSize()
+			.insertContainerAfterInitConfig()
+			.setPosition()
+			.setLayerSize()
 			.addResizeListener()
 			.addOperationListener()
 			.handleAnimation();
@@ -943,13 +979,12 @@ class ClassLayer {
 		if (!config.shade) {
 			return "";
 		}
-		return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${
-			this.zIndex - 1
-		};"></div>`;
+		return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${this.zIndex - 1
+			};"></div>`;
 	}
 
 	get cptDomTitle() {
-		const { config } = this;
+		const { config, _IDLayer } = this;
 
 		if (this.isContentTypeObject && !this.isNeedTitle) {
 			return "";
@@ -960,7 +995,7 @@ class ClassLayer {
 			config.title = [String(config.title), ""];
 		}
 		const [title, styleString]: any = config.title || ["", ""];
-		return `<div class="layui-layer-title" style="${styleString}"> ${title} </div >`;
+		return `<div class="${LAYUI_LAYER_TITLE}" style="${styleString}" data-layer-id="${_IDLayer}"> ${title} </div >`;
 	}
 
 	get cptDomIcon() {
@@ -992,8 +1027,8 @@ class ClassLayer {
 						(config.title
 							? config.closeBtn
 							: config.type == LayerUtils.TIPS
-							? "1"
-							: "2") +
+								? "1"
+								: "2") +
 						'" href="javascript:;"></a>';
 				}
 				return closebtn;
@@ -1024,9 +1059,8 @@ class ClassLayer {
 				},
 				""
 			);
-			return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${
-				config.btnAlign || ""
-			}">${domButtons}</div>`;
+			return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${config.btnAlign || ""
+				}">${domButtons}</div>`;
 		}
 		return "";
 	}
@@ -1069,7 +1103,9 @@ class ClassLayer {
 			.join(" ");
 
 		return `
-<div id="${_IDLayer}"
+<div id="${_IDLayer}" 
+		data-is-top-layer="${_IDLayer}"
+		data-z-index="${zIndex}"
 		type="${type}"
 		class="flex vertical ${LAYUI_LAYER}${typeClassname}${invisibleClassname}${boderClassname}${skinClassname}" 
 		times="${_layerIndex}"
@@ -1114,7 +1150,7 @@ class ClassLayer {
 
 		const { config } = layerInstance;
 		/* 随layer 的增减变动 */
-		layerInstance._layerIndex = ++LayerUtils.index;
+		layerInstance._layerIndex = ++LayerUtils.lastIndex;
 		layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerIndex}`;
 		layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerIndex}`;
 		layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerIndex}`;
@@ -1128,7 +1164,6 @@ class ClassLayer {
 		layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
 		layerInstance.isContentTypeObject = typeof config.content === "object";
 
-		console.log(layerInstance.config.content);
 		const { isContentTypeObject } = layerInstance;
 
 		if (typeof config.area === "string") {
@@ -1196,7 +1231,7 @@ class ClassLayer {
 		return layerInstance;
 	}
 
-	autoLayerSize() {
+	setLayerSize() {
 		const layerInstance = this;
 		const { config } = layerInstance;
 
@@ -1224,7 +1259,7 @@ class ClassLayer {
 			$win.on("resize", function () {
 				layerInstance.offset();
 				if (/^\d+%$/.test(config.area[0]) || /^\d+%$/.test(config.area[1])) {
-					layerInstance.autoPosition();
+					layerInstance.setPosition();
 				}
 				if (config.type == LayerUtils.tips) {
 					layerInstance.tips();
@@ -1263,7 +1298,7 @@ class ClassLayer {
 		return layerInstance;
 	}
 
-	initContainerAfterInitConfig() {
+	insertContainerAfterInitConfig() {
 		/* 容器 */
 		var layerInstance = this;
 		const { config, isContentTypeObject, _layerIndex, _IDLayer, _IDShade } =
@@ -1311,7 +1346,7 @@ class ClassLayer {
 		return layerInstance;
 	}
 
-	autoPosition() {
+	setPosition() {
 		/* 自适应 */
 		var layerInstance = this;
 		const { $eleLayer, config } = layerInstance;
@@ -1331,9 +1366,9 @@ class ClassLayer {
 				elem = $eleLayer.find(elem);
 				elem.height(
 					area[1] -
-						titHeight -
-						btnHeight -
-						2 * (parseFloat(elem.css("padding-top")) | 0)
+					titHeight -
+					btnHeight -
+					2 * (parseFloat(elem.css("padding-top")) | 0)
 				);
 			};
 		switch (config.type) {
@@ -1746,5 +1781,28 @@ var cache = LayerUtils.cache || {};
 var skin = function (type) {
 	return cache.skin ? " " + cache.skin + " " + cache.skin + "-" + type : "";
 };
+
+/* 点击层zIndex在最上层 */
+$(document).on(
+	"click.setLayerTop",
+	`[data-is-top-layer^=${LAYUI_LAYER}]`,
+	function (event) {
+		const { currentTarget } = event;
+		const zIndexTop = (_.last(LayerUtils._indexArray as number[]) as number) + 1;
+		const $currentTarget = $(currentTarget);
+		const isCurrentLayerTop = $currentTarget.css("z-index") == String(zIndexTop);
+		if (isCurrentLayerTop) {
+			return;
+		}
+		$(`[data-is-top-layer^=${LAYUI_LAYER}]`)
+			.each(function (index, ele) {
+				const $ele = $(ele);
+				const zIndexDefault = $ele.attr("data-z-index") || "1";
+				$ele.css("z-index", zIndexDefault);
+			});
+		$currentTarget.css("z-index", zIndexTop)
+	}
+)
+
 /* 暴露模块 */
 export { LayerUtils as LayerUtils };
