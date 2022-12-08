@@ -46,8 +46,8 @@ export const setDocumentTitle = title => {
  */
 export const setCSSVariables = colors => {
 	let $cssVariables = get$cssVariables();
-	const cssContent = vUtils.map(colors, (value, prop) => `--${prop}:${value}`).join(
-		";"
-	);
+	const cssContent = vUtils
+		.map(colors, (value, prop) => `--${prop}:${value}`)
+		.join(";");
 	$cssVariables.text(`:root{${cssContent}}`);
 };

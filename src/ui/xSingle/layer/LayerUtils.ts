@@ -131,21 +131,6 @@ const READY: {
 };
 /* 默认内置方法。 */
 const LayerUtils = {
-	/* 使用Object.defineProperty 劫持，不会实际用到，但是方便重构 */
-	lastIndex: 0,
-	/* 动态决定index，不能一直往上加，lastIndex是 indexRecordArray的最后一个元素*/
-	layerIndexArray: [
-		/* 至少是1，shade是index-1 */
-	],
-	removeIndexFromLayerIndexArray(layerIndex: number) {
-		let currentIndex = vUtils.findIndex(
-			this.layerIndexArray,
-			i => i === layerIndex
-		);
-		if (currentIndex > -1) {
-			this.layerIndexArray.splice(currentIndex, 1);
-		}
-	},
 	setZIndex(zIndex: number) {
 		READY.page;
 		READY.zIndex = zIndex;
@@ -180,18 +165,12 @@ const LayerUtils = {
 		LayerUtils.cache = READY.config = $.extend({}, READY.config, options);
 		LayerUtils.path = READY.config.path || LayerUtils.path;
 		typeof options.extend === "string" && (options.extend = [options.extend]);
-		/* 如果设置了路径，则加载样式 */
-		if (READY.config.path) LayerUtils.ready();
 		if (!options.extend) return this;
 		return this;
 	},
-	/* 主体CSS等待事件 */
-	ready(callback) {
-		return this;
-	},
 	open(options: i_layerOptions) {
-		const { _layerIndex } = new ClassLayer(options);
-		return _layerIndex;
+		const { _layerKey } = new ClassLayer(options);
+		return _layerKey;
 	},
 	/* 各种快捷引用 */
 	alert(content, options, yes) {
@@ -292,14 +271,14 @@ const LayerUtils = {
 			)
 		);
 	},
-	close(layerIndex: number) {
-		if (layerIndex <= 0) {
+	close(layerKey: string) {
+		if (!layerKey) {
 			return Promise.reject();
 		}
 		return new Promise((resolve, reject) => {
 			try {
 				/* 关闭layer核心方法 */
-				var $eleLayer = $(`#${LAYUI_LAYER}${layerIndex}`);
+				var $eleLayer = $(`#${LAYUI_LAYER}${layerKey}`);
 				var type = $eleLayer.attr("type");
 				var closeAnim = "layer-anim-close";
 				if ($eleLayer.length === 0) {
@@ -315,7 +294,7 @@ const LayerUtils = {
 						/* 低版本IE 回收 iframe */
 						if (type === TYPE_IFRAME) {
 							try {
-								var iframe = $(`#${LAYUI_LAYER_CONTENT}${layerIndex}`)[0];
+								var iframe = $(`#${LAYUI_LAYER_CONTENT}${layerKey}`)[0];
 								iframe.contentWindow.document.write("");
 								iframe.contentWindow.close();
 								$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
@@ -327,8 +306,8 @@ const LayerUtils = {
 					$eleLayer.remove();
 
 					try {
-						READY.end[layerIndex] && READY.end[layerIndex]();
-						delete READY.end[layerIndex];
+						READY.end[layerKey] && READY.end[layerKey]();
+						delete READY.end[layerKey];
 					} catch (e) {
 						/* end就是beforeUnmount 的回调函数，如果有，就执行 */
 					}
@@ -337,16 +316,15 @@ const LayerUtils = {
 					$eleLayer.addClass("layer-anim " + closeAnim);
 				}
 
-				$(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerIndex}`).remove();
+				$(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerKey}`).remove();
 				LayerUtils.ie == 6 && READY.reselect();
-				READY.rescollbar(layerIndex);
+				READY.rescollbar(layerKey);
 				if ($eleLayer.attr("minLeft")) {
 					READY.minIndex--;
 					READY.minLeft.push($eleLayer.attr("minLeft"));
 				}
 				setTimeout(function () {
 					removeLayerDomFromHtml();
-					LayerUtils.removeIndexFromLayerIndexArray(layerIndex);
 					resolve(true);
 				}, 200);
 			} catch (error) {
@@ -357,7 +335,7 @@ const LayerUtils = {
 	},
 	getChildFrame(selector, index) {
 		/* 获取子iframe的DOM */
-		index = index || $(`.${LAYUI_LAYER_CONTENT}`).attr("data-index");
+		index = index || $(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
 		return $("#" + LAYUI_LAYER + index)
 			.find("iframe")
 			.contents()
@@ -367,7 +345,7 @@ const LayerUtils = {
 		/* 得到当前iframe层的索引，子iframe时使用 */
 		return $("#" + name)
 			.parents(`.${LAYUI_LAYER_CONTENT}`)
-			.attr("data-index");
+			.attr("data-layer-key");
 	},
 	iframeAuto(index) {
 		/* iframe层自适应宽高 */
@@ -517,12 +495,9 @@ const LayerUtils = {
 			$eleLayer.find(".layui-layer-min").hide();
 		}, 100);
 	},
-	title(name, index) {
+	title(name, layerKey) {
 		/* 改变title */
-		var $title = $("#" + LAYUI_LAYER + (index || LayerUtils.lastIndex)).find(
-			`.${LAYUI_LAYER_TITLE}`
-		);
-		$title.html(name);
+		$(`#${LAYUI_LAYER}${layerKey}`).find(`.${LAYUI_LAYER_TITLE}`).html(name);
 	},
 	async closeAll(type: string) {
 		/* 关闭所有层 */
@@ -531,10 +506,10 @@ const LayerUtils = {
 			const $ele = $(this);
 			if (type) {
 				if ($ele.attr("type") === type) {
-					needClose.push($ele.attr("data-index"));
+					needClose.push($ele.attr("data-layer-key"));
 				}
 			} else {
-				needClose.push($ele.attr("data-index"));
+				needClose.push($ele.attr("data-layer-key"));
 			}
 		});
 		return await Promise.all(needClose.map(LayerUtils.close));
@@ -549,29 +524,9 @@ const LayerUtils = {
 	}
 };
 
-Object.defineProperty(LayerUtils, "lastIndex", {
-	get() {
-		const lastIndex = vUtils.last(LayerUtils.layerIndexArray);
-		if (lastIndex) {
-			return lastIndex;
-		} else {
-			(LayerUtils.layerIndexArray as number[]) = [1];
-			return 1;
-		}
-	},
-	set(newIndex) {
-		const lastIndex = vUtils.last(LayerUtils.layerIndexArray);
-		if (lastIndex) {
-			(LayerUtils.layerIndexArray as number[]).push(newIndex as number);
-		} else {
-			return;
-		}
-	}
-});
-
 class ClassLayer {
 	/* 在 constructor 和 init方法里面完成 init */
-	_layerIndex = 0;
+	_layerKey = 0;
 	_IDLayer = LAYUI_LAYER;
 	_IDShade = LAYUI_LAYER_SHADE;
 	_IDContent = LAYUI_LAYER_CONTENT;
@@ -622,11 +577,8 @@ class ClassLayer {
 
 	constructor(custumSettings: i_layerOptions) {
 		this.initConfig(custumSettings)
-			.insertContainerAfterInitConfig()
-			.setPosition()
-			.setLayerSize()
-			.onMoveOrResize()
-			.addOperationListener()
+			.insertLayer()
+			.addLayerListener()
 			.handleAnimation();
 	}
 
@@ -733,7 +685,7 @@ class ClassLayer {
 			typeName,
 			isContentTypeObject,
 			zIndex,
-			_layerIndex,
+			_layerKey,
 			_IDLayer,
 			_IDContent
 		} = this;
@@ -778,7 +730,7 @@ class ClassLayer {
 <div id="${_IDLayer}" layer-wrapper="${_IDLayer}" type="${typeName}"
 		class="${layerWrapperClassname}" 
 		data-z-index="${zIndex}"
-		data-index="${_layerIndex}"
+		data-layer-key="${_layerKey}"
 		data-during-time="${config.during}"
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
 		style="position:fixed;
@@ -814,10 +766,10 @@ class ClassLayer {
 
 		const { config } = layerInstance;
 		/* 随layer 的增减变动 */
-		layerInstance._layerIndex = ++LayerUtils.lastIndex;
-		layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerIndex}`;
-		layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerIndex}`;
-		layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerIndex}`;
+		layerInstance._layerKey = vUtils.genId("");
+		layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
+		layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerKey}`;
+		layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerKey}`;
 
 		/* shade 会-1 */
 		layerInstance.zIndex =
@@ -897,16 +849,21 @@ class ClassLayer {
 		return layerInstance;
 	}
 
-	setLayerSize() {
+	async setLayerPosition() {
+		await vUtils.sleep(34);
 		const layerInstance = this;
-		const { config } = layerInstance;
-		layerInstance.offset();
+		const { config, _layerKey } = layerInstance;
 		/* 首次弹出时，若 css 尚未加载，则等待 css 加载完毕后，重新设定尺寸 */
-		layerInstance.$eleLayer.css("visibility", "hidden");
-		LayerUtils.ready(function () {
-			layerInstance.offset();
-			layerInstance.$eleLayer.css("visibility", "visible");
-		});
+		layerInstance.offset();
+		if (config.type === LayerUtils.TIPS) {
+			layerInstance.setTips();
+		}
+		layerInstance.$eleLayer.css("visibility", "visible");
+		if (config.fullscreen) {
+			setTimeout(() => {
+				LayerUtils.full(_layerKey);
+			}, 400);
+		}
 
 		/* 如果是固定定位 */
 		if (config.fixed) {
@@ -916,16 +873,18 @@ class ClassLayer {
 					layerInstance.setPosition();
 				}
 				if (config.type == LayerUtils.tips) {
-					layerInstance.tips();
+					layerInstance.setTips();
 				}
 			});
 		}
 
 		if (typeof config.during === "number" && config.during > 0) {
 			setTimeout(function () {
-				LayerUtils.close(layerInstance._layerIndex);
+				LayerUtils.close(layerInstance._layerKey);
 			}, config.during);
 		}
+		/* 最后至于最上层 */
+		LayerUtils.setLayerTop(layerInstance.$eleLayer);
 
 		return layerInstance;
 	}
@@ -952,108 +911,47 @@ class ClassLayer {
 		return layerInstance;
 	}
 
-	insertContainerAfterInitConfig() {
+	insertLayer() {
 		/* 容器 */
 		const layerInstance = this;
+		/* moving 的遮罩是单例 */
 		if (!READY.$moveMask) {
 			READY.$moveMask = $(layerInstance.cptDomMoveMask);
 			$body.append(READY.$moveMask);
 		}
-		const { config, isContentTypeObject, _layerIndex, _IDLayer, _IDShade } =
-			layerInstance;
-		$body.append(layerInstance.cptDomShade);
-		if (isContentTypeObject) {
-			if ([LayerUtils.IFRAME].includes(config.type || 0)) {
-				$body.append(layerInstance.cptDomContainer);
-			} else if ([LayerUtils.TIPS].includes(config.type || 0)) {
-				layerInstance.tips();
-			} else {
-				const $content = $(config.content);
-				const _$layerWrapper = $content.parents(`.${LAYUI_LAYER}`);
-				if (_$layerWrapper.length === 0) {
-					const $container = $(layerInstance.cptDomContainer);
-					$content.replaceWith($container);
-					$container.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
-				}
-			}
-		} else {
-			$body.append(layerInstance.cptDomContainer);
+		const { config, _layerKey, _IDShade } = layerInstance;
+		layerInstance.$eleLayer = $(layerInstance.cptDomContainer);
+		/*  */
+		if (
+			vUtils.isObject(config.content) &&
+			(vUtils.isString(config.content) ||
+				vUtils.isString(config.content.jquery))
+		) {
+			const $content = $(config.content);
+			layerInstance.$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
 		}
-
-		layerInstance.$eleLayer = $(`#${_IDLayer}`);
-		layerInstance.$eleShade = $(`#${_IDShade}`);
-		if (!config.scrollbar) {
-			$html.css("overflow", "hidden").attr("layer-full", _layerIndex);
-		}
-
-		/* 最后一个 */
-		LayerUtils.setLayerTop(layerInstance.$eleLayer);
-
-		/* 遮罩 */
-		layerInstance.$eleShade.css({
-			"background-color": config.shade[1] || "#000",
-			opacity: config.shade[0] || config.shade
+		layerInstance.$eleLayer.css({
+			visibility: "hidden",
+			top: "100%",
+			left: "100%"
 		});
+		$body.append(layerInstance.$eleLayer);
 
-		/* IE6 bug */
-		if (config.type == LayerUtils.IFRAME && LayerUtils.ie == 6) {
-			layerInstance.$eleLayer.find("iframe").attr("src", content[0]);
+		/* 当前实例的遮罩 */
+		if (layerInstance.cptDomShade) {
+			$body.append(layerInstance.cptDomShade);
+			layerInstance.$eleShade = $(`#${_IDShade}`);
+			layerInstance.$eleShade.css({
+				"background-color": config.shade[1] || "#000",
+				opacity: config.shade[0] || config.shade
+			});
 		}
 
-		return layerInstance;
-	}
-
-	setPosition() {
-		/* 自适应 */
-		var layerInstance = this;
-		const { $eleLayer, config, _layerIndex } = layerInstance;
-		if (config.area[0] === "" && config.maxWidth > 0) {
-			/* 为了修复IE7下一个让人难以理解的bug */
-			if (LayerUtils.ie && LayerUtils.ie < 8 && config.btn) {
-				$eleLayer.width($eleLayer.innerWidth());
-			}
-			$eleLayer.outerWidth() > config.maxWidth &&
-				$eleLayer.width(config.maxWidth);
+		if (!config.scrollbar) {
+			$html.css("overflow", "hidden").attr("layer-full", _layerKey);
 		}
 
-		var area = [$eleLayer.innerWidth(), $eleLayer.innerHeight()],
-			titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0,
-			btnHeight = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0,
-			setHeight = function (elem) {
-				elem = $eleLayer.find(elem);
-				elem.height(
-					area[1] -
-						titHeight -
-						btnHeight -
-						2 * (parseFloat(elem.css("padding-top")) | 0)
-				);
-			};
-		switch (config.type) {
-			case LayerUtils.IFRAME: {
-				if (config.fullscreen) {
-					LayerUtils.full(_layerIndex);
-				}
-				break;
-			}
-			default: {
-				if (config.area[1] === "") {
-					if (
-						config.maxHeight > 0 &&
-						$eleLayer.outerHeight() > config.maxHeight
-					) {
-						area[1] = config.maxHeight;
-						setHeight(`.${LAYUI_LAYER_IFRAME}`);
-					} else if (config.fixed && area[1] >= $win.height()) {
-						area[1] = $win.height();
-						setHeight(`.${LAYUI_LAYER_IFRAME}`);
-					}
-				} else {
-					setHeight(`.${LAYUI_LAYER_IFRAME}`);
-				}
-				break;
-			}
-		}
-
+		layerInstance.setLayerPosition();
 		return layerInstance;
 	}
 
@@ -1128,27 +1026,10 @@ class ClassLayer {
 		return layerInstance;
 	}
 
-	async tips() {
+	async setTips() {
 		/* Tips=================470 */
 		const layerInstance = this;
 		const { config, $eleLayer } = layerInstance;
-		const { top, left } = (() => {
-			if (config.openAtPoint) {
-				return config.openAtPoint;
-			} else {
-				const $follow = $(config.follow);
-				return $follow.offset();
-			}
-		})();
-		const $domContainer = $(layerInstance.cptDomContainer).css({
-			position: "fixed",
-			top: `${top}px`,
-			left: `${left}px`
-		});
-		$body.append($domContainer);
-
-		await vUtils.sleep(1000 * 2);
-
 		const [tipsDomWidth, tipsdomHeight] = [
 			$eleLayer.outerWidth(),
 			$eleLayer.outerHeight()
@@ -1168,20 +1049,22 @@ class ClassLayer {
 			tipTop: 0,
 			tipLeft: 0
 		};
-		var tipsG = $eleLayer.find(".layui-layer-TipsG");
-		/* 1,2,3,4 */
-		const [direction, customColor]: any = config.tips || ["1", ""];
-		if (!customColor) {
-			tipsG.remove();
+		if (config.openAtPoint) {
+			const { top, left } = config.openAtPoint;
+			followInfo.top = top;
+			followInfo.left = left;
 		}
 
+		var $tipsG = $eleLayer.find(".layui-layer-TipsG");
+		/* 1,2,3,4 */
+		const [direction, customColor]: any = config.tips || ["1", ""];
 		function makeLeftAuto() {
 			/* 如果超出边界，位置需要偏移 */
 			/* 起始位置+tips宽度 比 视口 宽 */
 			if (followInfo.left + tipsDomWidth - $win.width() > 0) {
 				/* 向左偏移为超出的宽度 */
 				followInfo.tipLeft = followInfo.left + followInfo.width - tipsDomWidth;
-				tipsG.css({ right: 12, left: "auto" });
+				$tipsG.css({ right: 12, left: "auto" });
 			} else {
 				followInfo.tipLeft = followInfo.left;
 			}
@@ -1193,30 +1076,30 @@ class ClassLayer {
 				/* 上 */
 				makeLeftAuto();
 				followInfo.tipTop = followInfo.top - tipsdomHeight - 10;
-				tipsG
+				$tipsG
 					.removeClass("layui-layer-TipsB")
 					.addClass("layui-layer-TipsT")
 					.css("border-right-color", customColor);
 				followInfo.top - ($win.scrollTop() + tipsdomHeight + 8 * 2) < 0 &&
-					followInfo.where[2]();
+					direction_strategy[2]();
 			},
 			[LayerUtils.RIGHT]() {
 				/* 右 */
 				followInfo.tipLeft = followInfo.left + followInfo.width + 10;
 				followInfo.tipTop = followInfo.top;
-				tipsG
+				$tipsG
 					.removeClass("layui-layer-TipsL")
 					.addClass("layui-layer-TipsR")
 					.css("border-bottom-color", customColor);
 				$win.width() -
 					(followInfo.left + followInfo.width + tipsDomWidth + 8 * 2) >
-					0 || followInfo.where[3]();
+					0 || direction_strategy[3]();
 			},
 			[LayerUtils.BOTTOM]() {
 				/* 下 */
 				makeLeftAuto();
 				followInfo.tipTop = followInfo.top + followInfo.height + 10;
-				tipsG
+				$tipsG
 					.removeClass("layui-layer-TipsT")
 					.addClass("layui-layer-TipsB")
 					.css("border-right-color", customColor);
@@ -1226,17 +1109,17 @@ class ClassLayer {
 					tipsdomHeight +
 					8 * 2 -
 					$win.height() >
-					0 && followInfo.where[0]();
+					0 && direction_strategy[4]();
 			},
 			[LayerUtils.LEFT]() {
 				/* 左 */
 				followInfo.tipLeft = followInfo.left - tipsDomWidth - 10;
 				followInfo.tipTop = followInfo.top;
-				tipsG
+				$tipsG
 					.removeClass("layui-layer-TipsR")
 					.addClass("layui-layer-TipsL")
 					.css("border-bottom-color", customColor);
-				tipsDomWidth + 8 * 2 - followInfo.left > 0 && followInfo.where[1]();
+				tipsDomWidth + 8 * 2 - followInfo.left > 0 && direction_strategy[1]();
 			}
 		};
 
@@ -1248,10 +1131,19 @@ class ClassLayer {
 			"background-color": customColor,
 			"padding-right": config.closeBtn ? "30px" : ""
 		});
+
 		$eleLayer.css({
 			left: followInfo.tipLeft - $win.scrollLeft(),
-			top: followInfo.tipTop - $win.scrollTop()
+			top: followInfo.tipTop - $win.scrollTop(),
+			"transform-origin": [
+				$tipsG.hasClass("layui-layer-TipsT") ? "top" : "bottem",
+				$tipsG.hasClass("layui-layer-TipsL") ? "left" : "right"
+			].join(" ")
 		});
+
+		if (!customColor) {
+			$tipsG.remove();
+		}
 	}
 
 	onMoveOrResize() {
@@ -1291,23 +1183,21 @@ class ClassLayer {
 		return layerInstance;
 	}
 
-	addOperationListener() {
+	/* move resize min max close */
+	addLayerListener() {
 		const layerInstance = this;
 		const { $eleLayer, config } = layerInstance;
 
 		if (config.success) {
 			if (config.type == LayerUtils.IFRAME) {
 				$eleLayer.find("iframe").on("load", function () {
-					config.success.call(this, $eleLayer, layerInstance._layerIndex);
+					config.success.call(this, $eleLayer, layerInstance._layerKey);
 				});
 			} else {
-				config.success($eleLayer, layerInstance._layerIndex);
+				config.success($eleLayer, layerInstance._layerKey);
 			}
 		}
 
-		if (LayerUtils.ie == 6) {
-			layerInstance.IE6($eleLayer);
-		}
 		/* 按钮 */
 		$eleLayer
 			.find(`.${LAYUI_LAYER_CONTENT}`)
@@ -1316,17 +1206,17 @@ class ClassLayer {
 				var index = $(this).index();
 				if (index === 0) {
 					if (config.yes) {
-						config.yes(layerInstance._layerIndex, $eleLayer);
+						config.yes(layerInstance._layerKey, $eleLayer);
 					} else if (config["btn1"]) {
-						config["btn1"](layerInstance._layerIndex, $eleLayer);
+						config["btn1"](layerInstance._layerKey, $eleLayer);
 					} else {
-						LayerUtils.close(layerInstance._layerIndex);
+						LayerUtils.close(layerInstance._layerKey);
 					}
 				} else {
 					var close =
 						config["btn" + (index + 1)] &&
-						config["btn" + (index + 1)](layerInstance._layerIndex, $eleLayer);
-					close === false || LayerUtils.close(layerInstance._layerIndex);
+						config["btn" + (index + 1)](layerInstance._layerKey, $eleLayer);
+					close === false || LayerUtils.close(layerInstance._layerKey);
 				}
 			});
 		/* 右上角关闭回调 */
@@ -1336,10 +1226,10 @@ class ClassLayer {
 				/* 关闭 */
 				var isClosed = false;
 				if (config.cancel) {
-					isClosed = config.cancel(layerInstance._layerIndex, $eleLayer);
+					isClosed = config.cancel(layerInstance._layerKey, $eleLayer);
 				}
 				if (!isClosed) {
-					isClosed = await LayerUtils.close(layerInstance._layerIndex);
+					isClosed = await LayerUtils.close(layerInstance._layerKey);
 				}
 				if (!isClosed) {
 					await LayerUtils.close($(this).attr("data-layer-id"));
@@ -1348,52 +1238,43 @@ class ClassLayer {
 		/* 点遮罩关闭 */
 		if (config.shadeClose) {
 			layerInstance.$eleShade.on("click", function () {
-				LayerUtils.close(layerInstance._layerIndex);
+				LayerUtils.close(layerInstance._layerKey);
 			});
 		}
 		/* 最小化 */
 		$eleLayer.find(".layui-layer-min").on("click", function () {
-			var min = config.min && config.min($eleLayer, layerInstance._layerIndex);
-			min === false || LayerUtils.min(layerInstance._layerIndex, config);
+			var min = config.min && config.min($eleLayer, layerInstance._layerKey);
+			min === false || LayerUtils.min(layerInstance._layerKey, config);
 		});
 		/* 全屏/还原 */
 		$eleLayer.find(".layui-layer-max").on("click", function () {
 			if ($(this).hasClass("layui-layer-maxmin")) {
-				LayerUtils.restore(layerInstance._layerIndex);
-				config.restore && config.restore($eleLayer, layerInstance._layerIndex);
+				LayerUtils.restore(layerInstance._layerKey);
+				config.restore && config.restore($eleLayer, layerInstance._layerKey);
 			} else {
-				LayerUtils.full(layerInstance._layerIndex, config);
+				LayerUtils.full(layerInstance._layerKey, config);
 				setTimeout(function () {
-					config.full && config.full($eleLayer, layerInstance._layerIndex);
+					config.full && config.full($eleLayer, layerInstance._layerKey);
 				}, 100);
 			}
 		});
-		config.end && (READY.end[layerInstance._layerIndex] = config.end);
-		return layerInstance;
-	}
 
-	IE6($eleLayer) {
-		/* IE6 */
-		/* 隐藏select */
-		$("select").each(function (index, value) {
-			var sthis = $(this);
-			if (!sthis.parents("." + LAYUI_LAYER)[0]) {
-				sthis.css("display") === "none" ||
-					sthis
-						.attr({
-							layer: "1"
-						})
-						.hide();
-			}
-			sthis = null;
-		});
+		if (config.end) {
+			READY.end[layerInstance._layerKey] = config.end;
+		}
+
+		if (
+			![LayerUtils.TIPS, LayerUtils.MSG, LayerUtils.LOADING].includes(
+				config.type
+			)
+		) {
+			layerInstance.onMoveOrResize();
+		}
+		return layerInstance;
 	}
 }
 
 var cache = LayerUtils.cache || {};
-var skin = function (type) {
-	return cache.skin ? " " + cache.skin + " " + cache.skin + "-" + type : "";
-};
 
 /* 点击层zIndex在最上层 */
 $document

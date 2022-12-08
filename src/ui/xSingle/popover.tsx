@@ -12,11 +12,11 @@ type t_uiPopoverOptions = {
 
 const TIMEOUT_DELAY = 200;
 /* 缓存 popover 的配置信息 */
-const popverOptionsCollection: {
+const tipsOptionsCollection: {
 	[prop: string]: t_uiPopoverOptions;
 } = {};
 /**/
-const popverIndexCollection: {
+const tipsKeys: {
 	[prop: string]: Number;
 } = {};
 const appAddPlugin: any = {};
@@ -28,7 +28,7 @@ const DATA_APP_ID = "data-app-id";
 const DATA_FOLLOW_ID = "data-follow-id";
 
 function fnShowTips({ $ele, followId, appId, event }: any) {
-	const options = popverOptionsCollection[followId] || { content: "" };
+	const options = tipsOptionsCollection[followId] || { content: "" };
 	/* onlyEllipsis,content */
 	if (!options.content) {
 		/* 是不是需要判断内容有省略号 */
@@ -54,8 +54,18 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 		return;
 	}
 	let app: any;
+
+	const placement = (() => {
+		const placement_strategy = {
+			top: 1,
+			right: 2,
+			bottom: 3,
+			left: 4
+		};
+		return placement_strategy[options.placement || "top"];
+	})();
 	let layerTipsOptions: i_layerOptions = {
-		tips: [LayerUtils.UP, "#fff"],
+		tips: [placement, "#fff"],
 		/*hover 不允许 同时多个 tips出现*/
 		/*tipsMore: false,*/
 		during: 1000 * 60 * 10
@@ -90,7 +100,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 
 	setTimeout(() => {
 		if (visibleArea[followId]) {
-			popverIndexCollection[followId] = LayerUtils.tips(
+			tipsKeys[followId] = LayerUtils.tips(
 				tipsContent,
 				`#${followId}`,
 				layerTipsOptions
@@ -116,7 +126,7 @@ export function installPopoverDirective(app: any, appSettings: any) {
 				.attr(DATA_APP_ID, appId)
 				.attr(DATA_FOLLOW_ID, followId);
 			if (binding.value) {
-				popverOptionsCollection[followId] = binding.value;
+				tipsOptionsCollection[followId] = binding.value;
 				if (binding.value?.trigger) {
 					$ele.attr("data-trigger", binding.value?.trigger);
 					const classStrategy = {
@@ -132,9 +142,9 @@ export function installPopoverDirective(app: any, appSettings: any) {
 		},
 		unmounted(el: HTMLInputElement) {
 			const followId: any = $(el).attr(DATA_FOLLOW_ID);
-			LayerUtils.close(popverIndexCollection[followId] as number);
-			delete popverOptionsCollection[followId];
-			delete popverIndexCollection[followId];
+			LayerUtils.close(tipsKeys[followId] as number);
+			delete tipsOptionsCollection[followId];
+			delete visibleArea[followId];
 		}
 	});
 }
@@ -151,10 +161,11 @@ function inVisibleArea(followId: string) {
 function closeTips(followId: string, options = {}) {
 	delete visibleArea[followId];
 	timer4CloseTips[followId] = setTimeout(() => {
-		const layerIndex = popverIndexCollection[followId];
-		if (typeof layerIndex === "number") {
+		const layerIndex = tipsKeys[followId];
+		if (layerIndex) {
 			LayerUtils.close(layerIndex).then(() => {
-				delete popverIndexCollection[followId];
+				delete tipsKeys[followId];
+				delete timer4CloseTips[followId];
 			});
 		}
 	}, TIMEOUT_DELAY);
@@ -168,7 +179,7 @@ function handleClick(event) {
 	const followId = $ele.attr(DATA_FOLLOW_ID);
 	const appId = $ele.attr(DATA_APP_ID);
 	visibleArea[followId] = true;
-	if (popverIndexCollection[followId]) {
+	if (tipsKeys[followId]) {
 		closeTips(followId);
 	} else {
 		fnShowTips({ $ele, followId, appId, event });
@@ -199,7 +210,7 @@ $(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
 		const appId = $ele.attr(DATA_APP_ID);
 		inVisibleArea(followId);
 		/*如果存在，不重复添加*/
-		if (popverIndexCollection[followId]) {
+		if (tipsKeys[followId]) {
 			return;
 		}
 

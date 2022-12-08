@@ -31,7 +31,7 @@ export default {
 			configsPopoverChangeTheme: {
 				trigger: "rightClick",
 				content: MkitTheme,
-				openAtPoint: true,
+				openAtPoint: true
 			}
 		};
 	},

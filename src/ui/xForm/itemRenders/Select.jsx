@@ -2,7 +2,6 @@ import { h, resolveComponent } from "vue";
 import { EVENT_TYPE } from "../../tools/validate";
 import { vUtils } from "../../ventoseUtils";
 
-
 export default ({ property, listeners }) => {
 	const Select = resolveComponent("aSelect");
 	const SelectOption = resolveComponent("aSelectOption");

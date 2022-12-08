@@ -23,10 +23,15 @@ export default defineComponent({
 			return `xForm_${this._.uid}`;
 		},
 		labelStyleText() {
-			return vUtils.map(
-				vUtils.merge({ width: "120px", "text-align": "right" }, this.labelStyle),
-				(value, prop) => `${prop}: ${value}`
-			).join(";");
+			return vUtils
+				.map(
+					vUtils.merge(
+						{ width: "120px", "text-align": "right" },
+						this.labelStyle
+					),
+					(value, prop) => `${prop}: ${value}`
+				)
+				.join(";");
 		},
 
 		styleContent() {
@@ -62,6 +67,4 @@ export default defineComponent({
 	<!-- <form :id="xFormId" style="opacity: 0"><slot></slot></form> -->
 </template>
 
-<style>
-
-</style>
+<style></style>

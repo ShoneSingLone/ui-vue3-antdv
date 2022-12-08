@@ -187,7 +187,7 @@ const privateLodash = {
 		return obj;
 	},
 
-	safeSplit: function(target, sp) {
+	safeSplit: function (target, sp) {
 		return target?.split ? target.split(sp) : [];
 	},
 	/***
@@ -195,7 +195,7 @@ const privateLodash = {
 	 * @param val
 	 * @return {string|dayjs.Dayjs}
 	 */
-	safeDate: function(val) {
+	safeDate: function (val) {
 		if (!val) {
 			return "";
 		}
@@ -264,7 +264,7 @@ const privateLodash = {
 			return window[globalName];
 		}
 		const $style = $("<style/>").attr("id", `${asyncLoadJS}${globalName}`);
-		$style.appendTo($("body")).on("load", function() {
+		$style.appendTo($("body")).on("load", function () {
 			return window[globalName];
 		});
 		$style.attr("src", url);
@@ -272,7 +272,7 @@ const privateLodash = {
 
 	ensureValueDone: async fnGetValue => {
 		return new Promise(async resolve => {
-			let exeFnGetValue = async function() {
+			let exeFnGetValue = async function () {
 				const value = await fnGetValue();
 				if (value) {
 					exeFnGetValue = null;
@@ -299,7 +299,7 @@ const privateLodash = {
 				if (dep in seen) return;
 				seen[dep] = true;
 				const isCss = dep.endsWith(".css");
-				const cssSelector = isCss ? "[rel=\"stylesheet\"]" : "";
+				const cssSelector = isCss ? '[rel="stylesheet"]' : "";
 				if (document.querySelector(`link[href="${dep}"] ${cssSelector}`)) {
 					return;
 				}
@@ -325,7 +325,7 @@ const privateLodash = {
 	 * @param {*} url
 	 * @returns
 	 */
-	asyncLoadText: async function(url) {
+	asyncLoadText: async function (url) {
 		/* 在开发模式下App.vue 会设置这个对象 */
 		if (!window.___VENTOSE_UI_IS_DEV_MODE) {
 			const res = await idbGet(url);
@@ -356,7 +356,7 @@ const privateLodash = {
 	 * @param {*} cssname
 	 * @returns
 	 */
-	loadCss: function(cssname) {
+	loadCss: function (cssname) {
 		const cssPath = `${cssname}`;
 		let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
 		$link.appendTo($("head"));
@@ -368,7 +368,7 @@ const privateLodash = {
 		};
 	},
 
-	dateFormat: function(date, format) {
+	dateFormat: function (date, format) {
 		if (!format) {
 			format = "YYYY-MM-DD";
 		}
@@ -379,7 +379,7 @@ const privateLodash = {
 		return label === "Invalid Date" ? "--" : label;
 	},
 
-	keepDecimals: function(val, fractionDigits: 2) {
+	keepDecimals: function (val, fractionDigits: 2) {
 		let num = Number((val * 100) / 1024 / 100).toFixed(fractionDigits);
 		if (num === "NaN") {
 			num = "-";
@@ -387,7 +387,7 @@ const privateLodash = {
 		return num;
 	},
 
-	valueToLabel: function(value, options) {
+	valueToLabel: function (value, options) {
 		const target = privateLodash.find(options, {
 			value
 		});
@@ -397,7 +397,7 @@ const privateLodash = {
 			return "--";
 		}
 	},
-	timego: function(timestamp) {
+	timego: function (timestamp) {
 		let minutes, hours, days, seconds, mouth, year;
 		const timeNow = parseInt(new Date().getTime() / 1000);
 		seconds = timeNow - timestamp;

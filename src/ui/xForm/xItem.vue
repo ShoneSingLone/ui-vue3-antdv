@@ -85,7 +85,7 @@ export default defineComponent({
 		};
 
 		function initListenerHandler(prop, value) {
-			listeners[prop] = function(...args) {
+			listeners[prop] = function (...args) {
 				/* console.log("🚀", prop, listeners[prop].queue, args); */
 				vUtils.each(listeners[prop].queue, listener => {
 					listener?.apply(vm.configs, args);

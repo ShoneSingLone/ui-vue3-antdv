@@ -46,8 +46,12 @@ export const DemoAndCode = defineComponent({
 			this.isLoading = false;
 		},
 		async getBussinessComponent() {
-			this.BussinessComponentSourceCode = await vUtils.asyncLoadText(this.sfcURL);
-			const scfObjSourceCode = vUtils.VueLoader(this.BussinessComponentSourceCode);
+			this.BussinessComponentSourceCode = await vUtils.asyncLoadText(
+				this.sfcURL
+			);
+			const scfObjSourceCode = vUtils.VueLoader(
+				this.BussinessComponentSourceCode
+			);
 			this.reurn(scfObjSourceCode);
 		},
 		showSourceCodeDialog() {

@@ -12,6 +12,7 @@
     - [ ] tips
     - [ ] dialog
       - [ ] resize
+      - [ ] esc 退出最上层dialog
     - [ ] confirm
     - [ ] tips 的样式
       - [用SVG实现一个优雅的提示框](https://zhuanlan.zhihu.com/p/143876210)

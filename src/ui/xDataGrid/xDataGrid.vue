@@ -36,7 +36,9 @@ export default defineComponent({
 			columns = vUtils.map(this.Cpt_ColumnsOrder, prop =>
 				vUtils.find(this.configs.columns, { prop })
 			);
-			columns = vUtils.filter(columns, i => filterColIsShow(i?.isShow, i?.prop));
+			columns = vUtils.filter(columns, i =>
+				filterColIsShow(i?.isShow, i?.prop)
+			);
 			return columns;
 		},
 		/*列顺序 TODO:如果有排序的需求 */

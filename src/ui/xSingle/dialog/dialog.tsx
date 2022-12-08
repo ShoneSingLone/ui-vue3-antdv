@@ -29,10 +29,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 		new Promise((resolve, reject) => {
 			const { component: BussinessComponent, title, area } = dialogOptions;
 			const id = `xDialog_${Date.now()}`;
-			let $container = $("<div/>", {
-				id
-			});
-			$container.appendTo($("body"));
+			let $container = $("<div/>", { id });
 			const __elId = `#${id}`;
 			/* FIXED: */
 			if (dialogOptions.yes) {
@@ -144,7 +141,9 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 												if (this.dialogOptions.hideButtons) {
 													return null;
 												}
-												if (vUtils.isFunction(this.dialogOptions.renderButtons)) {
+												if (
+													vUtils.isFunction(this.dialogOptions.renderButtons)
+												) {
 													/* 提供 handleClickOk、handleClickCancel*/
 													let vDomButtons = (() => {
 														let _vDomButtons =

@@ -53,7 +53,7 @@ export default {
 		DemoXFormWithForm
 	},
 	methods: {
-		valid() { }
+		valid() {}
 	},
 	setup(props) {
 		return {
@@ -224,6 +224,4 @@ formData: {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,12 +1,6 @@
 <script lang="tsx">
 //@ts-nocheck
-import {
-	_,
-	UI,
-	defItem,
-	components,
-	pickValueFrom
-} from "@ventose/ui";
+import { _, UI, defItem, components, pickValueFrom } from "@ventose/ui";
 import { Alert } from "ant-design-vue";
 const { xItem } = components;
 
