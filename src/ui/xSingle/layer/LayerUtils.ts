@@ -1,4 +1,6 @@
 //@ts-nocheck
+
+/* https://www.layuiweb.com/doc/modules/layer.html#closeBtn */
 import $ from "jquery";
 import _ from "lodash";
 import { i_layerOptions } from "./i_layerOptions";
@@ -17,9 +19,15 @@ const $win = $(window);
 const $html = $("html");
 const $document = $(document);
 const $body = $("body");
-/* 缓存常用字符 */
 
+/* 缓存常用字符 */
 export const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
+const TYPE_DIALOG = "dialog";
+const TYPE_PAGE = "page";
+const TYPE_IFRAME = "iframe";
+const TYPE_LOADING = "loading";
+const TYPE_TIPS = "tips";
+/*  */
 const LAYUI_LAYER = "layui-layer";
 const LAYUI_LAYER_SHADE = "layui-layer-shade";
 const LAYUI_LAYER_MOVE = "layui-layer-move";
@@ -136,6 +144,7 @@ const LayerUtils = {
 		}
 	},
 	setZIndex(zIndex: number) {
+		READY.page;
 		READY.zIndex = zIndex;
 	},
 	/*  */
@@ -301,7 +310,7 @@ const LayerUtils = {
 						$eleLayer.children(`:not(.${LAYUI_LAYER_IFRAME})`).remove();
 					} else {
 						/* 低版本IE 回收 iframe */
-						if (type === READY.type[2]) {
+						if (type === TYPE_IFRAME) {
 							try {
 								var iframe = $(`#${LAYUI_LAYER_CONTENT}${layerIndex}`)[0];
 								iframe.contentWindow.document.write("");
@@ -338,387 +347,10 @@ const LayerUtils = {
 					resolve(true);
 				}, 200);
 			} catch (error) {
-				console.log(error);
+				console.error(error);
 				reject(false);
 			}
 		});
-	},
-	photos(options, loop, key) {
-		/* 相册层 */
-		var dict = {};
-		options = options || {};
-		if (!options.photos) return;
-		/* 若 photos 并非选择器或 jQuery 对象，则为普通 object */
-		var isObject = !(
-				typeof options.photos === "string" || options.photos instanceof $
-			),
-			photos = isObject ? options.photos : {},
-			data = photos.data || [],
-			start = photos.start || 0;
-		dict.imgIndex = (start | 0) + 1;
-		options.img = options.img || "img";
-		var success = options.success;
-		delete options.success;
-		/* 如果 options.photos 不是一个对象 */
-		if (!isObject) {
-			/* 页面直接获取 */
-			var parent = $(options.photos),
-				pushData = function () {
-					data = [];
-					parent.find(options.img).each(function (index) {
-						var othis = $(this);
-						othis.attr("layer-index", index);
-						data.push({
-							alt: othis.attr("alt"),
-							pid: othis.attr("layer-pid"),
-							src: othis.attr("layer-src") || othis.attr("src"),
-							thumb: othis.attr("src")
-						});
-					});
-				};
-			pushData();
-			if (data.length === 0) return;
-			loop ||
-				parent.on("click", options.img, function () {
-					pushData();
-					var othis = $(this),
-						index = othis.attr("layer-index");
-					LayerUtils.photos(
-						$.extend(options, {
-							photos: {
-								start: index,
-								data: data,
-								tab: options.tab
-							},
-							full: options.full
-						}),
-						true
-					);
-				});
-			/* 不直接弹出 */
-			if (!loop) return;
-		} else if (data.length === 0) {
-			return LayerUtils.msg("&#x6CA1;&#x6709;&#x56FE;&#x7247;");
-		}
-
-		/* 上一张 */
-		dict.imgprev = function (key) {
-			dict.imgIndex--;
-			if (dict.imgIndex < 1) {
-				dict.imgIndex = data.length;
-			}
-			dict.tabimg(key);
-		};
-		/* 下一张 */
-		dict.imgnext = function (key, errorMsg) {
-			dict.imgIndex++;
-			if (dict.imgIndex > data.length) {
-				dict.imgIndex = 1;
-				if (errorMsg) {
-					return;
-				}
-			}
-			dict.tabimg(key);
-		};
-		/* 方向键 */
-		dict.keyup = function (event) {
-			if (!dict.end) {
-				var code = event.keyCode;
-				event.preventDefault();
-				/*  */
-				if (code === KEY.left) {
-					dict.imgprev(true);
-				} else if (code === KEY.right) {
-					dict.imgnext(true);
-				} else if (code === KEY.esc) {
-					LayerUtils.close(dict.index);
-				}
-			}
-		};
-		/* 切换 */
-		dict.tabimg = function (key) {
-			if (data.length <= 1) return;
-			photos.start = dict.imgIndex - 1;
-			LayerUtils.close(dict.index);
-			setTimeout(function () {
-				LayerUtils.photos(options, true, key);
-			}, 200);
-		};
-		/* 一些动作 */
-		dict.event = function () {
-			/*
-			dict.bigimg.hover(function(){
-			  dict.imgsee.show();
-			}, function(){
-			  dict.imgsee.hide();
-			});
-			*/
-
-			dict.bigimg.find(".layui-layer-imgprev").on("click", function (event) {
-				event.preventDefault();
-				dict.imgprev(true);
-			});
-			dict.bigimg.find(".layui-layer-imgnext").on("click", function (event) {
-				event.preventDefault();
-				dict.imgnext(true);
-			});
-			$document.on("keyup", dict.keyup);
-		};
-		/* 图片预加载 */
-		function loadImage(url, callback, error) {
-			var img = new Image();
-			img.src = url;
-			if (img.complete) {
-				return callback(img);
-			}
-			img.onload = function () {
-				img.onload = null;
-				callback(img);
-			};
-			img.onerror = function (e) {
-				img.onerror = null;
-				error(e);
-			};
-		}
-
-		dict.loadi = LayerUtils.load(1, {
-			shade: "shade" in options ? false : 0.9,
-			scrollbar: false
-		});
-		loadImage(
-			data[start].src,
-			function (img) {
-				LayerUtils.close(dict.loadi);
-				/* 切换图片时不出现动画 */
-				if (key) options.anim = -1;
-				/* 弹出图片层 */
-				dict.index = LayerUtils.open(
-					$.extend(
-						{
-							type: 1,
-							id: "layui-layer-photos",
-							area: (function () {
-								var imgarea = [img.width, img.height];
-								var winarea = [
-									$(window).width() - 100,
-									$(window).height() - 100
-								];
-								/* 如果 实际图片的宽或者高比 屏幕大（那么进行缩放） */
-								if (
-									!options.full &&
-									(imgarea[0] > winarea[0] || imgarea[1] > winarea[1])
-								) {
-									var wh = [
-										imgarea[0] / winarea[0],
-										imgarea[1] / winarea[1]
-									]; /* 取宽度缩放比例、高度缩放比例 */
-									if (wh[0] > wh[1]) {
-										/* 取缩放比例最大的进行缩放 */
-										imgarea[0] = imgarea[0] / wh[0];
-										imgarea[1] = imgarea[1] / wh[0];
-									} else if (wh[0] < wh[1]) {
-										imgarea[0] = imgarea[0] / wh[1];
-										imgarea[1] = imgarea[1] / wh[1];
-									}
-								}
-
-								return [imgarea[0] + "px", imgarea[1] + "px"];
-							})(),
-							title: false,
-							shade: 0.9,
-							shadeClose: true,
-							closeBtn: false,
-							move: ".layui-layer-phimg img",
-							moveType: 1,
-							scrollbar: false,
-							moveOut: true,
-							anim: 5,
-							isOutAnim: false,
-							skin: "layui-layer-photos" + skin("photos"),
-							content:
-								'<div class="layui-layer-phimg">' +
-								'<img src="' +
-								data[start].src +
-								'" alt="' +
-								(data[start].alt || "") +
-								'" layer-pid="' +
-								data[start].pid +
-								'">' +
-								(function () {
-									if (data.length > 1) {
-										return (
-											'<div class="layui-layer-imgsee">' +
-											'<span class="layui-layer-imguide"><a href="javascript:;" class="layui-layer-iconext layui-layer-imgprev"></a><a href="javascript:;" class="layui-layer-iconext layui-layer-imgnext"></a></span>' +
-											'<div class="layui-layer-imgbar" style="display:' +
-											(key ? "block" : "") +
-											'"><span class="layui-layer-imgtit"><a href="javascript:;">' +
-											(data[start].alt || "") +
-											"</a><em>" +
-											dict.imgIndex +
-											" / " +
-											data.length +
-											"</em></span></div>" +
-											"</div>"
-										);
-									}
-									return "";
-								})() +
-								"</div>",
-							success($eleLayer, index) {
-								dict.bigimg = $eleLayer.find(".layui-layer-phimg");
-								dict.imgsee = $eleLayer.find(".layui-layer-imgbar");
-								dict.event($eleLayer);
-								options.tab && options.tab(data[start], $eleLayer);
-								typeof success === "function" && success($eleLayer);
-							},
-							end() {
-								dict.end = true;
-								$document.off("keyup", dict.keyup);
-							}
-						},
-						options
-					)
-				);
-			},
-			function () {
-				LayerUtils.close(dict.loadi);
-				LayerUtils.msg(
-					"&#x5F53;&#x524D;&#x56FE;&#x7247;&#x5730;&#x5740;&#x5F02;&#x5E38;<br>&#x662F;&#x5426;&#x7EE7;&#x7EED;&#x67E5;&#x770B;&#x4E0B;&#x4E00;&#x5F20;&#xFF1F;",
-					{
-						during: 30000,
-						btn: ["&#x4E0B;&#x4E00;&#x5F20;", "&#x4E0D;&#x770B;&#x4E86;"],
-						yes() {
-							data.length > 1 && dict.imgnext(true, true);
-						}
-					}
-				);
-			}
-		);
-	},
-	tab(options) {
-		/* tab层 */
-		options = options || {};
-		var tab = options.tab || {},
-			THIS = "layui-this",
-			success = options.success;
-		delete options.success;
-		return LayerUtils.open(
-			$.extend(
-				{
-					type: 1,
-					skin: "layui-layer-tab" + skin("tab"),
-					resize: false,
-					title: (function () {
-						var len = tab.length,
-							ii = 1,
-							str = "";
-						if (len > 0) {
-							str = '<span class="' + THIS + '">' + tab[0].title + "</span>";
-							for (; ii < len; ii++) {
-								str += "<span>" + tab[ii].title + "</span>";
-							}
-						}
-						return str;
-					})(),
-					content:
-						'<ul class="layui-layer-tabmain">' +
-						(function () {
-							var len = tab.length,
-								ii = 1,
-								str = "";
-							if (len > 0) {
-								str =
-									'<li class="layui-layer-tabli ' +
-									THIS +
-									'">' +
-									(tab[0].content || "no content") +
-									"</li>";
-								for (; ii < len; ii++) {
-									str +=
-										'<li class="layui-layer-tabli">' +
-										(tab[ii].content || "no  content") +
-										"</li>";
-								}
-							}
-							return str;
-						})() +
-						"</ul>",
-					success($eleLayer) {
-						var btn = $eleLayer.find(".layui-layer-title").children();
-						var main = $eleLayer.find(".layui-layer-tabmain").children();
-						btn.on("mousedown", function (e) {
-							e.stopPropagation ? e.stopPropagation() : (e.cancelBubble = true);
-							var othis = $(this),
-								index = othis.index();
-							othis.addClass(THIS).siblings().removeClass(THIS);
-							main.eq(index).show().siblings().hide();
-							typeof options.change === "function" && options.change(index);
-						});
-						typeof success === "function" && success($eleLayer);
-					}
-				},
-				options
-			)
-		);
-	},
-	prompt(options = {}, yes) {
-		/* 仿系统prompt */
-		var style = "";
-		if (typeof options === "function") {
-			yes = options;
-		}
-
-		if (options.area) {
-			var area = options.area;
-			style = `style="width: ${area[0]}; height: ${area[1]};"`;
-			delete options.area;
-		}
-
-		var prompt;
-		var content =
-			options.formType == 2
-				? `<textarea class="layui-layer-input" ${style}></textarea>`
-				: `<input type="${
-						options.formType === 1 ? "password" : "text"
-				  }" class="layui-layer-input">`;
-		var success = options.success;
-		delete options.success;
-		return LayerUtils.open(
-			Object.assign(
-				{
-					type: 1,
-					btn: ["&#x786E;&#x5B9A;", "&#x53D6;&#x6D88;"],
-					content: content,
-					skin: "layui-layer-prompt" + skin("prompt"),
-					maxWidth: $win.width(),
-					success($eleLayer) {
-						prompt = $eleLayer.find(".layui-layer-input");
-						prompt.val(options.value || "").focus();
-						typeof success === "function" && success($eleLayer);
-					},
-					resize: false,
-					yes(index) {
-						var value = prompt.val();
-						if (value === "") {
-							prompt.focus();
-						} else if (value.length > (options.maxlength || 500)) {
-							LayerUtils.tips(
-								"&#x6700;&#x591A;&#x8F93;&#x5165;" +
-									(options.maxlength || 500) +
-									"&#x4E2A;&#x5B57;&#x6570;",
-								prompt,
-								{
-									tips: 1
-								}
-							);
-						} else {
-							yes && yes(value, index, prompt);
-						}
-					}
-				},
-				options
-			)
-		);
 	},
 	getChildFrame(selector, index) {
 		/* 获取子iframe的DOM */
@@ -763,7 +395,7 @@ const LayerUtils = {
 			titHeight = $$eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0,
 			btnHeight = $$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0,
 			minLeft = $$eleLayer.attr("minLeft");
-		if (type === READY.type[3] || type === READY.type[4]) {
+		if (type === TYPE_LOADING || type === TYPE_TIPS) {
 			return;
 		}
 
@@ -779,10 +411,8 @@ const LayerUtils = {
 
 		$$eleLayer.css(options);
 		btnHeight = $$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight();
-		if (type === READY.type[2]) {
-			$$eleLayer.find("iframe").css({
-				height: parseFloat(options.height) - titHeight - btnHeight
-			});
+		if (type === TYPE_IFRAME) {
+			$$eleLayer.find("iframe").addClass("flex1");
 		} else {
 			contElem.css({
 				height:
@@ -907,7 +537,6 @@ const LayerUtils = {
 		return await Promise.all(needClose.map(LayerUtils.close));
 	},
 	setLayerTop($current: JQuery) {
-		console.log("setLayerTop");
 		if ($current.hasClass("set-layer-top")) {
 			return;
 		} else {
@@ -920,7 +549,6 @@ const LayerUtils = {
 Object.defineProperty(LayerUtils, "lastIndex", {
 	get() {
 		const lastIndex = _.last(LayerUtils.layerIndexArray);
-		console.log("get", lastIndex);
 		if (lastIndex) {
 			return lastIndex;
 		} else {
@@ -930,7 +558,6 @@ Object.defineProperty(LayerUtils, "lastIndex", {
 	},
 	set(newIndex) {
 		const lastIndex = _.last(LayerUtils.layerIndexArray);
-		console.log("set", lastIndex, LayerUtils.layerIndexArray);
 		if (lastIndex) {
 			(LayerUtils.layerIndexArray as number[]).push(newIndex as number);
 		} else {
@@ -946,7 +573,7 @@ class ClassLayer {
 	_IDShade = LAYUI_LAYER_SHADE;
 	_IDContent = LAYUI_LAYER_CONTENT;
 	zIndex = 0;
-	type = "";
+	typeName = "";
 	ismax = false;
 	isNeedTitle = false;
 	isContentTypeObject = false;
@@ -1100,7 +727,7 @@ class ClassLayer {
 	get cptDomContainer() {
 		const {
 			config,
-			type,
+			typeName,
 			isContentTypeObject,
 			zIndex,
 			_layerIndex,
@@ -1108,7 +735,7 @@ class ClassLayer {
 			_IDContent
 		} = this;
 
-		const typeClassname = ` layui-layer-${type}`;
+		const typeClassname = ` layui-layer-${typeName}`;
 		const boderClassname =
 			(config.type == 0 || config.type == 2) && !config.shade
 				? " layui-layer-border"
@@ -1132,7 +759,7 @@ class ClassLayer {
 <div id="${_IDLayer}" 
 		layer-wrapper="${_IDLayer}"
 		data-z-index="${zIndex}"
-		type="${type}"
+		type="${typeName}"
 		class="flex vertical elevation-4 ${LAYUI_LAYER}${typeClassname}${boderClassname}${skinClassname}" 
 		data-index="${_layerIndex}"
 		data-during-time="${config.during}"
@@ -1176,7 +803,7 @@ class ClassLayer {
 		/* shade 会-1 */
 		layerInstance.zIndex =
 			READY.zIndex + (layerInstance.config.zIndex as number);
-		layerInstance.type = READY.type[config.type || 0];
+		layerInstance.typeName = READY.type[config.type || 0];
 		layerInstance.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
 			Number(config.type)
 		);
@@ -1205,16 +832,17 @@ class ClassLayer {
 			},
 			[LayerUtils.IFRAME]() {
 				let scrolling = "auto";
-				let src = "";
+				let src = config.content;
 				if (isContentTypeObject) {
 					/* @ts-ignore */
 					scrolling = config.content[1] || "auto";
 					/* @ts-ignore */
-					src = config.content || "";
+					src = config.content[0] || "";
 				}
 
+				config.btn = [];
 				config.content = `
-<iframe class="layui-layer-load" 
+<iframe class="layui-layer-load flex flex1" 
 		scrolling="${scrolling}" 
 		src="${src}"
 		allowtransparency="true"
@@ -1376,7 +1004,7 @@ class ClassLayer {
 	setPosition() {
 		/* 自适应 */
 		var layerInstance = this;
-		const { $eleLayer, config } = layerInstance;
+		const { $eleLayer, config, _layerIndex } = layerInstance;
 		if (config.area[0] === "" && config.maxWidth > 0) {
 			/* 为了修复IE7下一个让人难以理解的bug */
 			if (LayerUtils.ie && LayerUtils.ie < 8 && config.btn) {
@@ -1400,7 +1028,9 @@ class ClassLayer {
 			};
 		switch (config.type) {
 			case LayerUtils.IFRAME: {
-				setHeight("iframe");
+				if (config.fullscreen) {
+					LayerUtils.full(_layerIndex);
+				}
 				break;
 			}
 			default: {
@@ -1771,7 +1401,6 @@ $document
 		"mousemove",
 		".layui-layer-move",
 		_.throttle(function (e) {
-			console.log(e);
 			/* 拖拽移动 */
 			if (READY.moveOrResizeInstance instanceof ClassLayer) {
 				const { $eleLayer, config } = READY.moveOrResizeInstance;

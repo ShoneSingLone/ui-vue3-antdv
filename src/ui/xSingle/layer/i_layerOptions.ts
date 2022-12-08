@@ -143,6 +143,8 @@ export interface i_layerOptions {
     默认情况下，关闭层时会有一个过度动画。如果你不想开启，设置 isOutAnim: false 即可
      */
 	isOutAnim?: boolean;
+	/*  */
+	fullscreen?: boolean;
 	/* maxmin - 最大最小化。;
     类型：boolean，默认：false
     

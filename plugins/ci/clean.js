@@ -2,8 +2,13 @@ const { _n } = require("@ventose/utils-node");
 const pathD = _n.getPathD(__dirname);
 const fs = require("fs");
 
-const cleanDir = async dirUrl => {
+const cleanDir = async () => {
+	const dirUrl = pathD("../../dist/assets");
 	try {
+		if (!fs.existsSync(dirUrl)) {
+			console.log("[✓] : no assets");
+			return;
+		}
 		const [dirs, files] = await _n.asyncAllDirAndFile([dirUrl]);
 		let file;
 		while ((file = files.pop())) {
@@ -14,15 +19,31 @@ const cleanDir = async dirUrl => {
 		} else {
 			await fs.promises.rmdir(dirUrl, { recursive: true });
 		}
-		console.log("✓ ","dist clean done");
-		const statsHtmlPath = pathD("../../dist/stats.html");
-		await fs.promises.copyFile(statsHtmlPath, pathD("../../public/stats.html"));
+		console.log("[✓] ", "dist clean done");
+	} catch (error) {
+		console.error(error);
+	}
+};
+const copyStats = async () => {
+	try {
+		const statsHtmlPath = pathD("../../stats.html");
+		if (!fs.existsSync(statsHtmlPath)) {
+			console.log("[✓] : no stats.html");
+			return;
+		}
+		const content = await fs.promises.readFile(statsHtmlPath);
+		await fs.promises.writeFile(
+			pathD("../../public/assets/html/stats.html"),
+			content
+		);
 		await fs.promises.unlink(statsHtmlPath);
-		await fs.promises.unlink(pathD("../../stats.html"));
-		console.log("✓ ","stats.html move done");
+		console.log("[✓] ", "stats.html move done");
 	} catch (error) {
 		console.error(error);
 	}
 };
 
-cleanDir(pathD("../../dist/assets"));
+(async () => {
+	await cleanDir();
+	await copyStats();
+})();

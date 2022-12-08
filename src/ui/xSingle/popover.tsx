@@ -48,8 +48,12 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			return;
 		}
 	}
-	let app: any;
 	let tipsContent = options.content;
+	if (!tipsContent) {
+		/* 如果仍然没有内容，那就不弹窗 */
+		return;
+	}
+	let app: any;
 	let layerTipsOptions: i_layerOptions = {
 		tips: [LayerUtils.UP, "#fff"],
 		/*hover 不允许 同时多个 tips出现*/

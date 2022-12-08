@@ -2,10 +2,13 @@
 
 - [x] Demo页面加载独立的vue文档，弹窗展示源码
   ![](README.md_assets/2022-12-02-16-25-39.png)
-- [ ] 使用boundless方式加载demo文件，允许动态修改，然后主动触发运行
+- [x] 使用boundless方式加载demo文件
+- [ ] ![](README.todo.md_assets/2022-12-08-18-42-03.png)
+- [ ] 允许动态修改demo文件，然后主动触发运行
 - [ ] datagrid
   - [ ] isHideFilter: true,
 - [ ] layer
+    - [ ] 弹窗效果从点击位置打开，openAtPoint
     - [ ] tips
     - [ ] dialog
       - [ ] resize

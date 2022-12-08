@@ -10,7 +10,7 @@
 import { _, $ } from "@ventose/ui";
 import { marked } from "../assets/libs/marked";
 import { hljs } from "../assets/libs/highlight";
-import { MkitTheme } from "./MkitTheme";
+import { MkitTheme, setTheme } from "./MkitTheme";
 
 /* 异步
 // const modules = import.meta.glob("../assets/highlightstyles/*.css");
@@ -21,6 +21,9 @@ import { MkitTheme } from "./MkitTheme";
 
 export default {
 	props: ["md" /* md text content */],
+	setup() {
+		setTheme();
+	},
 	data() {
 		return {
 			originHTML: "",
