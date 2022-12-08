@@ -1,8 +1,5 @@
 import _ from "lodash";
 import { resolveComponent } from "vue";
-const Radio = resolveComponent("aRadio");
-const RadioGroup = resolveComponent("aRadioGroup");
-const RadioButton = resolveComponent("aRadioButton");
 
 /**
  * @Description
@@ -12,14 +9,18 @@ const RadioButton = resolveComponent("aRadioButton");
  * @returns {any}
  */
 export default ({ property, slots, listeners }) => {
-	const _property = _.omit(property, ["options"]);
+	const Radio = resolveComponent("aRadio");
+	const RadioGroup = resolveComponent("aRadioGroup");
+	const RadioButton = resolveComponent("aRadioButton");
+
+	const _property = vUtils.omit(property, ["options"]);
 	const renderOptions = () => {
 		if (property.isButton) {
-			return _.map(property.options, option => {
+			return vUtils.map(property.options, option => {
 				return <RadioButton value={option.value}>{option.label}</RadioButton>;
 			});
 		}
-		return _.map(property.options, option => {
+		return vUtils.map(property.options, option => {
 			return <Radio value={option.value}>{option.label}</Radio>;
 		});
 	};

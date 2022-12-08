@@ -1,4 +1,4 @@
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 
 export const EVENT_TYPE = {
 	validateForm: "validateForm",
@@ -23,19 +23,19 @@ export const TIPS_TYPE = {
  */
 export async function validateForm(configsForm) {
 	return Promise.all(
-		_.map(
+		vUtils.map(
 			configsForm,
 			(configs, prop) =>
 				new Promise(resolve => {
 					/*处理不校验的情况*/
-					if (_.isInput(configs.isShow)) {
+					if (vUtils.isInput(configs.isShow)) {
 						/*configs.isShow至少默认是个true，如果是falsy，则明确为不显示*/
 						const isFalse = !configs.isShow;
 						if (isFalse) {
 							return resolve();
 						}
 						const isResFalse =
-							_.isFunction(configs.isShow) && !configs.isShow();
+							vUtils.isFunction(configs.isShow) && !configs.isShow();
 						if (isResFalse) {
 							return resolve();
 						}
@@ -69,7 +69,7 @@ export async function validateForm(configsForm) {
  * @returns
  */
 export const AllWasWell = res => {
-	return _.isArray(res) && res.length === 0;
+	return vUtils.isArray(res) && res.length === 0;
 };
 
 export const checkXItem = async (xItemConfigs, handlerResult) => {
@@ -98,7 +98,7 @@ export const checkXItem = async (xItemConfigs, handlerResult) => {
 						const isInTrigger = eventName =>
 							xItemConfigs.validate.triggerEventsObj[eventName];
 						/*some Event In Trigger*/
-						if (_.some(trigger, isInTrigger)) {
+						if (vUtils.some(trigger, isInTrigger)) {
 							trigBy = `triggerEvent ${trigger.toString()}`;
 							return true;
 						}
@@ -110,7 +110,7 @@ export const checkXItem = async (xItemConfigs, handlerResult) => {
 								EVENT_TYPE.input,
 								EVENT_TYPE.blur
 							];
-							if (_.some(updateTrigger, isInTrigger)) {
+							if (vUtils.some(updateTrigger, isInTrigger)) {
 								trigBy = "update";
 								return true;
 							}
@@ -120,7 +120,7 @@ export const checkXItem = async (xItemConfigs, handlerResult) => {
 					})();
 
 					trigBy &&
-						_.doNothing(
+						vUtils.doNothing(
 							`%cValidate trigger off by [${trigBy}]`,
 							"color:yellow;background:green;"
 						);
@@ -160,7 +160,7 @@ export const checkXItem = async (xItemConfigs, handlerResult) => {
 	} catch (error) {
 		console.error(error);
 	} finally {
-		if (_.isFunction(xItemConfigs.__onAfterValidate)) {
+		if (vUtils.isFunction(xItemConfigs.__onAfterValidate)) {
 			xItemConfigs.__onAfterValidate.call(xItemConfigs, result);
 		}
 		/*校验执行后*/

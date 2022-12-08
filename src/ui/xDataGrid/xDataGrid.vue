@@ -1,7 +1,7 @@
 <script lang="jsx">
 import { Table } from "ant-design-vue";
 import { defineComponent } from "vue";
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 import { filterColIsShow } from "./common";
 import { xPagination } from "./xPagination";
 import { Cpt_UI_locale } from "../State_UI";
@@ -22,7 +22,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			State: { id: _.genId("xDataGrid") }
+			State: { id: vUtils.genId("xDataGrid") }
 		};
 	},
 	computed: {
@@ -33,10 +33,10 @@ export default defineComponent({
 				return this.configs.columns;
 			}
 			let columns = null;
-			columns = _.map(this.Cpt_ColumnsOrder, prop =>
-				_.find(this.configs.columns, { prop })
+			columns = vUtils.map(this.Cpt_ColumnsOrder, prop =>
+				vUtils.find(this.configs.columns, { prop })
 			);
-			columns = _.filter(columns, i => filterColIsShow(i?.isShow, i?.prop));
+			columns = vUtils.filter(columns, i => filterColIsShow(i?.isShow, i?.prop));
 			return columns;
 		},
 		/*列顺序 TODO:如果有排序的需求 */
@@ -45,10 +45,10 @@ export default defineComponent({
 				if (this.configs.columns_order) {
 					return this.configs.columns_order;
 				} else {
-					return _.map(this.configs.columns, i => i.prop);
+					return vUtils.map(this.configs.columns, i => i.prop);
 				}
 			})();
-			return _.filter(order, i => !!i);
+			return vUtils.filter(order, i => !!i);
 		},
 		Cpt_AntTableProperty() {
 			if (this.configs.antTableProperty) {
@@ -103,7 +103,7 @@ export default defineComponent({
 							/* column index record text value */
 							const vNode = column.renderCell(args);
 							/*fix:返回null会判断为没有renderCell处理，直接取prop字段的数据*/
-							if (_.isNull(vNode) || _.isUndefined(vNode)) {
+							if (vUtils.isNull(vNode) || vUtils.isUndefined(vNode)) {
 								return "";
 							}
 							return vNode;

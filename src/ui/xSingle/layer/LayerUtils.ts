@@ -2,7 +2,7 @@
 
 /* https://www.layuiweb.com/doc/modules/layer.html#closeBtn */
 import $ from "jquery";
-import _ from "lodash";
+import { vUtils } from "../../ventoseUtils";
 import { i_layerOptions } from "./i_layerOptions";
 export const KEY = {
 	right: 39,
@@ -138,7 +138,10 @@ const LayerUtils = {
 		/* 至少是1，shade是index-1 */
 	],
 	removeIndexFromLayerIndexArray(layerIndex: number) {
-		let currentIndex = _.findIndex(this.layerIndexArray, i => i === layerIndex);
+		let currentIndex = vUtils.findIndex(
+			this.layerIndexArray,
+			i => i === layerIndex
+		);
 		if (currentIndex > -1) {
 			this.layerIndexArray.splice(currentIndex, 1);
 		}
@@ -205,7 +208,7 @@ const LayerUtils = {
 		);
 	},
 	confirm(content, options, yes, cancel) {
-		if (_.isFunction(options)) {
+		if (vUtils.isFunction(options)) {
 			cancel = yes;
 			yes = options;
 		}
@@ -223,7 +226,7 @@ const LayerUtils = {
 	},
 	msg(content, options: i_layerOptions, end = () => null) {
 		/*最常用提示层*/
-		var isOptionsIsFunction = _.isFunction(options),
+		var isOptionsIsFunction = vUtils.isFunction(options),
 			rskin = READY.config.skin;
 		var skin = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
 		var anim = DOMS_ANIM.length - 1;
@@ -548,7 +551,7 @@ const LayerUtils = {
 
 Object.defineProperty(LayerUtils, "lastIndex", {
 	get() {
-		const lastIndex = _.last(LayerUtils.layerIndexArray);
+		const lastIndex = vUtils.last(LayerUtils.layerIndexArray);
 		if (lastIndex) {
 			return lastIndex;
 		} else {
@@ -557,7 +560,7 @@ Object.defineProperty(LayerUtils, "lastIndex", {
 		}
 	},
 	set(newIndex) {
-		const lastIndex = _.last(LayerUtils.layerIndexArray);
+		const lastIndex = vUtils.last(LayerUtils.layerIndexArray);
 		if (lastIndex) {
 			(LayerUtils.layerIndexArray as number[]).push(newIndex as number);
 		} else {
@@ -699,11 +702,11 @@ class ClassLayer {
 				config.btn = [config.btn, ""];
 			}
 			/* 没一个能用,则不显示 */
-			if (_.every(config.btn, i => !i)) {
+			if (vUtils.every(config.btn, i => !i)) {
 				return "";
 			}
 
-			const domButtons = _.reduce(
+			const domButtons = vUtils.reduce(
 				config.btn,
 				(domButtonString, label) => {
 					if (label) {
@@ -735,13 +738,27 @@ class ClassLayer {
 			_IDContent
 		} = this;
 
-		const typeClassname = ` layui-layer-${typeName}`;
-		const boderClassname =
-			(config.type == 0 || config.type == 2) && !config.shade
-				? " layui-layer-border"
-				: "";
+		const fnValid = i => !!i;
 
-		const skinClassname = config.skin || "";
+		const layerWrapperClassname = [
+			"flex vertical",
+			"elevation-4",
+			`layui-layer-${typeName}`,
+			LAYUI_LAYER,
+			config.skin,
+			(() => {
+				if (
+					[LayerUtils.IFRAME, LayerUtils.MSG].includes(config.type) &&
+					!config.shade
+				) {
+					return "layui-layer-border";
+				}
+				return "";
+			})()
+		]
+			.filter(fnValid)
+			.join(" ");
+
 		const classContent = [
 			LAYUI_LAYER_CONTENT,
 			config.contentClass,
@@ -752,21 +769,23 @@ class ClassLayer {
 				? `layui-layer-loading${config.icon}`
 				: ""
 		]
-			.filter(i => !!i)
+			.filter(fnValid)
 			.join(" ");
 
+		const [width, height] = config.area;
+
 		return `
-<div id="${_IDLayer}" 
-		layer-wrapper="${_IDLayer}"
+<div id="${_IDLayer}" layer-wrapper="${_IDLayer}" type="${typeName}"
+		class="${layerWrapperClassname}" 
 		data-z-index="${zIndex}"
-		type="${typeName}"
-		class="flex vertical elevation-4 ${LAYUI_LAYER}${typeClassname}${boderClassname}${skinClassname}" 
 		data-index="${_layerIndex}"
 		data-during-time="${config.during}"
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
-		style="z-index:${zIndex}; width:${config.area[0]}; height:${
-			config.area[1]
-		}; position:fixed;">
+		style="position:fixed;
+			z-index:${zIndex};
+			width:${config.area[0]}; 
+			height:${config.area[1]};"
+		>
 			${this.cptDomTitle}
 			<div class="${classContent}" id="${_IDContent}">
 				${this.cptDomIcon}
@@ -881,25 +900,13 @@ class ClassLayer {
 	setLayerSize() {
 		const layerInstance = this;
 		const { config } = layerInstance;
-
-		/* 坐标自适应浏览器窗口尺寸 */
-		if (config.type == LayerUtils.TIPS) {
-			/* 642 */
-			layerInstance.tips();
-		} else {
+		layerInstance.offset();
+		/* 首次弹出时，若 css 尚未加载，则等待 css 加载完毕后，重新设定尺寸 */
+		layerInstance.$eleLayer.css("visibility", "hidden");
+		LayerUtils.ready(function () {
 			layerInstance.offset();
-			/* 首次弹出时，若 css 尚未加载，则等待 css 加载完毕后，重新设定尺寸 */
-			parseInt(
-				READY.getStyle(document.getElementById(LAYUI_LAYER_MOVE), "z-index")
-			) ||
-				(function () {
-					layerInstance.$eleLayer.css("visibility", "hidden");
-					LayerUtils.ready(function () {
-						layerInstance.offset();
-						layerInstance.$eleLayer.css("visibility", "visible");
-					});
-				})();
-		}
+			layerInstance.$eleLayer.css("visibility", "visible");
+		});
 
 		/* 如果是固定定位 */
 		if (config.fixed) {
@@ -959,12 +966,7 @@ class ClassLayer {
 			if ([LayerUtils.IFRAME].includes(config.type || 0)) {
 				$body.append(layerInstance.cptDomContainer);
 			} else if ([LayerUtils.TIPS].includes(config.type || 0)) {
-				const $follow = $(config.follow);
-				const { top, left } = $follow.offset();
-				const point = [parseFloat(left), parseFloat(top)];
-				const $domContainer = $(layerInstance.cptDomContainer);
-				/* $domContainer.css({ position: "fixed", top: `${top}px`, left: `${left}px` }); */
-				$body.append($domContainer);
+				layerInstance.tips();
 			} else {
 				const $content = $(config.content);
 				const _$layerWrapper = $content.parents(`.${LAYUI_LAYER}`);
@@ -1061,12 +1063,13 @@ class ClassLayer {
 			config = layerInstance.config,
 			$eleLayer = layerInstance.$eleLayer;
 		var area = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-		var type = typeof config.offset === "object";
+		var whetherOffsetIsObject = typeof config.offset === "object";
 		layerInstance.offsetTop = ($win.height() - area[1]) / 2;
 		layerInstance.offsetLeft = ($win.width() - area[0]) / 2;
-		if (type) {
-			layerInstance.offsetTop = config.offset[0];
-			layerInstance.offsetLeft = config.offset[1] || layerInstance.offsetLeft;
+		if (whetherOffsetIsObject) {
+			const [top, left] = config.offset;
+			layerInstance.offsetTop = top;
+			layerInstance.offsetLeft = left || layerInstance.offsetLeft;
 		} else if (config.offset !== "auto") {
 			if (config.offset === "t") {
 				/* 上 */
@@ -1128,12 +1131,23 @@ class ClassLayer {
 	async tips() {
 		/* Tips=================470 */
 		const layerInstance = this;
-		const config = layerInstance.config;
-		const $eleLayer = layerInstance.$eleLayer;
-		await new Promise(r => {
-			/* 延迟 经验时间 */
-			setTimeout(r, 34);
+		const { config, $eleLayer } = layerInstance;
+		const { top, left } = (() => {
+			if (config.openAtPoint) {
+				return config.openAtPoint;
+			} else {
+				const $follow = $(config.follow);
+				return $follow.offset();
+			}
+		})();
+		const $domContainer = $(layerInstance.cptDomContainer).css({
+			position: "fixed",
+			top: `${top}px`,
+			left: `${left}px`
 		});
+		$body.append($domContainer);
+
+		await vUtils.sleep(1000 * 2);
 
 		const [tipsDomWidth, tipsdomHeight] = [
 			$eleLayer.outerWidth(),
@@ -1236,17 +1250,8 @@ class ClassLayer {
 		});
 		$eleLayer.css({
 			left: followInfo.tipLeft - $win.scrollLeft(),
-			top: followInfo.tipTop - $win.scrollTop(),
-			transform: "scale(0)"
+			top: followInfo.tipTop - $win.scrollTop()
 		});
-
-		setTimeout(() => {
-			$eleLayer.css({
-				transform: "scale(1)",
-				visibility: "unset",
-				"z-index": 1
-			});
-		}, 200);
 	}
 
 	onMoveOrResize() {
@@ -1400,7 +1405,7 @@ $document
 	.on(
 		"mousemove",
 		".layui-layer-move",
-		_.throttle(function (e) {
+		vUtils.throttle(function (e) {
 			/* 拖拽移动 */
 			if (READY.moveOrResizeInstance instanceof ClassLayer) {
 				const { $eleLayer, config } = READY.moveOrResizeInstance;

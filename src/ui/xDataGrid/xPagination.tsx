@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { defineComponent } from "vue";
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 import { setPagination } from "./common";
 import { lStorage } from "../tools/storage";
 import { State_UI } from "../State_UI";
@@ -36,7 +36,7 @@ export const xPagination = defineComponent({
 		};
 	},
 	methods: {
-		onShowSizeChange: _.debounce(function (page, size) {
+		onShowSizeChange: vUtils.debounce(function (page, size) {
 			setPagination(this, { page, size });
 			if (this.onPaginationChange) {
 				this.onPaginationChange(this.pagination);

@@ -1,10 +1,11 @@
 <script lang="jsx">
 import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
 import renders from "./itemRenders";
-import { MutatingProps } from "../common";
 import { checkXItem, EVENT_TYPE, TIPS_TYPE } from "../tools/validate";
-import { _ } from "../loadCommonUtil";
 import $ from "jquery";
+import { vUtils } from "../ventoseUtils";
+
+const { MutatingProps } = vUtils;
 
 const domClass = {
 	tipsError: "ant-form-item-explain ant-form-item-explain-error"
@@ -31,16 +32,16 @@ export default defineComponent({
 		let Cpt_isShowXItem = true;
 		let Cpt_isDisabled = false;
 		/*isShow*/
-		if (_.isFunction(props.configs.isShow)) {
+		if (vUtils.isFunction(props.configs.isShow)) {
 			Cpt_isShowXItem = computed(props.configs.isShow);
-		} else if (_.isBoolean(props.configs.isShow)) {
+		} else if (vUtils.isBoolean(props.configs.isShow)) {
 			Cpt_isShowXItem = props.configs.isShow;
 		}
 
 		/*disabled*/
-		if (_.isFunction(props.configs.disabled)) {
+		if (vUtils.isFunction(props.configs.disabled)) {
 			Cpt_isDisabled = computed(props.configs.disabled);
-		} else if (_.isBoolean(props.configs.disabled)) {
+		} else if (vUtils.isBoolean(props.configs.disabled)) {
 			Cpt_isDisabled = props.configs.disabled;
 		}
 		/*readonly*/
@@ -63,7 +64,7 @@ export default defineComponent({
 			"onUpdate:value": (val, ...args) => {
 				configs.value = val;
 				this.$emit("update:modelValue", val);
-				if (_.isFunction(listeners.onAfterValueChange)) {
+				if (vUtils.isFunction(listeners.onAfterValueChange)) {
 					listeners.onAfterValueChange.call(configs, val);
 				}
 				/* TODO: rule检测*/
@@ -84,9 +85,9 @@ export default defineComponent({
 		};
 
 		function initListenerHandler(prop, value) {
-			listeners[prop] = function (...args) {
+			listeners[prop] = function(...args) {
 				/* console.log("🚀", prop, listeners[prop].queue, args); */
-				_.each(listeners[prop].queue, listener => {
+				vUtils.each(listeners[prop].queue, listener => {
 					listener?.apply(vm.configs, args);
 				});
 			};
@@ -96,9 +97,9 @@ export default defineComponent({
 		/* 后面的属性覆盖前面的属性 */
 		function addListenerFromConfigs(currentConfigs) {
 			const propsWillDeleteFromConfigs = [];
-			_.each(currentConfigs, (value, prop) => {
+			vUtils.each(currentConfigs, (value, prop) => {
 				/* FIX: 监听函数单独出来。listener不知道在哪里被覆盖了，inputPassword  被 pop 包裹，childListener被修改了,UI库？？*/
-				if (_.isListener(prop)) {
+				if (vUtils.isListener(prop)) {
 					propsWillDeleteFromConfigs.push(prop);
 					if (listeners[prop]) {
 						listeners[prop].queue.push(value);
@@ -110,12 +111,13 @@ export default defineComponent({
 				}
 			});
 
-			_.each(propsWillDeleteFromConfigs, prop => {
+			vUtils.each(propsWillDeleteFromConfigs, prop => {
 				delete currentConfigs[prop];
 			});
 			return listeners;
 		}
-		_.each(listeners, (value, prop) => initListenerHandler(prop, value));
+
+		vUtils.each(listeners, (value, prop) => initListenerHandler(prop, value));
 		addListenerFromConfigs(vm.configs);
 		return {
 			listeners,
@@ -139,7 +141,7 @@ export default defineComponent({
 			if (this.configs?.itemTips?.type) {
 				return {
 					type: this.configs.itemTips.type,
-					msg: _.isFunction(this.configs.itemTips.msg)
+					msg: vUtils.isFunction(this.configs.itemTips.msg)
 						? this.configs.itemTips.msg()
 						: this.configs.itemTips.msg
 				};
@@ -166,13 +168,13 @@ export default defineComponent({
 			let slots = {};
 
 			const pickAttrs = properties => {
-				_.each(properties, (value, prop) => {
+				vUtils.each(properties, (value, prop) => {
 					if ("slots" === prop) {
 						slots = value;
 						return;
 					}
 
-					if (["placeholder"].includes(prop) && _.isFunction(value)) {
+					if (["placeholder"].includes(prop) && vUtils.isFunction(value)) {
 						property[prop] = value(vm);
 						return;
 					}
@@ -237,11 +239,11 @@ export default defineComponent({
 			let label = (() => {
 				const _label = this.configs.label;
 				if (_label) {
-					if (_.isFunction(_label)) {
+					if (vUtils.isFunction(_label)) {
 						return _label();
 					}
 
-					if (_.isString(_label) || _label.__v_isVNode) {
+					if (vUtils.isString(_label) || _label.__v_isVNode) {
 						return _label;
 					}
 				}
@@ -295,9 +297,9 @@ export default defineComponent({
 		setValidateInfo(rules) {
 			/* 修改rules Array 要求全量替换 */
 			let isRequired = false;
-			if (_.isArrayFill(rules)) {
+			if (vUtils.isArrayFill(rules)) {
 				/* 如果有必填项 */
-				isRequired = _.some(rules, { name: "required" });
+				isRequired = vUtils.some(rules, { name: "required" });
 				/* 检测完成之后的回调 */
 				const handleAfterCheck = ([prop, msg]) => {
 					MutatingProps(this, "configs.checking", false);
@@ -305,7 +307,7 @@ export default defineComponent({
 						if (msg) {
 							this.setTips(TIPS_TYPE.error, msg);
 							/*校验未通过，如果有其他操作，可以提供一个onValidateFail的回调函数*/
-							if (_.isFunction(this.configs.onValidateFail)) {
+							if (vUtils.isFunction(this.configs.onValidateFail)) {
 								this.configs.onValidateFail(this.configs);
 							}
 						} else {
@@ -313,7 +315,7 @@ export default defineComponent({
 						}
 					}
 				};
-				const debounceCheckXItem = _.debounce(checkXItem, 300);
+				const debounceCheckXItem = vUtils.debounce(checkXItem, 300);
 				/* 如果有检验规则，添加可执行校验方法 */
 				MutatingProps(this, "configs.validate", eventType => {
 					/* 短时间内，多个事件触发统一校验，使用队列，任一一个触发 */
@@ -325,7 +327,7 @@ export default defineComponent({
 				/* init */
 				MutatingProps(this, "configs.validate.triggerEventsObj", {});
 			} else {
-				if (_.isFunction(this.configs.validate)) {
+				if (vUtils.isFunction(this.configs.validate)) {
 					delete this.configs.validate;
 				}
 			}
@@ -337,7 +339,7 @@ export default defineComponent({
 			return null;
 		}
 		const CurrentXItem = (() => {
-			if (_.isFunction(this.configs.itemType)) {
+			if (vUtils.isFunction(this.configs.itemType)) {
 				return this.configs.itemType;
 			}
 			return renders[this.configs.itemType] || renders.Input;

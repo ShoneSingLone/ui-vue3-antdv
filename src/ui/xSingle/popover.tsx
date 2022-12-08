@@ -2,7 +2,7 @@
 import $ from "jquery";
 import { LayerUtils, DATA_TIPS_FOLLOW_ID } from "./layer/LayerUtils";
 import { i_layerOptions } from "./layer/i_layerOptions";
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 import { createApp } from "vue";
 type t_trigger = "click" | "rightClick";
 type t_uiPopoverOptions = {
@@ -60,8 +60,17 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 		/*tipsMore: false,*/
 		during: 1000 * 60 * 10
 	};
+
+	const isOpenAtPoint = $ele.attr("data-open-at-point");
+	if (isOpenAtPoint) {
+		layerTipsOptions.openAtPoint = {
+			left: $ele.clientX,
+			top: $ele.clientY
+		};
+	}
+
 	/* TODO:目前只考虑vue组件对象 */
-	if (_.isPlainObject(options.content)) {
+	if (vUtils.isPlainObject(options.content)) {
 		const id = `${followId}_content`;
 		/* 桩 */
 		tipsContent = `<div id="${id}"></div>`;
@@ -88,18 +97,18 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			);
 		}
 		/* 如果delay之后还存在，再展示 */
-	}, options.delay || 240);
+	}, options.delay || 32);
 }
 
 /* 监听 触发popover的事件 hover click */
 export function installPopoverDirective(app: any, appSettings: any) {
-	const appId = _.genId("appId");
+	const appId = vUtils.genId("appId");
 	appAddPlugin[appId] = appSettings.appPlugins;
 	appDependState[appId] = appSettings.dependState;
 
 	app.directive("uiPopover", {
 		mounted(el: HTMLInputElement, binding) {
-			const followId = _.genId("xPopoverTarget");
+			const followId = vUtils.genId("xPopoverTarget");
 			const $ele = $(el);
 			$ele
 				.addClass("x-ui-popover")
@@ -114,6 +123,10 @@ export function installPopoverDirective(app: any, appSettings: any) {
 						rightClick: "pointer-right-click"
 					};
 					$ele.addClass(classStrategy[binding.value?.trigger] || "pointer");
+				}
+				/* 弹窗在click的点 */
+				if (binding.value?.openAtPoint) {
+					$ele.attr("data-open-at-point", true);
 				}
 			}
 		},
@@ -155,7 +168,6 @@ function handleClick(event) {
 	const followId = $ele.attr(DATA_FOLLOW_ID);
 	const appId = $ele.attr(DATA_APP_ID);
 	visibleArea[followId] = true;
-
 	if (popverIndexCollection[followId]) {
 		closeTips(followId);
 	} else {

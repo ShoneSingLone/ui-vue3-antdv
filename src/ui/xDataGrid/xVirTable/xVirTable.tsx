@@ -1,22 +1,22 @@
 //@ts-nocheck
 import { defineComponent } from "vue";
-import { _ } from "../../loadCommonUtil";
+import { vUtils } from "../../ventoseUtils";
 import $ from "jquery";
 import { xVirTableTh } from "./xVirTableTh";
 import { xVirTableBody } from "./xVirTableBody";
 
-export function defineXVirTableConfigs(options) {
+export function defXVirTableConfigs(options) {
 	const required = ["rowHeight", "columns"];
 	if (
-		_.some(required, prop => {
+		vUtils.some(required, prop => {
 			if (!options[prop]) {
-				alert("defineXVirTableConfigs miss required " + prop);
+				alert("defXVirTableConfigs miss required " + prop);
 				return true;
 			}
 			return false;
 		})
 	) {
-		throw new Error("defineXVirTableConfigs miss required");
+		throw new Error("defXVirTableConfigs miss required");
 	}
 
 	if (options.selectedConfigs) {
@@ -26,7 +26,7 @@ export function defineXVirTableConfigs(options) {
 	return options;
 }
 
-defineXVirTableConfigs.type = {
+defXVirTableConfigs.type = {
 	many: "many",
 	one: "one"
 };
@@ -72,7 +72,7 @@ export const xVirTable = defineComponent({
 			}
 			/* 如果有selectedConfigs，默认是many */
 			return (
-				this.configs?.selectedConfigs?.type || defineXVirTableConfigs.type.many
+				this.configs?.selectedConfigs?.type || defXVirTableConfigs.type.many
 			);
 		},
 		selectedProp() {
@@ -88,7 +88,7 @@ export const xVirTable = defineComponent({
 			if (!this.selectedType) {
 				return false;
 			}
-			if (_.isFunction(this.configs?.selectedConfigs?.fn)) {
+			if (vUtils.isFunction(this.configs?.selectedConfigs?.fn)) {
 				return this.configs?.selectedConfigs?.fn;
 			} else {
 				return false;
@@ -109,7 +109,7 @@ export const xVirTable = defineComponent({
 			return Object.keys(this.configs?.columns || {});
 		},
 		columnWidthArray() {
-			const _columnWidthArray = _.reduce(
+			const _columnWidthArray = vUtils.reduce(
 				this.columnOrder,
 				(columnStyle, prop: any) => {
 					const configsColumn = this.configs.columns[prop] || {};
@@ -158,7 +158,7 @@ export const xVirTable = defineComponent({
 				<div role="thead" class="xVirTable-thead">
 					<div role="tr" class="flex horizon">
 						{this.vDomTheadSelect}
-						{_.map(this.columnOrder, (prop: string, index: number) => {
+						{vUtils.map(this.columnOrder, (prop: string, index: number) => {
 							const column = this.configs?.columns[prop];
 							return <xVirTableTh column={column} index={index} key={prop} />;
 						})}
@@ -203,7 +203,7 @@ export const xVirTable = defineComponent({
 			const { checked } = e.target;
 			if (checked) {
 				this.selectedAll = true;
-				this.configs.selected = _.map(
+				this.configs.selected = vUtils.map(
 					this.configs.dataSource,
 					i => i[this.selectedProp]
 				);
@@ -213,7 +213,7 @@ export const xVirTable = defineComponent({
 		},
 		handleSelectedChangeTd({ id }) {
 			const isOnlyOne = this.selectedType === "one";
-			const index = _.findIndex(this.configs?.selected, i => i === id);
+			const index = vUtils.findIndex(this.configs?.selected, i => i === id);
 			if (index > -1) {
 				if (isOnlyOne) {
 					this.configs.selected = [];

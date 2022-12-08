@@ -33,18 +33,9 @@
 <script>
 import { h, markRaw } from "vue";
 import {
-	defCol,
-	defColActions,
-	_,
 	UI,
-	defColActionsBtnlist,
-	defDataGridOption,
 	defItem,
-	vModel,
-	setDataGridInfo,
 	State_UI,
-	getPaginationPageSize,
-	Utils,
 	validateForm,
 	AllWasWell,
 	pickValueFrom,
@@ -62,7 +53,7 @@ export default {
 		DemoXFormWithForm
 	},
 	methods: {
-		valid() {}
+		valid() { }
 	},
 	setup(props) {
 		return {
@@ -233,4 +224,6 @@ formData: {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>

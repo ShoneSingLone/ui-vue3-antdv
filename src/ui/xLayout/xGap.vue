@@ -1,6 +1,6 @@
 <script lang="jsx">
 import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 
 export default defineComponent({
 	name: "xGap",
@@ -30,7 +30,7 @@ export default defineComponent({
 				if (this.a) {
 					gapStyle.margin = `${this.a}px`;
 				} else {
-					_.map(POSITION_MAP, (prop, key) => {
+					vUtils.map(POSITION_MAP, (prop, key) => {
 						const value = this[key];
 						if (value) {
 							gapStyle[`margin-${prop}`] = `${value}px`;

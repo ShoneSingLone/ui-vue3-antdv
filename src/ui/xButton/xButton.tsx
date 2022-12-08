@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 import { State_UI } from "../State_UI";
 import { Button } from "ant-design-vue";
 
@@ -83,30 +83,30 @@ export default defineComponent({
 			return this.configs.type;
 		},
 		title() {
-			if (_.isString(this.disabled) && this.disabled.length > 0) {
+			if (vUtils.isString(this.disabled) && this.disabled.length > 0) {
 				return this.disabled;
 			}
-			if (_.isString(this.configs.title) && this.configs.title.length > 0) {
+			if (vUtils.isString(this.configs.title) && this.configs.title.length > 0) {
 				return this.configs.title;
 			}
 			return false;
 		},
 		disabled() {
-			if (_.isBoolean(this.configs.disabled)) {
+			if (vUtils.isBoolean(this.configs.disabled)) {
 				return this.configs.disabled;
 			}
-			if (_.isFunction(this.configs.disabled)) {
+			if (vUtils.isFunction(this.configs.disabled)) {
 				return this.configs.disabled(this);
 			}
 			return false;
 		},
 		text() {
 			/* slot优先 */
-			if (_.isFunction(this.$slots?.default)) {
+			if (vUtils.isFunction(this.$slots?.default)) {
 				return this.$slots.default(this);
 			}
 			/* text作为render */
-			if (_.isFunction(this.configs.text)) {
+			if (vUtils.isFunction(this.configs.text)) {
 				return this.configs.text(this) || "";
 			}
 			/* text 作为 string */
@@ -124,7 +124,7 @@ export default defineComponent({
 	created() {},
 	methods: {
 		async onClick() {
-			if (_.isFunction(this?.configs?.onClick)) {
+			if (vUtils.isFunction(this?.configs?.onClick)) {
 				this.loading = true;
 				try {
 					await this.configs.onClick.call(this.configs, this);
@@ -137,7 +137,7 @@ export default defineComponent({
 		}
 	},
 	render(h) {
-		const configs = _.omit(this.configs, ["text", "onClick", "disabled"]);
+		const configs = vUtils.omit(this.configs, ["text", "onClick", "disabled"]);
 		if (this.title) {
 			configs.title = this.title;
 		}

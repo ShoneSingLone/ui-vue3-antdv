@@ -1,21 +1,19 @@
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 
 export const pickValueFrom = configs => {
-	return _.reduce(
+	return vUtils.reduce(
 		configs,
 		(target, config, prop) => {
 			try {
 				target[prop] = JSON.parse(JSON.stringify(config.value));
-			} catch (error) {
-				console.error(error);
-			}
+			} catch (error) {}
 			return target;
 		},
 		{}
 	);
 };
 export const setValueTo = (configs, values) => {
-	return _.map(
+	return vUtils.map(
 		values,
 		(value, prop) => {
 			if (configs[prop]) {
@@ -28,7 +26,7 @@ export const setValueTo = (configs, values) => {
 
 /*重置reactive数据*/
 export const resetValueOf = (state, initState) => {
-	_.each(initState, (value, prop) => {
+	vUtils.each(initState, (value, prop) => {
 		state[prop] = JSON.parse(JSON.stringify(value));
 	});
 	return state;

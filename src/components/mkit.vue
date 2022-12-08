@@ -7,7 +7,7 @@
 	</div>
 </template>
 <script>
-import { _, $ } from "@ventose/ui";
+import { vUtils, $ } from "@ventose/ui";
 import { marked } from "../assets/libs/marked";
 import { hljs } from "../assets/libs/highlight";
 import { MkitTheme, setTheme } from "./MkitTheme";
@@ -30,7 +30,8 @@ export default {
 			html: "",
 			configsPopoverChangeTheme: {
 				trigger: "rightClick",
-				content: MkitTheme
+				content: MkitTheme,
+				openAtPoint: true,
 			}
 		};
 	},
@@ -50,6 +51,7 @@ export default {
 <style lang="scss">
 .markdown-wrapper {
 	position: relative;
+
 	.markdown-theme {
 		display: none;
 		position: absolute;
@@ -66,6 +68,7 @@ export default {
 
 	.markdown-wrapper_description {
 		position: relative;
+
 		code.hljs.language-js {
 			border-radius: 6px;
 		}

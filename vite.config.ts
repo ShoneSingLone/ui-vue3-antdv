@@ -20,14 +20,19 @@ const globals = {
 	lodash: "_",
 	dayjs: "dayjs",
 	moment: "dayjs",
-	axios: "axios",
+	axios: "axios"
 };
 
-
-const plugins = [useVue(), useVueJsx(), svgHelper(), cssInjectedByJsPlugin(), visualizer()];
+const plugins = [
+	useVue(),
+	useVueJsx(),
+	svgHelper(),
+	cssInjectedByJsPlugin(),
+	visualizer()
+];
 
 if (isUseDevServer) {
-	plugins.unshift(useDevServer())
+	plugins.unshift(useDevServer());
 }
 
 /* 默认打包lib */
