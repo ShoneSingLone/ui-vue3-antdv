@@ -1,10 +1,10 @@
 //@ts-nocheck
 import { createApp, reactive } from "vue";
 import "./AppStyle.less";
-import { _, $, VentoseUIWithInstall, State_UI, $ } from "@ventose/ui";
+import { vUtils, $, VentoseUIWithInstall, State_UI, $ } from "@ventose/ui";
 import { router } from "./router";
 import App from "./App.vue";
-import mkit from "./components/mkit.vue";
+import Mkit from "./components/Mkit.vue";
 import { DemoAndCode } from "./components/DemoAndCode";
 
 const appPlugins = {
@@ -14,9 +14,10 @@ const appPlugins = {
 			appPlugins,
 			dependState: options.dependState
 		});
+
 		app.use({
 			install: (app, { watch } = {}) => {
-				app.component("mkit", mkit);
+				app.component("Mkit", Mkit);
 				app.component("DemoAndCode", DemoAndCode);
 				//注册i8n实例并引入语言文件
 				app.config.globalProperties.$t = State_UI.$t;

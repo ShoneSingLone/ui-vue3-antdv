@@ -7,7 +7,11 @@
 				theme="dark"
 				mode="horizontal"
 				:style="{ lineHeight: '64px' }">
-				<a-menu-item key="1">nav 1</a-menu-item>
+				<a-menu-item key="1"
+					><div @click="openStatsDialog">
+						latest buildのlib分析报告
+					</div></a-menu-item
+				>
 				<a-menu-item key="2">nav 2</a-menu-item>
 				<a-menu-item key="3">nav 3</a-menu-item>
 			</a-menu>
@@ -56,16 +60,27 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { routes } from "../router";
+import { UI } from "../ui";
 export default defineComponent({
 	data() {
 		return {
 			routes,
-			selectedKeys1: ref<string[]>(["2"]),
+			selectedKeys1: ref<string[]>(["1"]),
 			selectedKeys2: ref<string[]>(["1"]),
 			collapsed: ref<boolean>(false),
 			openKeys: ref<string[]>(["sub1"]),
 			menus: [{ to: "xIcon" }, { to: "xButton" }, { to: "xDataGrid" }]
 		};
+	},
+	methods: {
+		openStatsDialog() {
+			UI.layer.open({
+				type: UI.layer.IFRAME,
+				maxmin: true,
+				fullscreen: true,
+				content: ["./assets/html/stats.html", ""]
+			});
+		}
 	}
 });
 </script>

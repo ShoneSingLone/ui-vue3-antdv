@@ -756,15 +756,22 @@ div[id^="xDialog_"] {
 }
 
 /* diallog move 用 */
-[layer-wrapper][type=page] {
+[layer-wrapper][type=page],
+[layer-wrapper][type=iframe] {
   transition: 0.1s linear
+}
+
+[layer-wrapper][type=iframe] {
+  .layui-layer-content{
+    display: flex;
+    flex:1
+  }
 }
 
 /* 只监听在move上的鼠标移动事件 */
 .layui-layer-move {
   display: none;
   position: fixed;
-  *position: absolute;
   top: 0;
   right: 0;
   left: 0;
@@ -779,6 +786,4 @@ div[id^="xDialog_"] {
 
 .layui-layer-tips {
   position: fixed;
-  transform-origin: bottom left;
-  visibility: hidden;
 }

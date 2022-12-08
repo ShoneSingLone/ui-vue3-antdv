@@ -1,6 +1,6 @@
-import { RangePicker } from "ant-design-vue/es/date-picker";
 import { Cpt_UI_locale } from "../../State_UI";
-import { _ } from "../../loadCommonUtil";
+import { vUtils } from "../../ventoseUtils";
+import { resolveComponent } from "vue";
 
 /**
  * @Description
@@ -10,15 +10,17 @@ import { _ } from "../../loadCommonUtil";
  * @returns {any}
  */
 export default ({ property, slots, listeners }) => {
+	const RangePicker = resolveComponent("aRangePicker");
+
 	/*let value = "";
-    if (property.value) {
-        if (_.isArray(property.value)) {
-            value = [
-                _.safeDate(property.value[0]),
-                _.safeDate(property.value[1])
-            ];
-        }
-    }*/
+	if (property.value) {
+		if (vUtils.isArray(property.value)) {
+			value = [
+				vUtils.safeDate(property.value[0]),
+				vUtils.safeDate(property.value[1])
+			];
+		}
+	}*/
 	console.log("property", property.value);
 	return (
 		<RangePicker

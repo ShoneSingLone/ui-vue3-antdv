@@ -3,7 +3,7 @@
 </template>
 
 <script>
-async function sfc({ defineComponent, markRaw, State_UI, _, UI }) {
+async function sfc({ defineComponent, markRaw, State_UI, vUtils, UI }) {
 	const { $t } = State_UI;
 
 	return defineComponent({

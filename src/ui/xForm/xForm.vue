@@ -1,9 +1,6 @@
 <script lang="jsx">
-import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
-import renders from "./itemRenders";
-import { MutatingProps } from "../common";
-import { checkXItem, EVENT_TYPE, TIPS_TYPE } from "../tools/validate";
-import { _ } from "../loadCommonUtil";
+import { defineComponent } from "vue";
+import { vUtils } from "../ventoseUtils";
 import $ from "jquery";
 
 export default defineComponent({
@@ -26,10 +23,15 @@ export default defineComponent({
 			return `xForm_${this._.uid}`;
 		},
 		labelStyleText() {
-			return _.map(
-				_.merge({ width: "120px", "text-align": "right" }, this.labelStyle),
-				(value, prop) => `${prop}: ${value}`
-			).join(";");
+			return vUtils
+				.map(
+					vUtils.merge(
+						{ width: "120px", "text-align": "right" },
+						this.labelStyle
+					),
+					(value, prop) => `${prop}: ${value}`
+				)
+				.join(";");
 		},
 
 		styleContent() {

@@ -14,7 +14,7 @@ import { ITEM_OPTIONS } from "../../common/options";
 import {
 	defCol,
 	defColActions,
-	_,
+	vUtils,
 	UI,
 	defColActionsBtnlist,
 	defDataGridOption,
@@ -22,8 +22,7 @@ import {
 	vModel,
 	setDataGridInfo,
 	State_UI,
-	getPaginationPageSize,
-	Utils
+	getPaginationPageSize
 } from "@ventose/ui";
 
 const { $t } = State_UI;
@@ -46,7 +45,7 @@ export default {
 						prop: "status",
 						label: $t("状态").label,
 						renderCell({ record }) {
-							return `${Utils.valueToLabel(
+							return `${vUtils.valueToLabel(
 								record.status,
 								ITEM_OPTIONS.status
 							)}`;
@@ -86,14 +85,14 @@ export default {
 						prop: "startDate",
 						label: $t("开始时间").label,
 						renderCell({ record }) {
-							return Utils.dateFormat(record.startDate);
+							return vUtils.dateFormat(record.startDate);
 						}
 					}),
 					...defCol({
 						prop: "endDate",
 						label: $t("到期时间").label,
 						renderCell({ record }) {
-							return Utils.dateFormat(record.endDate);
+							return vUtils.dateFormat(record.endDate);
 						}
 					})
 				}

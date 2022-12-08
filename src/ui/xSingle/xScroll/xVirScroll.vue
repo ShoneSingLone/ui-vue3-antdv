@@ -28,7 +28,7 @@
 <script>
 import { defineComponent } from "vue";
 
-import { _, $ } from "@ventose/ui";
+import { vUtils, $ } from "@ventose/ui";
 
 const itemHeight = 48;
 const perCount = 10;
@@ -158,7 +158,7 @@ export default defineComponent({
 		this.$wrapperEle.off("scroll");
 	},
 	methods: {
-		setTop: _.debounce(function () {
+		setTop: vUtils.debounce(function () {
 			if (this.$refs.refWrapper) {
 				this.$refs.refWrapper.scrollTo({
 					top: this.top,

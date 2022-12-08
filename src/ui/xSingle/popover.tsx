@@ -1,9 +1,10 @@
+//@ts-nocheck
 import $ from "jquery";
 import { LayerUtils, DATA_TIPS_FOLLOW_ID } from "./layer/LayerUtils";
 import { i_layerOptions } from "./layer/i_layerOptions";
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 import { createApp } from "vue";
-
+type t_trigger = "click" | "rightClick";
 type t_uiPopoverOptions = {
 	content: string;
 	onlyEllipsis?: Boolean;
@@ -11,11 +12,11 @@ type t_uiPopoverOptions = {
 
 const TIMEOUT_DELAY = 200;
 /* 缓存 popover 的配置信息 */
-const popverOptionsCollection: {
+const tipsOptionsCollection: {
 	[prop: string]: t_uiPopoverOptions;
 } = {};
 /**/
-const popverIndexCollection: {
+const tipsKeys: {
 	[prop: string]: Number;
 } = {};
 const appAddPlugin: any = {};
@@ -27,7 +28,7 @@ const DATA_APP_ID = "data-app-id";
 const DATA_FOLLOW_ID = "data-follow-id";
 
 function fnShowTips({ $ele, followId, appId, event }: any) {
-	const options = popverOptionsCollection[followId] || { content: "" };
+	const options = tipsOptionsCollection[followId] || { content: "" };
 	/* onlyEllipsis,content */
 	if (!options.content) {
 		/* 是不是需要判断内容有省略号 */
@@ -35,7 +36,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			const eleWidth = $ele.width() || 0;
 			const text = $ele.text();
 			const $div = $(
-				`<span style="opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`
+				`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`
 			);
 			$div.appendTo($("body"));
 			const innerWidth = $div.width() || 0;
@@ -43,19 +44,43 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			if (innerWidth > eleWidth) {
 				options.content = text;
 			}
+		} else {
+			return;
 		}
+	}
+	let tipsContent = options.content;
+	if (!tipsContent) {
+		/* 如果仍然没有内容，那就不弹窗 */
 		return;
 	}
 	let app: any;
-	let tipsContent = options.content;
+
+	const placement = (() => {
+		const placement_strategy = {
+			top: 1,
+			right: 2,
+			bottom: 3,
+			left: 4
+		};
+		return placement_strategy[options.placement || "top"];
+	})();
 	let layerTipsOptions: i_layerOptions = {
-		tips: [LayerUtils.UP, "#fff"],
+		tips: [placement, "#fff"],
 		/*hover 不允许 同时多个 tips出现*/
 		/*tipsMore: false,*/
 		during: 1000 * 60 * 10
 	};
+
+	const isOpenAtPoint = $ele.attr("data-open-at-point");
+	if (isOpenAtPoint) {
+		layerTipsOptions.openAtPoint = {
+			left: $ele.clientX,
+			top: $ele.clientY
+		};
+	}
+
 	/* TODO:目前只考虑vue组件对象 */
-	if (_.isPlainObject(options.content)) {
+	if (vUtils.isPlainObject(options.content)) {
 		const id = `${followId}_content`;
 		/* 桩 */
 		tipsContent = `<div id="${id}"></div>`;
@@ -72,27 +97,28 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			}
 		};
 	}
+
 	setTimeout(() => {
 		if (visibleArea[followId]) {
-			popverIndexCollection[followId] = LayerUtils.tips(
+			tipsKeys[followId] = LayerUtils.tips(
 				tipsContent,
 				`#${followId}`,
 				layerTipsOptions
 			);
 		}
 		/* 如果delay之后还存在，再展示 */
-	}, options.delay || 240);
+	}, options.delay || 32);
 }
 
 /* 监听 触发popover的事件 hover click */
 export function installPopoverDirective(app: any, appSettings: any) {
-	const appId = _.genId("appId");
+	const appId = vUtils.genId("appId");
 	appAddPlugin[appId] = appSettings.appPlugins;
 	appDependState[appId] = appSettings.dependState;
 
 	app.directive("uiPopover", {
 		mounted(el: HTMLInputElement, binding) {
-			const followId = _.genId("xPopoverTarget");
+			const followId = vUtils.genId("xPopoverTarget");
 			const $ele = $(el);
 			$ele
 				.addClass("x-ui-popover")
@@ -100,18 +126,25 @@ export function installPopoverDirective(app: any, appSettings: any) {
 				.attr(DATA_APP_ID, appId)
 				.attr(DATA_FOLLOW_ID, followId);
 			if (binding.value) {
-				popverOptionsCollection[followId] = binding.value;
+				tipsOptionsCollection[followId] = binding.value;
 				if (binding.value?.trigger) {
 					$ele.attr("data-trigger", binding.value?.trigger);
-					$ele.addClass("pointer");
+					const classStrategy = {
+						rightClick: "pointer-right-click"
+					};
+					$ele.addClass(classStrategy[binding.value?.trigger] || "pointer");
+				}
+				/* 弹窗在click的点 */
+				if (binding.value?.openAtPoint) {
+					$ele.attr("data-open-at-point", true);
 				}
 			}
 		},
 		unmounted(el: HTMLInputElement) {
 			const followId: any = $(el).attr(DATA_FOLLOW_ID);
-			LayerUtils.close(popverIndexCollection[followId] as number);
-			delete popverOptionsCollection[followId];
-			delete popverIndexCollection[followId];
+			LayerUtils.close(tipsKeys[followId] as number);
+			delete tipsOptionsCollection[followId];
+			delete visibleArea[followId];
 		}
 	});
 }
@@ -128,10 +161,11 @@ function inVisibleArea(followId: string) {
 function closeTips(followId: string, options = {}) {
 	delete visibleArea[followId];
 	timer4CloseTips[followId] = setTimeout(() => {
-		const layerIndex = popverIndexCollection[followId];
-		if (typeof layerIndex === "number") {
+		const layerIndex = tipsKeys[followId];
+		if (layerIndex) {
 			LayerUtils.close(layerIndex).then(() => {
-				delete popverIndexCollection[followId];
+				delete tipsKeys[followId];
+				delete timer4CloseTips[followId];
 			});
 		}
 	}, TIMEOUT_DELAY);
@@ -139,40 +173,56 @@ function closeTips(followId: string, options = {}) {
 
 /* listener */
 
+function handleClick(event) {
+	event.preventDefault();
+	const $ele: any = $(this);
+	const followId = $ele.attr(DATA_FOLLOW_ID);
+	const appId = $ele.attr(DATA_APP_ID);
+	visibleArea[followId] = true;
+	if (tipsKeys[followId]) {
+		closeTips(followId);
+	} else {
+		fnShowTips({ $ele, followId, appId, event });
+	}
+}
+
 /* 鼠标click处理 */
+/* 左键单击 */
 $(document).on(
 	"click.uiPopver",
 	`[${DATA_FOLLOW_ID}][data-trigger=click]`,
-	function (event) {
-		const $ele: any = $(this);
-		const followId = $ele.attr(DATA_FOLLOW_ID);
-		const appId = $ele.attr(DATA_APP_ID);
-		visibleArea[followId] = true;
-
-		if (popverIndexCollection[followId]) {
-			closeTips(followId);
-		} else {
-			fnShowTips({ $ele, followId, appId, event });
-		}
-	}
+	handleClick
+);
+/* 右键单击 */
+$(document).on(
+	"contextmenu.uiPopver",
+	`[${DATA_FOLLOW_ID}][data-trigger=rightClick]`,
+	handleClick
 );
 
 /* 鼠标hover处理 */
 $(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
 	const $ele: any = $(this);
 	const followId = $ele.attr(DATA_FOLLOW_ID);
-	const appId = $ele.attr(DATA_APP_ID);
-	inVisibleArea(followId);
-	/*如果存在，不重复添加*/
-	if (popverIndexCollection[followId]) {
+	if (visibleArea[followId]) {
 		return;
-	}
+	} else {
+		const appId = $ele.attr(DATA_APP_ID);
+		inVisibleArea(followId);
+		/*如果存在，不重复添加*/
+		if (tipsKeys[followId]) {
+			return;
+		}
 
-	if ($ele.attr("data-trigger") === "click") {
-		return;
-	}
+		if (($ele.attr("data-trigger") as t_trigger) === "click") {
+			return;
+		}
+		if (($ele.attr("data-trigger") as t_trigger) === "rightClick") {
+			return;
+		}
 
-	fnShowTips({ $ele, followId, appId, event });
+		fnShowTips({ $ele, followId, appId, event });
+	}
 });
 
 $(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
@@ -200,6 +250,6 @@ $(document).on(
 	function (event) {
 		const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
 		/*如果鼠标又移动到TIPS范围内，则不close*/
-		closeTips(followId);
+		closeTips(followId as string);
 	}
 );

@@ -1,8 +1,8 @@
-import { _ } from "../loadCommonUtil";
+import { vUtils } from "../ventoseUtils";
 
 export const lStorage = new Proxy(localStorage, {
 	set(_localStorage, prop, value) {
-		if (_.isPlainObject(value)) {
+		if (vUtils.isPlainObject(value)) {
 			_localStorage[prop] = JSON.stringify(value);
 		} else {
 			_localStorage[prop] = value;

@@ -21,17 +21,16 @@ import { xPagination } from "./xDataGrid/xPagination";
 import xColFilter from "./xDataGrid/xColFilter.vue";
 import xVirScroll from "./xSingle/xScroll/xVirScroll.vue";
 import {
-	defineXVirTableConfigs,
+	defXVirTableConfigs as defXVirTableConfigs,
 	xVirTable
 } from "./xDataGrid/xVirTable/xVirTable";
-import { _ as mylodash } from "./loadCommonUtil.js";
+import { vUtils } from "./ventoseUtils";
 import { State_UI, Cpt_UI_locale } from "./State_UI";
 import dayjs from "dayjs";
 import { RegexFn, FormRules } from "./xForm/FormRules";
 import { installPopoverDirective } from "./xSingle/popover";
 import { installUIDialogComponent } from "./xSingle/dialog/dialog";
 import { installDirective } from "./directive";
-import { Utils } from "./common";
 
 /* @ts-ignore */
 window.dayjs = dayjs;
@@ -84,18 +83,17 @@ export const components = {
 };
 
 export { VNodeCollection as VNodeCollection };
-export { Utils as Utils };
 export { UI as UI };
 export { dayjs as moment };
 export { dayjs as dayjs };
-export { mylodash as _ };
+export { vUtils as vUtils };
 export { $ as $ };
 export { defPagination as defPagination };
 export { defCol as defCol };
 export { defColActions as defColActions };
 export { defColActionsBtnlist as defColActionsBtnlist };
 export { defDataGridOption as defDataGridOption };
-export { defineXVirTableConfigs as defineXVirTableConfigs };
+export { defXVirTableConfigs as defXVirTableConfigs };
 export { setDataGridInfo as setDataGridInfo };
 /* State_UI作为句柄，与外部通信，$t language 等属性 */
 export { State_UI as State_UI };
@@ -125,11 +123,11 @@ export const VentoseUIWithInstall = {
 		installDirective(app, options);
 		installPopoverDirective(app, options);
 		installUIDialogComponent(UI, options);
-		mylodash.each(components, (component, name) => {
+		vUtils.each(components, (component, name) => {
 			if (component.name) {
 				name = component.name;
 			} else {
-				mylodash.doNothing(name, `miss name`);
+				vUtils.doNothing(name, `miss name`);
 			}
 			app.component(component.name || name, component);
 		});

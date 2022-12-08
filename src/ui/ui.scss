@@ -312,7 +312,8 @@ div[id^="svg-icon_"] {
 	height: 16px;
 }
 
-.pointer {
+.pointer,
+.pointer-right-click {
 	&:hover {
 		cursor: pointer;
 	}
@@ -328,6 +329,13 @@ div[id^="svg-icon_"] {
 		}
 	}
 }
+
+/* .pointer-right-click {
+	&:hover {
+		cursor: url(../assets/svg/RightClick.svg), auto;
+	}
+	cursor: url(../assets/svg/RightClick.svg), auto;
+} */
 
 .h100,
 .height100 {

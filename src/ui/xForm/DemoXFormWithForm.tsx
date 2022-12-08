@@ -8,6 +8,7 @@ import {
 	_
 } from "@ventose/ui";
 import { defineComponent } from "vue";
+import { vUtils } from "../ventoseUtils";
 
 const { $t } = State_UI;
 export const DemoXFormWithForm = defineComponent({
@@ -67,7 +68,7 @@ console.log(window)
 			<div id="DialogModifyIP">
 				<xForm class="flex vertical" labelStyle={this.styleForm}>
 					<aAlert message={this.$t("提示信息").label} type="info" />
-					{_.map(this.dataXItem, item => {
+					{vUtils.map(this.dataXItem, item => {
 						return (
 							<>
 								<xGap t="10" />
@@ -82,7 +83,7 @@ console.log(window)
 \`\`\`js
 <xForm class="flex vertical" labelStyle={this.styleForm}>
 	<aAlert message={this.$t("提示信息").label} type="info" />
-    {_.map(this.dataXItem, (item) => {
+    {vUtils.map(this.dataXItem, (item) => {
      return (<>
       <xGap t="10" />
       <xItem configs={item} />
