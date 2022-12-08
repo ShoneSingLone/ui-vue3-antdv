@@ -1521,16 +1521,27 @@ div[id^=svg-icon_] {
   height: 16px;
 }
 
-.pointer:hover {
+.pointer:hover,
+.pointer-right-click:hover {
   cursor: pointer;
 }
 
-.pointer.elevation:active {
+.pointer.elevation:active,
+.pointer-right-click.elevation:active {
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12) !important;
 }
 
-.pointer.elevation:hover {
+.pointer.elevation:hover,
+.pointer-right-click.elevation:hover {
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.pointer-right-click {
+  cursor: url(data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgc3R5bGU9IndpZHRoOiAxZW07aGVpZ2h0OiAxZW07dmVydGljYWwtYWxpZ246IG1pZGRsZTtmaWxsOiBjdXJyZW50Q29sb3I7b3ZlcmZsb3c6IGhpZGRlbjsiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwLWlkPSIxODI2Ij48cGF0aCBkPSJNNjU3LjA0NzE4MjAyIDEzMS45MzI3NTk5aC0xMTAuNjkzOTAyMDd2LTE4LjUzOTg2NTM3YzAtMzguNzE1NjAxMjItMjEuMjY2MzE2MTYtNzQuNzA0NzUxNjQtNTUuMDc0MzA1OTYtOTMuNzg5OTA3MTdsLTMyLjE3MjExOTMyLTE3Ljk5NDU3NTIxYy0xNi4zNTg3MDQ3NC05LjI2OTkzMjY5LTM3LjA3OTczMDczLTMuMjcxNzQwOTQtNDYuMzQ5NjYzNDMgMTMuMDg2OTYzOC05LjI2OTkzMjY5IDE2LjM1ODcwNDc0LTMuMjcxNzQwOTQgMzcuMDc5NzMwNzMgMTMuMDg2OTYzOCA0Ni4zNDk2NjM0M2wzMi4xNzIxMTkzMyAxNy45OTQ1NzUyYzEyLjU0MTY3MzYzIDcuMDg4NzcyMDUgMjAuMTc1NzM1ODQgMjAuMTc1NzM1ODQgMjAuMTc1NzM1ODMgMzQuMzUzMjc5OTV2MTguNTM5ODY1MzdIMzY2Ljk1MjgxNzk4Yy0xMDguNTEyNzQxNDMgMC0xOTYuMzA0NDU2ODggODguMzM3MDA1NTktMTk2LjMwNDQ1Njg3IDE5Ni4zMDQ0NTY4NnYyOTguODE5MDA2NTdjMCAxODEuNTgxNjIyNTkgMTQ3Ljc3MzYzMjgxIDMyOS45MDA1NDU1NiAzMjkuOTAwNTQ1NTcgMzI5LjkwMDU0NTU2aDIzLjQ0NzQ3NjhjMTgxLjU4MTYyMjU5IDAgMzI5LjkwMDU0NTU2LTE0Ny43NzM2MzI4MSAzMjkuOTAwNTQ1NTctMzI5LjkwMDU0NTU2VjMyOC4yMzcyMTY3NmMtMC41NDUyOTAxNS0xMDcuOTY3NDUxMjktODguMzM3MDA1NTktMTk2LjMwNDQ1Njg4LTE5Ni44NDk3NDcwMy0xOTYuMzA0NDU2ODZ6TTM2Ni45NTI4MTc5OCAyMDAuMDk0MDI5NjRINTEydjI0My43NDQ3MDA2MkgyMzguODA5NjMwODZWMzI4LjIzNzIxNjc2YzAtNzAuMzQyNDMwMzcgNTcuMjU1NDY2NTktMTI4LjE0MzE4NzEyIDEyOC4xNDMxODcxMi0xMjguMTQzMTg3MTJ6IG0xNTcuMDQzNTY1NSA2ODguNzAxNDY5NTFoLTIzLjQ0NzQ3NjhjLTE0My45NTY2MDE3IDAtMjYxLjczOTI3NTgxLTExNy4yMzczODM5Ni0yNjEuNzM5Mjc1ODItMjYxLjczOTI3NTgyVjUxMmg1NDYuMzgwNzM4Mjh2MTE1LjYwMTUxMzQ4YzAgMTQzLjk1NjYwMTctMTE3LjIzNzM4Mzk2IDI2MS4xOTM5ODU2Ny0yNjEuMTkzOTg1NjYgMjYxLjE5Mzk4NTY3eiIgZmlsbD0iIzJjMmMyYyIgcC1pZD0iMTgyNyI+PC9wYXRoPjwvc3ZnPg==), auto;
+}
+
+.pointer-right-click:hover {
+  cursor: url(data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgc3R5bGU9IndpZHRoOiAxZW07aGVpZ2h0OiAxZW07dmVydGljYWwtYWxpZ246IG1pZGRsZTtmaWxsOiBjdXJyZW50Q29sb3I7b3ZlcmZsb3c6IGhpZGRlbjsiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwLWlkPSIxODI2Ij48cGF0aCBkPSJNNjU3LjA0NzE4MjAyIDEzMS45MzI3NTk5aC0xMTAuNjkzOTAyMDd2LTE4LjUzOTg2NTM3YzAtMzguNzE1NjAxMjItMjEuMjY2MzE2MTYtNzQuNzA0NzUxNjQtNTUuMDc0MzA1OTYtOTMuNzg5OTA3MTdsLTMyLjE3MjExOTMyLTE3Ljk5NDU3NTIxYy0xNi4zNTg3MDQ3NC05LjI2OTkzMjY5LTM3LjA3OTczMDczLTMuMjcxNzQwOTQtNDYuMzQ5NjYzNDMgMTMuMDg2OTYzOC05LjI2OTkzMjY5IDE2LjM1ODcwNDc0LTMuMjcxNzQwOTQgMzcuMDc5NzMwNzMgMTMuMDg2OTYzOCA0Ni4zNDk2NjM0M2wzMi4xNzIxMTkzMyAxNy45OTQ1NzUyYzEyLjU0MTY3MzYzIDcuMDg4NzcyMDUgMjAuMTc1NzM1ODQgMjAuMTc1NzM1ODQgMjAuMTc1NzM1ODMgMzQuMzUzMjc5OTV2MTguNTM5ODY1MzdIMzY2Ljk1MjgxNzk4Yy0xMDguNTEyNzQxNDMgMC0xOTYuMzA0NDU2ODggODguMzM3MDA1NTktMTk2LjMwNDQ1Njg3IDE5Ni4zMDQ0NTY4NnYyOTguODE5MDA2NTdjMCAxODEuNTgxNjIyNTkgMTQ3Ljc3MzYzMjgxIDMyOS45MDA1NDU1NiAzMjkuOTAwNTQ1NTcgMzI5LjkwMDU0NTU2aDIzLjQ0NzQ3NjhjMTgxLjU4MTYyMjU5IDAgMzI5LjkwMDU0NTU2LTE0Ny43NzM2MzI4MSAzMjkuOTAwNTQ1NTctMzI5LjkwMDU0NTU2VjMyOC4yMzcyMTY3NmMtMC41NDUyOTAxNS0xMDcuOTY3NDUxMjktODguMzM3MDA1NTktMTk2LjMwNDQ1Njg4LTE5Ni44NDk3NDcwMy0xOTYuMzA0NDU2ODZ6TTM2Ni45NTI4MTc5OCAyMDAuMDk0MDI5NjRINTEydjI0My43NDQ3MDA2MkgyMzguODA5NjMwODZWMzI4LjIzNzIxNjc2YzAtNzAuMzQyNDMwMzcgNTcuMjU1NDY2NTktMTI4LjE0MzE4NzEyIDEyOC4xNDMxODcxMi0xMjguMTQzMTg3MTJ6IG0xNTcuMDQzNTY1NSA2ODguNzAxNDY5NTFoLTIzLjQ0NzQ3NjhjLTE0My45NTY2MDE3IDAtMjYxLjczOTI3NTgxLTExNy4yMzczODM5Ni0yNjEuNzM5Mjc1ODItMjYxLjczOTI3NTgyVjUxMmg1NDYuMzgwNzM4Mjh2MTE1LjYwMTUxMzQ4YzAgMTQzLjk1NjYwMTctMTE3LjIzNzM4Mzk2IDI2MS4xOTM5ODU2Ny0yNjEuMTkzOTg1NjYgMjYxLjE5Mzk4NTY3eiIgZmlsbD0iIzJjMmMyYyIgcC1pZD0iMTgyNyI+PC9wYXRoPjwvc3ZnPg==), auto;
 }
 
 .h100,
@@ -34477,76 +34488,76 @@ class ClassLayer {
     return layerInstance;
   }
   async tips() {
-    var layerInstance = this;
-    var config = layerInstance.config;
-    var $eleLayer = layerInstance.$eleLayer;
+    const layerInstance = this;
+    const config = layerInstance.config;
+    const $eleLayer = layerInstance.$eleLayer;
     await new Promise((r) => {
       setTimeout(r, 34);
     });
-    var layArea = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-    var follow = $(config.follow);
-    if (!follow[0]) {
-      follow = $body;
+    const [tipsDomWidth, tipsdomHeight] = [
+      $eleLayer.outerWidth(),
+      $eleLayer.outerHeight()
+    ];
+    let $eleFollow = $(config.follow);
+    if ($eleFollow.length == 0) {
+      $eleFollow = $body;
     }
-    var goal = {
-      width: follow.outerWidth(),
-      height: follow.outerHeight(),
-      top: follow.offset().top,
-      left: follow.offset().left
+    var followInfo = {
+      width: $eleFollow.outerWidth(),
+      height: $eleFollow.outerHeight(),
+      top: $eleFollow.offset().top,
+      left: $eleFollow.offset().left,
+      tipTop: 0,
+      tipLeft: 0
     };
     var tipsG = $eleLayer.find(".layui-layer-TipsG");
-    const [guide, customColor] = config.tips || ["1", ""];
+    const [direction, customColor] = config.tips || ["1", ""];
     if (!customColor) {
       tipsG.remove();
     }
     function makeLeftAuto() {
-      if (goal.left + layArea[0] - $win.width() > 0) {
-        goal.tipLeft = goal.left + goal.width - layArea[0];
+      if (followInfo.left + tipsDomWidth - $win.width() > 0) {
+        followInfo.tipLeft = followInfo.left + followInfo.width - tipsDomWidth;
         tipsG.css({ right: 12, left: "auto" });
       } else {
-        goal.tipLeft = goal.left;
+        followInfo.tipLeft = followInfo.left;
       }
     }
-    goal.where = [
-      function() {
+    const direction_strategy = {
+      [LayerUtils.UP]() {
         makeLeftAuto();
-        goal.tipTop = goal.top - layArea[1] - 10;
+        followInfo.tipTop = followInfo.top - tipsdomHeight - 10;
         tipsG.removeClass("layui-layer-TipsB").addClass("layui-layer-TipsT").css("border-right-color", customColor);
+        followInfo.top - ($win.scrollTop() + tipsdomHeight + 8 * 2) < 0 && followInfo.where[2]();
       },
-      function() {
-        goal.tipLeft = goal.left + goal.width + 10;
-        goal.tipTop = goal.top;
+      [LayerUtils.RIGHT]() {
+        followInfo.tipLeft = followInfo.left + followInfo.width + 10;
+        followInfo.tipTop = followInfo.top;
         tipsG.removeClass("layui-layer-TipsL").addClass("layui-layer-TipsR").css("border-bottom-color", customColor);
+        $win.width() - (followInfo.left + followInfo.width + tipsDomWidth + 8 * 2) > 0 || followInfo.where[3]();
       },
-      function() {
+      [LayerUtils.BOTTOM]() {
         makeLeftAuto();
-        goal.tipTop = goal.top + goal.height + 10;
+        followInfo.tipTop = followInfo.top + followInfo.height + 10;
         tipsG.removeClass("layui-layer-TipsT").addClass("layui-layer-TipsB").css("border-right-color", customColor);
+        followInfo.top - $win.scrollTop() + followInfo.height + tipsdomHeight + 8 * 2 - $win.height() > 0 && followInfo.where[0]();
       },
-      function() {
-        goal.tipLeft = goal.left - layArea[0] - 10;
-        goal.tipTop = goal.top;
+      [LayerUtils.LEFT]() {
+        followInfo.tipLeft = followInfo.left - tipsDomWidth - 10;
+        followInfo.tipTop = followInfo.top;
         tipsG.removeClass("layui-layer-TipsR").addClass("layui-layer-TipsL").css("border-bottom-color", customColor);
+        tipsDomWidth + 8 * 2 - followInfo.left > 0 && followInfo.where[1]();
       }
-    ];
-    goal.where[guide - 1]();
-    if (guide === 1) {
-      goal.top - ($win.scrollTop() + layArea[1] + 8 * 2) < 0 && goal.where[2]();
-    } else if (guide === 2) {
-      $win.width() - (goal.left + goal.width + layArea[0] + 8 * 2) > 0 || goal.where[3]();
-    } else if (guide === 3) {
-      goal.top - $win.scrollTop() + goal.height + layArea[1] + 8 * 2 - $win.height() > 0 && goal.where[0]();
-    } else if (guide === 4) {
-      layArea[0] + 8 * 2 - goal.left > 0 && goal.where[1]();
-    }
+    };
+    direction_strategy[direction] && direction_strategy[direction]();
     $eleLayer.attr(DATA_TIPS_FOLLOW_ID, config.follow.substring(1));
     $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).css({
       "background-color": customColor,
       "padding-right": config.closeBtn ? "30px" : ""
     });
     $eleLayer.css({
-      left: goal.tipLeft - $win.scrollLeft(),
-      top: goal.tipTop - $win.scrollTop(),
+      left: followInfo.tipLeft - $win.scrollLeft(),
+      top: followInfo.tipTop - $win.scrollTop(),
       transform: "scale(0)"
     });
     setTimeout(() => {
@@ -34750,15 +34761,16 @@ function fnShowTips({
     if (options.onlyEllipsis) {
       const eleWidth = $ele.width() || 0;
       const text = $ele.text();
-      const $div = $(`<span style="opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
+      const $div = $(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
       $div.appendTo($("body"));
       const innerWidth = $div.width() || 0;
       $div.remove();
       if (innerWidth > eleWidth) {
         options.content = text;
       }
+    } else {
+      return;
     }
-    return;
   }
   let app;
   let tipsContent = options.content;
@@ -34796,7 +34808,7 @@ function installPopoverDirective(app, appSettings) {
   appDependState[appId] = appSettings.dependState;
   app.directive("uiPopover", {
     mounted(el, binding) {
-      var _a, _b;
+      var _a, _b, _c;
       const followId = _$1.genId("xPopoverTarget");
       const $ele = $(el);
       $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
@@ -34804,7 +34816,10 @@ function installPopoverDirective(app, appSettings) {
         popverOptionsCollection[followId] = binding.value;
         if ((_a = binding.value) == null ? void 0 : _a.trigger) {
           $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
-          $ele.addClass("pointer");
+          const classStrategy = {
+            rightClick: "pointer-right-click"
+          };
+          $ele.addClass(classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer");
         }
       }
     },
@@ -34834,7 +34849,8 @@ function closeTips(followId, options = {}) {
     }
   }, TIMEOUT_DELAY);
 }
-$(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, function(event) {
+function handleClick(event) {
+  event.preventDefault();
   const $ele = $(this);
   const followId = $ele.attr(DATA_FOLLOW_ID);
   const appId = $ele.attr(DATA_APP_ID);
@@ -34849,24 +34865,33 @@ $(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, func
       event
     });
   }
-});
+}
+$(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, handleClick);
+$(document).on("contextmenu.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=rightClick]`, handleClick);
 $(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event) {
   const $ele = $(this);
   const followId = $ele.attr(DATA_FOLLOW_ID);
-  const appId = $ele.attr(DATA_APP_ID);
-  inVisibleArea(followId);
-  if (popverIndexCollection[followId]) {
+  if (visibleArea[followId]) {
     return;
+  } else {
+    const appId = $ele.attr(DATA_APP_ID);
+    inVisibleArea(followId);
+    if (popverIndexCollection[followId]) {
+      return;
+    }
+    if ($ele.attr("data-trigger") === "click") {
+      return;
+    }
+    if ($ele.attr("data-trigger") === "rightClick") {
+      return;
+    }
+    fnShowTips({
+      $ele,
+      followId,
+      appId,
+      event
+    });
   }
-  if ($ele.attr("data-trigger") === "click") {
-    return;
-  }
-  fnShowTips({
-    $ele,
-    followId,
-    appId,
-    event
-  });
 });
 $(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event) {
   const followId = $(this).attr(DATA_FOLLOW_ID);
