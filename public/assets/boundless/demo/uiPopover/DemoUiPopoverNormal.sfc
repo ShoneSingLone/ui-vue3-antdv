@@ -26,6 +26,10 @@
 	<aTag v-uiPopover="{ trigger: 'click', content: '点击触发' }">
 		trigger:click
 	</aTag>
+	<xGap t="10" />
+	<aTag v-uiPopover="configsUiPopoverRightClick">
+		trigger:rightClick 右键点击 弹窗
+	</aTag>
 </template>
 
 <script>
@@ -45,6 +49,10 @@ async function sfc({ defineComponent, State_UI, UI, markRaw }) {
 					content: `v-uiPopover="{ content: $t('这是一个浮动tips').label }" `
 				},
 				configsUiPopoverComponent: {
+					content: PopoverContent
+				},
+				configsUiPopoverRightClick: {
+					trigger:"rightClick",
 					content: PopoverContent
 				},
 				configsBtn: {

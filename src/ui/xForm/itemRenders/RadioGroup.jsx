@@ -1,5 +1,9 @@
-import Radio, { RadioGroup, RadioButton } from "ant-design-vue/es/radio";
 import _ from "lodash";
+import { resolveComponent } from "vue";
+const Radio = resolveComponent("aRadio");
+const RadioGroup = resolveComponent("aRadioGroup");
+const RadioButton = resolveComponent("aRadioButton");
+
 /**
  * @Description
  * @date 2021-11-09

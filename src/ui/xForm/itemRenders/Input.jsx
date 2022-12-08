@@ -1,7 +1,11 @@
-import { Input, InputNumber } from "ant-design-vue";
-import { InputPassword, Textarea, InputSearch } from "ant-design-vue/es/input";
-import { h } from "vue";
+import { h, resolveComponent } from "vue";
 import { _ } from "../../loadCommonUtil";
+
+const Input = resolveComponent("aInput");
+const InputNumber = resolveComponent("aInputNumber");
+const InputPassword = resolveComponent("aInputPassword");
+const Textarea = resolveComponent("aTextarea");
+const InputSearch = resolveComponent("aInputSearch");
 
 /**
  * @Description

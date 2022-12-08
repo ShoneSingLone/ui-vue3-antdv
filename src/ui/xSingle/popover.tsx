@@ -1,9 +1,10 @@
+//@ts-nocheck
 import $ from "jquery";
 import { LayerUtils, DATA_TIPS_FOLLOW_ID } from "./layer/LayerUtils";
 import { i_layerOptions } from "./layer/i_layerOptions";
 import { _ } from "../loadCommonUtil";
 import { createApp } from "vue";
-
+type t_trigger = "click" | "rightClick";
 type t_uiPopoverOptions = {
 	content: string;
 	onlyEllipsis?: Boolean;
@@ -35,7 +36,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			const eleWidth = $ele.width() || 0;
 			const text = $ele.text();
 			const $div = $(
-				`<span style="opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`
+				`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`
 			);
 			$div.appendTo($("body"));
 			const innerWidth = $div.width() || 0;
@@ -43,8 +44,9 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			if (innerWidth > eleWidth) {
 				options.content = text;
 			}
+		} else {
+			return;
 		}
-		return;
 	}
 	let app: any;
 	let tipsContent = options.content;
@@ -72,6 +74,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			}
 		};
 	}
+
 	setTimeout(() => {
 		if (visibleArea[followId]) {
 			popverIndexCollection[followId] = LayerUtils.tips(
@@ -103,7 +106,10 @@ export function installPopoverDirective(app: any, appSettings: any) {
 				popverOptionsCollection[followId] = binding.value;
 				if (binding.value?.trigger) {
 					$ele.attr("data-trigger", binding.value?.trigger);
-					$ele.addClass("pointer");
+					const classStrategy = {
+						rightClick: "pointer-right-click"
+					};
+					$ele.addClass(classStrategy[binding.value?.trigger] || "pointer");
 				}
 			}
 		},
@@ -139,40 +145,57 @@ function closeTips(followId: string, options = {}) {
 
 /* listener */
 
+function handleClick(event) {
+	event.preventDefault();
+	const $ele: any = $(this);
+	const followId = $ele.attr(DATA_FOLLOW_ID);
+	const appId = $ele.attr(DATA_APP_ID);
+	visibleArea[followId] = true;
+
+	if (popverIndexCollection[followId]) {
+		closeTips(followId);
+	} else {
+		fnShowTips({ $ele, followId, appId, event });
+	}
+}
+
 /* 鼠标click处理 */
+/* 左键单击 */
 $(document).on(
 	"click.uiPopver",
 	`[${DATA_FOLLOW_ID}][data-trigger=click]`,
-	function (event) {
-		const $ele: any = $(this);
-		const followId = $ele.attr(DATA_FOLLOW_ID);
-		const appId = $ele.attr(DATA_APP_ID);
-		visibleArea[followId] = true;
-
-		if (popverIndexCollection[followId]) {
-			closeTips(followId);
-		} else {
-			fnShowTips({ $ele, followId, appId, event });
-		}
-	}
+	handleClick
+);
+/* 右键单击 */
+$(document).on(
+	"contextmenu.uiPopver",
+	`[${DATA_FOLLOW_ID}][data-trigger=rightClick]`,
+	handleClick
 );
 
 /* 鼠标hover处理 */
 $(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
 	const $ele: any = $(this);
 	const followId = $ele.attr(DATA_FOLLOW_ID);
-	const appId = $ele.attr(DATA_APP_ID);
-	inVisibleArea(followId);
-	/*如果存在，不重复添加*/
-	if (popverIndexCollection[followId]) {
+	if (visibleArea[followId]) {
 		return;
-	}
+	} else {
+		const appId = $ele.attr(DATA_APP_ID);
+		inVisibleArea(followId);
+		/*如果存在，不重复添加*/
+		if (popverIndexCollection[followId]) {
+			return;
+		}
 
-	if ($ele.attr("data-trigger") === "click") {
-		return;
-	}
+		if (($ele.attr("data-trigger") as t_trigger) === "click") {
+			return;
+		}
+		if (($ele.attr("data-trigger") as t_trigger) === "rightClick") {
+			return;
+		}
 
-	fnShowTips({ $ele, followId, appId, event });
+		fnShowTips({ $ele, followId, appId, event });
+	}
 });
 
 $(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
@@ -200,6 +223,6 @@ $(document).on(
 	function (event) {
 		const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
 		/*如果鼠标又移动到TIPS范围内，则不close*/
-		closeTips(followId);
+		closeTips(followId as string);
 	}
 );

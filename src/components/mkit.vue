@@ -1,5 +1,5 @@
 <template>
-	<div class="markdown-wrapper">
+	<div class="markdown-wrapper" @click.right="showHighlightSelector">
 		<select class="markdown-theme" v-model="theme">
 			<option v-for="item in cssOptions" :key="item.value" :value="item.value">
 				{{ item.label }}
@@ -12,6 +12,7 @@
 import { _, $ } from "@ventose/ui";
 import { marked } from "../assets/libs/marked";
 import { hljs } from "../assets/libs/highlight";
+import { UI } from "../ui";
 
 /* 异步 */
 const modules = import.meta.glob("../assets/highlightstyles/*.css");
@@ -52,6 +53,13 @@ export default {
 				}
 				$style.html(content);
 			}
+		}
+	},
+	methods: {
+		showHighlightSelector(e) {
+			e.stopPropagation();
+			e.preventDefault();
+			UI.layer.tips(tipsContent, `#${followId}`, layerTipsOptions);
 		}
 	},
 	async mounted() {

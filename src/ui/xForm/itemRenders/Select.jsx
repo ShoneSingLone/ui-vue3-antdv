@@ -1,8 +1,9 @@
-import { Select } from "ant-design-vue";
-import { SelectOption } from "ant-design-vue/es/select";
-import { h } from "vue";
+import { h, resolveComponent } from "vue";
 import { EVENT_TYPE } from "../../tools/validate";
 import { _ } from "../../loadCommonUtil";
+
+const Select = resolveComponent("aSelect");
+const SelectOption = resolveComponent("aSelectOption");
 
 export default ({ property, listeners }) => {
 	const _property = _.omit(property, ["options"]);

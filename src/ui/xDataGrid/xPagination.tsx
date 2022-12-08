@@ -1,7 +1,6 @@
 //@ts-nocheck
 import { defineComponent } from "vue";
 import { _ } from "../loadCommonUtil";
-import { Pagination } from "ant-design-vue";
 import { setPagination } from "./common";
 import { lStorage } from "../tools/storage";
 import { State_UI } from "../State_UI";
@@ -11,9 +10,6 @@ const { page, size, total } = lStorage.appConfigs.pagination;
 
 export const xPagination = defineComponent({
 	name: "xPagination",
-	components: {
-		Pagination
-	},
 	setup() {
 		return { State_UI };
 	},
@@ -58,7 +54,7 @@ export const xPagination = defineComponent({
 	},
 	render() {
 		return (
-			<Pagination
+			<aPagination
 				v-model:current={this.pagination[page]}
 				pageSizeOptions={this.pageSizeOptions}
 				total={this.pagination[total]}
@@ -78,7 +74,7 @@ export const xPagination = defineComponent({
 						);
 					}
 				}}
-			</Pagination>
+			</aPagination>
 		);
 	}
 });

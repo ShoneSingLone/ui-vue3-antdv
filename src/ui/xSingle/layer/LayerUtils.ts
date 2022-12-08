@@ -1,3 +1,4 @@
+//@ts-nocheck
 import $ from "jquery";
 import _ from "lodash";
 import { i_layerOptions } from "./i_layerOptions";
@@ -1496,28 +1497,36 @@ class ClassLayer {
 
 	async tips() {
 		/* Tips=================470 */
-		var layerInstance = this;
-		var config = layerInstance.config;
-		var $eleLayer = layerInstance.$eleLayer;
+		const layerInstance = this;
+		const config = layerInstance.config;
+		const $eleLayer = layerInstance.$eleLayer;
 		await new Promise(r => {
 			/* 延迟 经验时间 */
 			setTimeout(r, 34);
 		});
-		var layArea = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-		var follow = $(config.follow);
-		if (!follow[0]) {
-			follow = $body;
+
+		const [tipsDomWidth, tipsdomHeight] = [
+			$eleLayer.outerWidth(),
+			$eleLayer.outerHeight()
+		];
+
+		let $eleFollow = $(config.follow);
+
+		if ($eleFollow.length == 0) {
+			$eleFollow = $body;
 		}
 
-		var goal = {
-			width: follow.outerWidth(),
-			height: follow.outerHeight(),
-			top: follow.offset().top,
-			left: follow.offset().left
+		var followInfo = {
+			width: $eleFollow.outerWidth(),
+			height: $eleFollow.outerHeight(),
+			top: $eleFollow.offset().top,
+			left: $eleFollow.offset().left,
+			tipTop: 0,
+			tipLeft: 0
 		};
 		var tipsG = $eleLayer.find(".layui-layer-TipsG");
 		/* 1,2,3,4 */
-		const [guide, customColor]: any = config.tips || ["1", ""];
+		const [direction, customColor]: any = config.tips || ["1", ""];
 		if (!customColor) {
 			tipsG.remove();
 		}
@@ -1525,80 +1534,79 @@ class ClassLayer {
 		function makeLeftAuto() {
 			/* 如果超出边界，位置需要偏移 */
 			/* 起始位置+tips宽度 比 视口 宽 */
-			if (goal.left + layArea[0] - $win.width() > 0) {
+			if (followInfo.left + tipsDomWidth - $win.width() > 0) {
 				/* 向左偏移为超出的宽度 */
-				goal.tipLeft = goal.left + goal.width - layArea[0];
+				followInfo.tipLeft = followInfo.left + followInfo.width - tipsDomWidth;
 				tipsG.css({ right: 12, left: "auto" });
 			} else {
-				goal.tipLeft = goal.left;
+				followInfo.tipLeft = followInfo.left;
 			}
 		}
 
 		/* 辨别tips的方位 */
-		goal.where = [
-			function () {
+		const direction_strategy = {
+			[LayerUtils.UP]() {
 				/* 上 */
 				makeLeftAuto();
-				goal.tipTop = goal.top - layArea[1] - 10;
+				followInfo.tipTop = followInfo.top - tipsdomHeight - 10;
 				tipsG
 					.removeClass("layui-layer-TipsB")
 					.addClass("layui-layer-TipsT")
 					.css("border-right-color", customColor);
+				followInfo.top - ($win.scrollTop() + tipsdomHeight + 8 * 2) < 0 &&
+					followInfo.where[2]();
 			},
-			function () {
+			[LayerUtils.RIGHT]() {
 				/* 右 */
-				goal.tipLeft = goal.left + goal.width + 10;
-				goal.tipTop = goal.top;
+				followInfo.tipLeft = followInfo.left + followInfo.width + 10;
+				followInfo.tipTop = followInfo.top;
 				tipsG
 					.removeClass("layui-layer-TipsL")
 					.addClass("layui-layer-TipsR")
 					.css("border-bottom-color", customColor);
+				$win.width() -
+					(followInfo.left + followInfo.width + tipsDomWidth + 8 * 2) >
+					0 || followInfo.where[3]();
 			},
-			function () {
+			[LayerUtils.BOTTOM]() {
 				/* 下 */
 				makeLeftAuto();
-				goal.tipTop = goal.top + goal.height + 10;
+				followInfo.tipTop = followInfo.top + followInfo.height + 10;
 				tipsG
 					.removeClass("layui-layer-TipsT")
 					.addClass("layui-layer-TipsB")
 					.css("border-right-color", customColor);
+				followInfo.top -
+					$win.scrollTop() +
+					followInfo.height +
+					tipsdomHeight +
+					8 * 2 -
+					$win.height() >
+					0 && followInfo.where[0]();
 			},
-			function () {
+			[LayerUtils.LEFT]() {
 				/* 左 */
-				goal.tipLeft = goal.left - layArea[0] - 10;
-				goal.tipTop = goal.top;
+				followInfo.tipLeft = followInfo.left - tipsDomWidth - 10;
+				followInfo.tipTop = followInfo.top;
 				tipsG
 					.removeClass("layui-layer-TipsR")
 					.addClass("layui-layer-TipsL")
 					.css("border-bottom-color", customColor);
+				tipsDomWidth + 8 * 2 - followInfo.left > 0 && followInfo.where[1]();
 			}
-		];
-		goal.where[guide - 1]();
+		};
+
+		direction_strategy[direction] && direction_strategy[direction]();
+
 		/* 8*2为小三角形占据的空间 */
-		if (guide === 1) {
-			goal.top - ($win.scrollTop() + layArea[1] + 8 * 2) < 0 && goal.where[2]();
-		} else if (guide === 2) {
-			$win.width() - (goal.left + goal.width + layArea[0] + 8 * 2) > 0 ||
-				goal.where[3]();
-		} else if (guide === 3) {
-			goal.top -
-				$win.scrollTop() +
-				goal.height +
-				layArea[1] +
-				8 * 2 -
-				$win.height() >
-				0 && goal.where[0]();
-		} else if (guide === 4) {
-			layArea[0] + 8 * 2 - goal.left > 0 && goal.where[1]();
-		}
 		$eleLayer.attr(DATA_TIPS_FOLLOW_ID, config.follow.substring(1));
 		$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).css({
 			"background-color": customColor,
 			"padding-right": config.closeBtn ? "30px" : ""
 		});
 		$eleLayer.css({
-			left: goal.tipLeft - $win.scrollLeft(),
-			top: goal.tipTop - $win.scrollTop(),
+			left: followInfo.tipLeft - $win.scrollLeft(),
+			top: followInfo.tipTop - $win.scrollTop(),
 			transform: "scale(0)"
 		});
 

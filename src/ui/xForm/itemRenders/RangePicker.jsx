@@ -1,6 +1,7 @@
-import { RangePicker } from "ant-design-vue/es/date-picker";
 import { Cpt_UI_locale } from "../../State_UI";
 import { _ } from "../../loadCommonUtil";
+import { resolveComponent } from "vue";
+const RangePicker = resolveComponent("aRangePicker");
 
 /**
  * @Description
