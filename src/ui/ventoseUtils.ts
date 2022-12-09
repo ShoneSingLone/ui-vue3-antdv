@@ -14,6 +14,44 @@ const privateLodash = {
 		INVALID_DATE: "Invalid Date",
 		format_ymd: "YYYY-MM-DD"
 	},
+	/* 从jQuery对象中，获取leftTop的数值 */
+	getLeftTopFromAbsolute($ele: JQuery) {
+		const _top = $ele.css("top");
+		const _left = $ele.css("left");
+		const getNum = (x: string) => {
+			const match = String(x).match(/^(.*)px$/);
+			/* @ts-ignore */
+			if (match && match[1]) {
+				/* @ts-ignore */
+				return Number(match[1]);
+			} else {
+				return 0;
+			}
+		};
+		const top = getNum(_top);
+		const left = getNum(_left);
+		console.log(left, top);
+		return { top, left };
+	},
+	getLeftTopFromTranslate($ele: JQuery) {
+		const transform = $ele.css("transform");
+		const match = String(transform).match(/^matrix\((.*)\)$/);
+		if (!match) {
+			return { top: 0, left: 0 };
+		}
+		/* @ts-ignore */
+		if (match && match[1]) {
+			/* @ts-ignore */
+			const [a, b, c, d, e, f] = String(match[1])
+				.split(",")
+				.map(i => Number(privateLodash.trim(i)));
+
+			return {
+				left: a + c + e,
+				top: b + d + f
+			};
+		}
+	},
 	/**
 	 * 用于Boundless 解析vue SFC文件
 	 * @param {*} code
@@ -169,7 +207,7 @@ const privateLodash = {
 				return JSON.stringify(val);
 			}
 		} catch (error) {
-			return ""
+			return "";
 		}
 	},
 	safeParse: (val: string, defaultObj: {}) => {
@@ -247,7 +285,9 @@ const privateLodash = {
 	 * @returns
 	 */
 	getObjectFirstKeyValue: (obj: object, defaultValue: "") => {
-		if (!obj) { return defaultValue; }
+		if (!obj) {
+			return defaultValue;
+		}
 		const keyArray = Object.keys(obj);
 		if (!privateLodash.isArrayFill(keyArray)) return defaultValue;
 		const prop = keyArray[0];
@@ -350,10 +390,10 @@ const privateLodash = {
 	},
 
 	/**
-	 * 
+	 *
 	 * @param date type dayjs.ConfigType = string | number | Date | dayjs.Dayjs | null | undefined
 	 * @param format 默认 "YYYY-MM-DD" 1："YYYY-MM-DD HH:mm:ss"
-	 * @returns 
+	 * @returns
 	 */
 	dateFormat: function (date: dayjs.ConfigType, format = "YYYY-MM-DD") {
 		/* @ts-ignore */

@@ -141,9 +141,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 												if (this.dialogOptions.hideButtons) {
 													return null;
 												}
-												if (
-													xU.isFunction(this.dialogOptions.renderButtons)
-												) {
+												if (xU.isFunction(this.dialogOptions.renderButtons)) {
 													/* 提供 handleClickOk、handleClickCancel*/
 													let vDomButtons = (() => {
 														let _vDomButtons =

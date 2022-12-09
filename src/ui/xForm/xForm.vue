@@ -25,10 +25,7 @@ export default defineComponent({
 		labelStyleText() {
 			return xU
 				.map(
-					xU.merge(
-						{ width: "120px", "text-align": "right" },
-						this.labelStyle
-					),
+					xU.merge({ width: "120px", "text-align": "right" }, this.labelStyle),
 					(value, prop) => `${prop}: ${value}`
 				)
 				.join(";");

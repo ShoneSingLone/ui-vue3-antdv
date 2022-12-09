@@ -659,6 +659,9 @@ div[id^="xDialog_"] {
 .layui-layer-tips {
   position: fixed;
 }
+.move-transition {
+  transition: 0.1s linear;
+}
 .x-button.flex {
   display: flex;
 }
@@ -30101,6 +30104,36 @@ const privateLodash = {
     INVALID_DATE: "Invalid Date",
     format_ymd: "YYYY-MM-DD"
   },
+  getLeftTopFromAbsolute($ele) {
+    const _top = $ele.css("top");
+    const _left = $ele.css("left");
+    const getNum = (x) => {
+      const match = String(x).match(/^(.*)px$/);
+      if (match && match[1]) {
+        return Number(match[1]);
+      } else {
+        return 0;
+      }
+    };
+    const top = getNum(_top);
+    const left = getNum(_left);
+    console.log(left, top);
+    return { top, left };
+  },
+  getLeftTopFromTranslate($ele) {
+    const transform = $ele.css("transform");
+    const match = String(transform).match(/^matrix\((.*)\)$/);
+    if (!match) {
+      return { top: 0, left: 0 };
+    }
+    if (match && match[1]) {
+      const [a, b, c, d, e, f] = String(match[1]).split(",").map((i) => Number(privateLodash.trim(i)));
+      return {
+        left: a + c + e,
+        top: b + d + f
+      };
+    }
+  },
   async asyncImportSFC(url, __Vue) {
     if (VueComponents[url]) {
       return VueComponents[url];
@@ -32511,7 +32544,7 @@ const _sfc_main = defineComponent({
       this.$wrapperEle = $(this.$refs.refWrapper);
       this.$wrapperEle.on("scroll", () => this.updateTop());
     },
-    updateTop(event) {
+    updateTop(event2) {
       if (this.$refs.refWrapper) {
         const top = this.$refs.refWrapper.scrollTop;
         this.blockCount = Math.floor(top / oneBlockHeight);
@@ -32899,9 +32932,9 @@ const xVirTableBody = defineComponent({
         });
       }
     }, 1e3),
-    updateTop(event) {
-      if (event) {
-        const top = event.target.scrollTop;
+    updateTop(event2) {
+      if (event2) {
+        const top = event2.target.scrollTop;
         this.blockInViewCount = Math.floor(top / this.perBlockHeight);
       }
     },
@@ -33263,6 +33296,7 @@ const $html = $("html");
 const $document = $(document);
 const $body = $("body");
 const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
+const DATA_V_UI_MOVE = "data-directive-ui-move";
 const TYPE_IFRAME = "iframe";
 const TYPE_LOADING = "loading";
 const TYPE_TIPS = "tips";
@@ -33282,6 +33316,12 @@ const DOMS_ANIM = [
   "layer-anim-05",
   "layer-anim-06"
 ];
+const $MoveMask = $(
+  `<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
+);
+setTimeout(() => {
+  $body.append($MoveMask);
+}, 0);
 const READY = {
   zIndex: 0,
   pointMousedown: [],
@@ -33845,11 +33885,6 @@ class ClassLayer {
 			${this.cptDomResizeBar}
 </div>`;
   }
-  get cptDomMoveMask() {
-    return $(
-      `<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
-    );
-  }
   initConfig(custumSettings) {
     const layerInstance = this;
     layerInstance.config = Object.assign(layerInstance.config, custumSettings);
@@ -33975,10 +34010,6 @@ class ClassLayer {
   }
   insertLayer() {
     const layerInstance = this;
-    if (!READY.$moveMask) {
-      READY.$moveMask = $(layerInstance.cptDomMoveMask);
-      $body.append(READY.$moveMask);
-    }
     const { config, _layerKey, _IDShade } = layerInstance;
     layerInstance.$eleLayer = $(layerInstance.cptDomContainer);
     if (privateLodash.isObject(config.content) && (privateLodash.isString(config.content) || privateLodash.isString(config.content.jquery))) {
@@ -34150,7 +34181,7 @@ class ClassLayer {
           e.clientX - parseFloat($eleLayer.css("left")),
           e.clientY - parseFloat($eleLayer.css("top"))
         ];
-        READY.$moveMask.css("cursor", "move").show();
+        $MoveMask.css("cursor", "move").show();
       }
     });
     $eleResize.on("mousedown", function(e) {
@@ -34160,7 +34191,7 @@ class ClassLayer {
       READY.moveOrResizeType = "resize";
       READY.pointMousedown = [e.clientX, e.clientY];
       READY.moveOrResizeWH = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-      READY.$moveMask.css("cursor", "se-resize").show();
+      $MoveMask.css("cursor", "se-resize").show();
     });
     return layerInstance;
   }
@@ -34235,17 +34266,18 @@ class ClassLayer {
   }
 }
 LayerUtils.cache || {};
-$document.on("click.setLayerTop", "[layer-wrapper]", (event) => {
-  const { currentTarget } = event;
+$document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
+  const { currentTarget } = event2;
   const $currentTarget = $(currentTarget);
   LayerUtils.setLayerTop($currentTarget);
 }).on(
   "mousemove",
-  ".layui-layer-move",
+  `.${LAYUI_LAYER_MOVE}`,
   privateLodash.throttle(function(e) {
-    if (READY.moveOrResizeInstance instanceof ClassLayer) {
-      const { $eleLayer, config } = READY.moveOrResizeInstance;
-      if (READY.moveOrResizeType === "move") {
+    const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
+    if (moveOrResizeInstance instanceof ClassLayer) {
+      const { $eleLayer, config } = moveOrResizeInstance;
+      if (moveOrResizeType === "move") {
         e.preventDefault();
         let X = e.clientX - READY.pointMousedown[0];
         let Y = e.clientY - READY.pointMousedown[1];
@@ -34282,208 +34314,19 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event) => {
           config.onResizing && config.onResizing($eleLayer);
         }
       }
+    } else if (typeof onMoving == "function") {
+      event && onMoving(event);
     }
-  }, 100)
-).on("mouseup", ".layui-layer-move", function(e) {
+  }, 90)
+).on("mouseup", function(e) {
   if (READY.moveOrResizeInstance instanceof ClassLayer) {
     const { config } = READY.moveOrResizeInstance;
     if (config.onMoveEnd) {
       config.onMoveEnd(READY.moveOrResizeInstance);
     }
     READY.moveOrResizeInstance = false;
-    READY.$moveMask.hide();
   }
-});
-const TIMEOUT_DELAY = 200;
-const tipsOptionsCollection = {};
-const tipsKeys = {};
-const appAddPlugin = {};
-const appDependState = {};
-const timer4CloseTips = {};
-const visibleArea = {};
-const DATA_APP_ID = "data-app-id";
-const DATA_FOLLOW_ID = "data-follow-id";
-function fnShowTips({
-  $ele,
-  followId,
-  appId,
-  event
-}) {
-  const options = tipsOptionsCollection[followId] || {
-    content: ""
-  };
-  if (!options.content) {
-    if (options.onlyEllipsis) {
-      const eleWidth = $ele.width() || 0;
-      const text = $ele.text();
-      const $div = $(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
-      $div.appendTo($("body"));
-      const innerWidth = $div.width() || 0;
-      $div.remove();
-      if (innerWidth > eleWidth) {
-        options.content = text;
-      }
-    } else {
-      return;
-    }
-  }
-  let tipsContent = options.content;
-  if (!tipsContent) {
-    return;
-  }
-  let app;
-  const placement = (() => {
-    const placement_strategy = {
-      top: 1,
-      right: 2,
-      bottom: 3,
-      left: 4
-    };
-    return placement_strategy[options.placement || "top"];
-  })();
-  let layerTipsOptions = {
-    tips: [placement, "#fff"],
-    during: 1e3 * 60 * 10
-  };
-  const isOpenAtPoint = $ele.attr("data-open-at-point");
-  if (isOpenAtPoint) {
-    layerTipsOptions.openAtPoint = {
-      left: $ele.clientX,
-      top: $ele.clientY
-    };
-  }
-  if (privateLodash.isPlainObject(options.content)) {
-    const id = `${followId}_content`;
-    tipsContent = `<div id="${id}"></div>`;
-    layerTipsOptions.success = function success(indexPanel, layerIndex) {
-      app = createApp(options.content);
-      app.use(appAddPlugin[appId], {
-        dependState: appDependState[appId]
-      });
-      app.mount(`#${id}`);
-      options.afterOpenDialoag && options.afterOpenDialoag(app);
-    };
-    layerTipsOptions.end = function end() {
-      if (app) {
-        app.unmount();
-        app = null;
-      }
-    };
-  }
-  setTimeout(() => {
-    if (visibleArea[followId]) {
-      tipsKeys[followId] = LayerUtils.tips(tipsContent, `#${followId}`, layerTipsOptions);
-    }
-  }, options.delay || 32);
-}
-function installPopoverDirective(app, appSettings) {
-  const appId = privateLodash.genId("appId");
-  appAddPlugin[appId] = appSettings.appPlugins;
-  appDependState[appId] = appSettings.dependState;
-  app.directive("uiPopover", {
-    mounted(el, binding) {
-      var _a, _b, _c, _d;
-      const followId = privateLodash.genId("xPopoverTarget");
-      const $ele = $(el);
-      $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
-      if (binding.value) {
-        tipsOptionsCollection[followId] = binding.value;
-        if ((_a = binding.value) == null ? void 0 : _a.trigger) {
-          $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
-          const classStrategy = {
-            rightClick: "pointer-right-click"
-          };
-          $ele.addClass(classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer");
-        }
-        if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
-          $ele.attr("data-open-at-point", true);
-        }
-      }
-    },
-    unmounted(el) {
-      const followId = $(el).attr(DATA_FOLLOW_ID);
-      if (typeof tipsKeys[followId] == "string") {
-        LayerUtils.close(tipsKeys[followId]);
-      }
-      delete tipsOptionsCollection[followId];
-      delete visibleArea[followId];
-    }
-  });
-}
-function inVisibleArea(followId) {
-  if (timer4CloseTips[followId]) {
-    clearTimeout(timer4CloseTips[followId]);
-    delete timer4CloseTips[followId];
-  }
-  visibleArea[followId] = true;
-}
-function closeTips(followId, options = {}) {
-  delete visibleArea[followId];
-  timer4CloseTips[followId] = setTimeout(() => {
-    const layerIndex = tipsKeys[followId];
-    if (layerIndex) {
-      LayerUtils.close(layerIndex).then(() => {
-        delete tipsKeys[followId];
-        delete timer4CloseTips[followId];
-      });
-    }
-  }, TIMEOUT_DELAY);
-}
-function handleClick(event) {
-  event.preventDefault();
-  const $ele = $(this);
-  const followId = $ele.attr(DATA_FOLLOW_ID);
-  const appId = $ele.attr(DATA_APP_ID);
-  visibleArea[followId] = true;
-  if (tipsKeys[followId]) {
-    closeTips(followId);
-  } else {
-    fnShowTips({
-      $ele,
-      followId,
-      appId,
-      event
-    });
-  }
-}
-$(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, handleClick);
-$(document).on("contextmenu.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=rightClick]`, handleClick);
-$(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event) {
-  const $ele = $(this);
-  const followId = $ele.attr(DATA_FOLLOW_ID);
-  if (visibleArea[followId]) {
-    return;
-  } else {
-    const appId = $ele.attr(DATA_APP_ID);
-    inVisibleArea(followId);
-    if (tipsKeys[followId]) {
-      return;
-    }
-    if ($ele.attr("data-trigger") === "click") {
-      return;
-    }
-    if ($ele.attr("data-trigger") === "rightClick") {
-      return;
-    }
-    fnShowTips({
-      $ele,
-      followId,
-      appId,
-      event
-    });
-  }
-});
-$(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event) {
-  const followId = $(this).attr(DATA_FOLLOW_ID);
-  closeTips(followId);
-});
-$(document).on("mouseenter.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event) {
-  const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
-  inVisibleArea(followId);
-});
-$(document).on("mouseleave.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event) {
-  const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
-  closeTips(followId);
+  $MoveMask.hide();
 });
 const installUIDialogComponent = (UI2, {
   appPlugins,
@@ -34507,9 +34350,9 @@ const installUIDialogComponent = (UI2, {
     let dialogVueApp = null;
     let handleEcsPress = {
       layerIndex: "",
-      handler(event) {
-        const code = event.keyCode;
-        event.preventDefault();
+      handler(event2) {
+        const code = event2.keyCode;
+        event2.preventDefault();
         if (code === KEY.esc) {
           LayerUtils.close(handleEcsPress.layerIndex);
         }
@@ -34674,6 +34517,197 @@ const installUIDialogComponent = (UI2, {
     }, dialogOptions));
   });
 };
+const appAddPlugin = {};
+const appDependState = {};
+const timer4CloseTips = {};
+const visibleArea = {};
+const DATA_APP_ID = "data-app-id";
+const DATA_FOLLOW_ID = "data-follow-id";
+const TIMEOUT_DELAY = 200;
+const tipsOptionsCollection = {};
+const tipsKeys = {};
+function fnShowTips({
+  $ele,
+  followId,
+  appId,
+  event: event2
+}) {
+  const options = tipsOptionsCollection[followId] || {
+    content: ""
+  };
+  if (!options.content) {
+    if (options.onlyEllipsis) {
+      const eleWidth = $ele.width() || 0;
+      const text = $ele.text();
+      const $div = $(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
+      $div.appendTo($("body"));
+      const innerWidth = $div.width() || 0;
+      $div.remove();
+      if (innerWidth > eleWidth) {
+        options.content = text;
+      }
+    } else {
+      return;
+    }
+  }
+  let tipsContent = options.content;
+  if (!tipsContent) {
+    return;
+  }
+  let app;
+  const placement = (() => {
+    const placement_strategy = {
+      top: 1,
+      right: 2,
+      bottom: 3,
+      left: 4
+    };
+    return placement_strategy[options.placement || "top"];
+  })();
+  let layerTipsOptions = {
+    tips: [placement, "#fff"],
+    during: 1e3 * 60 * 10
+  };
+  const isOpenAtPoint = $ele.attr("data-open-at-point");
+  if (isOpenAtPoint) {
+    layerTipsOptions.openAtPoint = {
+      left: $ele.clientX,
+      top: $ele.clientY
+    };
+  }
+  if (privateLodash.isPlainObject(options.content)) {
+    const id = `${followId}_content`;
+    tipsContent = `<div id="${id}"></div>`;
+    layerTipsOptions.success = function success(indexPanel, layerIndex) {
+      app = createApp(options.content);
+      app.use(appAddPlugin[appId], {
+        dependState: appDependState[appId]
+      });
+      app.mount(`#${id}`);
+      options.afterOpenDialoag && options.afterOpenDialoag(app);
+    };
+    layerTipsOptions.end = function end() {
+      if (app) {
+        app.unmount();
+        app = null;
+      }
+    };
+  }
+  setTimeout(() => {
+    if (visibleArea[followId]) {
+      tipsKeys[followId] = LayerUtils.tips(tipsContent, `#${followId}`, layerTipsOptions);
+    }
+  }, options.delay || 32);
+}
+function installPopoverDirective(app, appSettings) {
+  const appId = privateLodash.genId("appId");
+  appAddPlugin[appId] = appSettings.appPlugins;
+  appDependState[appId] = appSettings.dependState;
+  app.directive("uiPopover", {
+    mounted(el, binding) {
+      var _a, _b, _c, _d;
+      const followId = privateLodash.genId("xPopoverTarget");
+      const $ele = $(el);
+      $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
+      if (binding.value) {
+        tipsOptionsCollection[followId] = binding.value;
+        if ((_a = binding.value) == null ? void 0 : _a.trigger) {
+          $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
+          const classStrategy = {
+            rightClick: "pointer-right-click"
+          };
+          $ele.addClass(classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer");
+        }
+        if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
+          $ele.attr("data-open-at-point", true);
+        }
+      }
+    },
+    unmounted(el) {
+      const followId = $(el).attr(DATA_FOLLOW_ID);
+      if (typeof tipsKeys[followId] == "string" && tipsKeys[followId]) {
+        LayerUtils.close(tipsKeys[followId]);
+      }
+      delete tipsOptionsCollection[followId];
+      delete visibleArea[followId];
+    }
+  });
+}
+function inVisibleArea(followId) {
+  if (timer4CloseTips[followId]) {
+    clearTimeout(timer4CloseTips[followId]);
+    delete timer4CloseTips[followId];
+  }
+  visibleArea[followId] = true;
+}
+function closeTips(followId, options = {}) {
+  delete visibleArea[followId];
+  timer4CloseTips[followId] = setTimeout(() => {
+    const layerIndex = tipsKeys[followId];
+    if (layerIndex) {
+      LayerUtils.close(layerIndex).then(() => {
+        delete tipsKeys[followId];
+        delete timer4CloseTips[followId];
+      });
+    }
+  }, TIMEOUT_DELAY);
+}
+function handleClick(event2) {
+  event2.preventDefault();
+  const $ele = $(this);
+  const followId = $ele.attr(DATA_FOLLOW_ID);
+  const appId = $ele.attr(DATA_APP_ID);
+  visibleArea[followId] = true;
+  if (tipsKeys[followId]) {
+    closeTips(followId);
+  } else {
+    fnShowTips({
+      $ele,
+      followId,
+      appId,
+      event: event2
+    });
+  }
+}
+$(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, handleClick);
+$(document).on("contextmenu.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=rightClick]`, handleClick);
+$(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
+  const $ele = $(this);
+  const followId = $ele.attr(DATA_FOLLOW_ID);
+  if (visibleArea[followId]) {
+    return;
+  } else {
+    const appId = $ele.attr(DATA_APP_ID);
+    inVisibleArea(followId);
+    if (tipsKeys[followId]) {
+      return;
+    }
+    if ($ele.attr("data-trigger") === "click") {
+      return;
+    }
+    if ($ele.attr("data-trigger") === "rightClick") {
+      return;
+    }
+    fnShowTips({
+      $ele,
+      followId,
+      appId,
+      event: event2
+    });
+  }
+});
+$(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
+  const followId = $(this).attr(DATA_FOLLOW_ID);
+  closeTips(followId);
+});
+$(document).on("mouseenter.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
+  const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
+  inVisibleArea(followId);
+});
+$(document).on("mouseleave.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
+  const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
+  closeTips(followId);
+});
 function installLoading(app, options = {}) {
   app.directive("loading", {
     updated(el, binding) {
@@ -34685,8 +34719,46 @@ function installLoading(app, options = {}) {
     }
   });
 }
+function installMoveDirective(app) {
+  app.directive("uiMove", {
+    mounted(el, binding) {
+      if (binding.value) {
+        if (binding.value.onMoving) {
+          const $ele = $(el);
+          const id = privateLodash.genId("xResize");
+          $ele.attr(DATA_V_UI_MOVE, id);
+          $ele.on("mousedown", function(event2) {
+            $MoveMask.css("cursor", "move").show();
+            const clickInfo = privateLodash.getLeftTopFromAbsolute($ele);
+            clickInfo.w = $ele.width();
+            clickInfo.h = $ele.height();
+            const {
+              top,
+              left
+            } = privateLodash.getLeftTopFromTranslate($ele);
+            clickInfo.translateX = left;
+            clickInfo.translateY = top;
+            READY.onMoving = (movingEvent) => {
+              binding.value.onMoving({
+                $ele,
+                clickInfo,
+                clickEvent: event2,
+                movingEvent
+              });
+            };
+          });
+        }
+      }
+    },
+    unmounted(el) {
+      const $ele = $(el);
+      $ele.attr(DATA_V_UI_MOVE);
+    }
+  });
+}
 const installDirective = (app, options) => {
-  [installLoading].forEach((install) => install(app));
+  installPopoverDirective(app, options);
+  [installLoading, installMoveDirective].forEach((install) => install(app));
 };
 function _isSlot(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
@@ -34983,8 +35055,7 @@ const components = {
 };
 const VentoseUIWithInstall = {
   install: (app, options) => {
-    installDirective(app);
-    installPopoverDirective(app, options);
+    installDirective(app, options);
     installUIDialogComponent(UI, options);
     privateLodash.each(components, (component, name) => {
       if (component.name) {

@@ -120,10 +120,7 @@ export const UI = {
 			return new Proxy(m, {
 				apply(target, thisArg, argArray) {
 					if (typeof argArray[0] === "string") {
-						argArray[0] = xU.merge(
-							{ message: argArray[0] },
-							argArray[1] || {}
-						);
+						argArray[0] = xU.merge({ message: argArray[0] }, argArray[1] || {});
 					}
 					return target.apply(thisArg, argArray);
 				}

@@ -11,7 +11,7 @@
     - [ ] 弹窗效果从点击位置打开，openAtPoint
     - [ ] tips
     - [ ] dialog
-      - [ ] resize
+      - [x] resize
       - [ ] esc 退出最上层dialog
     - [ ] confirm
     - [ ] tips 的样式
@@ -29,7 +29,5 @@
 
 ## 指令
 
-- [ ] v-uiPopover
-- [ ] v-uiMove
-
-
+- [x] v-uiPopover
+- [x] v-uiMove

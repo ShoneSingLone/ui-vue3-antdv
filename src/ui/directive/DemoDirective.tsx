@@ -1,9 +1,12 @@
-import { defineComponent } from "vue"
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    render() {
-        return <>
-            <DemoAndCode path="/boundless/demo/directive/uiMove.sfc" />
-        </>
-    }
+	render() {
+		return (
+			<>
+				{/* @ts-ignore */}
+				<DemoAndCode path="/boundless/demo/directive/uiMove.sfc" />
+			</>
+		);
+	}
 });

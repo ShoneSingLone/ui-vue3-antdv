@@ -36,9 +36,7 @@ export default defineComponent({
 			columns = xU.map(this.Cpt_ColumnsOrder, prop =>
 				xU.find(this.configs.columns, { prop })
 			);
-			columns = xU.filter(columns, i =>
-				filterColIsShow(i?.isShow, i?.prop)
-			);
+			columns = xU.filter(columns, i => filterColIsShow(i?.isShow, i?.prop));
 			return columns;
 		},
 		/*列顺序 TODO:如果有排序的需求 */

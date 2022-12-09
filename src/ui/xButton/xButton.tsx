@@ -86,10 +86,7 @@ export default defineComponent({
 			if (xU.isString(this.disabled) && this.disabled.length > 0) {
 				return this.disabled;
 			}
-			if (
-				xU.isString(this.configs.title) &&
-				this.configs.title.length > 0
-			) {
+			if (xU.isString(this.configs.title) && this.configs.title.length > 0) {
 				return this.configs.title;
 			}
 			return false;

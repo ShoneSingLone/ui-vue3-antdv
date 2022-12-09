@@ -1,8 +1,16 @@
 import $ from "jquery";
 import { createApp } from "vue";
 import { xU } from "../ventoseUtils";
+import { i_layerOptions } from "../xSingle/layer/i_layerOptions";
 import { DATA_TIPS_FOLLOW_ID, LayerUtils } from "../xSingle/layer/LayerUtils";
-import { appAddPlugin, appDependState, DATA_APP_ID, DATA_FOLLOW_ID, timer4CloseTips, visibleArea } from "./directiveState";
+import {
+	appAddPlugin,
+	appDependState,
+	DATA_APP_ID,
+	DATA_FOLLOW_ID,
+	timer4CloseTips,
+	visibleArea
+} from "./directiveState";
 type t_trigger = "click" | "rightClick";
 type t_uiPopoverOptions = {
 	content: string;
@@ -57,6 +65,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 		/* @ts-ignore */
 		return placement_strategy[options.placement || "top"];
 	})();
+
 	let layerTipsOptions: i_layerOptions = {
 		tips: [placement, "#fff"],
 		/*hover 不允许 同时多个 tips出现*/
@@ -143,7 +152,7 @@ export function installPopoverDirective(app: any, appSettings: any) {
 		},
 		unmounted(el: HTMLInputElement) {
 			const followId: any = $(el).attr(DATA_FOLLOW_ID);
-			if (typeof tipsKeys[followId] == 'string' && tipsKeys[followId]) {
+			if (typeof tipsKeys[followId] == "string" && tipsKeys[followId]) {
 				/* @ts-ignore */
 				LayerUtils.close(tipsKeys[followId]);
 			}

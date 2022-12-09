@@ -45,10 +45,7 @@ export default {
 						prop: "status",
 						label: $t("状态").label,
 						renderCell({ record }) {
-							return `${xU.valueToLabel(
-								record.status,
-								ITEM_OPTIONS.status
-							)}`;
+							return `${xU.valueToLabel(record.status, ITEM_OPTIONS.status)}`;
 						}
 					}),
 					...defCol({
