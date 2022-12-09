@@ -30732,10 +30732,11 @@ const RadioGroup = ({
   const Radio = resolveComponent("aRadio");
   const RadioGroup2 = resolveComponent("aRadioGroup");
   const RadioButton = resolveComponent("aRadioButton");
-  vUtils.omit(property, ["options"]);
+  const PROPERTY_OPTIONS = property.options;
+  const componentPropertyOmitOptions = privateLodash.omit(property, ["options"]);
   const renderOptions = () => {
     if (property.isButton) {
-      return vUtils.map(property.options, (option) => {
+      return privateLodash.map(PROPERTY_OPTIONS, (option) => {
         return createVNode(RadioButton, {
           "value": option.value
         }, {
@@ -30743,7 +30744,7 @@ const RadioGroup = ({
         });
       });
     }
-    return vUtils.map(property.options, (option) => {
+    return privateLodash.map(PROPERTY_OPTIONS, (option) => {
       return createVNode(Radio, {
         "value": option.value
       }, {
@@ -30751,7 +30752,7 @@ const RadioGroup = ({
       });
     });
   };
-  return createVNode(RadioGroup2, mergeProps(property, listeners), {
+  return createVNode(RadioGroup2, mergeProps(componentPropertyOmitOptions, listeners), {
     default: renderOptions
   });
 };
@@ -34401,7 +34402,9 @@ function installPopoverDirective(app, appSettings) {
     },
     unmounted(el) {
       const followId = $(el).attr(DATA_FOLLOW_ID);
-      LayerUtils.close(tipsKeys[followId]);
+      if (typeof tipsKeys[followId] == "string") {
+        LayerUtils.close(tipsKeys[followId]);
+      }
       delete tipsOptionsCollection[followId];
       delete visibleArea[followId];
     }
@@ -34917,7 +34920,7 @@ const UI = {
       return new Proxy(m, {
         apply(target2, thisArg, argArray) {
           if (typeof argArray[0] === "string") {
-            argArray[0] = vUtils.merge({
+            argArray[0] = privateLodash.merge({
               message: argArray[0]
             }, argArray[1] || {});
           }

@@ -9,8 +9,8 @@ import {
 	notification,
 	ModalFuncProps
 } from "ant-design-vue";
-import _ from "lodash";
 import $ from "jquery";
+import { vUtils } from "./ventoseUtils";
 
 /* 静态方法，与APP实例无关，引用有直接可用 */
 

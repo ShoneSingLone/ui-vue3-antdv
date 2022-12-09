@@ -2,7 +2,6 @@ import _ from "lodash";
 import dayjs from "dayjs";
 import $ from "jquery";
 import { get as idbGet, set as idbSet } from "idb-keyval";
-import { State_UI } from "./State_UI";
 
 /* 组件属性是否是on开头，组件的事件监听*/
 const onRE = /^on[^a-z]/;

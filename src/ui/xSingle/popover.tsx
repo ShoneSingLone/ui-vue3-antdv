@@ -142,7 +142,9 @@ export function installPopoverDirective(app: any, appSettings: any) {
 		},
 		unmounted(el: HTMLInputElement) {
 			const followId: any = $(el).attr(DATA_FOLLOW_ID);
-			LayerUtils.close(tipsKeys[followId] as number);
+			if (typeof tipsKeys[followId] == 'string') {
+				LayerUtils.close(tipsKeys[followId]);
+			}
 			delete tipsOptionsCollection[followId];
 			delete visibleArea[followId];
 		}

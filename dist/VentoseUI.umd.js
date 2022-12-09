@@ -30734,10 +30734,11 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     const Radio = vue.resolveComponent("aRadio");
     const RadioGroup2 = vue.resolveComponent("aRadioGroup");
     const RadioButton = vue.resolveComponent("aRadioButton");
-    vUtils.omit(property, ["options"]);
+    const PROPERTY_OPTIONS = property.options;
+    const componentPropertyOmitOptions = privateLodash.omit(property, ["options"]);
     const renderOptions = () => {
       if (property.isButton) {
-        return vUtils.map(property.options, (option) => {
+        return privateLodash.map(PROPERTY_OPTIONS, (option) => {
           return vue.createVNode(RadioButton, {
             "value": option.value
           }, {
@@ -30745,7 +30746,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           });
         });
       }
-      return vUtils.map(property.options, (option) => {
+      return privateLodash.map(PROPERTY_OPTIONS, (option) => {
         return vue.createVNode(Radio, {
           "value": option.value
         }, {
@@ -30753,7 +30754,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         });
       });
     };
-    return vue.createVNode(RadioGroup2, vue.mergeProps(property, listeners), {
+    return vue.createVNode(RadioGroup2, vue.mergeProps(componentPropertyOmitOptions, listeners), {
       default: renderOptions
     });
   };
@@ -34403,7 +34404,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       },
       unmounted(el) {
         const followId = $__default.default(el).attr(DATA_FOLLOW_ID);
-        LayerUtils.close(tipsKeys[followId]);
+        if (typeof tipsKeys[followId] == "string") {
+          LayerUtils.close(tipsKeys[followId]);
+        }
         delete tipsOptionsCollection[followId];
         delete visibleArea[followId];
       }
@@ -34919,7 +34922,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         return new Proxy(m, {
           apply(target2, thisArg, argArray) {
             if (typeof argArray[0] === "string") {
-              argArray[0] = vUtils.merge({
+              argArray[0] = privateLodash.merge({
                 message: argArray[0]
               }, argArray[1] || {});
             }
