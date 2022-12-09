@@ -1,0 +1,1 @@
+import{_ as n,r as s,o as t,c as a,g as e,F as r}from"./index.87d06142.js";const c={};function m(p,d,l,_,i,u){const o=s("DemoAndCode");return t(),a(r,null,[e(o,{path:"/boundless/demo/uiPopover/DemoUiPopoverNormal.sfc"}),e(o,{path:"/boundless/demo/uiPopover/DemouiDialogComponent.sfc"})],64)}const D=n(c,[["render",m]]);export{D as default};
