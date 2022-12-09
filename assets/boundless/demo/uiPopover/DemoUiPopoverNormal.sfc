@@ -26,6 +26,10 @@
 	<aTag v-uiPopover="{ trigger: 'click', content: '点击触发' }">
 		trigger:click
 	</aTag>
+	<xGap t="10" />
+	<aTag v-uiPopover="configsUiPopoverRightClick">
+		trigger:rightClick 右键点击 弹窗
+	</aTag>
 </template>
 
 <script>
@@ -42,38 +46,18 @@ async function sfc({ defineComponent, State_UI, UI, markRaw }) {
 		data() {
 			return {
 				configsUiPopoverNormal: {
+					placement:"right",
 					content: `v-uiPopover="{ content: $t('这是一个浮动tips').label }" `
 				},
 				configsUiPopoverComponent: {
+					placement:"bottom",
 					content: PopoverContent
 				},
-				configsBtn: {
-					text: () => {
-						return $t("一般").label;
-					},
-					async onClick() {
-						UI.dialog.component({
-							title: $t("DemoXFormWithForm").label,
-							component: defineComponent({
-								template: `<p>boundless Vue SFC 文件演示，使用template，不使用jsx</p>`
-							}),
-							maxmin: true,
-							async onOk(instance) {
-								const { close, payload } = instance;
-								const { Methods } = payload;
-								try {
-									if (await Methods.verifyForm()) {
-										const params = Methods.getParams();
-										console.log(params);
-										close();
-									}
-								} catch (e) {
-									logError(e?.error?.msg);
-								}
-							}
-						});
-					}
-				}
+				configsUiPopoverRightClick: {
+					placement:"left",
+					trigger:"rightClick",
+					content: PopoverContent
+				},
 			};
 		},
 		methods: {}
