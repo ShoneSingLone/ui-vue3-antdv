@@ -1,6 +1,6 @@
 //@ts-nocheck
 
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import { reactive } from "vue";
 import { t_itemConfigs } from "./itemRenders/index";
 
@@ -12,11 +12,11 @@ export function defItem(options: t_itemConfigs) {
 		options.prop = `xItem${xItemNoPropCount++}`;
 		console.error(`no xItem prop replace by ${options.prop}`);
 	}
-	if (!vUtils.isInput(options.isShow)) {
+	if (!xU.isInput(options.isShow)) {
 		options.isShow = true;
 	}
 	const configs = reactive(
-		vUtils.merge(
+		xU.merge(
 			{
 				/* 提示信息，可以用于提示或者定位 */
 				itemTips: {},

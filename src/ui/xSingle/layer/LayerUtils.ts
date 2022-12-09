@@ -2,8 +2,9 @@
 
 /* https://www.layuiweb.com/doc/modules/layer.html#closeBtn */
 import $ from "jquery";
-import { vUtils } from "../../ventoseUtils";
+import { xU } from "../../ventoseUtils";
 import { i_layerOptions } from "./i_layerOptions";
+
 export const KEY = {
 	right: 39,
 	left: 37,
@@ -22,6 +23,8 @@ const $body = $("body");
 
 /* 缓存常用字符 */
 export const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
+export const DATA_V_UI_MOVE = "data-directive-ui-move";
+
 const TYPE_DIALOG = "dialog";
 const TYPE_PAGE = "page";
 const TYPE_IFRAME = "iframe";
@@ -45,9 +48,15 @@ const DOMS_ANIM = [
 	"layer-anim-06"
 ];
 
-const READY: {
+export const $MoveMask: JQuery = $(
+	`<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
+);
+setTimeout(() => {
+	$body.append($MoveMask);
+}, 0);
+
+export const READY: {
 	zIndex: number;
-	$moveMask: JQuery;
 	/* layerInstanceForMoveOrResize */
 	moveOrResizeInstance: any;
 	moveOrResizeWH: any[];
@@ -187,7 +196,7 @@ const LayerUtils = {
 		);
 	},
 	confirm(content, options, yes, cancel) {
-		if (vUtils.isFunction(options)) {
+		if (xU.isFunction(options)) {
 			cancel = yes;
 			yes = options;
 		}
@@ -205,7 +214,7 @@ const LayerUtils = {
 	},
 	msg(content, options: i_layerOptions, end = () => null) {
 		/*最常用提示层*/
-		var isOptionsIsFunction = vUtils.isFunction(options),
+		var isOptionsIsFunction = xU.isFunction(options),
 			rskin = READY.config.skin;
 		var skin = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
 		var anim = DOMS_ANIM.length - 1;
@@ -654,11 +663,11 @@ class ClassLayer {
 				config.btn = [config.btn, ""];
 			}
 			/* 没一个能用,则不显示 */
-			if (vUtils.every(config.btn, i => !i)) {
+			if (xU.every(config.btn, i => !i)) {
 				return "";
 			}
 
-			const domButtons = vUtils.reduce(
+			const domButtons = xU.reduce(
 				config.btn,
 				(domButtonString, label) => {
 					if (label) {
@@ -749,12 +758,6 @@ class ClassLayer {
 </div>`;
 	}
 
-	get cptDomMoveMask() {
-		return $(
-			`<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
-		);
-	}
-
 	initConfig(custumSettings: i_layerOptions) {
 		const layerInstance = this;
 		layerInstance.config = Object.assign(layerInstance.config, custumSettings);
@@ -766,7 +769,7 @@ class ClassLayer {
 
 		const { config } = layerInstance;
 		/* 随layer 的增减变动 */
-		layerInstance._layerKey = vUtils.genId("");
+		layerInstance._layerKey = xU.genId("");
 		layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
 		layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerKey}`;
 		layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerKey}`;
@@ -849,8 +852,9 @@ class ClassLayer {
 		return layerInstance;
 	}
 
+	/* 调整位置并显示 */
 	async setLayerPosition() {
-		await vUtils.sleep(34);
+		await xU.sleep(34);
 		const layerInstance = this;
 		const { config, _layerKey } = layerInstance;
 		/* 首次弹出时，若 css 尚未加载，则等待 css 加载完毕后，重新设定尺寸 */
@@ -915,17 +919,12 @@ class ClassLayer {
 		/* 容器 */
 		const layerInstance = this;
 		/* moving 的遮罩是单例 */
-		if (!READY.$moveMask) {
-			READY.$moveMask = $(layerInstance.cptDomMoveMask);
-			$body.append(READY.$moveMask);
-		}
 		const { config, _layerKey, _IDShade } = layerInstance;
 		layerInstance.$eleLayer = $(layerInstance.cptDomContainer);
 		/*  */
 		if (
-			vUtils.isObject(config.content) &&
-			(vUtils.isString(config.content) ||
-				vUtils.isString(config.content.jquery))
+			xU.isObject(config.content) &&
+			(xU.isString(config.content) || xU.isString(config.content.jquery))
 		) {
 			const $content = $(config.content);
 			layerInstance.$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
@@ -1166,7 +1165,7 @@ class ClassLayer {
 					e.clientX - parseFloat($eleLayer.css("left")),
 					e.clientY - parseFloat($eleLayer.css("top"))
 				];
-				READY.$moveMask.css("cursor", "move").show();
+				$MoveMask.css("cursor", "move").show();
 			}
 		});
 
@@ -1177,7 +1176,7 @@ class ClassLayer {
 			READY.moveOrResizeType = "resize";
 			READY.pointMousedown = [e.clientX, e.clientY];
 			READY.moveOrResizeWH = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-			READY.$moveMask.css("cursor", "se-resize").show();
+			$MoveMask.css("cursor", "se-resize").show();
 		});
 
 		return layerInstance;
@@ -1275,7 +1274,7 @@ class ClassLayer {
 }
 
 var cache = LayerUtils.cache || {};
-
+/* eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee */
 /* 点击层zIndex在最上层 */
 $document
 	.on("click.setLayerTop", "[layer-wrapper]", event => {
@@ -1285,12 +1284,13 @@ $document
 	})
 	.on(
 		"mousemove",
-		".layui-layer-move",
-		vUtils.throttle(function (e) {
+		`.${LAYUI_LAYER_MOVE}`,
+		xU.throttle(function (e) {
+			const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
 			/* 拖拽移动 */
-			if (READY.moveOrResizeInstance instanceof ClassLayer) {
-				const { $eleLayer, config } = READY.moveOrResizeInstance;
-				if (READY.moveOrResizeType === "move") {
+			if (moveOrResizeInstance instanceof ClassLayer) {
+				const { $eleLayer, config } = moveOrResizeInstance;
+				if (moveOrResizeType === "move") {
 					e.preventDefault();
 					let X = e.clientX - READY.pointMousedown[0];
 					let Y = e.clientY - READY.pointMousedown[1];
@@ -1337,20 +1337,22 @@ $document
 						config.onResizing && config.onResizing($eleLayer);
 					}
 				}
+			} else if (typeof onMoving == "function") {
+				event && onMoving(event);
 			}
 
 			/* Resize */
-		}, 100)
+		}, 90)
 	)
-	.on("mouseup", ".layui-layer-move", function (e) {
+	.on("mouseup", function (e) {
 		if (READY.moveOrResizeInstance instanceof ClassLayer) {
 			const { config } = READY.moveOrResizeInstance;
 			if (config.onMoveEnd) {
 				config.onMoveEnd(READY.moveOrResizeInstance);
 			}
 			READY.moveOrResizeInstance = false;
-			READY.$moveMask.hide();
 		}
+		$MoveMask.hide();
 	});
 
 /* 暴露模块 */

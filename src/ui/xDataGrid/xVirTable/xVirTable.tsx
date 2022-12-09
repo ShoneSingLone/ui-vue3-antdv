@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { defineComponent } from "vue";
-import { vUtils } from "../../ventoseUtils";
+import { xU } from "../../ventoseUtils";
 import $ from "jquery";
 import { xVirTableTh } from "./xVirTableTh";
 import { xVirTableBody } from "./xVirTableBody";
@@ -8,7 +8,7 @@ import { xVirTableBody } from "./xVirTableBody";
 export function defXVirTableConfigs(options) {
 	const required = ["rowHeight", "columns"];
 	if (
-		vUtils.some(required, prop => {
+		xU.some(required, prop => {
 			if (!options[prop]) {
 				alert("defXVirTableConfigs miss required " + prop);
 				return true;
@@ -88,7 +88,7 @@ export const xVirTable = defineComponent({
 			if (!this.selectedType) {
 				return false;
 			}
-			if (vUtils.isFunction(this.configs?.selectedConfigs?.fn)) {
+			if (xU.isFunction(this.configs?.selectedConfigs?.fn)) {
 				return this.configs?.selectedConfigs?.fn;
 			} else {
 				return false;
@@ -109,7 +109,7 @@ export const xVirTable = defineComponent({
 			return Object.keys(this.configs?.columns || {});
 		},
 		columnWidthArray() {
-			const _columnWidthArray = vUtils.reduce(
+			const _columnWidthArray = xU.reduce(
 				this.columnOrder,
 				(columnStyle, prop: any) => {
 					const configsColumn = this.configs.columns[prop] || {};
@@ -158,7 +158,7 @@ export const xVirTable = defineComponent({
 				<div role="thead" class="xVirTable-thead">
 					<div role="tr" class="flex horizon">
 						{this.vDomTheadSelect}
-						{vUtils.map(this.columnOrder, (prop: string, index: number) => {
+						{xU.map(this.columnOrder, (prop: string, index: number) => {
 							const column = this.configs?.columns[prop];
 							return <xVirTableTh column={column} index={index} key={prop} />;
 						})}
@@ -203,7 +203,7 @@ export const xVirTable = defineComponent({
 			const { checked } = e.target;
 			if (checked) {
 				this.selectedAll = true;
-				this.configs.selected = vUtils.map(
+				this.configs.selected = xU.map(
 					this.configs.dataSource,
 					i => i[this.selectedProp]
 				);
@@ -213,7 +213,7 @@ export const xVirTable = defineComponent({
 		},
 		handleSelectedChangeTd({ id }) {
 			const isOnlyOne = this.selectedType === "one";
-			const index = vUtils.findIndex(this.configs?.selected, i => i === id);
+			const index = xU.findIndex(this.configs?.selected, i => i === id);
 			if (index > -1) {
 				if (isOnlyOne) {
 					this.configs.selected = [];

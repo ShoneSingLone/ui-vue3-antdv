@@ -646,7 +646,6 @@ div[id^="xDialog_"] {
 .layui-layer-move {
   display: none;
   position: fixed;
-  *position: absolute;
   top: 0;
   right: 0;
   left: 0;
@@ -659,8 +658,9 @@ div[id^="xDialog_"] {
 }
 .layui-layer-tips {
   position: fixed;
-  transform-origin: bottom left;
-  visibility: hidden;
+}
+.move-transition {
+  transition: 0.1s linear;
 }
 .x-button.flex {
   display: flex;
@@ -29578,14 +29578,14 @@ var __publicField = (obj, key, value) => {
   return value;
 };
 (function(global2, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? factory(exports, require("ant-design-vue"), require("jquery"), require("vue"), require("lodash"), require("dayjs")) : typeof define === "function" && define.amd ? define(["exports", "ant-design-vue", "jquery", "vue", "lodash", "dayjs"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.VentoseUI = {}, global2.antd, global2.$, global2.Vue, global2._, global2.dayjs));
-})(this, function(exports2, Antd, $, vue, _$1, dayjs$1) {
+  typeof exports === "object" && typeof module !== "undefined" ? factory(exports, require("ant-design-vue"), require("jquery"), require("vue"), require("dayjs"), require("lodash")) : typeof define === "function" && define.amd ? define(["exports", "ant-design-vue", "jquery", "vue", "dayjs", "lodash"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.VentoseUI = {}, global2.antd, global2.$, global2.Vue, global2.dayjs, global2._));
+})(this, function(exports2, Antd, $, vue, dayjs, _) {
   "use strict";
   const _interopDefaultLegacy = (e) => e && typeof e === "object" && "default" in e ? e : { default: e };
   const Antd__default = /* @__PURE__ */ _interopDefaultLegacy(Antd);
   const $__default = /* @__PURE__ */ _interopDefaultLegacy($);
-  const ___default = /* @__PURE__ */ _interopDefaultLegacy(_$1);
-  const dayjs__default = /* @__PURE__ */ _interopDefaultLegacy(dayjs$1);
+  const dayjs__default = /* @__PURE__ */ _interopDefaultLegacy(dayjs);
+  const ___default = /* @__PURE__ */ _interopDefaultLegacy(_);
   const index = "";
   const ui = "";
   const antd = "";
@@ -29605,418 +29605,24 @@ var __publicField = (obj, key, value) => {
       });
     }
   }));
-  function promisifyRequest(request) {
-    return new Promise((resolve, reject) => {
-      request.oncomplete = request.onsuccess = () => resolve(request.result);
-      request.onabort = request.onerror = () => reject(request.error);
-    });
-  }
-  function createStore(dbName, storeName) {
-    const request = indexedDB.open(dbName);
-    request.onupgradeneeded = () => request.result.createObjectStore(storeName);
-    const dbp = promisifyRequest(request);
-    return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
-  }
-  let defaultGetStoreFunc;
-  function defaultGetStore() {
-    if (!defaultGetStoreFunc) {
-      defaultGetStoreFunc = createStore("keyval-store", "keyval");
-    }
-    return defaultGetStoreFunc;
-  }
-  function get(key, customStore = defaultGetStore()) {
-    return customStore("readonly", (store) => promisifyRequest(store.get(key)));
-  }
-  function set(key, value, customStore = defaultGetStore()) {
-    return customStore("readwrite", (store) => {
-      store.put(value, key);
-      return promisifyRequest(store.transaction);
-    });
-  }
-  ___default.default.WORDS = {
-    INVALID_DATE: "Invalid Date",
-    format_ymd: "YYYY-MM-DD"
-  };
-  ___default.default.doNothing = (...args2) => {
-    if (localStorage.isShowDevLog) {
-      const e = new Error();
-      console.log("\u{1F680}:", e.stack.split("\n")[2].replace("    at ", ""));
-      console.log.apply(console, args2);
-    }
-  };
-  ___default.default.sleep = (t) => new Promise((r) => setTimeout(r, t));
-  const onRE = /^on[^a-z]/;
-  ___default.default.isOn = (key) => onRE.test(key);
-  ___default.default.isModelListener = (key) => {
-    key = String(key);
-    if (!key) {
-      return false;
-    }
-    return key.startsWith("onUpdate:");
-  };
-  ___default.default.isListener = (key) => {
-    key = String(key);
-    if (!key) {
-      return false;
-    }
-    return ___default.default.isOn(key) || ___default.default.isModelListener(key);
-  };
-  ___default.default.isArrayFill = (arr) => {
-    if (Object.prototype.toString.call(arr) == "[object Array]") {
-      if (arr.length > 0) {
-        return true;
-      }
-    }
-    return false;
-  };
-  ___default.default.isObjectFill = (obj) => ___default.default.isPlainObject(obj) && Object.keys(obj).length > 0;
-  ___default.default.safeFirst = (arr, fnCheck) => {
-    fnCheck = fnCheck || ((value) => ___default.default.isInput(value));
-    const obj = ___default.default.first(arr);
-    return fnCheck(obj) ? obj : false;
-  };
-  ___default.default.safeToString = (val, isBeautiful) => {
-    if (typeof val === "object") {
-      if (isBeautiful) {
-        return JSON.stringify(val, null, 2);
-      } else {
-        return JSON.stringify(val);
-      }
-    } else {
-      return String(val);
-    }
-  };
-  ___default.default.safeParse = (val, defaultObj = {}) => {
-    let obj = defaultObj;
-    try {
-      obj = JSON.parse(val);
-      if (!val) {
-        obj = defaultObj;
-        throw new Error("json parse error");
-      }
-    } catch (error) {
-      ___default.default.doNothing(error);
-    }
-    return obj;
-  };
-  ___default.default.safeSplit = function(target, sp) {
-    return (target == null ? void 0 : target.split) ? target.split(sp) : [];
-  };
-  ___default.default.safeDate = function(val) {
-    if (!val) {
-      return "";
-    }
-    let date = dayjs__default.default(val);
-    if (date === ___default.default.WORDS.INVALID_DATE) {
-      return "";
-    } else {
-      return date;
-    }
-  };
-  ___default.default.isInput = (val) => {
-    if (val === void 0) {
-      return false;
-    }
-    val = JSON.parse(JSON.stringify(val));
-    if (val === 0) {
-      return true;
-    }
-    if (val === false) {
-      return true;
-    }
-    if (___default.default.isArray(val)) {
-      return val.length > 0;
-    } else if (val) {
-      return true;
-    }
-    return false;
-  };
-  ___default.default.is$Selected = ($ele) => $ele && $ele.length > 0;
-  ___default.default.getObjectFirstKeyValue = (obj, defaultValue = "") => {
-    if (!obj)
-      return defaultValue;
-    const keyArray = Object.keys(obj);
-    if (!___default.default.isArrayFill(keyArray))
-      return defaultValue;
-    return ___default.default.isInput(keyArray[0]) ? obj[keyArray[0]] : defaultValue;
-  };
-  ___default.default.asyncLoadJS = async (url, globalName) => {
-    if (window[globalName]) {
-      return window[globalName];
-    }
-    const $style = $__default.default("<style/>").attr("id", `${asyncLoadJS}${globalName}`);
-    $style.appendTo($__default.default("body")).on("load", function() {
-      return window[globalName];
-    });
-    $style.attr("src", url);
-  };
-  ___default.default.ensureValueDone = async (fnGetValue) => {
-    return new Promise(async (resolve) => {
-      let exeFnGetValue = async function() {
-        const value = await fnGetValue();
-        if (value) {
-          exeFnGetValue = null;
-          resolve(value);
-        } else {
-          setTimeout(exeFnGetValue, 1e3 * exeFnGetValue.count++);
-        }
-      };
-      exeFnGetValue.count = 1;
-      exeFnGetValue();
-    });
-  };
-  function genId(category) {
-    if (genId.idCount > genId.ID_COUNT_MAX) {
-      genId.idCount = 1;
-      genId.DATE_NOW = Date.now();
-    }
-    return `${category}_${genId.DATE_NOW}_${genId.idCount++}`;
-  }
-  genId.idCount = 1;
-  genId.ID_COUNT_MAX = 4e4;
-  genId.DATE_NOW = Date.now();
-  ___default.default.genId = genId;
-  ___default.default.genProp = (someString) => {
-    return `k${___default.default.camelCase(someString)}`;
-  };
-  ___default.default.preload = (baseModule, deps) => {
-    if (!deps || deps.length === 0) {
-      return baseModule();
-    }
-    return Promise.all(
-      deps.map((dep) => {
-        dep = `${base}${dep}`;
-        if (dep in seen)
-          return;
-        seen[dep] = true;
-        const isCss = dep.endsWith(".css");
-        const cssSelector = isCss ? '[rel="stylesheet"]' : "";
-        if (document.querySelector(`link[href="${dep}"] ${cssSelector}`)) {
-          return;
-        }
-        const link = document.createElement("link");
-        link.rel = isCss ? "stylesheet" : scriptRel;
-        if (!isCss) {
-          link.as = "script";
-          link.crossOrigin = "";
-        }
-        link.href = dep;
-        document.head.appendChild(link);
-        if (isCss) {
-          return new Promise((res, rej) => {
-            link.addEventListener("load", res);
-            link.addEventListener("error", rej);
-          });
-        }
-      })
-    ).then(() => baseModule());
-  };
-  const parseContent = (returnSentence) => {
-    if (!returnSentence)
-      return;
-    return new Function(`${returnSentence} return module();`);
-  };
-  ___default.default.asyncLoadText = async function(url) {
-    if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-      const res = await get(url);
-      if (res) {
-        return res;
-      }
-    }
-    return new Promise(
-      (resolve, reject) => $__default.default.ajax({
-        type: "GET",
-        async: true,
-        url,
-        dataType: "text",
-        success(...args2) {
-          if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-            set(url, args2[0]);
-          }
-          resolve.apply(null, args2);
-        },
-        error: reject
-      })
-    );
-  };
-  async function asyncExecFnString(url) {
-    let data = "";
-    try {
-      data = await ___default.default.asyncLoadText(url);
-    } catch (error) {
-    }
-    return parseContent(data);
-  }
-  ___default.default.asyncExecFnString = asyncExecFnString;
-  const VueComponents = {};
-  async function getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
-    const scfObjAsyncFn = new Function(
-      "argVue",
-      "argPayload",
-      `console.log(\`${url}\`)
-return (${scfObjSourceCode})(argVue,argPayload);`
-    );
-    const scfObj = await scfObjAsyncFn(__Vue, {
-      url
-    });
-    return scfObj;
-  }
-  ___default.default.getVueComponentBySourceCode = getVueComponentBySourceCode;
-  async function asyncImportSFC(url, __Vue) {
-    if (VueComponents[url]) {
-      return VueComponents[url];
-    }
-    const scfSourceCode = await ___default.default.asyncLoadText(url);
-    const scfObjSourceCode = VueLoader(scfSourceCode);
-    VueComponents[url] = await getVueComponentBySourceCode(
-      url,
-      scfObjSourceCode,
-      __Vue
-    );
-    return VueComponents[url];
-  }
-  ___default.default.asyncImportSFC = asyncImportSFC;
-  function VueLoader(code) {
-    function getSource(source, type2) {
-      var regex = new RegExp("<" + type2 + "[^>]*>");
-      var openingTag = source.match(regex);
-      if (!openingTag)
-        return "";
-      else
-        openingTag = openingTag[0];
-      var targetSource = source.slice(
-        source.indexOf(openingTag) + openingTag.length,
-        source.lastIndexOf("</" + type2 + ">")
-      );
-      return type2 === "template" ? targetSource.replace(/`/g, "\\`") : targetSource;
-    }
-    function splitCode() {
-      if (!/TEMPLATE_PLACEHOLDER/.test(code)) {
-        alert("SFC miss TEMPLATE_PLACEHOLDER");
-        console.error(code);
-      }
-      return getSource(code, "script").replace(
-        /TEMPLATE_PLACEHOLDER/,
-        `template: \`${getSource(code, "template")}\``
-      );
-    }
-    return splitCode();
-  }
-  ___default.default.VueLoader = VueLoader;
-  ___default.default.loadCss = function(cssname) {
-    const cssPath = `${cssname}`;
-    let $link = $__default.default("<link/>", { rel: "stylesheet", type: "text/css" });
-    $link.appendTo($__default.default("head"));
-    $link[0].href = `${cssPath}?_t=${Date.now()}`;
-    return () => {
-      $link.remove();
-      $link = null;
-    };
-  };
-  ___default.default.dateFormat = function(date, format) {
-    if (!format) {
-      format = "YYYY-MM-DD";
-    }
-    if (format === 1) {
-      format = "YYYY-MM-DD HH:mm:ss";
-    }
-    const label = dayjs__default.default(date).format(format);
-    return label === "Invalid Date" ? "--" : label;
-  };
-  ___default.default.keepDecimals = function(val, fractionDigits = 2) {
-    let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
-    if (num === "NaN") {
-      num = "-";
-    }
-    return num;
-  };
-  ___default.default.valueToLabel = function(value, options) {
-    const target = ___default.default.find(options, {
-      value
-    });
-    if (target) {
-      return target.label;
-    } else {
-      return "--";
-    }
-  };
-  ___default.default.timego = function(timestamp) {
-    let minutes, hours, days, seconds, mouth, year;
-    const timeNow = parseInt(new Date().getTime() / 1e3);
-    seconds = timeNow - timestamp;
-    if (seconds > 86400 * 30 * 12) {
-      year = parseInt(seconds / (86400 * 30 * 12));
-    } else {
-      year = 0;
-    }
-    if (seconds > 86400 * 30) {
-      mouth = parseInt(seconds / (86400 * 30));
-    } else {
-      mouth = 0;
-    }
-    if (seconds > 86400) {
-      days = parseInt(seconds / 86400);
-    } else {
-      days = 0;
-    }
-    if (seconds > 3600) {
-      hours = parseInt(seconds / 3600);
-    } else {
-      hours = 0;
-    }
-    minutes = parseInt(seconds / 60);
-    if (year > 0) {
-      return year + "\u5E74\u524D";
-    } else if (mouth > 0 && year <= 0) {
-      return mouth + "\u6708\u524D";
-    } else if (days > 0 && mouth <= 0) {
-      return days + "\u5929\u524D";
-    } else if (days <= 0 && hours > 0) {
-      return hours + "\u5C0F\u65F6\u524D";
-    } else if (hours <= 0 && minutes > 0) {
-      return minutes + "\u5206\u949F\u524D";
-    } else if (minutes <= 0 && seconds > 0) {
-      if (seconds < 30) {
-        return "\u521A\u521A";
-      } else {
-        return seconds + "\u79D2\u524D";
-      }
-    } else {
-      return "\u521A\u521A";
-    }
-  };
-  ___default.default.htmlFilter = (html) => {
-    if (!html)
-      return;
-    let reg = /<\/?.+?\/?>/g;
-    return html.replace(reg, "") || "";
-  };
-  const Input = vue.resolveComponent("aInput");
-  const InputNumber = vue.resolveComponent("aInputNumber");
-  const InputPassword = vue.resolveComponent("aInputPassword");
-  const Textarea = vue.resolveComponent("aTextarea");
-  const InputSearch = vue.resolveComponent("aInputSearch");
-  const Input$1 = ({
+  const Input = ({
     property,
     slots,
     listeners
   }) => {
-    let component = Input;
+    let component = vue.resolveComponent("aInput");
     if (property.isPassword) {
-      component = InputPassword;
-    }
-    if (property.isNumber) {
-      component = InputNumber;
-    }
-    if (property.isTextarea) {
-      component = Textarea;
+      component = vue.resolveComponent("aInputPassword");
+    } else if (property.isNumber) {
+      component = vue.resolveComponent("aInputNumber");
+    } else if (property.isTextarea) {
+      component = vue.resolveComponent("aTextarea");
       property.autoSize = property.autoSize || {
         minRows: 4,
         maxRows: 6
       };
-    }
-    if (property.isSearch) {
-      component = InputSearch;
+    } else if (property.isSearch) {
+      component = vue.resolveComponent("aInputSearch");
     }
     return vue.createVNode(component, vue.mergeProps(property, listeners), slots);
   };
@@ -30464,9 +30070,432 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       return t.default.locale(_2, null, true), _2;
     });
   })(enAu);
+  function promisifyRequest(request) {
+    return new Promise((resolve, reject) => {
+      request.oncomplete = request.onsuccess = () => resolve(request.result);
+      request.onabort = request.onerror = () => reject(request.error);
+    });
+  }
+  function createStore(dbName, storeName) {
+    const request = indexedDB.open(dbName);
+    request.onupgradeneeded = () => request.result.createObjectStore(storeName);
+    const dbp = promisifyRequest(request);
+    return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
+  }
+  let defaultGetStoreFunc;
+  function defaultGetStore() {
+    if (!defaultGetStoreFunc) {
+      defaultGetStoreFunc = createStore("keyval-store", "keyval");
+    }
+    return defaultGetStoreFunc;
+  }
+  function get(key, customStore = defaultGetStore()) {
+    return customStore("readonly", (store) => promisifyRequest(store.get(key)));
+  }
+  function set(key, value, customStore = defaultGetStore()) {
+    return customStore("readwrite", (store) => {
+      store.put(value, key);
+      return promisifyRequest(store.transaction);
+    });
+  }
+  const onRE = /^on[^a-z]/;
+  const VueComponents = {};
+  const privateLodash = {
+    ...___default.default,
+    WORDS: {
+      INVALID_DATE: "Invalid Date",
+      format_ymd: "YYYY-MM-DD"
+    },
+    getLeftTopFromAbsolute($ele) {
+      const _top = $ele.css("top");
+      const _left = $ele.css("left");
+      const getNum = (x) => {
+        const match = String(x).match(/^(.*)px$/);
+        if (match && match[1]) {
+          return Number(match[1]);
+        } else {
+          return 0;
+        }
+      };
+      const top = getNum(_top);
+      const left = getNum(_left);
+      console.log(left, top);
+      return { top, left };
+    },
+    getLeftTopFromTranslate($ele) {
+      const transform = $ele.css("transform");
+      const match = String(transform).match(/^matrix\((.*)\)$/);
+      if (!match) {
+        return { top: 0, left: 0 };
+      }
+      if (match && match[1]) {
+        const [a, b, c, d, e, f] = String(match[1]).split(",").map((i) => Number(privateLodash.trim(i)));
+        return {
+          left: a + c + e,
+          top: b + d + f
+        };
+      }
+    },
+    async asyncImportSFC(url, __Vue) {
+      if (VueComponents[url]) {
+        return VueComponents[url];
+      }
+      const scfSourceCode = await privateLodash.asyncLoadText(url);
+      const scfObjSourceCode = privateLodash.VueLoader(scfSourceCode);
+      VueComponents[url] = await privateLodash.getVueComponentBySourceCode(
+        url,
+        scfObjSourceCode,
+        __Vue
+      );
+      return VueComponents[url];
+    },
+    async getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
+      const scfObjAsyncFn = new Function(
+        "argVue",
+        "argPayload",
+        `console.log(\`${url}\`)
+return (${scfObjSourceCode})(argVue,argPayload);`
+      );
+      const scfObj = await scfObjAsyncFn(__Vue, {
+        url
+      });
+      return scfObj;
+    },
+    parseContent: (returnSentence) => {
+      if (!returnSentence)
+        return;
+      return new Function(`${returnSentence} return module();`);
+    },
+    payloadIdCount: 1,
+    payloadIdCountMax: 4e4,
+    payloadDateNow: Date.now(),
+    genId: (category) => {
+      const { payloadIdCount, payloadIdCountMax, payloadDateNow } = privateLodash;
+      if (payloadIdCount > payloadIdCountMax) {
+        privateLodash.payloadIdCount = 1;
+        privateLodash.payloadDateNow = Date.now();
+      }
+      return `${category}_${payloadDateNow}_${privateLodash.payloadIdCount++}`;
+    },
+    VueLoader: (code) => {
+      function getSource(source, type2) {
+        var regex = new RegExp("<" + type2 + "[^>]*>");
+        var openingTag = source.match(regex);
+        if (!openingTag)
+          return "";
+        else
+          openingTag = openingTag[0];
+        var targetSource = source.slice(
+          source.indexOf(openingTag) + openingTag.length,
+          source.lastIndexOf("</" + type2 + ">")
+        );
+        return type2 === "template" ? targetSource.replace(/`/g, "\\`") : targetSource;
+      }
+      function splitCode() {
+        if (!/TEMPLATE_PLACEHOLDER/.test(code)) {
+          alert("SFC miss TEMPLATE_PLACEHOLDER");
+          console.error(code);
+        }
+        return getSource(code, "script").replace(
+          /TEMPLATE_PLACEHOLDER/,
+          `template: \`${getSource(code, "template")}\``
+        );
+      }
+      return splitCode();
+    },
+    async asyncExecFnString(url) {
+      const data = await privateLodash.asyncLoadText(url);
+      return privateLodash.parseContent(data);
+    },
+    doNothing: (...args2) => {
+      var _a;
+      if (localStorage.isShowDevLog) {
+        const e = new Error();
+        console.log("\u{1F680}:", (_a = e == null ? void 0 : e.stack) == null ? void 0 : _a.split("\n")[2].replace("    at ", ""));
+        console.log.apply(console, args2);
+      }
+    },
+    sleep: (t) => new Promise((r) => setTimeout(r, t)),
+    isOn: (key) => onRE.test(key),
+    isModelListener: (key) => {
+      key = String(key);
+      if (!key) {
+        return false;
+      }
+      return key.startsWith("onUpdate:");
+    },
+    isListener: (key) => {
+      key = String(key);
+      if (!key) {
+        return false;
+      }
+      return privateLodash.isOn(key) || privateLodash.isModelListener(key);
+    },
+    isArrayFill: (arr) => {
+      if (Array.isArray(arr)) {
+        if (arr.length > 0) {
+          return true;
+        }
+      }
+      return false;
+    },
+    isObjectFill: (obj) => privateLodash.isPlainObject(obj) && Object.keys(obj).length > 0,
+    safeFirst: (arr, fnCheck) => {
+      fnCheck = fnCheck || ((value) => privateLodash.isInput(value));
+      const obj = privateLodash.first(arr);
+      return fnCheck(obj) ? obj : false;
+    },
+    safeToString: (val, isBeautiful = false) => {
+      try {
+        if (isBeautiful) {
+          return JSON.stringify(val, null, 2);
+        } else {
+          return JSON.stringify(val);
+        }
+      } catch (error) {
+        return "";
+      }
+    },
+    safeParse: (val, defaultObj) => {
+      let obj = defaultObj;
+      try {
+        obj = JSON.parse(val);
+        if (!val) {
+          obj = defaultObj;
+          throw new Error("json parse error");
+        }
+      } catch (error) {
+        privateLodash.doNothing(error);
+      }
+      return obj;
+    },
+    safeSplit: (target, sp = "") => {
+      return (target == null ? void 0 : target.split) ? target.split(sp) : [];
+    },
+    safeDate: (val) => {
+      if (!val) {
+        return "";
+      }
+      let date = dayjs__default.default(val);
+      if (date === privateLodash.WORDS.INVALID_DATE) {
+        return "";
+      } else {
+        return date;
+      }
+    },
+    isInput: (val) => {
+      if (val === void 0) {
+        return false;
+      }
+      val = JSON.parse(JSON.stringify(val));
+      if (val === 0) {
+        return true;
+      }
+      if (val === false) {
+        return true;
+      }
+      if (privateLodash.isArray(val)) {
+        return val.length > 0;
+      } else if (val) {
+        return true;
+      }
+      return false;
+    },
+    is$Selected: ($ele) => $ele && $ele.jquery && $ele.length > 0,
+    getObjectFirstKeyValue: (obj, defaultValue) => {
+      if (!obj) {
+        return defaultValue;
+      }
+      const keyArray = Object.keys(obj);
+      if (!privateLodash.isArrayFill(keyArray))
+        return defaultValue;
+      const prop = keyArray[0];
+      return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
+    },
+    asyncLoadJS: async (url, globalName) => {
+      if (window[globalName]) {
+        return window[globalName];
+      }
+      const $style = $__default.default("<style/>").attr("id", `asyncLoadJS_${globalName}`);
+      $style.appendTo($__default.default("body")).on("load", function() {
+        return window[globalName];
+      });
+      $style.attr("src", url);
+    },
+    ensureValueDone: async (fnGetValue) => {
+      return new Promise(async (resolve) => {
+        let exeFnGetValue = async function() {
+          const value = await fnGetValue();
+          if (value) {
+            exeFnGetValue = null;
+            resolve(value);
+          } else {
+            setTimeout(exeFnGetValue, 1e3 * exeFnGetValue.count++);
+          }
+        };
+        exeFnGetValue.count = 1;
+        exeFnGetValue();
+      });
+    },
+    genProp: (someString) => {
+      return `k${privateLodash.camelCase(someString)}`;
+    },
+    asyncLoadText: async function(url) {
+      if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+        const res = await get(url);
+        if (res) {
+          return res;
+        }
+      }
+      return new Promise(
+        (resolve, reject) => $__default.default.ajax({
+          type: "GET",
+          async: true,
+          url,
+          dataType: "text",
+          success(...args2) {
+            if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+              set(url, args2[0]);
+            }
+            resolve.apply(null, args2);
+          },
+          error: reject
+        })
+      );
+    },
+    loadCss: function(cssname) {
+      const cssPath = `${cssname}`;
+      let $link = $__default.default("<link/>", { rel: "stylesheet", type: "text/css" });
+      $link.appendTo($__default.default("head"));
+      $link[0].href = `${cssPath}?_t=${Date.now()}`;
+      return () => {
+        $link.remove();
+        $link = null;
+      };
+    },
+    dateFormat: function(date, format = "YYYY-MM-DD") {
+      if (format === 1) {
+        format = "YYYY-MM-DD HH:mm:ss";
+      }
+      const label = dayjs__default.default(date).format(format);
+      return label === privateLodash.WORDS.INVALID_DATE ? "--" : label;
+    },
+    keepDecimals: function(val, fractionDigits) {
+      let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
+      if (num === "NaN") {
+        num = "-";
+      }
+      return num;
+    },
+    valueToLabel: function(value, options) {
+      const target = privateLodash.find(options, {
+        value
+      });
+      if (target) {
+        return target.label;
+      } else {
+        return "--";
+      }
+    },
+    timego: function(timestamp) {
+      let minutes, hours, days, seconds, mouth, year;
+      const timeNow = parseInt(new Date().getTime() / 1e3);
+      seconds = timeNow - timestamp;
+      if (seconds > 86400 * 30 * 12) {
+        year = parseInt(seconds / (86400 * 30 * 12));
+      } else {
+        year = 0;
+      }
+      if (seconds > 86400 * 30) {
+        mouth = parseInt(seconds / (86400 * 30));
+      } else {
+        mouth = 0;
+      }
+      if (seconds > 86400) {
+        days = parseInt(seconds / 86400);
+      } else {
+        days = 0;
+      }
+      if (seconds > 3600) {
+        hours = parseInt(seconds / 3600);
+      } else {
+        hours = 0;
+      }
+      minutes = parseInt(seconds / 60);
+      if (year > 0) {
+        return year + "\u5E74\u524D";
+      } else if (mouth > 0 && year <= 0) {
+        return mouth + "\u6708\u524D";
+      } else if (days > 0 && mouth <= 0) {
+        return days + "\u5929\u524D";
+      } else if (days <= 0 && hours > 0) {
+        return hours + "\u5C0F\u65F6\u524D";
+      } else if (hours <= 0 && minutes > 0) {
+        return minutes + "\u5206\u949F\u524D";
+      } else if (minutes <= 0 && seconds > 0) {
+        if (seconds < 30) {
+          return "\u521A\u521A";
+        } else {
+          return seconds + "\u79D2\u524D";
+        }
+      } else {
+        return "\u521A\u521A";
+      }
+    },
+    htmlFilter: (html) => {
+      if (!html)
+        return;
+      let reg = /<\/?.+?\/?>/g;
+      return html.replace(reg, "") || "";
+    },
+    MutatingProps: (item, prop, val = null) => {
+      item = item || {};
+      const propArray = prop.split(".");
+      let key = "";
+      let nextItem = item;
+      const setVal = () => {
+        while (key = propArray.shift()) {
+          if (!key) {
+            debugger;
+          }
+          if (propArray.length === 0) {
+            nextItem[key] = val;
+            return;
+          } else {
+            const _nextItem = nextItem[key];
+            if (!_nextItem) {
+              nextItem[key] = {};
+            }
+            nextItem = nextItem[key];
+          }
+        }
+      };
+      const getVal = () => {
+        while (key = propArray.shift()) {
+          const _nextItem = nextItem[key];
+          if (!_nextItem) {
+            return nextItem[key];
+          } else {
+            if (propArray.length === 0) {
+              return _nextItem;
+            } else {
+              nextItem = nextItem[key];
+            }
+          }
+        }
+        return nextItem;
+      };
+      if (val || privateLodash.isString(val) || privateLodash.isBoolean(val) || privateLodash.isNumber(val) && !privateLodash.isNaN(val)) {
+        setVal();
+      } else {
+        return getVal();
+      }
+      return item;
+    }
+  };
   const lStorage = new Proxy(localStorage, {
     set(_localStorage, prop, value) {
-      if (___default.default.isPlainObject(value)) {
+      if (privateLodash.isPlainObject(value)) {
         _localStorage[prop] = JSON.stringify(value);
       } else {
         _localStorage[prop] = value;
@@ -30517,11 +30546,11 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         label: prop,
         prop
       };
-      ___default.default.templateSettings.interpolate = /{([\s\S]+?)}/g;
+      privateLodash.templateSettings.interpolate = /{([\s\S]+?)}/g;
       if (State_UI.i18nMessage) {
         const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
         if (temp) {
-          result.label = ___default.default.template(temp)(payload);
+          result.label = privateLodash.template(temp)(payload);
           if (!result.label) {
             result.label = prop;
             console.error(`i18n:${prop} "NOT_FOUND"`);
@@ -30542,7 +30571,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     immediate: true
   });
   const Cpt_UI_locale = vue.computed(() => {
-    const currentLanguage = ___default.default.camelCase(State_UI.language);
+    const currentLanguage = privateLodash.camelCase(State_UI.language);
     const locale2 = State_UI.LANGUAGE[currentLanguage];
     return locale2;
   });
@@ -30554,9 +30583,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     let value = "";
     if (property.value) {
       value = dayjs__default.default(property.value);
-      ___default.default.doNothing(value, property.value);
+      privateLodash.doNothing(value, property.value);
       if (value === "Invalid Date") {
-        ___default.default.doNothing("property.value", property.value);
+        privateLodash.doNothing("property.value", property.value);
         value = "";
       }
     }
@@ -30565,14 +30594,14 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       "locale": Cpt_UI_locale.value.DatePicker
     }), slots);
   };
-  const RangePicker = vue.resolveComponent("aRangePicker");
-  const RangePicker$1 = ({
+  const RangePicker = ({
     property,
     slots,
     listeners
   }) => {
+    const RangePicker2 = vue.resolveComponent("aRangePicker");
     console.log("property", property.value);
-    return vue.createVNode(RangePicker, vue.mergeProps(property, listeners, {
+    return vue.createVNode(RangePicker2, vue.mergeProps(property, listeners, {
       "locale": Cpt_UI_locale.value.DatePicker
     }), slots);
   };
@@ -30590,15 +30619,15 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   };
   async function validateForm(configsForm) {
     return Promise.all(
-      ___default.default.map(
+      privateLodash.map(
         configsForm,
         (configs, prop) => new Promise((resolve) => {
-          if (___default.default.isInput(configs.isShow)) {
+          if (privateLodash.isInput(configs.isShow)) {
             const isFalse = !configs.isShow;
             if (isFalse) {
               return resolve();
             }
-            const isResFalse = ___default.default.isFunction(configs.isShow) && !configs.isShow();
+            const isResFalse = privateLodash.isFunction(configs.isShow) && !configs.isShow();
             if (isResFalse) {
               return resolve();
             }
@@ -30622,7 +30651,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     });
   }
   const AllWasWell = (res) => {
-    return ___default.default.isArray(res) && res.length === 0;
+    return privateLodash.isArray(res) && res.length === 0;
   };
   const checkXItem = async (xItemConfigs, handlerResult) => {
     xItemConfigs.checking = true;
@@ -30642,7 +30671,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
                 return true;
               }
               const isInTrigger = (eventName) => xItemConfigs.validate.triggerEventsObj[eventName];
-              if (___default.default.some(trigger, isInTrigger)) {
+              if (privateLodash.some(trigger, isInTrigger)) {
                 trigBy = `triggerEvent ${trigger.toString()}`;
                 return true;
               }
@@ -30652,14 +30681,14 @@ return (${scfObjSourceCode})(argVue,argPayload);`
                   EVENT_TYPE.input,
                   EVENT_TYPE.blur
                 ];
-                if (___default.default.some(updateTrigger, isInTrigger)) {
+                if (privateLodash.some(updateTrigger, isInTrigger)) {
                   trigBy = "update";
                   return true;
                 }
               }
               return false;
             })();
-            trigBy && ___default.default.doNothing(
+            trigBy && privateLodash.doNothing(
               `%cValidate trigger off by [${trigBy}]`,
               "color:yellow;background:green;"
             );
@@ -30693,7 +30722,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     } catch (error) {
       console.error(error);
     } finally {
-      if (___default.default.isFunction(xItemConfigs.__onAfterValidate)) {
+      if (privateLodash.isFunction(xItemConfigs.__onAfterValidate)) {
         xItemConfigs.__onAfterValidate.call(xItemConfigs, result);
       }
       xItemConfigs.validate.triggerEventsObj = {};
@@ -30702,7 +30731,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   const Checkbox = ({
     property
   }) => {
-    const _property = _.merge({}, property, {
+    const _property = xU.merge({}, property, {
       checked: property.value,
       onClick() {
         _property["onUpdate:value"](!_property.value, EVENT_TYPE.update);
@@ -30710,15 +30739,15 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     });
     return vue.h(Antd.Checkbox, _property);
   };
-  const Select = vue.resolveComponent("aSelect");
-  const SelectOption = vue.resolveComponent("aSelectOption");
-  const Select$1 = ({
+  const Select = ({
     property,
     listeners
   }) => {
-    const _property = ___default.default.omit(property, ["options"]);
+    const Select2 = vue.resolveComponent("aSelect");
+    const SelectOption = vue.resolveComponent("aSelectOption");
+    const _property = privateLodash.omit(property, ["options"]);
     const renderOptions = () => {
-      return ___default.default.map(property.options, (option) => {
+      return privateLodash.map(property.options, (option) => {
         return vue.createVNode(SelectOption, {
           "value": option.value
         }, {
@@ -30726,22 +30755,23 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         });
       });
     };
-    return vue.createVNode(Select, vue.mergeProps(listeners, _property), {
+    return vue.createVNode(Select2, vue.mergeProps(listeners, _property), {
       default: renderOptions
     });
   };
-  const Radio = vue.resolveComponent("aRadio");
-  const RadioGroup = vue.resolveComponent("aRadioGroup");
-  const RadioButton = vue.resolveComponent("aRadioButton");
-  const RadioGroup$1 = ({
+  const RadioGroup = ({
     property,
     slots,
     listeners
   }) => {
-    ___default.default.omit(property, ["options"]);
+    const Radio = vue.resolveComponent("aRadio");
+    const RadioGroup2 = vue.resolveComponent("aRadioGroup");
+    const RadioButton = vue.resolveComponent("aRadioButton");
+    const PROPERTY_OPTIONS = property.options;
+    const componentPropertyOmitOptions = privateLodash.omit(property, ["options"]);
     const renderOptions = () => {
       if (property.isButton) {
-        return ___default.default.map(property.options, (option) => {
+        return privateLodash.map(PROPERTY_OPTIONS, (option) => {
           return vue.createVNode(RadioButton, {
             "value": option.value
           }, {
@@ -30749,7 +30779,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           });
         });
       }
-      return ___default.default.map(property.options, (option) => {
+      return privateLodash.map(PROPERTY_OPTIONS, (option) => {
         return vue.createVNode(Radio, {
           "value": option.value
         }, {
@@ -30757,7 +30787,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         });
       });
     };
-    return vue.createVNode(RadioGroup, vue.mergeProps(property, listeners), {
+    return vue.createVNode(RadioGroup2, vue.mergeProps(componentPropertyOmitOptions, listeners), {
       default: renderOptions
     });
   };
@@ -30773,94 +30803,27 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     slots,
     listeners
   }) => {
-    const _property = ___default.default.merge({}, property, {
+    const _property = privateLodash.merge({}, property, {
       checked: property.value,
       onClick() {
         listeners["onUpdate:value"](!_property.value);
       }
     });
-    return vue.createVNode("span", null, [vue.h(Antd.Switch, ___default.default.omit(_property, ["value"]))]);
+    return vue.createVNode("span", null, [vue.h(Antd.Switch, privateLodash.omit(_property, ["value"]))]);
   };
   const itemRenders = {
-    Input: Input$1,
+    Input,
     Checkbox,
-    Select: Select$1,
+    Select,
     Switch,
     DatePicker,
-    RangePicker: RangePicker$1,
-    RadioGroup: RadioGroup$1,
+    RangePicker,
+    RadioGroup,
     CheckboxGroup
   };
-  const MutatingProps = (item, prop, val = null) => {
-    item = item || {};
-    const propArray = prop.split(".");
-    let key = "";
-    let nextItem = item;
-    const setVal = () => {
-      while (key = propArray.shift()) {
-        if (!key) {
-          debugger;
-        }
-        if (propArray.length === 0) {
-          nextItem[key] = val;
-          return;
-        } else {
-          const _nextItem = nextItem[key];
-          if (!_nextItem) {
-            nextItem[key] = {};
-          }
-          nextItem = nextItem[key];
-        }
-      }
-    };
-    const getVal = () => {
-      while (key = propArray.shift()) {
-        const _nextItem = nextItem[key];
-        if (!_nextItem) {
-          return nextItem[key];
-        } else {
-          if (propArray.length === 0) {
-            return _nextItem;
-          } else {
-            nextItem = nextItem[key];
-          }
-        }
-      }
-      return nextItem;
-    };
-    if (val || ___default.default.isString(val) || ___default.default.isBoolean(val) || ___default.default.isNumber(val) && !___default.default.isNaN(val)) {
-      setVal();
-    } else {
-      return getVal();
-    }
-    return item;
-  };
-  const Utils = {
-    dateFormat(date, format = "YYYY-MM-DD") {
-      if (format === 1) {
-        format = "YYYY-MM-DD HH:mm:ss";
-      }
-      const label = dayjs(date).format(format);
-      return label === "Invalid Date" ? "--" : label;
-    },
-    keepDecimals(val, fractionDigits = 2) {
-      let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
-      if (num === "NaN") {
-        num = "-";
-      }
-      return num;
-    },
-    valueToLabel(value, options) {
-      const target = ___default.default.find(options, {
-        value
-      });
-      if (target) {
-        return target.label;
-      } else {
-        return "--";
-      }
-    }
-  };
+  const {
+    MutatingProps
+  } = privateLodash;
   const domClass = {
     tipsError: "ant-form-item-explain ant-form-item-explain-error"
   };
@@ -30881,14 +30844,14 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     setup(props) {
       let Cpt_isShowXItem = true;
       let Cpt_isDisabled = false;
-      if (___default.default.isFunction(props.configs.isShow)) {
+      if (privateLodash.isFunction(props.configs.isShow)) {
         Cpt_isShowXItem = vue.computed(props.configs.isShow);
-      } else if (___default.default.isBoolean(props.configs.isShow)) {
+      } else if (privateLodash.isBoolean(props.configs.isShow)) {
         Cpt_isShowXItem = props.configs.isShow;
       }
-      if (___default.default.isFunction(props.configs.disabled)) {
+      if (privateLodash.isFunction(props.configs.disabled)) {
         Cpt_isDisabled = vue.computed(props.configs.disabled);
-      } else if (___default.default.isBoolean(props.configs.disabled)) {
+      } else if (privateLodash.isBoolean(props.configs.disabled)) {
         Cpt_isDisabled = props.configs.disabled;
       }
       return {
@@ -30906,7 +30869,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         "onUpdate:value": (val, ...args2) => {
           configs.value = val;
           this.$emit("update:modelValue", val);
-          if (___default.default.isFunction(listeners.onAfterValueChange)) {
+          if (privateLodash.isFunction(listeners.onAfterValueChange)) {
             listeners.onAfterValueChange.call(configs, val);
           }
           handleConfigsValidate(EVENT_TYPE.update);
@@ -30926,7 +30889,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       };
       function initListenerHandler(prop, value) {
         listeners[prop] = function(...args2) {
-          ___default.default.each(listeners[prop].queue, (listener) => {
+          privateLodash.each(listeners[prop].queue, (listener) => {
             listener == null ? void 0 : listener.apply(vm.configs, args2);
           });
         };
@@ -30934,8 +30897,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }
       function addListenerFromConfigs(currentConfigs) {
         const propsWillDeleteFromConfigs = [];
-        ___default.default.each(currentConfigs, (value, prop) => {
-          if (___default.default.isListener(prop)) {
+        privateLodash.each(currentConfigs, (value, prop) => {
+          if (privateLodash.isListener(prop)) {
             propsWillDeleteFromConfigs.push(prop);
             if (listeners[prop]) {
               listeners[prop].queue.push(value);
@@ -30946,12 +30909,12 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             }
           }
         });
-        ___default.default.each(propsWillDeleteFromConfigs, (prop) => {
+        privateLodash.each(propsWillDeleteFromConfigs, (prop) => {
           delete currentConfigs[prop];
         });
         return listeners;
       }
-      ___default.default.each(listeners, (value, prop) => initListenerHandler(prop, value));
+      privateLodash.each(listeners, (value, prop) => initListenerHandler(prop, value));
       addListenerFromConfigs(vm.configs);
       return {
         listeners,
@@ -30974,7 +30937,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         if ((_b = (_a = this.configs) == null ? void 0 : _a.itemTips) == null ? void 0 : _b.type) {
           return {
             type: this.configs.itemTips.type,
-            msg: ___default.default.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
+            msg: privateLodash.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
           };
         } else {
           this.configs.itemTips = _itemTips;
@@ -30995,12 +30958,12 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         const property = {};
         let slots = {};
         const pickAttrs = (properties) => {
-          ___default.default.each(properties, (value, prop) => {
+          privateLodash.each(properties, (value, prop) => {
             if ("slots" === prop) {
               slots = value;
               return;
             }
-            if (["placeholder"].includes(prop) && ___default.default.isFunction(value)) {
+            if (["placeholder"].includes(prop) && privateLodash.isFunction(value)) {
               property[prop] = value(vm);
               return;
             }
@@ -31056,10 +31019,10 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         let label = (() => {
           const _label = this.configs.label;
           if (_label) {
-            if (___default.default.isFunction(_label)) {
+            if (privateLodash.isFunction(_label)) {
               return _label();
             }
-            if (___default.default.isString(_label) || _label.__v_isVNode) {
+            if (privateLodash.isString(_label) || _label.__v_isVNode) {
               return _label;
             }
           }
@@ -31103,8 +31066,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       },
       setValidateInfo(rules) {
         let isRequired = false;
-        if (___default.default.isArrayFill(rules)) {
-          isRequired = ___default.default.some(rules, {
+        if (privateLodash.isArrayFill(rules)) {
+          isRequired = privateLodash.some(rules, {
             name: "required"
           });
           const handleAfterCheck = ([prop, msg]) => {
@@ -31112,7 +31075,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             if (prop) {
               if (msg) {
                 this.setTips(TIPS_TYPE.error, msg);
-                if (___default.default.isFunction(this.configs.onValidateFail)) {
+                if (privateLodash.isFunction(this.configs.onValidateFail)) {
                   this.configs.onValidateFail(this.configs);
                 }
               } else {
@@ -31120,7 +31083,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
               }
             }
           };
-          const debounceCheckXItem = ___default.default.debounce(checkXItem, 300);
+          const debounceCheckXItem = privateLodash.debounce(checkXItem, 300);
           MutatingProps(this, "configs.validate", (eventType) => {
             const prop = `configs.validate.triggerEventsObj.${eventType}`;
             MutatingProps(this, prop, true);
@@ -31128,7 +31091,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           });
           MutatingProps(this, "configs.validate.triggerEventsObj", {});
         } else {
-          if (___default.default.isFunction(this.configs.validate)) {
+          if (privateLodash.isFunction(this.configs.validate)) {
             delete this.configs.validate;
           }
         }
@@ -31140,7 +31103,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         return null;
       }
       const CurrentXItem = (() => {
-        if (___default.default.isFunction(this.configs.itemType)) {
+        if (privateLodash.isFunction(this.configs.itemType)) {
           return this.configs.itemType;
         }
         return itemRenders[this.configs.itemType] || itemRenders.Input;
@@ -31172,7 +31135,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         return `xForm_${this._.uid}`;
       },
       labelStyleText() {
-        return ___default.default.map(___default.default.merge({
+        return privateLodash.map(privateLodash.merge({
           width: "120px",
           "text-align": "right"
         }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
@@ -31297,29 +31260,29 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         return this.configs.type;
       },
       title() {
-        if (___default.default.isString(this.disabled) && this.disabled.length > 0) {
+        if (privateLodash.isString(this.disabled) && this.disabled.length > 0) {
           return this.disabled;
         }
-        if (___default.default.isString(this.configs.title) && this.configs.title.length > 0) {
+        if (privateLodash.isString(this.configs.title) && this.configs.title.length > 0) {
           return this.configs.title;
         }
         return false;
       },
       disabled() {
-        if (___default.default.isBoolean(this.configs.disabled)) {
+        if (privateLodash.isBoolean(this.configs.disabled)) {
           return this.configs.disabled;
         }
-        if (___default.default.isFunction(this.configs.disabled)) {
+        if (privateLodash.isFunction(this.configs.disabled)) {
           return this.configs.disabled(this);
         }
         return false;
       },
       text() {
         var _a;
-        if (___default.default.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
+        if (privateLodash.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
           return this.$slots.default(this);
         }
-        if (___default.default.isFunction(this.configs.text)) {
+        if (privateLodash.isFunction(this.configs.text)) {
           return this.configs.text(this) || "";
         }
         return this.configs.text || "";
@@ -31338,7 +31301,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     methods: {
       async onClick() {
         var _a;
-        if (___default.default.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
+        if (privateLodash.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
           this.loading = true;
           try {
             await this.configs.onClick.call(this.configs, this);
@@ -31351,7 +31314,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }
     },
     render(h) {
-      const configs = ___default.default.omit(this.configs, ["text", "onClick", "disabled"]);
+      const configs = privateLodash.omit(this.configs, ["text", "onClick", "disabled"]);
       if (this.title) {
         configs.title = this.title;
       }
@@ -31391,7 +31354,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           class: "center",
           text: vm.configs.text.normal,
           async onClick() {
-            if (___default.default.isFunction(vm.configs.onClick)) {
+            if (privateLodash.isFunction(vm.configs.onClick)) {
               await vm.configs.onClick({
                 countDown: vm.countDown
               });
@@ -31465,7 +31428,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           if (this.a) {
             gapStyle.margin = `${this.a}px`;
           } else {
-            ___default.default.map(POSITION_MAP, (prop, key) => {
+            privateLodash.map(POSITION_MAP, (prop, key) => {
               const value = this[key];
               if (value) {
                 gapStyle[`margin-${prop}`] = `${value}px`;
@@ -31506,14 +31469,14 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }
     },
     data() {
-      const id = ___default.default.genId("xChart");
+      const id = privateLodash.genId("xChart");
       return {
         id
       };
     },
     computed: {
       helper() {
-        if (___default.default.isPlainObject(this.configs)) {
+        if (privateLodash.isPlainObject(this.configs)) {
           return this.configs;
         }
         return CONFIGS_MAP[this.configs];
@@ -31738,7 +31701,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         };
       },
       iconKey() {
-        const _iconKey = ___default.default.camelCase(this.getIconPath()).replace(/\s/, "");
+        const _iconKey = privateLodash.camelCase(this.getIconPath()).replace(/\s/, "");
         return _iconKey;
       }
     },
@@ -31760,12 +31723,12 @@ return (${scfObjSourceCode})(argVue,argPayload);`
               return _SvgIconAny;
             }
             try {
-              _SvgIconAny = await ___default.default.asyncLoadText(this.getIconPath());
+              _SvgIconAny = await privateLodash.asyncLoadText(this.getIconPath());
             } catch (error) {
             }
             return _SvgIconAny;
           })();
-          if (___default.default.isString(SvgIconAny) && SvgIconAny.length > 0) {
+          if (privateLodash.isString(SvgIconAny) && SvgIconAny.length > 0) {
             const SvgComponentByString = {
               name: this.icon,
               template: SvgIconAny
@@ -31837,7 +31800,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   }
   function setPagination(StateTable, pagination) {
     const PAGINATION_MAP = lStorage.appConfigs.pagination;
-    ___default.default.each(pagination, (value, prop) => {
+    privateLodash.each(pagination, (value, prop) => {
       StateTable.pagination[PAGINATION_MAP[prop]] = value;
     });
   }
@@ -31865,7 +31828,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   }
   function defColActions(options) {
     return {
-      [static_word.operation]: ___default.default.merge({
+      [static_word.operation]: privateLodash.merge({
         title: State_UI.$t("\u64CD\u4F5C").label,
         key: static_word.operation,
         prop: static_word.operation,
@@ -31890,8 +31853,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       "class": "flex middle"
     }, [vue.createVNode(vue.resolveComponent("xGap"), {
       "l": "4"
-    }, null), ___default.default.map(always, (btn) => {
-      const configs = ___default.default.merge({
+    }, null), privateLodash.map(always, (btn) => {
+      const configs = privateLodash.merge({
         type: "link",
         size: "small"
       }, btn);
@@ -31914,8 +31877,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         },
         overlay: () => {
           let _slot;
-          return vue.createVNode(vue.Fragment, null, [vue.createVNode(vue.resolveComponent("aMenu"), null, _isSlot$1(_slot = ___default.default.map(more, (btn) => {
-            const configs = ___default.default.merge({
+          return vue.createVNode(vue.Fragment, null, [vue.createVNode(vue.resolveComponent("aMenu"), null, _isSlot$1(_slot = privateLodash.map(more, (btn) => {
+            const configs = privateLodash.merge({
               type: "link",
               size: "small"
             }, btn);
@@ -31936,7 +31899,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     })()]);
   }
   function filterColIsShow(isShow, prop) {
-    if (___default.default.isBoolean(isShow)) {
+    if (privateLodash.isBoolean(isShow)) {
       return isShow;
     } else {
       return true;
@@ -31995,7 +31958,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       };
     },
     methods: {
-      onShowSizeChange: ___default.default.debounce(function(page2, size2) {
+      onShowSizeChange: privateLodash.debounce(function(page2, size2) {
         setPagination(this, {
           page: page2,
           size: size2
@@ -32057,7 +32020,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     data() {
       return {
         State: {
-          id: ___default.default.genId("xDataGrid")
+          id: privateLodash.genId("xDataGrid")
         }
       };
     },
@@ -32067,10 +32030,10 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           return this.configs.columns;
         }
         let columns = null;
-        columns = ___default.default.map(this.Cpt_ColumnsOrder, (prop) => ___default.default.find(this.configs.columns, {
+        columns = privateLodash.map(this.Cpt_ColumnsOrder, (prop) => privateLodash.find(this.configs.columns, {
           prop
         }));
-        columns = ___default.default.filter(columns, (i) => filterColIsShow(i == null ? void 0 : i.isShow, i == null ? void 0 : i.prop));
+        columns = privateLodash.filter(columns, (i) => filterColIsShow(i == null ? void 0 : i.isShow, i == null ? void 0 : i.prop));
         return columns;
       },
       Cpt_ColumnsOrder() {
@@ -32078,10 +32041,10 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           if (this.configs.columns_order) {
             return this.configs.columns_order;
           } else {
-            return ___default.default.map(this.configs.columns, (i) => i.prop);
+            return privateLodash.map(this.configs.columns, (i) => i.prop);
           }
         })();
-        return ___default.default.filter(order, (i) => !!i);
+        return privateLodash.filter(order, (i) => !!i);
       },
       Cpt_AntTableProperty() {
         if (this.configs.antTableProperty) {
@@ -32136,7 +32099,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
               } = args2;
               if (column && column.renderCell) {
                 const vNode = column.renderCell(args2);
-                if (___default.default.isNull(vNode) || ___default.default.isUndefined(vNode)) {
+                if (privateLodash.isNull(vNode) || privateLodash.isUndefined(vNode)) {
                   return "";
                 }
                 return vNode;
@@ -32208,10 +32171,10 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     },
     methods: {
       handleChecked(col) {
-        const target = ___default.default.find(this.configs.columns, {
+        const target = privateLodash.find(this.configs.columns, {
           key: col.key
         });
-        target.isShow = ___default.default.isBoolean(target.isShow) ? !target.isShow : false;
+        target.isShow = privateLodash.isBoolean(target.isShow) ? !target.isShow : false;
       }
     },
     computed: {
@@ -32220,18 +32183,18 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           if (this.configs.columns_order) {
             return this.configs.columns_order;
           } else {
-            return ___default.default.map(this.configs.columns, (i) => i.prop);
+            return privateLodash.map(this.configs.columns, (i) => i.prop);
           }
         })();
-        return ___default.default.filter(order, (i) => !!i);
+        return privateLodash.filter(order, (i) => !!i);
       },
       Cpt_Columns() {
-        return ___default.default.map(this.Cpt_ColumnsOrder, (prop) => ___default.default.find(this.configs.columns, {
+        return privateLodash.map(this.Cpt_ColumnsOrder, (prop) => privateLodash.find(this.configs.columns, {
           prop
         }));
       },
       checkedList() {
-        return ___default.default.filter(this.Cpt_ColumnsOrder, (prop) => {
+        return privateLodash.filter(this.Cpt_ColumnsOrder, (prop) => {
           const {
             isShow
           } = this.configs.columns[prop];
@@ -32571,7 +32534,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       this.$wrapperEle.off("scroll");
     },
     methods: {
-      setTop: ___default.default.debounce(function() {
+      setTop: privateLodash.debounce(function() {
         if (this.$refs.refWrapper) {
           this.$refs.refWrapper.scrollTo({
             top: this.top,
@@ -32583,7 +32546,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         this.$wrapperEle = $__default.default(this.$refs.refWrapper);
         this.$wrapperEle.on("scroll", () => this.updateTop());
       },
-      updateTop(event) {
+      updateTop(event2) {
         if (this.$refs.refWrapper) {
           const top = this.$refs.refWrapper.scrollTop;
           this.blockCount = Math.floor(top / oneBlockHeight);
@@ -32772,7 +32735,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           isSelect,
           prop
         } = this.selectedConfigs || {};
-        if (___default.default.isFunction(isSelect)) {
+        if (privateLodash.isFunction(isSelect)) {
           return (args2) => {
             return isSelect.call(this, args2);
           };
@@ -32789,7 +32752,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         const {
           isDisabled
         } = this.selectedConfigs || {};
-        if (___default.default.isFunction(isDisabled)) {
+        if (privateLodash.isFunction(isDisabled)) {
           return () => {
             return isDisabled.call(this, args);
           };
@@ -32857,7 +32820,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
       },
       vDomBodyTr1() {
-        return ___default.default.map(this.virs1, (data, rowIndex) => {
+        return privateLodash.map(this.virs1, (data, rowIndex) => {
           return vue.createVNode("div", {
             "role": "tr",
             "class": "xVirTable-row flex horizon",
@@ -32865,7 +32828,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           }, [this.genSelectedVDom({
             rowIndex,
             rowData: data
-          }), ___default.default.map(this.columnOrder, (prop, index2) => {
+          }), privateLodash.map(this.columnOrder, (prop, index2) => {
             return vue.createVNode(xVirTableTd, {
               "column": this.columns[prop],
               "data-index": index2,
@@ -32876,7 +32839,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         });
       },
       vDomBodyTr2() {
-        return ___default.default.map(this.virs2, (data, rowIndex) => {
+        return privateLodash.map(this.virs2, (data, rowIndex) => {
           return vue.createVNode("div", {
             "role": "tr",
             "class": "xVirTable-row flex horizon",
@@ -32884,7 +32847,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           }, [this.genSelectedVDom({
             rowIndex,
             rowData: data
-          }), ___default.default.map(this.columnOrder, (prop, index2) => {
+          }), privateLodash.map(this.columnOrder, (prop, index2) => {
             return vue.createVNode(xVirTableTd, {
               "column": this.columns[prop],
               "data-index": index2,
@@ -32895,7 +32858,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         });
       },
       vDomBodyTr3() {
-        return ___default.default.map(this.virs3, (data, rowIndex) => {
+        return privateLodash.map(this.virs3, (data, rowIndex) => {
           return vue.createVNode("div", {
             "role": "tr",
             "class": "xVirTable-row flex horizon",
@@ -32903,7 +32866,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           }, [this.genSelectedVDom({
             rowIndex,
             rowData: data
-          }), ___default.default.map(this.columnOrder, (prop, index2) => {
+          }), privateLodash.map(this.columnOrder, (prop, index2) => {
             return vue.createVNode(xVirTableTd, {
               "column": this.columns[prop],
               "data-index": index2,
@@ -32928,7 +32891,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           this.emitSelectedChange(e.target.checked, rowInfo.rowData[prop]);
         };
         let vDomChecked;
-        if (___default.default.isString(isDisabled)) {
+        if (privateLodash.isString(isDisabled)) {
           isDisabled = true;
           const uiPopoverConfigs = {
             content: isDisabled
@@ -32957,13 +32920,13 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           id
         });
       },
-      setPerBlockHeight: ___default.default.debounce(function(viewportHeight) {
+      setPerBlockHeight: privateLodash.debounce(function(viewportHeight) {
         this.viewportHeight = viewportHeight;
         this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
         this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
         this.setHeight();
       }, 64),
-      setTop: ___default.default.debounce(function() {
+      setTop: privateLodash.debounce(function() {
         if (this.$refs.refWrapper) {
           this.$refs.refWrapper.scrollTo({
             top: this.top,
@@ -32971,9 +32934,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           });
         }
       }, 1e3),
-      updateTop(event) {
-        if (event) {
-          const top = event.target.scrollTop;
+      updateTop(event2) {
+        if (event2) {
+          const top = event2.target.scrollTop;
           this.blockInViewCount = Math.floor(top / this.perBlockHeight);
         }
       },
@@ -33022,23 +32985,23 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }, [this.vDomBodyTr3])])]);
     }
   });
-  function defineXVirTableConfigs(options) {
+  function defXVirTableConfigs(options) {
     const required = ["rowHeight", "columns"];
-    if (___default.default.some(required, (prop) => {
+    if (privateLodash.some(required, (prop) => {
       if (!options[prop]) {
-        alert("defineXVirTableConfigs miss required " + prop);
+        alert("defXVirTableConfigs miss required " + prop);
         return true;
       }
       return false;
     })) {
-      throw new Error("defineXVirTableConfigs miss required");
+      throw new Error("defXVirTableConfigs miss required");
     }
     if (options.selectedConfigs) {
       options.selected = options.selected || [];
     }
     return options;
   }
-  defineXVirTableConfigs.type = {
+  defXVirTableConfigs.type = {
     many: "many",
     one: "one"
   };
@@ -33075,7 +33038,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         if (!((_a = this.configs) == null ? void 0 : _a.selectedConfigs)) {
           return false;
         }
-        return ((_c = (_b = this.configs) == null ? void 0 : _b.selectedConfigs) == null ? void 0 : _c.type) || defineXVirTableConfigs.type.many;
+        return ((_c = (_b = this.configs) == null ? void 0 : _b.selectedConfigs) == null ? void 0 : _c.type) || defXVirTableConfigs.type.many;
       },
       selectedProp() {
         var _a, _b, _c, _d;
@@ -33092,7 +33055,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         if (!this.selectedType) {
           return false;
         }
-        if (___default.default.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
+        if (privateLodash.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
           return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.fn;
         } else {
           return false;
@@ -33113,7 +33076,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         return Object.keys(((_c = this.configs) == null ? void 0 : _c.columns) || {});
       },
       columnWidthArray() {
-        const _columnWidthArray = ___default.default.reduce(this.columnOrder, (columnStyle, prop) => {
+        const _columnWidthArray = privateLodash.reduce(this.columnOrder, (columnStyle, prop) => {
           const configsColumn = this.configs.columns[prop] || {};
           const {
             width
@@ -33151,7 +33114,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         }, [vue.createVNode("div", {
           "role": "tr",
           "class": "flex horizon"
-        }, [this.vDomTheadSelect, ___default.default.map(this.columnOrder, (prop, index2) => {
+        }, [this.vDomTheadSelect, privateLodash.map(this.columnOrder, (prop, index2) => {
           var _a;
           const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
           return vue.createVNode(xVirTableTh, {
@@ -33200,7 +33163,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         } = e.target;
         if (checked) {
           this.selectedAll = true;
-          this.configs.selected = ___default.default.map(this.configs.dataSource, (i) => i[this.selectedProp]);
+          this.configs.selected = privateLodash.map(this.configs.dataSource, (i) => i[this.selectedProp]);
         } else {
           this.configs.selected = [];
         }
@@ -33210,7 +33173,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }) {
         var _a;
         const isOnlyOne = this.selectedType === "one";
-        const index2 = ___default.default.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i) => i === id);
+        const index2 = privateLodash.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i) => i === id);
         if (index2 > -1) {
           if (isOnlyOne) {
             this.configs.selected = [];
@@ -33269,7 +33232,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         msg: msg || $t("\u5FC5\u586B\u9879").label,
         async validator(value) {
           if (value) {
-            if (___default.default.isArray(value)) {
+            if (privateLodash.isArray(value)) {
               if (value.length > 0) {
                 return SUCCESS;
               } else {
@@ -33278,9 +33241,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             }
             return SUCCESS;
           }
-          if (___default.default.isBoolean(value))
+          if (privateLodash.isBoolean(value))
             return SUCCESS;
-          if (___default.default.isNumber(value) && !___default.default.isNaN(value))
+          if (privateLodash.isNumber(value) && !privateLodash.isNaN(value))
             return SUCCESS;
           return FAIL;
         },
@@ -33292,7 +33255,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         name: "Demo",
         msg: "Demo",
         async validator(value) {
-          await ___default.default.sleep(1e3);
+          await privateLodash.sleep(1e3);
           return FAIL;
         },
         trigger: [EVENT_TYPE.update, EVENT_TYPE.input, EVENT_TYPE.change, EVENT_TYPE.blur]
@@ -33335,6 +33298,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   const $document = $__default.default(document);
   const $body = $__default.default("body");
   const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
+  const DATA_V_UI_MOVE = "data-directive-ui-move";
   const TYPE_IFRAME = "iframe";
   const TYPE_LOADING = "loading";
   const TYPE_TIPS = "tips";
@@ -33354,6 +33318,12 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     "layer-anim-05",
     "layer-anim-06"
   ];
+  const $MoveMask = $__default.default(
+    `<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
+  );
+  setTimeout(() => {
+    $body.append($MoveMask);
+  }, 0);
   const READY = {
     zIndex: 0,
     pointMousedown: [],
@@ -33416,14 +33386,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     }
   };
   const LayerUtils = {
-    lastIndex: 0,
-    layerIndexArray: [],
-    removeIndexFromLayerIndexArray(layerIndex) {
-      let currentIndex = ___default.default.findIndex(this.layerIndexArray, (i) => i === layerIndex);
-      if (currentIndex > -1) {
-        this.layerIndexArray.splice(currentIndex, 1);
-      }
-    },
     setZIndex(zIndex) {
       READY.zIndex = zIndex;
     },
@@ -33455,42 +33417,37 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       LayerUtils.cache = READY.config = $__default.default.extend({}, READY.config, options);
       LayerUtils.path = READY.config.path || LayerUtils.path;
       typeof options.extend === "string" && (options.extend = [options.extend]);
-      if (READY.config.path)
-        LayerUtils.ready();
       if (!options.extend)
         return this;
       return this;
     },
-    ready(callback) {
-      return this;
-    },
     open(options) {
-      const { _layerIndex } = new ClassLayer(options);
-      return _layerIndex;
+      const { _layerKey } = new ClassLayer(options);
+      return _layerKey;
     },
-    alert(content2, options, yes) {
+    alert(content, options, yes) {
       var type2 = typeof options === "function";
       if (type2)
         yes = options;
       return LayerUtils.open(
         $__default.default.extend(
           {
-            content: content2,
+            content,
             yes
           },
           type2 ? {} : options
         )
       );
     },
-    confirm(content2, options, yes, cancel) {
-      if (___default.default.isFunction(options)) {
+    confirm(content, options, yes, cancel) {
+      if (privateLodash.isFunction(options)) {
         cancel = yes;
         yes = options;
       }
       return LayerUtils.open(
         $__default.default.extend(
           {
-            content: content2,
+            content,
             btn: READY.btn,
             yes,
             btn2: cancel
@@ -33499,19 +33456,19 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         )
       );
     },
-    msg(content2, options, end = () => null) {
-      var isOptionsIsFunction = ___default.default.isFunction(options), rskin = READY.config.skin;
-      var skin2 = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
+    msg(content, options, end = () => null) {
+      var isOptionsIsFunction = privateLodash.isFunction(options), rskin = READY.config.skin;
+      var skin = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
       var anim = DOMS_ANIM.length - 1;
       if (isOptionsIsFunction)
         end = options;
       return LayerUtils.open(
         $__default.default.extend(
           {
-            content: content2,
+            content,
             time: 3e3,
             shade: false,
-            skin: skin2,
+            skin,
             title: false,
             closeBtn: false,
             btn: false,
@@ -33519,12 +33476,12 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             end
           },
           isOptionsIsFunction && !READY.config.skin ? {
-            skin: skin2 + " layui-layer-hui",
+            skin: skin + " layui-layer-hui",
             anim
           } : function() {
             options = options || {};
             if (options.icon === -1 || options.icon === void 0 && !READY.config.skin) {
-              options.skin = skin2 + " " + (options.skin || "layui-layer-hui");
+              options.skin = skin + " " + (options.skin || "layui-layer-hui");
             }
             return options;
           }()
@@ -33544,12 +33501,12 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         )
       );
     },
-    tips(content2, followSelector, options) {
+    tips(content, followSelector, options) {
       return LayerUtils.open(
         $__default.default.extend(
           {
             type: LayerUtils.TIPS,
-            content: [content2, followSelector],
+            content: [content, followSelector],
             closeBtn: false,
             time: 3e3,
             shade: false,
@@ -33561,8 +33518,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         )
       );
     },
-    close(layerIndex) {
-      if (layerIndex <= 0) {
+    close(layerKey) {
+      if (!layerKey) {
         return Promise.reject();
       }
       return new Promise((resolve, reject) => {
@@ -33573,7 +33530,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             } else {
               if (type2 === TYPE_IFRAME) {
                 try {
-                  var iframe = $__default.default(`#${LAYUI_LAYER_CONTENT}${layerIndex}`)[0];
+                  var iframe = $__default.default(`#${LAYUI_LAYER_CONTENT}${layerKey}`)[0];
                   iframe.contentWindow.document.write("");
                   iframe.contentWindow.close();
                   $eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
@@ -33584,12 +33541,12 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             $eleLayer[0].innerHTML = "";
             $eleLayer.remove();
             try {
-              READY.end[layerIndex] && READY.end[layerIndex]();
-              delete READY.end[layerIndex];
+              READY.end[layerKey] && READY.end[layerKey]();
+              delete READY.end[layerKey];
             } catch (e) {
             }
           };
-          var $eleLayer = $__default.default(`#${LAYUI_LAYER}${layerIndex}`);
+          var $eleLayer = $__default.default(`#${LAYUI_LAYER}${layerKey}`);
           var type2 = $eleLayer.attr("type");
           var closeAnim = "layer-anim-close";
           if ($eleLayer.length === 0) {
@@ -33598,16 +33555,15 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           if ($eleLayer.data("isOutAnim")) {
             $eleLayer.addClass("layer-anim " + closeAnim);
           }
-          $__default.default(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerIndex}`).remove();
+          $__default.default(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerKey}`).remove();
           LayerUtils.ie == 6 && READY.reselect();
-          READY.rescollbar(layerIndex);
+          READY.rescollbar(layerKey);
           if ($eleLayer.attr("minLeft")) {
             READY.minIndex--;
             READY.minLeft.push($eleLayer.attr("minLeft"));
           }
           setTimeout(function() {
             removeLayerDomFromHtml();
-            LayerUtils.removeIndexFromLayerIndexArray(layerIndex);
             resolve(true);
           }, 200);
         } catch (error) {
@@ -33617,11 +33573,11 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       });
     },
     getChildFrame(selector, index2) {
-      index2 = index2 || $__default.default(`.${LAYUI_LAYER_CONTENT}`).attr("data-index");
+      index2 = index2 || $__default.default(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
       return $__default.default("#" + LAYUI_LAYER + index2).find("iframe").contents().find(selector);
     },
     getFrameIndex(name) {
-      return $__default.default("#" + name).parents(`.${LAYUI_LAYER_CONTENT}`).attr("data-index");
+      return $__default.default("#" + name).parents(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
     },
     iframeAuto(index2) {
       if (!index2)
@@ -33733,11 +33689,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         $eleLayer.find(".layui-layer-min").hide();
       }, 100);
     },
-    title(name, index2) {
-      var $title = $__default.default("#" + LAYUI_LAYER + (index2 || LayerUtils.lastIndex)).find(
-        `.${LAYUI_LAYER_TITLE}`
-      );
-      $title.html(name);
+    title(name, layerKey) {
+      $__default.default(`#${LAYUI_LAYER}${layerKey}`).find(`.${LAYUI_LAYER_TITLE}`).html(name);
     },
     async closeAll(type2) {
       const needClose = [];
@@ -33745,10 +33698,10 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         const $ele = $__default.default(this);
         if (type2) {
           if ($ele.attr("type") === type2) {
-            needClose.push($ele.attr("data-index"));
+            needClose.push($ele.attr("data-layer-key"));
           }
         } else {
-          needClose.push($ele.attr("data-index"));
+          needClose.push($ele.attr("data-layer-key"));
         }
       });
       return await Promise.all(needClose.map(LayerUtils.close));
@@ -33762,28 +33715,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }
     }
   };
-  Object.defineProperty(LayerUtils, "lastIndex", {
-    get() {
-      const lastIndex = ___default.default.last(LayerUtils.layerIndexArray);
-      if (lastIndex) {
-        return lastIndex;
-      } else {
-        LayerUtils.layerIndexArray = [1];
-        return 1;
-      }
-    },
-    set(newIndex) {
-      const lastIndex = ___default.default.last(LayerUtils.layerIndexArray);
-      if (lastIndex) {
-        LayerUtils.layerIndexArray.push(newIndex);
-      } else {
-        return;
-      }
-    }
-  });
   class ClassLayer {
     constructor(custumSettings) {
-      __publicField(this, "_layerIndex", 0);
+      __publicField(this, "_layerKey", 0);
       __publicField(this, "_IDLayer", LAYUI_LAYER);
       __publicField(this, "_IDShade", LAYUI_LAYER_SHADE);
       __publicField(this, "_IDContent", LAYUI_LAYER_CONTENT);
@@ -33831,7 +33765,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         full: false,
         minStack: true
       });
-      this.initConfig(custumSettings).insertContainerAfterInitConfig().setPosition().setLayerSize().onMoveOrResize().addOperationListener().handleAnimation();
+      this.initConfig(custumSettings).insertLayer().addLayerListener().handleAnimation();
     }
     get cptDomShade() {
       const { config, _IDShade } = this;
@@ -33880,10 +33814,10 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         if (typeof config.btn === "string") {
           config.btn = [config.btn, ""];
         }
-        if (___default.default.every(config.btn, (i) => !i)) {
+        if (privateLodash.every(config.btn, (i) => !i)) {
           return "";
         }
-        const domButtons = ___default.default.reduce(
+        const domButtons = privateLodash.reduce(
           config.btn,
           (domButtonString, label) => {
             if (label) {
@@ -33906,29 +33840,43 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         typeName,
         isContentTypeObject,
         zIndex,
-        _layerIndex,
+        _layerKey,
         _IDLayer,
         _IDContent
       } = this;
-      const typeClassname = ` layui-layer-${typeName}`;
-      const boderClassname = (config.type == 0 || config.type == 2) && !config.shade ? " layui-layer-border" : "";
-      const skinClassname = config.skin || "";
+      const fnValid = (i) => !!i;
+      const layerWrapperClassname = [
+        "flex vertical",
+        "elevation-4",
+        `layui-layer-${typeName}`,
+        LAYUI_LAYER,
+        config.skin,
+        (() => {
+          if ([LayerUtils.IFRAME, LayerUtils.MSG].includes(config.type) && !config.shade) {
+            return "layui-layer-border";
+          }
+          return "";
+        })()
+      ].filter(fnValid).join(" ");
       const classContent = [
         LAYUI_LAYER_CONTENT,
         config.contentClass,
         config.type == LayerUtils.MSG && config.icon !== -1 ? "layui-layer-padding" : "",
         config.type == LayerUtils.LOADING ? `layui-layer-loading${config.icon}` : ""
-      ].filter((i) => !!i).join(" ");
+      ].filter(fnValid).join(" ");
+      config.area;
       return `
-<div id="${_IDLayer}" 
-		layer-wrapper="${_IDLayer}"
+<div id="${_IDLayer}" layer-wrapper="${_IDLayer}" type="${typeName}"
+		class="${layerWrapperClassname}" 
 		data-z-index="${zIndex}"
-		type="${typeName}"
-		class="flex vertical elevation-4 ${LAYUI_LAYER}${typeClassname}${boderClassname}${skinClassname}" 
-		data-index="${_layerIndex}"
+		data-layer-key="${_layerKey}"
 		data-during-time="${config.during}"
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
-		style="z-index:${zIndex}; width:${config.area[0]}; height:${config.area[1]}; position:fixed;">
+		style="position:fixed;
+			z-index:${zIndex};
+			width:${config.area[0]}; 
+			height:${config.area[1]};"
+		>
 			${this.cptDomTitle}
 			<div class="${classContent}" id="${_IDContent}">
 				${this.cptDomIcon}
@@ -33939,21 +33887,16 @@ return (${scfObjSourceCode})(argVue,argPayload);`
 			${this.cptDomResizeBar}
 </div>`;
     }
-    get cptDomMoveMask() {
-      return $__default.default(
-        `<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
-      );
-    }
     initConfig(custumSettings) {
       const layerInstance = this;
       layerInstance.config = Object.assign(layerInstance.config, custumSettings);
       layerInstance.config.icon = custumSettings.type === LayerUtils.LOADING ? 0 : -1;
       layerInstance.config.maxWidth = $win.width() - 15 * 2;
       const { config } = layerInstance;
-      layerInstance._layerIndex = ++LayerUtils.lastIndex;
-      layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerIndex}`;
-      layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerIndex}`;
-      layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerIndex}`;
+      layerInstance._layerKey = privateLodash.genId("");
+      layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
+      layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerKey}`;
+      layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerKey}`;
       layerInstance.zIndex = READY.zIndex + layerInstance.config.zIndex;
       layerInstance.typeName = READY.type[config.type || 0];
       layerInstance.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
@@ -34017,22 +33960,19 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       processContentFn && processContentFn();
       return layerInstance;
     }
-    setLayerSize() {
+    async setLayerPosition() {
+      await privateLodash.sleep(34);
       const layerInstance = this;
-      const { config } = layerInstance;
-      if (config.type == LayerUtils.TIPS) {
-        layerInstance.tips();
-      } else {
-        layerInstance.offset();
-        parseInt(
-          READY.getStyle(document.getElementById(LAYUI_LAYER_MOVE), "z-index")
-        ) || function() {
-          layerInstance.$eleLayer.css("visibility", "hidden");
-          LayerUtils.ready(function() {
-            layerInstance.offset();
-            layerInstance.$eleLayer.css("visibility", "visible");
-          });
-        }();
+      const { config, _layerKey } = layerInstance;
+      layerInstance.offset();
+      if (config.type === LayerUtils.TIPS) {
+        layerInstance.setTips();
+      }
+      layerInstance.$eleLayer.css("visibility", "visible");
+      if (config.fullscreen) {
+        setTimeout(() => {
+          LayerUtils.full(_layerKey);
+        }, 400);
       }
       if (config.fixed) {
         $win.on("resize", function() {
@@ -34041,15 +33981,16 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             layerInstance.setPosition();
           }
           if (config.type == LayerUtils.tips) {
-            layerInstance.tips();
+            layerInstance.setTips();
           }
         });
       }
       if (typeof config.during === "number" && config.during > 0) {
         setTimeout(function() {
-          LayerUtils.close(layerInstance._layerIndex);
+          LayerUtils.close(layerInstance._layerKey);
         }, config.during);
       }
+      LayerUtils.setLayerTop(layerInstance.$eleLayer);
       return layerInstance;
     }
     handleAnimation() {
@@ -34069,97 +34010,44 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }
       return layerInstance;
     }
-    insertContainerAfterInitConfig() {
+    insertLayer() {
       const layerInstance = this;
-      if (!READY.$moveMask) {
-        READY.$moveMask = $__default.default(layerInstance.cptDomMoveMask);
-        $body.append(READY.$moveMask);
+      const { config, _layerKey, _IDShade } = layerInstance;
+      layerInstance.$eleLayer = $__default.default(layerInstance.cptDomContainer);
+      if (privateLodash.isObject(config.content) && (privateLodash.isString(config.content) || privateLodash.isString(config.content.jquery))) {
+        const $content = $__default.default(config.content);
+        layerInstance.$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
       }
-      const { config, isContentTypeObject, _layerIndex, _IDLayer, _IDShade } = layerInstance;
-      $body.append(layerInstance.cptDomShade);
-      if (isContentTypeObject) {
-        if ([LayerUtils.IFRAME].includes(config.type || 0)) {
-          $body.append(layerInstance.cptDomContainer);
-        } else if ([LayerUtils.TIPS].includes(config.type || 0)) {
-          const $follow = $__default.default(config.follow);
-          $follow.offset();
-          const $domContainer = $__default.default(layerInstance.cptDomContainer);
-          $body.append($domContainer);
-        } else {
-          const $content = $__default.default(config.content);
-          const _$layerWrapper = $content.parents(`.${LAYUI_LAYER}`);
-          if (_$layerWrapper.length === 0) {
-            const $container = $__default.default(layerInstance.cptDomContainer);
-            $content.replaceWith($container);
-            $container.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
-          }
-        }
-      } else {
-        $body.append(layerInstance.cptDomContainer);
-      }
-      layerInstance.$eleLayer = $__default.default(`#${_IDLayer}`);
-      layerInstance.$eleShade = $__default.default(`#${_IDShade}`);
-      if (!config.scrollbar) {
-        $html.css("overflow", "hidden").attr("layer-full", _layerIndex);
-      }
-      LayerUtils.setLayerTop(layerInstance.$eleLayer);
-      layerInstance.$eleShade.css({
-        "background-color": config.shade[1] || "#000",
-        opacity: config.shade[0] || config.shade
+      layerInstance.$eleLayer.css({
+        visibility: "hidden",
+        top: "100%",
+        left: "100%"
       });
-      if (config.type == LayerUtils.IFRAME && LayerUtils.ie == 6) {
-        layerInstance.$eleLayer.find("iframe").attr("src", content[0]);
+      $body.append(layerInstance.$eleLayer);
+      if (layerInstance.cptDomShade) {
+        $body.append(layerInstance.cptDomShade);
+        layerInstance.$eleShade = $__default.default(`#${_IDShade}`);
+        layerInstance.$eleShade.css({
+          "background-color": config.shade[1] || "#000",
+          opacity: config.shade[0] || config.shade
+        });
       }
-      return layerInstance;
-    }
-    setPosition() {
-      var layerInstance = this;
-      const { $eleLayer, config, _layerIndex } = layerInstance;
-      if (config.area[0] === "" && config.maxWidth > 0) {
-        if (LayerUtils.ie && LayerUtils.ie < 8 && config.btn) {
-          $eleLayer.width($eleLayer.innerWidth());
-        }
-        $eleLayer.outerWidth() > config.maxWidth && $eleLayer.width(config.maxWidth);
+      if (!config.scrollbar) {
+        $html.css("overflow", "hidden").attr("layer-full", _layerKey);
       }
-      var area = [$eleLayer.innerWidth(), $eleLayer.innerHeight()], titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0, btnHeight = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0, setHeight = function(elem) {
-        elem = $eleLayer.find(elem);
-        elem.height(
-          area[1] - titHeight - btnHeight - 2 * (parseFloat(elem.css("padding-top")) | 0)
-        );
-      };
-      switch (config.type) {
-        case LayerUtils.IFRAME: {
-          if (config.fullscreen) {
-            LayerUtils.full(_layerIndex);
-          }
-          break;
-        }
-        default: {
-          if (config.area[1] === "") {
-            if (config.maxHeight > 0 && $eleLayer.outerHeight() > config.maxHeight) {
-              area[1] = config.maxHeight;
-              setHeight(`.${LAYUI_LAYER_IFRAME}`);
-            } else if (config.fixed && area[1] >= $win.height()) {
-              area[1] = $win.height();
-              setHeight(`.${LAYUI_LAYER_IFRAME}`);
-            }
-          } else {
-            setHeight(`.${LAYUI_LAYER_IFRAME}`);
-          }
-          break;
-        }
-      }
+      layerInstance.setLayerPosition();
       return layerInstance;
     }
     offset() {
       var layerInstance = this, config = layerInstance.config, $eleLayer = layerInstance.$eleLayer;
       var area = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-      var type2 = typeof config.offset === "object";
+      var whetherOffsetIsObject = typeof config.offset === "object";
       layerInstance.offsetTop = ($win.height() - area[1]) / 2;
       layerInstance.offsetLeft = ($win.width() - area[0]) / 2;
-      if (type2) {
-        layerInstance.offsetTop = config.offset[0];
-        layerInstance.offsetLeft = config.offset[1] || layerInstance.offsetLeft;
+      if (whetherOffsetIsObject) {
+        const [top, left] = config.offset;
+        layerInstance.offsetTop = top;
+        layerInstance.offsetLeft = left || layerInstance.offsetLeft;
       } else if (config.offset !== "auto") {
         if (config.offset === "t") {
           layerInstance.offsetTop = 0;
@@ -34201,13 +34089,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       });
       return layerInstance;
     }
-    async tips() {
+    async setTips() {
       const layerInstance = this;
-      const config = layerInstance.config;
-      const $eleLayer = layerInstance.$eleLayer;
-      await new Promise((r) => {
-        setTimeout(r, 34);
-      });
+      const { config, $eleLayer } = layerInstance;
       const [tipsDomWidth, tipsdomHeight] = [
         $eleLayer.outerWidth(),
         $eleLayer.outerHeight()
@@ -34224,15 +34108,17 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         tipTop: 0,
         tipLeft: 0
       };
-      var tipsG = $eleLayer.find(".layui-layer-TipsG");
-      const [direction, customColor] = config.tips || ["1", ""];
-      if (!customColor) {
-        tipsG.remove();
+      if (config.openAtPoint) {
+        const { top, left } = config.openAtPoint;
+        followInfo.top = top;
+        followInfo.left = left;
       }
+      var $tipsG = $eleLayer.find(".layui-layer-TipsG");
+      const [direction, customColor] = config.tips || ["1", ""];
       function makeLeftAuto() {
         if (followInfo.left + tipsDomWidth - $win.width() > 0) {
           followInfo.tipLeft = followInfo.left + followInfo.width - tipsDomWidth;
-          tipsG.css({ right: 12, left: "auto" });
+          $tipsG.css({ right: 12, left: "auto" });
         } else {
           followInfo.tipLeft = followInfo.left;
         }
@@ -34241,26 +34127,26 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         [LayerUtils.UP]() {
           makeLeftAuto();
           followInfo.tipTop = followInfo.top - tipsdomHeight - 10;
-          tipsG.removeClass("layui-layer-TipsB").addClass("layui-layer-TipsT").css("border-right-color", customColor);
-          followInfo.top - ($win.scrollTop() + tipsdomHeight + 8 * 2) < 0 && followInfo.where[2]();
+          $tipsG.removeClass("layui-layer-TipsB").addClass("layui-layer-TipsT").css("border-right-color", customColor);
+          followInfo.top - ($win.scrollTop() + tipsdomHeight + 8 * 2) < 0 && direction_strategy[2]();
         },
         [LayerUtils.RIGHT]() {
           followInfo.tipLeft = followInfo.left + followInfo.width + 10;
           followInfo.tipTop = followInfo.top;
-          tipsG.removeClass("layui-layer-TipsL").addClass("layui-layer-TipsR").css("border-bottom-color", customColor);
-          $win.width() - (followInfo.left + followInfo.width + tipsDomWidth + 8 * 2) > 0 || followInfo.where[3]();
+          $tipsG.removeClass("layui-layer-TipsL").addClass("layui-layer-TipsR").css("border-bottom-color", customColor);
+          $win.width() - (followInfo.left + followInfo.width + tipsDomWidth + 8 * 2) > 0 || direction_strategy[3]();
         },
         [LayerUtils.BOTTOM]() {
           makeLeftAuto();
           followInfo.tipTop = followInfo.top + followInfo.height + 10;
-          tipsG.removeClass("layui-layer-TipsT").addClass("layui-layer-TipsB").css("border-right-color", customColor);
-          followInfo.top - $win.scrollTop() + followInfo.height + tipsdomHeight + 8 * 2 - $win.height() > 0 && followInfo.where[0]();
+          $tipsG.removeClass("layui-layer-TipsT").addClass("layui-layer-TipsB").css("border-right-color", customColor);
+          followInfo.top - $win.scrollTop() + followInfo.height + tipsdomHeight + 8 * 2 - $win.height() > 0 && direction_strategy[4]();
         },
         [LayerUtils.LEFT]() {
           followInfo.tipLeft = followInfo.left - tipsDomWidth - 10;
           followInfo.tipTop = followInfo.top;
-          tipsG.removeClass("layui-layer-TipsR").addClass("layui-layer-TipsL").css("border-bottom-color", customColor);
-          tipsDomWidth + 8 * 2 - followInfo.left > 0 && followInfo.where[1]();
+          $tipsG.removeClass("layui-layer-TipsR").addClass("layui-layer-TipsL").css("border-bottom-color", customColor);
+          tipsDomWidth + 8 * 2 - followInfo.left > 0 && direction_strategy[1]();
         }
       };
       direction_strategy[direction] && direction_strategy[direction]();
@@ -34272,15 +34158,14 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       $eleLayer.css({
         left: followInfo.tipLeft - $win.scrollLeft(),
         top: followInfo.tipTop - $win.scrollTop(),
-        transform: "scale(0)"
+        "transform-origin": [
+          $tipsG.hasClass("layui-layer-TipsT") ? "top" : "bottem",
+          $tipsG.hasClass("layui-layer-TipsL") ? "left" : "right"
+        ].join(" ")
       });
-      setTimeout(() => {
-        $eleLayer.css({
-          transform: "scale(1)",
-          visibility: "unset",
-          "z-index": 1
-        });
-      }, 200);
+      if (!customColor) {
+        $tipsG.remove();
+      }
     }
     onMoveOrResize() {
       var layerInstance = this;
@@ -34298,7 +34183,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             e.clientX - parseFloat($eleLayer.css("left")),
             e.clientY - parseFloat($eleLayer.css("top"))
           ];
-          READY.$moveMask.css("cursor", "move").show();
+          $MoveMask.css("cursor", "move").show();
         }
       });
       $eleResize.on("mousedown", function(e) {
@@ -34308,47 +34193,44 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         READY.moveOrResizeType = "resize";
         READY.pointMousedown = [e.clientX, e.clientY];
         READY.moveOrResizeWH = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-        READY.$moveMask.css("cursor", "se-resize").show();
+        $MoveMask.css("cursor", "se-resize").show();
       });
       return layerInstance;
     }
-    addOperationListener() {
+    addLayerListener() {
       const layerInstance = this;
       const { $eleLayer, config } = layerInstance;
       if (config.success) {
         if (config.type == LayerUtils.IFRAME) {
           $eleLayer.find("iframe").on("load", function() {
-            config.success.call(this, $eleLayer, layerInstance._layerIndex);
+            config.success.call(this, $eleLayer, layerInstance._layerKey);
           });
         } else {
-          config.success($eleLayer, layerInstance._layerIndex);
+          config.success($eleLayer, layerInstance._layerKey);
         }
-      }
-      if (LayerUtils.ie == 6) {
-        layerInstance.IE6($eleLayer);
       }
       $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).children("a").on("click", function() {
         var index2 = $__default.default(this).index();
         if (index2 === 0) {
           if (config.yes) {
-            config.yes(layerInstance._layerIndex, $eleLayer);
+            config.yes(layerInstance._layerKey, $eleLayer);
           } else if (config["btn1"]) {
-            config["btn1"](layerInstance._layerIndex, $eleLayer);
+            config["btn1"](layerInstance._layerKey, $eleLayer);
           } else {
-            LayerUtils.close(layerInstance._layerIndex);
+            LayerUtils.close(layerInstance._layerKey);
           }
         } else {
-          var close = config["btn" + (index2 + 1)] && config["btn" + (index2 + 1)](layerInstance._layerIndex, $eleLayer);
-          close === false || LayerUtils.close(layerInstance._layerIndex);
+          var close = config["btn" + (index2 + 1)] && config["btn" + (index2 + 1)](layerInstance._layerKey, $eleLayer);
+          close === false || LayerUtils.close(layerInstance._layerKey);
         }
       });
       $eleLayer.find(`.${LAYUI_LAYER_CLOSE}`).on("click", async function handleClickCloseBtn() {
         var isClosed = false;
         if (config.cancel) {
-          isClosed = config.cancel(layerInstance._layerIndex, $eleLayer);
+          isClosed = config.cancel(layerInstance._layerKey, $eleLayer);
         }
         if (!isClosed) {
-          isClosed = await LayerUtils.close(layerInstance._layerIndex);
+          isClosed = await LayerUtils.close(layerInstance._layerKey);
         }
         if (!isClosed) {
           await LayerUtils.close($__default.default(this).attr("data-layer-id"));
@@ -34356,51 +34238,48 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       });
       if (config.shadeClose) {
         layerInstance.$eleShade.on("click", function() {
-          LayerUtils.close(layerInstance._layerIndex);
+          LayerUtils.close(layerInstance._layerKey);
         });
       }
       $eleLayer.find(".layui-layer-min").on("click", function() {
-        var min = config.min && config.min($eleLayer, layerInstance._layerIndex);
-        min === false || LayerUtils.min(layerInstance._layerIndex, config);
+        var min = config.min && config.min($eleLayer, layerInstance._layerKey);
+        min === false || LayerUtils.min(layerInstance._layerKey, config);
       });
       $eleLayer.find(".layui-layer-max").on("click", function() {
         if ($__default.default(this).hasClass("layui-layer-maxmin")) {
-          LayerUtils.restore(layerInstance._layerIndex);
-          config.restore && config.restore($eleLayer, layerInstance._layerIndex);
+          LayerUtils.restore(layerInstance._layerKey);
+          config.restore && config.restore($eleLayer, layerInstance._layerKey);
         } else {
-          LayerUtils.full(layerInstance._layerIndex, config);
+          LayerUtils.full(layerInstance._layerKey, config);
           setTimeout(function() {
-            config.full && config.full($eleLayer, layerInstance._layerIndex);
+            config.full && config.full($eleLayer, layerInstance._layerKey);
           }, 100);
         }
       });
-      config.end && (READY.end[layerInstance._layerIndex] = config.end);
+      if (config.end) {
+        READY.end[layerInstance._layerKey] = config.end;
+      }
+      if (![LayerUtils.TIPS, LayerUtils.MSG, LayerUtils.LOADING].includes(
+        config.type
+      )) {
+        layerInstance.onMoveOrResize();
+      }
       return layerInstance;
-    }
-    IE6($eleLayer) {
-      $__default.default("select").each(function(index2, value) {
-        var sthis = $__default.default(this);
-        if (!sthis.parents("." + LAYUI_LAYER)[0]) {
-          sthis.css("display") === "none" || sthis.attr({
-            layer: "1"
-          }).hide();
-        }
-        sthis = null;
-      });
     }
   }
   LayerUtils.cache || {};
-  $document.on("click.setLayerTop", "[layer-wrapper]", (event) => {
-    const { currentTarget } = event;
+  $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
+    const { currentTarget } = event2;
     const $currentTarget = $__default.default(currentTarget);
     LayerUtils.setLayerTop($currentTarget);
   }).on(
     "mousemove",
-    ".layui-layer-move",
-    ___default.default.throttle(function(e) {
-      if (READY.moveOrResizeInstance instanceof ClassLayer) {
-        const { $eleLayer, config } = READY.moveOrResizeInstance;
-        if (READY.moveOrResizeType === "move") {
+    `.${LAYUI_LAYER_MOVE}`,
+    privateLodash.throttle(function(e) {
+      const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
+      if (moveOrResizeInstance instanceof ClassLayer) {
+        const { $eleLayer, config } = moveOrResizeInstance;
+        if (moveOrResizeType === "move") {
           e.preventDefault();
           let X = e.clientX - READY.pointMousedown[0];
           let Y = e.clientY - READY.pointMousedown[1];
@@ -34437,186 +34316,19 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             config.onResizing && config.onResizing($eleLayer);
           }
         }
+      } else if (typeof onMoving == "function") {
+        event && onMoving(event);
       }
-    }, 100)
-  ).on("mouseup", ".layui-layer-move", function(e) {
+    }, 90)
+  ).on("mouseup", function(e) {
     if (READY.moveOrResizeInstance instanceof ClassLayer) {
       const { config } = READY.moveOrResizeInstance;
       if (config.onMoveEnd) {
         config.onMoveEnd(READY.moveOrResizeInstance);
       }
       READY.moveOrResizeInstance = false;
-      READY.$moveMask.hide();
     }
-  });
-  const TIMEOUT_DELAY = 200;
-  const popverOptionsCollection = {};
-  const popverIndexCollection = {};
-  const appAddPlugin = {};
-  const appDependState = {};
-  const timer4CloseTips = {};
-  const visibleArea = {};
-  const DATA_APP_ID = "data-app-id";
-  const DATA_FOLLOW_ID = "data-follow-id";
-  function fnShowTips({
-    $ele,
-    followId,
-    appId,
-    event
-  }) {
-    const options = popverOptionsCollection[followId] || {
-      content: ""
-    };
-    if (!options.content) {
-      if (options.onlyEllipsis) {
-        const eleWidth = $ele.width() || 0;
-        const text = $ele.text();
-        const $div = $__default.default(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
-        $div.appendTo($__default.default("body"));
-        const innerWidth = $div.width() || 0;
-        $div.remove();
-        if (innerWidth > eleWidth) {
-          options.content = text;
-        }
-      } else {
-        return;
-      }
-    }
-    let tipsContent = options.content;
-    if (!tipsContent) {
-      return;
-    }
-    let app;
-    let layerTipsOptions = {
-      tips: [LayerUtils.UP, "#fff"],
-      during: 1e3 * 60 * 10
-    };
-    if (___default.default.isPlainObject(options.content)) {
-      const id = `${followId}_content`;
-      tipsContent = `<div id="${id}"></div>`;
-      layerTipsOptions.success = function success(indexPanel, layerIndex) {
-        app = vue.createApp(options.content);
-        app.use(appAddPlugin[appId], {
-          dependState: appDependState[appId]
-        });
-        app.mount(`#${id}`);
-        options.afterOpenDialoag && options.afterOpenDialoag(app);
-      };
-      layerTipsOptions.end = function end() {
-        if (app) {
-          app.unmount();
-          app = null;
-        }
-      };
-    }
-    setTimeout(() => {
-      if (visibleArea[followId]) {
-        popverIndexCollection[followId] = LayerUtils.tips(tipsContent, `#${followId}`, layerTipsOptions);
-      }
-    }, options.delay || 240);
-  }
-  function installPopoverDirective(app, appSettings) {
-    const appId = ___default.default.genId("appId");
-    appAddPlugin[appId] = appSettings.appPlugins;
-    appDependState[appId] = appSettings.dependState;
-    app.directive("uiPopover", {
-      mounted(el, binding) {
-        var _a, _b, _c;
-        const followId = ___default.default.genId("xPopoverTarget");
-        const $ele = $__default.default(el);
-        $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
-        if (binding.value) {
-          popverOptionsCollection[followId] = binding.value;
-          if ((_a = binding.value) == null ? void 0 : _a.trigger) {
-            $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
-            const classStrategy = {
-              rightClick: "pointer-right-click"
-            };
-            $ele.addClass(classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer");
-          }
-        }
-      },
-      unmounted(el) {
-        const followId = $__default.default(el).attr(DATA_FOLLOW_ID);
-        LayerUtils.close(popverIndexCollection[followId]);
-        delete popverOptionsCollection[followId];
-        delete popverIndexCollection[followId];
-      }
-    });
-  }
-  function inVisibleArea(followId) {
-    if (timer4CloseTips[followId]) {
-      clearTimeout(timer4CloseTips[followId]);
-      delete timer4CloseTips[followId];
-    }
-    visibleArea[followId] = true;
-  }
-  function closeTips(followId, options = {}) {
-    delete visibleArea[followId];
-    timer4CloseTips[followId] = setTimeout(() => {
-      const layerIndex = popverIndexCollection[followId];
-      if (typeof layerIndex === "number") {
-        LayerUtils.close(layerIndex).then(() => {
-          delete popverIndexCollection[followId];
-        });
-      }
-    }, TIMEOUT_DELAY);
-  }
-  function handleClick(event) {
-    event.preventDefault();
-    const $ele = $__default.default(this);
-    const followId = $ele.attr(DATA_FOLLOW_ID);
-    const appId = $ele.attr(DATA_APP_ID);
-    visibleArea[followId] = true;
-    if (popverIndexCollection[followId]) {
-      closeTips(followId);
-    } else {
-      fnShowTips({
-        $ele,
-        followId,
-        appId,
-        event
-      });
-    }
-  }
-  $__default.default(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, handleClick);
-  $__default.default(document).on("contextmenu.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=rightClick]`, handleClick);
-  $__default.default(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event) {
-    const $ele = $__default.default(this);
-    const followId = $ele.attr(DATA_FOLLOW_ID);
-    if (visibleArea[followId]) {
-      return;
-    } else {
-      const appId = $ele.attr(DATA_APP_ID);
-      inVisibleArea(followId);
-      if (popverIndexCollection[followId]) {
-        return;
-      }
-      if ($ele.attr("data-trigger") === "click") {
-        return;
-      }
-      if ($ele.attr("data-trigger") === "rightClick") {
-        return;
-      }
-      fnShowTips({
-        $ele,
-        followId,
-        appId,
-        event
-      });
-    }
-  });
-  $__default.default(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event) {
-    const followId = $__default.default(this).attr(DATA_FOLLOW_ID);
-    closeTips(followId);
-  });
-  $__default.default(document).on("mouseenter.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event) {
-    const followId = $__default.default(this).attr(DATA_TIPS_FOLLOW_ID);
-    inVisibleArea(followId);
-  });
-  $__default.default(document).on("mouseleave.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event) {
-    const followId = $__default.default(this).attr(DATA_TIPS_FOLLOW_ID);
-    closeTips(followId);
+    $MoveMask.hide();
   });
   const installUIDialogComponent = (UI2, {
     appPlugins,
@@ -34632,7 +34344,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       let $container = $__default.default("<div/>", {
         id
       });
-      $container.appendTo($__default.default("body"));
       const __elId = `#${id}`;
       if (dialogOptions.yes) {
         dialogOptions._yes = dialogOptions.yes;
@@ -34641,9 +34352,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       let dialogVueApp = null;
       let handleEcsPress = {
         layerIndex: "",
-        handler(event) {
-          const code = event.keyCode;
-          event.preventDefault();
+        handler(event2) {
+          const code = event2.keyCode;
+          event2.preventDefault();
           if (code === KEY.esc) {
             LayerUtils.close(handleEcsPress.layerIndex);
           }
@@ -34657,7 +34368,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           handleEcsPress = null;
         }
       };
-      LayerUtils.open(___default.default.merge({
+      LayerUtils.open(privateLodash.merge({
         contentClass: "flex1",
         type: 1,
         title: [title || ""],
@@ -34727,7 +34438,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
                   if (this.dialogOptions.hideButtons) {
                     return null;
                   }
-                  if (___default.default.isFunction(this.dialogOptions.renderButtons)) {
+                  if (privateLodash.isFunction(this.dialogOptions.renderButtons)) {
                     let vDomButtons = (() => {
                       let _vDomButtons = this.dialogOptions.renderButtons(this);
                       if (!_vDomButtons) {
@@ -34808,6 +34519,197 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }, dialogOptions));
     });
   };
+  const appAddPlugin = {};
+  const appDependState = {};
+  const timer4CloseTips = {};
+  const visibleArea = {};
+  const DATA_APP_ID = "data-app-id";
+  const DATA_FOLLOW_ID = "data-follow-id";
+  const TIMEOUT_DELAY = 200;
+  const tipsOptionsCollection = {};
+  const tipsKeys = {};
+  function fnShowTips({
+    $ele,
+    followId,
+    appId,
+    event: event2
+  }) {
+    const options = tipsOptionsCollection[followId] || {
+      content: ""
+    };
+    if (!options.content) {
+      if (options.onlyEllipsis) {
+        const eleWidth = $ele.width() || 0;
+        const text = $ele.text();
+        const $div = $__default.default(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
+        $div.appendTo($__default.default("body"));
+        const innerWidth = $div.width() || 0;
+        $div.remove();
+        if (innerWidth > eleWidth) {
+          options.content = text;
+        }
+      } else {
+        return;
+      }
+    }
+    let tipsContent = options.content;
+    if (!tipsContent) {
+      return;
+    }
+    let app;
+    const placement = (() => {
+      const placement_strategy = {
+        top: 1,
+        right: 2,
+        bottom: 3,
+        left: 4
+      };
+      return placement_strategy[options.placement || "top"];
+    })();
+    let layerTipsOptions = {
+      tips: [placement, "#fff"],
+      during: 1e3 * 60 * 10
+    };
+    const isOpenAtPoint = $ele.attr("data-open-at-point");
+    if (isOpenAtPoint) {
+      layerTipsOptions.openAtPoint = {
+        left: $ele.clientX,
+        top: $ele.clientY
+      };
+    }
+    if (privateLodash.isPlainObject(options.content)) {
+      const id = `${followId}_content`;
+      tipsContent = `<div id="${id}"></div>`;
+      layerTipsOptions.success = function success(indexPanel, layerIndex) {
+        app = vue.createApp(options.content);
+        app.use(appAddPlugin[appId], {
+          dependState: appDependState[appId]
+        });
+        app.mount(`#${id}`);
+        options.afterOpenDialoag && options.afterOpenDialoag(app);
+      };
+      layerTipsOptions.end = function end() {
+        if (app) {
+          app.unmount();
+          app = null;
+        }
+      };
+    }
+    setTimeout(() => {
+      if (visibleArea[followId]) {
+        tipsKeys[followId] = LayerUtils.tips(tipsContent, `#${followId}`, layerTipsOptions);
+      }
+    }, options.delay || 32);
+  }
+  function installPopoverDirective(app, appSettings) {
+    const appId = privateLodash.genId("appId");
+    appAddPlugin[appId] = appSettings.appPlugins;
+    appDependState[appId] = appSettings.dependState;
+    app.directive("uiPopover", {
+      mounted(el, binding) {
+        var _a, _b, _c, _d;
+        const followId = privateLodash.genId("xPopoverTarget");
+        const $ele = $__default.default(el);
+        $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
+        if (binding.value) {
+          tipsOptionsCollection[followId] = binding.value;
+          if ((_a = binding.value) == null ? void 0 : _a.trigger) {
+            $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
+            const classStrategy = {
+              rightClick: "pointer-right-click"
+            };
+            $ele.addClass(classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer");
+          }
+          if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
+            $ele.attr("data-open-at-point", true);
+          }
+        }
+      },
+      unmounted(el) {
+        const followId = $__default.default(el).attr(DATA_FOLLOW_ID);
+        if (typeof tipsKeys[followId] == "string" && tipsKeys[followId]) {
+          LayerUtils.close(tipsKeys[followId]);
+        }
+        delete tipsOptionsCollection[followId];
+        delete visibleArea[followId];
+      }
+    });
+  }
+  function inVisibleArea(followId) {
+    if (timer4CloseTips[followId]) {
+      clearTimeout(timer4CloseTips[followId]);
+      delete timer4CloseTips[followId];
+    }
+    visibleArea[followId] = true;
+  }
+  function closeTips(followId, options = {}) {
+    delete visibleArea[followId];
+    timer4CloseTips[followId] = setTimeout(() => {
+      const layerIndex = tipsKeys[followId];
+      if (layerIndex) {
+        LayerUtils.close(layerIndex).then(() => {
+          delete tipsKeys[followId];
+          delete timer4CloseTips[followId];
+        });
+      }
+    }, TIMEOUT_DELAY);
+  }
+  function handleClick(event2) {
+    event2.preventDefault();
+    const $ele = $__default.default(this);
+    const followId = $ele.attr(DATA_FOLLOW_ID);
+    const appId = $ele.attr(DATA_APP_ID);
+    visibleArea[followId] = true;
+    if (tipsKeys[followId]) {
+      closeTips(followId);
+    } else {
+      fnShowTips({
+        $ele,
+        followId,
+        appId,
+        event: event2
+      });
+    }
+  }
+  $__default.default(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, handleClick);
+  $__default.default(document).on("contextmenu.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=rightClick]`, handleClick);
+  $__default.default(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
+    const $ele = $__default.default(this);
+    const followId = $ele.attr(DATA_FOLLOW_ID);
+    if (visibleArea[followId]) {
+      return;
+    } else {
+      const appId = $ele.attr(DATA_APP_ID);
+      inVisibleArea(followId);
+      if (tipsKeys[followId]) {
+        return;
+      }
+      if ($ele.attr("data-trigger") === "click") {
+        return;
+      }
+      if ($ele.attr("data-trigger") === "rightClick") {
+        return;
+      }
+      fnShowTips({
+        $ele,
+        followId,
+        appId,
+        event: event2
+      });
+    }
+  });
+  $__default.default(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
+    const followId = $__default.default(this).attr(DATA_FOLLOW_ID);
+    closeTips(followId);
+  });
+  $__default.default(document).on("mouseenter.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
+    const followId = $__default.default(this).attr(DATA_TIPS_FOLLOW_ID);
+    inVisibleArea(followId);
+  });
+  $__default.default(document).on("mouseleave.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
+    const followId = $__default.default(this).attr(DATA_TIPS_FOLLOW_ID);
+    closeTips(followId);
+  });
   function installLoading(app, options = {}) {
     app.directive("loading", {
       updated(el, binding) {
@@ -34819,8 +34721,46 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }
     });
   }
+  function installMoveDirective(app) {
+    app.directive("uiMove", {
+      mounted(el, binding) {
+        if (binding.value) {
+          if (binding.value.onMoving) {
+            const $ele = $__default.default(el);
+            const id = privateLodash.genId("xResize");
+            $ele.attr(DATA_V_UI_MOVE, id);
+            $ele.on("mousedown", function(event2) {
+              $MoveMask.css("cursor", "move").show();
+              const clickInfo = privateLodash.getLeftTopFromAbsolute($ele);
+              clickInfo.w = $ele.width();
+              clickInfo.h = $ele.height();
+              const {
+                top,
+                left
+              } = privateLodash.getLeftTopFromTranslate($ele);
+              clickInfo.translateX = left;
+              clickInfo.translateY = top;
+              READY.onMoving = (movingEvent) => {
+                binding.value.onMoving({
+                  $ele,
+                  clickInfo,
+                  clickEvent: event2,
+                  movingEvent
+                });
+              };
+            });
+          }
+        }
+      },
+      unmounted(el) {
+        const $ele = $__default.default(el);
+        $ele.attr(DATA_V_UI_MOVE);
+      }
+    });
+  }
   const installDirective = (app, options) => {
-    [installLoading].forEach((install) => install(app));
+    installPopoverDirective(app, options);
+    [installLoading, installMoveDirective].forEach((install) => install(app));
   };
   function _isSlot(s) {
     return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !vue.isVNode(s);
@@ -34831,10 +34771,10 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       options.prop = `xItem${xItemNoPropCount++}`;
       console.error(`no xItem prop replace by ${options.prop}`);
     }
-    if (!___default.default.isInput(options.isShow)) {
+    if (!privateLodash.isInput(options.isShow)) {
       options.isShow = true;
     }
-    const configs = vue.reactive(___default.default.merge({
+    const configs = vue.reactive(privateLodash.merge({
       itemTips: {},
       itemType: options.itemType || "Input"
     }, {
@@ -34886,7 +34826,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   }
   const get$head = () => {
     let $head = $__default.default("html head");
-    if (!___default.default.is$Selected($head)) {
+    if (!privateLodash.is$Selected($head)) {
       $head = $__default.default("<head/>");
       $head.prependTo($__default.default("html"));
     }
@@ -34895,7 +34835,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   const get$title = () => {
     let $head = get$head();
     let $title = $head.find("title");
-    if (!___default.default.is$Selected($title)) {
+    if (!privateLodash.is$Selected($title)) {
       $title = $__default.default("<title/>");
       $title.prependTo($head);
     }
@@ -34904,7 +34844,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   const get$cssVariables = () => {
     let $head = get$head();
     let $cssVariables = $head.find("#cssVariables");
-    if (!___default.default.is$Selected($cssVariables)) {
+    if (!privateLodash.is$Selected($cssVariables)) {
       $cssVariables = $__default.default("<style/>", { id: "cssVariables" });
       $cssVariables.appendTo($head);
     }
@@ -34915,19 +34855,16 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   };
   const setCSSVariables = (colors) => {
     let $cssVariables = get$cssVariables();
-    const cssContent = ___default.default.map(colors, (value, prop) => `--${prop}:${value}`).join(
-      ";"
-    );
+    const cssContent = privateLodash.map(colors, (value, prop) => `--${prop}:${value}`).join(";");
     $cssVariables.text(`:root{${cssContent}}`);
   };
   const pickValueFrom = (configs) => {
-    return ___default.default.reduce(
+    return privateLodash.reduce(
       configs,
       (target, config, prop) => {
         try {
           target[prop] = JSON.parse(JSON.stringify(config.value));
         } catch (error) {
-          console.error(error);
         }
         return target;
       },
@@ -34935,7 +34872,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     );
   };
   const setValueTo = (configs, values) => {
-    return ___default.default.map(
+    return privateLodash.map(
       values,
       (value, prop) => {
         if (configs[prop]) {
@@ -34946,7 +34883,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     );
   };
   const resetValueOf = (state, initState) => {
-    ___default.default.each(initState, (value, prop) => {
+    privateLodash.each(initState, (value, prop) => {
       state[prop] = JSON.parse(JSON.stringify(value));
     });
     return state;
@@ -34954,7 +34891,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   const useModel = (type2) => {
     return ({
       title = "",
-      content: content2 = ""
+      content = ""
     }) => {
       return new Promise((resolve, reject) => {
         title = ((isDefault) => {
@@ -34977,7 +34914,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             "type": "image/svg+xml",
             "href": "/ExclamationCircleOutlined.svg"
           }, null),
-          content: content2,
+          content,
           onOk() {
             resolve("ok");
           },
@@ -35026,17 +34963,17 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       },
       delete({
         title,
-        content: content2
+        content
       } = {}) {
         title = title || State_UI.$t("\u5220\u9664").label;
-        content2 = content2 || State_UI.$t("\u5220\u9664\u786E\u8BA4\u63D0\u793A").label;
+        content = content || State_UI.$t("\u5220\u9664\u786E\u8BA4\u63D0\u793A").label;
         return new Promise((resolve, reject) => {
           Antd.Modal.confirm({
             title,
             icon: vue.createVNode(vue.resolveComponent("ExclamationCircleOutlined"), {
               "style": "color:red"
             }, null),
-            content: content2,
+            content,
             okType: "danger",
             okText: State_UI.$t("\u786E\u5B9A").label,
             cancelText: State_UI.$t("\u53D6\u6D88").label,
@@ -35057,7 +34994,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         return new Proxy(m, {
           apply(target2, thisArg, argArray) {
             if (typeof argArray[0] === "string") {
-              argArray[0] = ___default.default.merge({
+              argArray[0] = privateLodash.merge({
                 message: argArray[0]
               }, argArray[1] || {});
             }
@@ -35120,14 +35057,13 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   };
   const VentoseUIWithInstall = {
     install: (app, options) => {
-      installDirective(app);
-      installPopoverDirective(app, options);
+      installDirective(app, options);
       installUIDialogComponent(UI, options);
-      ___default.default.each(components, (component, name) => {
+      privateLodash.each(components, (component, name) => {
         if (component.name) {
           name = component.name;
         } else {
-          ___default.default.doNothing(name, `miss name`);
+          privateLodash.doNothing(name, `miss name`);
         }
         app.component(component.name || name, component);
       });
@@ -35137,10 +35073,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   Object.defineProperty(exports2, "$", {
     enumerable: true,
     get: () => $__default.default
-  });
-  Object.defineProperty(exports2, "_", {
-    enumerable: true,
-    get: () => ___default.default
   });
   Object.defineProperty(exports2, "dayjs", {
     enumerable: true,
@@ -35157,7 +35089,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   exports2.RegexFn = RegexFn;
   exports2.State_UI = State_UI;
   exports2.UI = UI;
-  exports2.Utils = Utils;
   exports2.VNodeCollection = VNodeCollection;
   exports2.VentoseUIWithInstall = VentoseUIWithInstall;
   exports2.antColKey = antColKey;
@@ -35169,7 +35100,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   exports2.defDataGridOption = defDataGridOption;
   exports2.defItem = defItem;
   exports2.defPagination = defPagination;
-  exports2.defineXVirTableConfigs = defineXVirTableConfigs;
+  exports2.defXVirTableConfigs = defXVirTableConfigs;
   exports2.getPaginationPageSize = getPaginationPageSize;
   exports2.lStorage = lStorage;
   exports2.pickValueFrom = pickValueFrom;
@@ -35181,5 +35112,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   exports2.setValueTo = setValueTo;
   exports2.vModel = vModel;
   exports2.validateForm = validateForm;
+  exports2.xU = privateLodash;
   Object.defineProperties(exports2, { __esModule: { value: true }, [Symbol.toStringTag]: { value: "Module" } });
 });

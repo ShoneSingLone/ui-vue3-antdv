@@ -11,7 +11,7 @@
     - [ ] 弹窗效果从点击位置打开，openAtPoint
     - [ ] tips
     - [ ] dialog
-      - [ ] resize
+      - [x] resize
       - [ ] esc 退出最上层dialog
     - [ ] confirm
     - [ ] tips 的样式
@@ -27,4 +27,7 @@
 - [ ] 路由默认约定方式
     - [ ] 路由与视图的 import 加载，默认文件夹？
 
+## 指令
 
+- [x] v-uiPopover
+- [x] v-uiMove

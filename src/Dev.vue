@@ -22,6 +22,7 @@ export default defineComponent({
 
 <template>
 	<aTag v-uiPopover="configsUiPopoverComponent">使用Vue组件</aTag>
+	<aTag v-uiMove="configsUiPopoverComponent">使用Vue组件</aTag>
 </template>
 
 <style scoped>

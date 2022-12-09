@@ -1,6 +1,6 @@
 import { State_UI } from "../State_UI";
 import { EVENT_TYPE } from "../tools/validate";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 
 const { $t } = State_UI;
 
@@ -37,7 +37,7 @@ export const FormRules = {
 				/*必填的简单验证*/
 				if (value) {
 					/*不为空数组*/
-					if (vUtils.isArray(value)) {
+					if (xU.isArray(value)) {
 						if (value.length > 0) {
 							return SUCCESS;
 						} else {
@@ -48,8 +48,8 @@ export const FormRules = {
 					return SUCCESS;
 				}
 
-				if (vUtils.isBoolean(value)) return SUCCESS;
-				if (vUtils.isNumber(value) && !vUtils.isNaN(value)) return SUCCESS;
+				if (xU.isBoolean(value)) return SUCCESS;
+				if (xU.isNumber(value) && !xU.isNaN(value)) return SUCCESS;
 
 				return FAIL;
 			},
@@ -61,7 +61,7 @@ export const FormRules = {
 			name: "Demo",
 			msg: "Demo",
 			async validator(value) {
-				await vUtils.sleep(1000);
+				await xU.sleep(1000);
 				return FAIL;
 			},
 			trigger: [

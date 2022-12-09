@@ -42,7 +42,7 @@ async function sfc({
 	defineComponent,
 	markRaw,
 	State_UI,
-	vUtils,
+	xU,
 	UI,
 	compileVNode,
 	defXVirTableConfigs,
@@ -128,7 +128,7 @@ async function sfc({
 										record: new Proxy(record, {
 											get: obj => obj.capacity,
 											set(obj, prop, val) {
-												const currentItemIndex = vUtils.findIndex(
+												const currentItemIndex = xU.findIndex(
 													vm.configs_xVirTable.dataSource,
 													{ _index: obj._index }
 												);
@@ -175,7 +175,7 @@ async function sfc({
 							prop: "startDate",
 							label: vm.$t("开始时间").label,
 							renderCell({ record }) {
-								return vUtils.dateFormat(record.startDate, 1);
+								return xU.dateFormat(record.startDate, 1);
 							}
 						}),
 						...defCol({
@@ -202,16 +202,16 @@ async function sfc({
 			}
 		},
 		methods: {
-			updateData: vUtils.debounce(function () {
-				if (vUtils.isArrayFill(this.filter.status)) {
-					this.configs_xVirTable.dataSource = vUtils.filter(this.dataSource, i =>
+			updateData: xU.debounce(function () {
+				if (xU.isArrayFill(this.filter.status)) {
+					this.configs_xVirTable.dataSource = xU.filter(this.dataSource, i =>
 						this.filter.status.includes(i.status)
 					);
 				} else {
 					this.configs_xVirTable.dataSource = this.dataSource;
 				}
 			}, 300),
-			genNewData: vUtils.debounce(function (total) {
+			genNewData: xU.debounce(function (total) {
 				this.configs_xVirTable.selected = [];
 				this.filter.status = [];
 				this.dataSource = [...new Array(total)].map((i, ii) => {

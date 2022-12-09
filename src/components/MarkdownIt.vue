@@ -7,7 +7,7 @@
 	</div>
 </template>
 <script>
-import { vUtils, $ } from "@ventose/ui";
+import { xU, $ } from "@ventose/ui";
 import { marked } from "../assets/libs/marked";
 import { hljs } from "../assets/libs/highlight";
 import { MkitTheme, setTheme } from "./MkitTheme";

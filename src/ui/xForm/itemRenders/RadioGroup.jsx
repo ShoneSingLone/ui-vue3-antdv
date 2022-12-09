@@ -1,5 +1,5 @@
-import _ from "lodash";
 import { resolveComponent } from "vue";
+import { xU } from "../../ventoseUtils";
 
 /**
  * @Description
@@ -13,21 +13,23 @@ export default ({ property, slots, listeners }) => {
 	const RadioGroup = resolveComponent("aRadioGroup");
 	const RadioButton = resolveComponent("aRadioButton");
 
-	const _property = vUtils.omit(property, ["options"]);
+	const PROPERTY_OPTIONS = property.options;
+	const componentPropertyOmitOptions = xU.omit(property, ["options"]);
+
 	const renderOptions = () => {
 		if (property.isButton) {
-			return vUtils.map(property.options, option => {
+			return xU.map(PROPERTY_OPTIONS, option => {
 				return <RadioButton value={option.value}>{option.label}</RadioButton>;
 			});
 		}
-		return vUtils.map(property.options, option => {
+		return xU.map(PROPERTY_OPTIONS, option => {
 			return <Radio value={option.value}>{option.label}</Radio>;
 		});
 	};
 
 	return (
 		<RadioGroup
-			{...property}
+			{...componentPropertyOmitOptions}
 			{...listeners}
 			v-slots={{ default: renderOptions }}
 		/>

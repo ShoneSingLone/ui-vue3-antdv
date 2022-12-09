@@ -7,7 +7,7 @@ const { xItem } = components;
 async function log() {
 	const text = this.text;
 	this.text = "loading...";
-	await vUtils.sleep(1000);
+	await xU.sleep(1000);
 	this.text = text;
 }
 
@@ -56,7 +56,7 @@ export default {
 							return vm.count % 3 === 0;
 						},
 						async onClick() {
-							await vUtils.sleep(1000);
+							await xU.sleep(1000);
 						}
 					},
 					query: { preset: "query", onClick: log },
@@ -112,7 +112,7 @@ export default {
 async function log() {
 	const text = this.text;
 	this.text = "loading...";
-	await vUtils.sleep(1000);
+	await xU.sleep(1000);
 	this.text = text;
 }
 
@@ -140,7 +140,7 @@ data() {
 					},
 					/* 异步函数会有loading效果 */
 					async onClick() {
-						await vUtils.sleep(1000);
+						await xU.sleep(1000);
 					}
 				},
 				query: { preset: "query", onClick: log },

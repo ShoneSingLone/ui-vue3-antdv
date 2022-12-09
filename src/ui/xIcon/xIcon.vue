@@ -1,7 +1,7 @@
 <script lang="jsx">
 // @ts-nocheck
 import { defineComponent, markRaw } from "vue";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import { State_UI } from "../State_UI";
 import { get, set } from "idb-keyval";
 
@@ -44,7 +44,7 @@ export default defineComponent(
 				};
 			},
 			iconKey() {
-				const _iconKey = vUtils.camelCase(this.getIconPath()).replace(/\s/, "");
+				const _iconKey = xU.camelCase(this.getIconPath()).replace(/\s/, "");
 				return _iconKey;
 			}
 		},
@@ -69,12 +69,12 @@ export default defineComponent(
 						}
 						try {
 							/* public asset remote 加载 svg 字符串 */
-							_SvgIconAny = await vUtils.asyncLoadText(this.getIconPath());
+							_SvgIconAny = await xU.asyncLoadText(this.getIconPath());
 						} catch (error) {}
 						return _SvgIconAny;
 					})();
 
-					if (vUtils.isString(SvgIconAny) && SvgIconAny.length > 0) {
+					if (xU.isString(SvgIconAny) && SvgIconAny.length > 0) {
 						const SvgComponentByString = {
 							name: this.icon,
 							template: SvgIconAny

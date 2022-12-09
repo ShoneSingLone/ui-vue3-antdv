@@ -2,6 +2,10 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 export const routes = [
 	{ path: "/Dev", component: () => import("./Dev.vue") },
+	{
+		path: "/xDirective",
+		component: () => import("./ui/directive/DemoDirective")
+	},
 	{ path: "/xIcon", component: () => import("./ui/xIcon/DemoXIcon.vue") },
 	{ path: "/xButton", component: () => import("./ui/xButton/DemoXButton.vue") },
 	{

@@ -1,10 +1,10 @@
 //@ts-nocheck
 import { createApp, reactive } from "vue";
 import "./AppStyle.less";
-import { vUtils, $, VentoseUIWithInstall, State_UI, $ } from "@ventose/ui";
+import { xU, $, VentoseUIWithInstall, State_UI, $ } from "@ventose/ui";
 import { router } from "./router";
 import App from "./App.vue";
-import Mkit from "./components/Mkit.vue";
+import Mkit from "./components/MarkdownIt.vue";
 import { DemoAndCode } from "./components/DemoAndCode";
 
 const appPlugins = {

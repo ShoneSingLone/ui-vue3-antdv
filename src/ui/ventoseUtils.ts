@@ -14,6 +14,44 @@ const privateLodash = {
 		INVALID_DATE: "Invalid Date",
 		format_ymd: "YYYY-MM-DD"
 	},
+	/* 从jQuery对象中，获取leftTop的数值 */
+	getLeftTopFromAbsolute($ele: JQuery) {
+		const _top = $ele.css("top");
+		const _left = $ele.css("left");
+		const getNum = (x: string) => {
+			const match = String(x).match(/^(.*)px$/);
+			/* @ts-ignore */
+			if (match && match[1]) {
+				/* @ts-ignore */
+				return Number(match[1]);
+			} else {
+				return 0;
+			}
+		};
+		const top = getNum(_top);
+		const left = getNum(_left);
+		console.log(left, top);
+		return { top, left };
+	},
+	getLeftTopFromTranslate($ele: JQuery) {
+		const transform = $ele.css("transform");
+		const match = String(transform).match(/^matrix\((.*)\)$/);
+		if (!match) {
+			return { top: 0, left: 0 };
+		}
+		/* @ts-ignore */
+		if (match && match[1]) {
+			/* @ts-ignore */
+			const [a, b, c, d, e, f] = String(match[1])
+				.split(",")
+				.map(i => Number(privateLodash.trim(i)));
+
+			return {
+				left: a + c + e,
+				top: b + d + f
+			};
+		}
+	},
 	/**
 	 * 用于Boundless 解析vue SFC文件
 	 * @param {*} code
@@ -129,8 +167,8 @@ const privateLodash = {
 		return privateLodash.isOn(key) || privateLodash.isModelListener(key);
 	},
 	/*是否非空数组*/
-	isArrayFill: arr => {
-		if (Object.prototype.toString.call(arr) == "[object Array]") {
+	isArrayFill: (arr: any) => {
+		if (Array.isArray(arr)) {
 			if (arr.length > 0) {
 				return true;
 			}
@@ -145,13 +183,13 @@ const privateLodash = {
 	 * 通过check,
 	 * 为真则返回value,
 	 * 否则返回false,
-	 * 默认check为 vUtils.isInput
+	 * 默认check为 xU.isInput
 	 * @param arr
 	 * @param fnCheck
 	 * @return {firstValue|false}
 	 */
-	safeFirst: (arr, fnCheck) => {
-		fnCheck = fnCheck || (value => privateLodash.isInput(value));
+	safeFirst: (arr: any[], fnCheck: Function) => {
+		fnCheck = fnCheck || ((value: any) => privateLodash.isInput(value));
 		const obj = privateLodash.first(arr);
 		return fnCheck(obj) ? obj : false;
 	},
@@ -161,19 +199,18 @@ const privateLodash = {
 	 * @param isBeautiful
 	 * @return {string}
 	 */
-	safeToString: (val, isBeautiful) => {
-		if (typeof val === "object") {
+	safeToString: (val: object, isBeautiful = false) => {
+		try {
 			if (isBeautiful) {
 				return JSON.stringify(val, null, 2);
 			} else {
 				return JSON.stringify(val);
 			}
-		} else {
-			return String(val);
+		} catch (error) {
+			return "";
 		}
 	},
-
-	safeParse: (val, defaultObj: {}) => {
+	safeParse: (val: string, defaultObj: {}) => {
 		let obj = defaultObj;
 		try {
 			obj = JSON.parse(val);
@@ -187,7 +224,7 @@ const privateLodash = {
 		return obj;
 	},
 
-	safeSplit: function (target, sp) {
+	safeSplit: (target: string, sp = "") => {
 		return target?.split ? target.split(sp) : [];
 	},
 	/***
@@ -195,11 +232,12 @@ const privateLodash = {
 	 * @param val
 	 * @return {string|dayjs.Dayjs}
 	 */
-	safeDate: function (val) {
+	safeDate: (val: dayjs.ConfigType) => {
 		if (!val) {
 			return "";
 		}
 		let date = dayjs(val);
+		/* @ts-ignore */
 		if (date === privateLodash.WORDS.INVALID_DATE) {
 			return "";
 		} else {
@@ -213,7 +251,7 @@ const privateLodash = {
 	 * @param val {any}
 	 * @returns {boolean}
 	 */
-	isInput: val => {
+	isInput: (val: any) => {
 		if (val === undefined) {
 			return false;
 		}
@@ -232,7 +270,7 @@ const privateLodash = {
 		return false;
 	},
 	/*jquery到底有没有选中目标DOM？*/
-	is$Selected: $ele => $ele && $ele.length > 0,
+	is$Selected: ($ele: JQuery) => $ele && $ele.jquery && $ele.length > 0,
 	/**
 	 * 获取对象的键和值
 	 * 这个方法很灵性，有时候后面来的结构长这样 {id:value}，有且只有一个属性，
@@ -246,11 +284,15 @@ const privateLodash = {
 	 * @param {*} defaultValue
 	 * @returns
 	 */
-	getObjectFirstKeyValue: (obj, defaultValue: "") => {
-		if (!obj) return defaultValue;
+	getObjectFirstKeyValue: (obj: object, defaultValue: "") => {
+		if (!obj) {
+			return defaultValue;
+		}
 		const keyArray = Object.keys(obj);
 		if (!privateLodash.isArrayFill(keyArray)) return defaultValue;
-		return privateLodash.isInput(keyArray[0]) ? obj[keyArray[0]] : defaultValue;
+		const prop = keyArray[0];
+		/* @ts-ignore */
+		return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
 	},
 
 	/**
@@ -259,74 +301,49 @@ const privateLodash = {
 	 * @param {string} globalName
 	 * @returns 在window中名为globalName的全局变量
 	 */
-	asyncLoadJS: async (url, globalName) => {
+	asyncLoadJS: async (url: string, globalName: string) => {
+		/* UMD 会暴露出一个全局对象，正是此globalName */
+		/* @ts-ignore */
 		if (window[globalName]) {
+			/* @ts-ignore */
 			return window[globalName];
 		}
-		const $style = $("<style/>").attr("id", `${asyncLoadJS}${globalName}`);
+		const $style = $("<style/>").attr("id", `asyncLoadJS_${globalName}`);
 		$style.appendTo($("body")).on("load", function () {
+			/* @ts-ignore */
 			return window[globalName];
 		});
 		$style.attr("src", url);
 	},
-
-	ensureValueDone: async fnGetValue => {
+	ensureValueDone: async (fnGetValue: Function) => {
 		return new Promise(async resolve => {
 			let exeFnGetValue = async function () {
 				const value = await fnGetValue();
 				if (value) {
+					/* @ts-ignore */
 					exeFnGetValue = null;
 					resolve(value);
 				} else {
+					/* @ts-ignore */
 					setTimeout(exeFnGetValue, 1000 * exeFnGetValue.count++);
 				}
 			};
-			exeFnGetValue.count = 1;
+			(exeFnGetValue as any).count = 1;
 			exeFnGetValue();
 		});
 	},
 	/* 生成合法的键名 */
-	genProp: someString => {
+	genProp: (someString: string) => {
 		return `k${privateLodash.camelCase(someString)}`;
-	},
-	preload: (baseModule, deps) => {
-		if (!deps || deps.length === 0) {
-			return baseModule();
-		}
-		return Promise.all(
-			deps.map(dep => {
-				dep = `${base}${dep}`;
-				if (dep in seen) return;
-				seen[dep] = true;
-				const isCss = dep.endsWith(".css");
-				const cssSelector = isCss ? '[rel="stylesheet"]' : "";
-				if (document.querySelector(`link[href="${dep}"] ${cssSelector}`)) {
-					return;
-				}
-				const link = document.createElement("link");
-				link.rel = isCss ? "stylesheet" : scriptRel;
-				if (!isCss) {
-					link.as = "script";
-					link.crossOrigin = "";
-				}
-				link.href = dep;
-				document.head.appendChild(link);
-				if (isCss) {
-					return new Promise((res, rej) => {
-						link.addEventListener("load", res);
-						link.addEventListener("error", rej);
-					});
-				}
-			})
-		).then(() => baseModule());
 	},
 	/**
 	 *
 	 * @param {*} url
 	 * @returns
 	 */
-	asyncLoadText: async function (url) {
+	asyncLoadText: async function (url: string) {
 		/* 在开发模式下App.vue 会设置这个对象 */
+		/* @ts-ignore */
 		if (!window.___VENTOSE_UI_IS_DEV_MODE) {
 			const res = await idbGet(url);
 			if (res) {
@@ -342,9 +359,11 @@ const privateLodash = {
 				url,
 				dataType: "text",
 				success(...args) {
+					/* @ts-ignore */
 					if (!window.___VENTOSE_UI_IS_DEV_MODE) {
 						idbSet(url, args[0]);
 					}
+					/* @ts-ignore */
 					resolve.apply(null, args);
 				},
 				error: reject
@@ -356,30 +375,36 @@ const privateLodash = {
 	 * @param {*} cssname
 	 * @returns
 	 */
-	loadCss: function (cssname) {
+	loadCss: function (cssname: string) {
 		const cssPath = `${cssname}`;
 		let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
 		$link.appendTo($("head"));
+		/* @ts-ignore */
 		$link[0].href = `${cssPath}?_t=${Date.now()}`;
 		/* destroy 的时候移除已加载的模块css，酌情使用 */
 		return () => {
 			$link.remove();
+			/* @ts-ignore */
 			$link = null;
 		};
 	},
 
-	dateFormat: function (date, format) {
-		if (!format) {
-			format = "YYYY-MM-DD";
-		}
+	/**
+	 *
+	 * @param date type dayjs.ConfigType = string | number | Date | dayjs.Dayjs | null | undefined
+	 * @param format 默认 "YYYY-MM-DD" 1："YYYY-MM-DD HH:mm:ss"
+	 * @returns
+	 */
+	dateFormat: function (date: dayjs.ConfigType, format = "YYYY-MM-DD") {
+		/* @ts-ignore */
 		if (format === 1) {
 			format = "YYYY-MM-DD HH:mm:ss";
 		}
 		const label = dayjs(date).format(format);
-		return label === "Invalid Date" ? "--" : label;
+		return label === privateLodash.WORDS.INVALID_DATE ? "--" : label;
 	},
 
-	keepDecimals: function (val, fractionDigits: 2) {
+	keepDecimals: function (val: number, fractionDigits: 2) {
 		let num = Number((val * 100) / 1024 / 100).toFixed(fractionDigits);
 		if (num === "NaN") {
 			num = "-";
@@ -387,7 +412,7 @@ const privateLodash = {
 		return num;
 	},
 
-	valueToLabel: function (value, options) {
+	valueToLabel: function (value: string, options: any[]) {
 		const target = privateLodash.find(options, {
 			value
 		});
@@ -397,30 +422,38 @@ const privateLodash = {
 			return "--";
 		}
 	},
-	timego: function (timestamp) {
+	timego: function (timestamp: any) {
 		let minutes, hours, days, seconds, mouth, year;
+		/* @ts-ignore */
 		const timeNow = parseInt(new Date().getTime() / 1000);
 		seconds = timeNow - timestamp;
+
 		if (seconds > 86400 * 30 * 12) {
+			/* @ts-ignore */
 			year = parseInt(seconds / (86400 * 30 * 12));
 		} else {
 			year = 0;
 		}
+
 		if (seconds > 86400 * 30) {
+			/* @ts-ignore */
 			mouth = parseInt(seconds / (86400 * 30));
 		} else {
 			mouth = 0;
 		}
 		if (seconds > 86400) {
+			/* @ts-ignore */
 			days = parseInt(seconds / 86400);
 		} else {
 			days = 0;
 		}
 		if (seconds > 3600) {
+			/* @ts-ignore */
 			hours = parseInt(seconds / 3600);
 		} else {
 			hours = 0;
 		}
+		/* @ts-ignore */
 		minutes = parseInt(seconds / 60);
 		if (year > 0) {
 			return year + "年前";
@@ -512,4 +545,4 @@ const privateLodash = {
 	}
 };
 
-export { privateLodash as vUtils };
+export { privateLodash as xU };

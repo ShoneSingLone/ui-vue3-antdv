@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { t_buttonOptions } from "../xButton/xButton";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import { ColumnProps } from "ant-design-vue/es/table";
 import { lStorage } from "../tools/storage.js";
 import { State_UI } from "../State_UI";
@@ -98,7 +98,7 @@ export function defPagination(num_page = 1, num_size = 10, num_total = 0) {
  */
 export function setPagination(StateTable, pagination: t_pagination) {
 	const PAGINATION_MAP = lStorage.appConfigs.pagination;
-	vUtils.each(pagination, (value, prop) => {
+	xU.each(pagination, (value, prop) => {
 		StateTable.pagination[PAGINATION_MAP[prop]] = value;
 	});
 }
@@ -143,7 +143,7 @@ export function defColActions(options: {
 	}) => JSX.Element;
 }) {
 	return {
-		[static_word.operation]: vUtils.merge(
+		[static_word.operation]: xU.merge(
 			{
 				title: State_UI.$t("操作").label,
 				key: static_word.operation,
@@ -171,8 +171,8 @@ export function defColActionsBtnlist(options: {
 	return (
 		<div class="flex middle">
 			<xGap l="4" />
-			{vUtils.map(always, btn => {
-				const configs = vUtils.merge({ type: "link", size: "small" }, btn);
+			{xU.map(always, btn => {
+				const configs = xU.merge({ type: "link", size: "small" }, btn);
 				return (
 					<>
 						<xButton configs={configs} />
@@ -197,8 +197,8 @@ export function defColActionsBtnlist(options: {
 									return (
 										<>
 											<aMenu>
-												{vUtils.map(more, btn => {
-													const configs = vUtils.merge(
+												{xU.map(more, btn => {
+													const configs = xU.merge(
 														{ type: "link", size: "small" },
 														btn
 													);
@@ -223,7 +223,7 @@ export function defColActionsBtnlist(options: {
 }
 
 export function filterColIsShow(isShow, prop) {
-	if (vUtils.isBoolean(isShow)) {
+	if (xU.isBoolean(isShow)) {
 		return isShow;
 	} else {
 		return true;
