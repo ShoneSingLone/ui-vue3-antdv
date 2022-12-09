@@ -646,7 +646,6 @@ div[id^="xDialog_"] {
 .layui-layer-move {
   display: none;
   position: fixed;
-  *position: absolute;
   top: 0;
   right: 0;
   left: 0;
@@ -659,8 +658,6 @@ div[id^="xDialog_"] {
 }
 .layui-layer-tips {
   position: fixed;
-  transform-origin: bottom left;
-  visibility: hidden;
 }
 .x-button.flex {
   display: flex;
@@ -29539,18 +29536,18 @@ div[id^=lazy-svg_] {
   z-index: 4;
   text-align: center;
 }
-.table-options {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
+.table-options {\r
+	display: flex;\r
+	flex-flow: row nowrap;\r
+	align-items: center;\r
 	padding: 10px 0;
 }
-.table-filter {
+.table-filter {\r
 	margin-left: 4px;
 }
-.table-pagination {
+.table-pagination {\r
 	padding: 10px 0;
-}
+}\r
 .vir-item-component {
   height: 100%;
   overflow: auto;
@@ -29581,10 +29578,9 @@ import Antd, { DatePicker as DatePicker$3, Checkbox as Checkbox$1, Switch as Swi
 import $ from "jquery";
 import { default as default2 } from "jquery";
 import { defineComponent, markRaw, h, resolveComponent, createVNode, mergeProps, reactive, watch, computed, createTextVNode, openBlock, createElementBlock, renderSlot, Fragment, createBlock, withDirectives, vShow, createElementVNode, isVNode, withCtx, renderList, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, createApp, compile } from "vue";
-import _$1 from "lodash";
-import { default as default3 } from "lodash";
-import dayjs$1 from "dayjs";
-import { default as default4, default as default5 } from "dayjs";
+import dayjs from "dayjs";
+import { default as default3, default as default4 } from "dayjs";
+import _ from "lodash";
 const index = "";
 const ui = "";
 const antd = "";
@@ -29604,418 +29600,24 @@ const xRender = defineComponent(markRaw({
     });
   }
 }));
-function promisifyRequest(request) {
-  return new Promise((resolve, reject) => {
-    request.oncomplete = request.onsuccess = () => resolve(request.result);
-    request.onabort = request.onerror = () => reject(request.error);
-  });
-}
-function createStore(dbName, storeName) {
-  const request = indexedDB.open(dbName);
-  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
-  const dbp = promisifyRequest(request);
-  return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
-}
-let defaultGetStoreFunc;
-function defaultGetStore() {
-  if (!defaultGetStoreFunc) {
-    defaultGetStoreFunc = createStore("keyval-store", "keyval");
-  }
-  return defaultGetStoreFunc;
-}
-function get(key, customStore = defaultGetStore()) {
-  return customStore("readonly", (store) => promisifyRequest(store.get(key)));
-}
-function set(key, value, customStore = defaultGetStore()) {
-  return customStore("readwrite", (store) => {
-    store.put(value, key);
-    return promisifyRequest(store.transaction);
-  });
-}
-_$1.WORDS = {
-  INVALID_DATE: "Invalid Date",
-  format_ymd: "YYYY-MM-DD"
-};
-_$1.doNothing = (...args2) => {
-  if (localStorage.isShowDevLog) {
-    const e = new Error();
-    console.log("\u{1F680}:", e.stack.split("\n")[2].replace("    at ", ""));
-    console.log.apply(console, args2);
-  }
-};
-_$1.sleep = (t) => new Promise((r) => setTimeout(r, t));
-const onRE = /^on[^a-z]/;
-_$1.isOn = (key) => onRE.test(key);
-_$1.isModelListener = (key) => {
-  key = String(key);
-  if (!key) {
-    return false;
-  }
-  return key.startsWith("onUpdate:");
-};
-_$1.isListener = (key) => {
-  key = String(key);
-  if (!key) {
-    return false;
-  }
-  return _$1.isOn(key) || _$1.isModelListener(key);
-};
-_$1.isArrayFill = (arr) => {
-  if (Object.prototype.toString.call(arr) == "[object Array]") {
-    if (arr.length > 0) {
-      return true;
-    }
-  }
-  return false;
-};
-_$1.isObjectFill = (obj) => _$1.isPlainObject(obj) && Object.keys(obj).length > 0;
-_$1.safeFirst = (arr, fnCheck) => {
-  fnCheck = fnCheck || ((value) => _$1.isInput(value));
-  const obj = _$1.first(arr);
-  return fnCheck(obj) ? obj : false;
-};
-_$1.safeToString = (val, isBeautiful) => {
-  if (typeof val === "object") {
-    if (isBeautiful) {
-      return JSON.stringify(val, null, 2);
-    } else {
-      return JSON.stringify(val);
-    }
-  } else {
-    return String(val);
-  }
-};
-_$1.safeParse = (val, defaultObj = {}) => {
-  let obj = defaultObj;
-  try {
-    obj = JSON.parse(val);
-    if (!val) {
-      obj = defaultObj;
-      throw new Error("json parse error");
-    }
-  } catch (error) {
-    _$1.doNothing(error);
-  }
-  return obj;
-};
-_$1.safeSplit = function(target, sp) {
-  return (target == null ? void 0 : target.split) ? target.split(sp) : [];
-};
-_$1.safeDate = function(val) {
-  if (!val) {
-    return "";
-  }
-  let date = dayjs$1(val);
-  if (date === _$1.WORDS.INVALID_DATE) {
-    return "";
-  } else {
-    return date;
-  }
-};
-_$1.isInput = (val) => {
-  if (val === void 0) {
-    return false;
-  }
-  val = JSON.parse(JSON.stringify(val));
-  if (val === 0) {
-    return true;
-  }
-  if (val === false) {
-    return true;
-  }
-  if (_$1.isArray(val)) {
-    return val.length > 0;
-  } else if (val) {
-    return true;
-  }
-  return false;
-};
-_$1.is$Selected = ($ele) => $ele && $ele.length > 0;
-_$1.getObjectFirstKeyValue = (obj, defaultValue = "") => {
-  if (!obj)
-    return defaultValue;
-  const keyArray = Object.keys(obj);
-  if (!_$1.isArrayFill(keyArray))
-    return defaultValue;
-  return _$1.isInput(keyArray[0]) ? obj[keyArray[0]] : defaultValue;
-};
-_$1.asyncLoadJS = async (url, globalName) => {
-  if (window[globalName]) {
-    return window[globalName];
-  }
-  const $style = $("<style/>").attr("id", `${asyncLoadJS}${globalName}`);
-  $style.appendTo($("body")).on("load", function() {
-    return window[globalName];
-  });
-  $style.attr("src", url);
-};
-_$1.ensureValueDone = async (fnGetValue) => {
-  return new Promise(async (resolve) => {
-    let exeFnGetValue = async function() {
-      const value = await fnGetValue();
-      if (value) {
-        exeFnGetValue = null;
-        resolve(value);
-      } else {
-        setTimeout(exeFnGetValue, 1e3 * exeFnGetValue.count++);
-      }
-    };
-    exeFnGetValue.count = 1;
-    exeFnGetValue();
-  });
-};
-function genId(category) {
-  if (genId.idCount > genId.ID_COUNT_MAX) {
-    genId.idCount = 1;
-    genId.DATE_NOW = Date.now();
-  }
-  return `${category}_${genId.DATE_NOW}_${genId.idCount++}`;
-}
-genId.idCount = 1;
-genId.ID_COUNT_MAX = 4e4;
-genId.DATE_NOW = Date.now();
-_$1.genId = genId;
-_$1.genProp = (someString) => {
-  return `k${_$1.camelCase(someString)}`;
-};
-_$1.preload = (baseModule, deps) => {
-  if (!deps || deps.length === 0) {
-    return baseModule();
-  }
-  return Promise.all(
-    deps.map((dep) => {
-      dep = `${base}${dep}`;
-      if (dep in seen)
-        return;
-      seen[dep] = true;
-      const isCss = dep.endsWith(".css");
-      const cssSelector = isCss ? '[rel="stylesheet"]' : "";
-      if (document.querySelector(`link[href="${dep}"] ${cssSelector}`)) {
-        return;
-      }
-      const link = document.createElement("link");
-      link.rel = isCss ? "stylesheet" : scriptRel;
-      if (!isCss) {
-        link.as = "script";
-        link.crossOrigin = "";
-      }
-      link.href = dep;
-      document.head.appendChild(link);
-      if (isCss) {
-        return new Promise((res, rej) => {
-          link.addEventListener("load", res);
-          link.addEventListener("error", rej);
-        });
-      }
-    })
-  ).then(() => baseModule());
-};
-const parseContent = (returnSentence) => {
-  if (!returnSentence)
-    return;
-  return new Function(`${returnSentence} return module();`);
-};
-_$1.asyncLoadText = async function(url) {
-  if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-    const res = await get(url);
-    if (res) {
-      return res;
-    }
-  }
-  return new Promise(
-    (resolve, reject) => $.ajax({
-      type: "GET",
-      async: true,
-      url,
-      dataType: "text",
-      success(...args2) {
-        if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-          set(url, args2[0]);
-        }
-        resolve.apply(null, args2);
-      },
-      error: reject
-    })
-  );
-};
-async function asyncExecFnString(url) {
-  let data = "";
-  try {
-    data = await _$1.asyncLoadText(url);
-  } catch (error) {
-  }
-  return parseContent(data);
-}
-_$1.asyncExecFnString = asyncExecFnString;
-const VueComponents = {};
-async function getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
-  const scfObjAsyncFn = new Function(
-    "argVue",
-    "argPayload",
-    `console.log(\`${url}\`)
-return (${scfObjSourceCode})(argVue,argPayload);`
-  );
-  const scfObj = await scfObjAsyncFn(__Vue, {
-    url
-  });
-  return scfObj;
-}
-_$1.getVueComponentBySourceCode = getVueComponentBySourceCode;
-async function asyncImportSFC(url, __Vue) {
-  if (VueComponents[url]) {
-    return VueComponents[url];
-  }
-  const scfSourceCode = await _$1.asyncLoadText(url);
-  const scfObjSourceCode = VueLoader(scfSourceCode);
-  VueComponents[url] = await getVueComponentBySourceCode(
-    url,
-    scfObjSourceCode,
-    __Vue
-  );
-  return VueComponents[url];
-}
-_$1.asyncImportSFC = asyncImportSFC;
-function VueLoader(code) {
-  function getSource(source, type2) {
-    var regex = new RegExp("<" + type2 + "[^>]*>");
-    var openingTag = source.match(regex);
-    if (!openingTag)
-      return "";
-    else
-      openingTag = openingTag[0];
-    var targetSource = source.slice(
-      source.indexOf(openingTag) + openingTag.length,
-      source.lastIndexOf("</" + type2 + ">")
-    );
-    return type2 === "template" ? targetSource.replace(/`/g, "\\`") : targetSource;
-  }
-  function splitCode() {
-    if (!/TEMPLATE_PLACEHOLDER/.test(code)) {
-      alert("SFC miss TEMPLATE_PLACEHOLDER");
-      console.error(code);
-    }
-    return getSource(code, "script").replace(
-      /TEMPLATE_PLACEHOLDER/,
-      `template: \`${getSource(code, "template")}\``
-    );
-  }
-  return splitCode();
-}
-_$1.VueLoader = VueLoader;
-_$1.loadCss = function(cssname) {
-  const cssPath = `${cssname}`;
-  let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
-  $link.appendTo($("head"));
-  $link[0].href = `${cssPath}?_t=${Date.now()}`;
-  return () => {
-    $link.remove();
-    $link = null;
-  };
-};
-_$1.dateFormat = function(date, format) {
-  if (!format) {
-    format = "YYYY-MM-DD";
-  }
-  if (format === 1) {
-    format = "YYYY-MM-DD HH:mm:ss";
-  }
-  const label = dayjs$1(date).format(format);
-  return label === "Invalid Date" ? "--" : label;
-};
-_$1.keepDecimals = function(val, fractionDigits = 2) {
-  let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
-  if (num === "NaN") {
-    num = "-";
-  }
-  return num;
-};
-_$1.valueToLabel = function(value, options) {
-  const target = _$1.find(options, {
-    value
-  });
-  if (target) {
-    return target.label;
-  } else {
-    return "--";
-  }
-};
-_$1.timego = function(timestamp) {
-  let minutes, hours, days, seconds, mouth, year;
-  const timeNow = parseInt(new Date().getTime() / 1e3);
-  seconds = timeNow - timestamp;
-  if (seconds > 86400 * 30 * 12) {
-    year = parseInt(seconds / (86400 * 30 * 12));
-  } else {
-    year = 0;
-  }
-  if (seconds > 86400 * 30) {
-    mouth = parseInt(seconds / (86400 * 30));
-  } else {
-    mouth = 0;
-  }
-  if (seconds > 86400) {
-    days = parseInt(seconds / 86400);
-  } else {
-    days = 0;
-  }
-  if (seconds > 3600) {
-    hours = parseInt(seconds / 3600);
-  } else {
-    hours = 0;
-  }
-  minutes = parseInt(seconds / 60);
-  if (year > 0) {
-    return year + "\u5E74\u524D";
-  } else if (mouth > 0 && year <= 0) {
-    return mouth + "\u6708\u524D";
-  } else if (days > 0 && mouth <= 0) {
-    return days + "\u5929\u524D";
-  } else if (days <= 0 && hours > 0) {
-    return hours + "\u5C0F\u65F6\u524D";
-  } else if (hours <= 0 && minutes > 0) {
-    return minutes + "\u5206\u949F\u524D";
-  } else if (minutes <= 0 && seconds > 0) {
-    if (seconds < 30) {
-      return "\u521A\u521A";
-    } else {
-      return seconds + "\u79D2\u524D";
-    }
-  } else {
-    return "\u521A\u521A";
-  }
-};
-_$1.htmlFilter = (html) => {
-  if (!html)
-    return;
-  let reg = /<\/?.+?\/?>/g;
-  return html.replace(reg, "") || "";
-};
-const Input = resolveComponent("aInput");
-const InputNumber = resolveComponent("aInputNumber");
-const InputPassword = resolveComponent("aInputPassword");
-const Textarea = resolveComponent("aTextarea");
-const InputSearch = resolveComponent("aInputSearch");
-const Input$1 = ({
+const Input = ({
   property,
   slots,
   listeners
 }) => {
-  let component = Input;
+  let component = resolveComponent("aInput");
   if (property.isPassword) {
-    component = InputPassword;
-  }
-  if (property.isNumber) {
-    component = InputNumber;
-  }
-  if (property.isTextarea) {
-    component = Textarea;
+    component = resolveComponent("aInputPassword");
+  } else if (property.isNumber) {
+    component = resolveComponent("aInputNumber");
+  } else if (property.isTextarea) {
+    component = resolveComponent("aTextarea");
     property.autoSize = property.autoSize || {
       minRows: 4,
       maxRows: 6
     };
-  }
-  if (property.isSearch) {
-    component = InputSearch;
+  } else if (property.isSearch) {
+    component = resolveComponent("aInputSearch");
   }
   return createVNode(component, mergeProps(property, listeners), slots);
 };
@@ -30435,7 +30037,7 @@ var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof win
 var zhCn = { exports: {} };
 (function(module, exports) {
   !function(e, _2) {
-    module.exports = _2(dayjs$1);
+    module.exports = _2(dayjs);
   }(commonjsGlobal, function(e) {
     function _2(e2) {
       return e2 && "object" == typeof e2 && "default" in e2 ? e2 : { default: e2 };
@@ -30452,7 +30054,7 @@ var zhCn = { exports: {} };
 var enAu = { exports: {} };
 (function(module, exports) {
   !function(e, a) {
-    module.exports = a(dayjs$1);
+    module.exports = a(dayjs);
   }(commonjsGlobal, function(e) {
     function a(e2) {
       return e2 && "object" == typeof e2 && "default" in e2 ? e2 : { default: e2 };
@@ -30463,9 +30065,402 @@ var enAu = { exports: {} };
     return t.default.locale(_2, null, true), _2;
   });
 })(enAu);
+function promisifyRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.oncomplete = request.onsuccess = () => resolve(request.result);
+    request.onabort = request.onerror = () => reject(request.error);
+  });
+}
+function createStore(dbName, storeName) {
+  const request = indexedDB.open(dbName);
+  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
+  const dbp = promisifyRequest(request);
+  return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
+}
+let defaultGetStoreFunc;
+function defaultGetStore() {
+  if (!defaultGetStoreFunc) {
+    defaultGetStoreFunc = createStore("keyval-store", "keyval");
+  }
+  return defaultGetStoreFunc;
+}
+function get(key, customStore = defaultGetStore()) {
+  return customStore("readonly", (store) => promisifyRequest(store.get(key)));
+}
+function set(key, value, customStore = defaultGetStore()) {
+  return customStore("readwrite", (store) => {
+    store.put(value, key);
+    return promisifyRequest(store.transaction);
+  });
+}
+const onRE = /^on[^a-z]/;
+const VueComponents = {};
+const privateLodash = {
+  ..._,
+  WORDS: {
+    INVALID_DATE: "Invalid Date",
+    format_ymd: "YYYY-MM-DD"
+  },
+  async asyncImportSFC(url, __Vue) {
+    if (VueComponents[url]) {
+      return VueComponents[url];
+    }
+    const scfSourceCode = await privateLodash.asyncLoadText(url);
+    const scfObjSourceCode = privateLodash.VueLoader(scfSourceCode);
+    VueComponents[url] = await privateLodash.getVueComponentBySourceCode(
+      url,
+      scfObjSourceCode,
+      __Vue
+    );
+    return VueComponents[url];
+  },
+  async getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
+    const scfObjAsyncFn = new Function(
+      "argVue",
+      "argPayload",
+      `console.log(\`${url}\`)
+return (${scfObjSourceCode})(argVue,argPayload);`
+    );
+    const scfObj = await scfObjAsyncFn(__Vue, {
+      url
+    });
+    return scfObj;
+  },
+  parseContent: (returnSentence) => {
+    if (!returnSentence)
+      return;
+    return new Function(`${returnSentence} return module();`);
+  },
+  payloadIdCount: 1,
+  payloadIdCountMax: 4e4,
+  payloadDateNow: Date.now(),
+  genId: (category) => {
+    const { payloadIdCount, payloadIdCountMax, payloadDateNow } = privateLodash;
+    if (payloadIdCount > payloadIdCountMax) {
+      privateLodash.payloadIdCount = 1;
+      privateLodash.payloadDateNow = Date.now();
+    }
+    return `${category}_${payloadDateNow}_${privateLodash.payloadIdCount++}`;
+  },
+  VueLoader: (code) => {
+    function getSource(source, type2) {
+      var regex = new RegExp("<" + type2 + "[^>]*>");
+      var openingTag = source.match(regex);
+      if (!openingTag)
+        return "";
+      else
+        openingTag = openingTag[0];
+      var targetSource = source.slice(
+        source.indexOf(openingTag) + openingTag.length,
+        source.lastIndexOf("</" + type2 + ">")
+      );
+      return type2 === "template" ? targetSource.replace(/`/g, "\\`") : targetSource;
+    }
+    function splitCode() {
+      if (!/TEMPLATE_PLACEHOLDER/.test(code)) {
+        alert("SFC miss TEMPLATE_PLACEHOLDER");
+        console.error(code);
+      }
+      return getSource(code, "script").replace(
+        /TEMPLATE_PLACEHOLDER/,
+        `template: \`${getSource(code, "template")}\``
+      );
+    }
+    return splitCode();
+  },
+  async asyncExecFnString(url) {
+    const data = await privateLodash.asyncLoadText(url);
+    return privateLodash.parseContent(data);
+  },
+  doNothing: (...args2) => {
+    var _a;
+    if (localStorage.isShowDevLog) {
+      const e = new Error();
+      console.log("\u{1F680}:", (_a = e == null ? void 0 : e.stack) == null ? void 0 : _a.split("\n")[2].replace("    at ", ""));
+      console.log.apply(console, args2);
+    }
+  },
+  sleep: (t) => new Promise((r) => setTimeout(r, t)),
+  isOn: (key) => onRE.test(key),
+  isModelListener: (key) => {
+    key = String(key);
+    if (!key) {
+      return false;
+    }
+    return key.startsWith("onUpdate:");
+  },
+  isListener: (key) => {
+    key = String(key);
+    if (!key) {
+      return false;
+    }
+    return privateLodash.isOn(key) || privateLodash.isModelListener(key);
+  },
+  isArrayFill: (arr) => {
+    if (Array.isArray(arr)) {
+      if (arr.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  },
+  isObjectFill: (obj) => privateLodash.isPlainObject(obj) && Object.keys(obj).length > 0,
+  safeFirst: (arr, fnCheck) => {
+    fnCheck = fnCheck || ((value) => privateLodash.isInput(value));
+    const obj = privateLodash.first(arr);
+    return fnCheck(obj) ? obj : false;
+  },
+  safeToString: (val, isBeautiful = false) => {
+    try {
+      if (isBeautiful) {
+        return JSON.stringify(val, null, 2);
+      } else {
+        return JSON.stringify(val);
+      }
+    } catch (error) {
+      return "";
+    }
+  },
+  safeParse: (val, defaultObj) => {
+    let obj = defaultObj;
+    try {
+      obj = JSON.parse(val);
+      if (!val) {
+        obj = defaultObj;
+        throw new Error("json parse error");
+      }
+    } catch (error) {
+      privateLodash.doNothing(error);
+    }
+    return obj;
+  },
+  safeSplit: (target, sp = "") => {
+    return (target == null ? void 0 : target.split) ? target.split(sp) : [];
+  },
+  safeDate: (val) => {
+    if (!val) {
+      return "";
+    }
+    let date = dayjs(val);
+    if (date === privateLodash.WORDS.INVALID_DATE) {
+      return "";
+    } else {
+      return date;
+    }
+  },
+  isInput: (val) => {
+    if (val === void 0) {
+      return false;
+    }
+    val = JSON.parse(JSON.stringify(val));
+    if (val === 0) {
+      return true;
+    }
+    if (val === false) {
+      return true;
+    }
+    if (privateLodash.isArray(val)) {
+      return val.length > 0;
+    } else if (val) {
+      return true;
+    }
+    return false;
+  },
+  is$Selected: ($ele) => $ele && $ele.jquery && $ele.length > 0,
+  getObjectFirstKeyValue: (obj, defaultValue) => {
+    if (!obj) {
+      return defaultValue;
+    }
+    const keyArray = Object.keys(obj);
+    if (!privateLodash.isArrayFill(keyArray))
+      return defaultValue;
+    const prop = keyArray[0];
+    return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
+  },
+  asyncLoadJS: async (url, globalName) => {
+    if (window[globalName]) {
+      return window[globalName];
+    }
+    const $style = $("<style/>").attr("id", `asyncLoadJS_${globalName}`);
+    $style.appendTo($("body")).on("load", function() {
+      return window[globalName];
+    });
+    $style.attr("src", url);
+  },
+  ensureValueDone: async (fnGetValue) => {
+    return new Promise(async (resolve) => {
+      let exeFnGetValue = async function() {
+        const value = await fnGetValue();
+        if (value) {
+          exeFnGetValue = null;
+          resolve(value);
+        } else {
+          setTimeout(exeFnGetValue, 1e3 * exeFnGetValue.count++);
+        }
+      };
+      exeFnGetValue.count = 1;
+      exeFnGetValue();
+    });
+  },
+  genProp: (someString) => {
+    return `k${privateLodash.camelCase(someString)}`;
+  },
+  asyncLoadText: async function(url) {
+    if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+      const res = await get(url);
+      if (res) {
+        return res;
+      }
+    }
+    return new Promise(
+      (resolve, reject) => $.ajax({
+        type: "GET",
+        async: true,
+        url,
+        dataType: "text",
+        success(...args2) {
+          if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+            set(url, args2[0]);
+          }
+          resolve.apply(null, args2);
+        },
+        error: reject
+      })
+    );
+  },
+  loadCss: function(cssname) {
+    const cssPath = `${cssname}`;
+    let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
+    $link.appendTo($("head"));
+    $link[0].href = `${cssPath}?_t=${Date.now()}`;
+    return () => {
+      $link.remove();
+      $link = null;
+    };
+  },
+  dateFormat: function(date, format = "YYYY-MM-DD") {
+    if (format === 1) {
+      format = "YYYY-MM-DD HH:mm:ss";
+    }
+    const label = dayjs(date).format(format);
+    return label === privateLodash.WORDS.INVALID_DATE ? "--" : label;
+  },
+  keepDecimals: function(val, fractionDigits) {
+    let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
+    if (num === "NaN") {
+      num = "-";
+    }
+    return num;
+  },
+  valueToLabel: function(value, options) {
+    const target = privateLodash.find(options, {
+      value
+    });
+    if (target) {
+      return target.label;
+    } else {
+      return "--";
+    }
+  },
+  timego: function(timestamp) {
+    let minutes, hours, days, seconds, mouth, year;
+    const timeNow = parseInt(new Date().getTime() / 1e3);
+    seconds = timeNow - timestamp;
+    if (seconds > 86400 * 30 * 12) {
+      year = parseInt(seconds / (86400 * 30 * 12));
+    } else {
+      year = 0;
+    }
+    if (seconds > 86400 * 30) {
+      mouth = parseInt(seconds / (86400 * 30));
+    } else {
+      mouth = 0;
+    }
+    if (seconds > 86400) {
+      days = parseInt(seconds / 86400);
+    } else {
+      days = 0;
+    }
+    if (seconds > 3600) {
+      hours = parseInt(seconds / 3600);
+    } else {
+      hours = 0;
+    }
+    minutes = parseInt(seconds / 60);
+    if (year > 0) {
+      return year + "\u5E74\u524D";
+    } else if (mouth > 0 && year <= 0) {
+      return mouth + "\u6708\u524D";
+    } else if (days > 0 && mouth <= 0) {
+      return days + "\u5929\u524D";
+    } else if (days <= 0 && hours > 0) {
+      return hours + "\u5C0F\u65F6\u524D";
+    } else if (hours <= 0 && minutes > 0) {
+      return minutes + "\u5206\u949F\u524D";
+    } else if (minutes <= 0 && seconds > 0) {
+      if (seconds < 30) {
+        return "\u521A\u521A";
+      } else {
+        return seconds + "\u79D2\u524D";
+      }
+    } else {
+      return "\u521A\u521A";
+    }
+  },
+  htmlFilter: (html) => {
+    if (!html)
+      return;
+    let reg = /<\/?.+?\/?>/g;
+    return html.replace(reg, "") || "";
+  },
+  MutatingProps: (item, prop, val = null) => {
+    item = item || {};
+    const propArray = prop.split(".");
+    let key = "";
+    let nextItem = item;
+    const setVal = () => {
+      while (key = propArray.shift()) {
+        if (!key) {
+          debugger;
+        }
+        if (propArray.length === 0) {
+          nextItem[key] = val;
+          return;
+        } else {
+          const _nextItem = nextItem[key];
+          if (!_nextItem) {
+            nextItem[key] = {};
+          }
+          nextItem = nextItem[key];
+        }
+      }
+    };
+    const getVal = () => {
+      while (key = propArray.shift()) {
+        const _nextItem = nextItem[key];
+        if (!_nextItem) {
+          return nextItem[key];
+        } else {
+          if (propArray.length === 0) {
+            return _nextItem;
+          } else {
+            nextItem = nextItem[key];
+          }
+        }
+      }
+      return nextItem;
+    };
+    if (val || privateLodash.isString(val) || privateLodash.isBoolean(val) || privateLodash.isNumber(val) && !privateLodash.isNaN(val)) {
+      setVal();
+    } else {
+      return getVal();
+    }
+    return item;
+  }
+};
 const lStorage = new Proxy(localStorage, {
   set(_localStorage, prop, value) {
-    if (_$1.isPlainObject(value)) {
+    if (privateLodash.isPlainObject(value)) {
       _localStorage[prop] = JSON.stringify(value);
     } else {
       _localStorage[prop] = value;
@@ -30516,11 +30511,11 @@ let _State_UI = {
       label: prop,
       prop
     };
-    _$1.templateSettings.interpolate = /{([\s\S]+?)}/g;
+    privateLodash.templateSettings.interpolate = /{([\s\S]+?)}/g;
     if (State_UI.i18nMessage) {
       const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
       if (temp) {
-        result.label = _$1.template(temp)(payload);
+        result.label = privateLodash.template(temp)(payload);
         if (!result.label) {
           result.label = prop;
           console.error(`i18n:${prop} "NOT_FOUND"`);
@@ -30533,7 +30528,7 @@ let _State_UI = {
 const State_UI = reactive(_State_UI);
 watch(() => State_UI.language, (language) => {
   lStorage["language"] = language;
-  dayjs$1.locale(language === "zh-CN" ? "zh-cn" : "en");
+  dayjs.locale(language === "zh-CN" ? "zh-cn" : "en");
   if (State_UI.onLanguageChange) {
     State_UI.onLanguageChange(language, State_UI);
   }
@@ -30541,7 +30536,7 @@ watch(() => State_UI.language, (language) => {
   immediate: true
 });
 const Cpt_UI_locale = computed(() => {
-  const currentLanguage = _$1.camelCase(State_UI.language);
+  const currentLanguage = privateLodash.camelCase(State_UI.language);
   const locale2 = State_UI.LANGUAGE[currentLanguage];
   return locale2;
 });
@@ -30552,10 +30547,10 @@ const DatePicker = ({
 }) => {
   let value = "";
   if (property.value) {
-    value = dayjs$1(property.value);
-    _$1.doNothing(value, property.value);
+    value = dayjs(property.value);
+    privateLodash.doNothing(value, property.value);
     if (value === "Invalid Date") {
-      _$1.doNothing("property.value", property.value);
+      privateLodash.doNothing("property.value", property.value);
       value = "";
     }
   }
@@ -30564,14 +30559,14 @@ const DatePicker = ({
     "locale": Cpt_UI_locale.value.DatePicker
   }), slots);
 };
-const RangePicker = resolveComponent("aRangePicker");
-const RangePicker$1 = ({
+const RangePicker = ({
   property,
   slots,
   listeners
 }) => {
+  const RangePicker2 = resolveComponent("aRangePicker");
   console.log("property", property.value);
-  return createVNode(RangePicker, mergeProps(property, listeners, {
+  return createVNode(RangePicker2, mergeProps(property, listeners, {
     "locale": Cpt_UI_locale.value.DatePicker
   }), slots);
 };
@@ -30589,15 +30584,15 @@ const TIPS_TYPE = {
 };
 async function validateForm(configsForm) {
   return Promise.all(
-    _$1.map(
+    privateLodash.map(
       configsForm,
       (configs, prop) => new Promise((resolve) => {
-        if (_$1.isInput(configs.isShow)) {
+        if (privateLodash.isInput(configs.isShow)) {
           const isFalse = !configs.isShow;
           if (isFalse) {
             return resolve();
           }
-          const isResFalse = _$1.isFunction(configs.isShow) && !configs.isShow();
+          const isResFalse = privateLodash.isFunction(configs.isShow) && !configs.isShow();
           if (isResFalse) {
             return resolve();
           }
@@ -30621,7 +30616,7 @@ async function validateForm(configsForm) {
   });
 }
 const AllWasWell = (res) => {
-  return _$1.isArray(res) && res.length === 0;
+  return privateLodash.isArray(res) && res.length === 0;
 };
 const checkXItem = async (xItemConfigs, handlerResult) => {
   xItemConfigs.checking = true;
@@ -30641,7 +30636,7 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
               return true;
             }
             const isInTrigger = (eventName) => xItemConfigs.validate.triggerEventsObj[eventName];
-            if (_$1.some(trigger, isInTrigger)) {
+            if (privateLodash.some(trigger, isInTrigger)) {
               trigBy = `triggerEvent ${trigger.toString()}`;
               return true;
             }
@@ -30651,14 +30646,14 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
                 EVENT_TYPE.input,
                 EVENT_TYPE.blur
               ];
-              if (_$1.some(updateTrigger, isInTrigger)) {
+              if (privateLodash.some(updateTrigger, isInTrigger)) {
                 trigBy = "update";
                 return true;
               }
             }
             return false;
           })();
-          trigBy && _$1.doNothing(
+          trigBy && privateLodash.doNothing(
             `%cValidate trigger off by [${trigBy}]`,
             "color:yellow;background:green;"
           );
@@ -30692,7 +30687,7 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
   } catch (error) {
     console.error(error);
   } finally {
-    if (_$1.isFunction(xItemConfigs.__onAfterValidate)) {
+    if (privateLodash.isFunction(xItemConfigs.__onAfterValidate)) {
       xItemConfigs.__onAfterValidate.call(xItemConfigs, result);
     }
     xItemConfigs.validate.triggerEventsObj = {};
@@ -30701,7 +30696,7 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
 const Checkbox = ({
   property
 }) => {
-  const _property = _.merge({}, property, {
+  const _property = vUtils.merge({}, property, {
     checked: property.value,
     onClick() {
       _property["onUpdate:value"](!_property.value, EVENT_TYPE.update);
@@ -30709,15 +30704,15 @@ const Checkbox = ({
   });
   return h(Checkbox$1, _property);
 };
-const Select = resolveComponent("aSelect");
-const SelectOption = resolveComponent("aSelectOption");
-const Select$1 = ({
+const Select = ({
   property,
   listeners
 }) => {
-  const _property = _$1.omit(property, ["options"]);
+  const Select2 = resolveComponent("aSelect");
+  const SelectOption = resolveComponent("aSelectOption");
+  const _property = privateLodash.omit(property, ["options"]);
   const renderOptions = () => {
-    return _$1.map(property.options, (option) => {
+    return privateLodash.map(property.options, (option) => {
       return createVNode(SelectOption, {
         "value": option.value
       }, {
@@ -30725,22 +30720,22 @@ const Select$1 = ({
       });
     });
   };
-  return createVNode(Select, mergeProps(listeners, _property), {
+  return createVNode(Select2, mergeProps(listeners, _property), {
     default: renderOptions
   });
 };
-const Radio = resolveComponent("aRadio");
-const RadioGroup = resolveComponent("aRadioGroup");
-const RadioButton = resolveComponent("aRadioButton");
-const RadioGroup$1 = ({
+const RadioGroup = ({
   property,
   slots,
   listeners
 }) => {
-  _$1.omit(property, ["options"]);
+  const Radio = resolveComponent("aRadio");
+  const RadioGroup2 = resolveComponent("aRadioGroup");
+  const RadioButton = resolveComponent("aRadioButton");
+  vUtils.omit(property, ["options"]);
   const renderOptions = () => {
     if (property.isButton) {
-      return _$1.map(property.options, (option) => {
+      return vUtils.map(property.options, (option) => {
         return createVNode(RadioButton, {
           "value": option.value
         }, {
@@ -30748,7 +30743,7 @@ const RadioGroup$1 = ({
         });
       });
     }
-    return _$1.map(property.options, (option) => {
+    return vUtils.map(property.options, (option) => {
       return createVNode(Radio, {
         "value": option.value
       }, {
@@ -30756,7 +30751,7 @@ const RadioGroup$1 = ({
       });
     });
   };
-  return createVNode(RadioGroup, mergeProps(property, listeners), {
+  return createVNode(RadioGroup2, mergeProps(property, listeners), {
     default: renderOptions
   });
 };
@@ -30772,94 +30767,27 @@ const Switch = ({
   slots,
   listeners
 }) => {
-  const _property = _$1.merge({}, property, {
+  const _property = privateLodash.merge({}, property, {
     checked: property.value,
     onClick() {
       listeners["onUpdate:value"](!_property.value);
     }
   });
-  return createVNode("span", null, [h(Switch$1, _$1.omit(_property, ["value"]))]);
+  return createVNode("span", null, [h(Switch$1, privateLodash.omit(_property, ["value"]))]);
 };
 const itemRenders = {
-  Input: Input$1,
+  Input,
   Checkbox,
-  Select: Select$1,
+  Select,
   Switch,
   DatePicker,
-  RangePicker: RangePicker$1,
-  RadioGroup: RadioGroup$1,
+  RangePicker,
+  RadioGroup,
   CheckboxGroup
 };
-const MutatingProps = (item, prop, val = null) => {
-  item = item || {};
-  const propArray = prop.split(".");
-  let key = "";
-  let nextItem = item;
-  const setVal = () => {
-    while (key = propArray.shift()) {
-      if (!key) {
-        debugger;
-      }
-      if (propArray.length === 0) {
-        nextItem[key] = val;
-        return;
-      } else {
-        const _nextItem = nextItem[key];
-        if (!_nextItem) {
-          nextItem[key] = {};
-        }
-        nextItem = nextItem[key];
-      }
-    }
-  };
-  const getVal = () => {
-    while (key = propArray.shift()) {
-      const _nextItem = nextItem[key];
-      if (!_nextItem) {
-        return nextItem[key];
-      } else {
-        if (propArray.length === 0) {
-          return _nextItem;
-        } else {
-          nextItem = nextItem[key];
-        }
-      }
-    }
-    return nextItem;
-  };
-  if (val || _$1.isString(val) || _$1.isBoolean(val) || _$1.isNumber(val) && !_$1.isNaN(val)) {
-    setVal();
-  } else {
-    return getVal();
-  }
-  return item;
-};
-const Utils = {
-  dateFormat(date, format = "YYYY-MM-DD") {
-    if (format === 1) {
-      format = "YYYY-MM-DD HH:mm:ss";
-    }
-    const label = dayjs(date).format(format);
-    return label === "Invalid Date" ? "--" : label;
-  },
-  keepDecimals(val, fractionDigits = 2) {
-    let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
-    if (num === "NaN") {
-      num = "-";
-    }
-    return num;
-  },
-  valueToLabel(value, options) {
-    const target = _$1.find(options, {
-      value
-    });
-    if (target) {
-      return target.label;
-    } else {
-      return "--";
-    }
-  }
-};
+const {
+  MutatingProps
+} = privateLodash;
 const domClass = {
   tipsError: "ant-form-item-explain ant-form-item-explain-error"
 };
@@ -30880,14 +30808,14 @@ const _sfc_main$b = defineComponent({
   setup(props) {
     let Cpt_isShowXItem = true;
     let Cpt_isDisabled = false;
-    if (_$1.isFunction(props.configs.isShow)) {
+    if (privateLodash.isFunction(props.configs.isShow)) {
       Cpt_isShowXItem = computed(props.configs.isShow);
-    } else if (_$1.isBoolean(props.configs.isShow)) {
+    } else if (privateLodash.isBoolean(props.configs.isShow)) {
       Cpt_isShowXItem = props.configs.isShow;
     }
-    if (_$1.isFunction(props.configs.disabled)) {
+    if (privateLodash.isFunction(props.configs.disabled)) {
       Cpt_isDisabled = computed(props.configs.disabled);
-    } else if (_$1.isBoolean(props.configs.disabled)) {
+    } else if (privateLodash.isBoolean(props.configs.disabled)) {
       Cpt_isDisabled = props.configs.disabled;
     }
     return {
@@ -30905,7 +30833,7 @@ const _sfc_main$b = defineComponent({
       "onUpdate:value": (val, ...args2) => {
         configs.value = val;
         this.$emit("update:modelValue", val);
-        if (_$1.isFunction(listeners.onAfterValueChange)) {
+        if (privateLodash.isFunction(listeners.onAfterValueChange)) {
           listeners.onAfterValueChange.call(configs, val);
         }
         handleConfigsValidate(EVENT_TYPE.update);
@@ -30925,7 +30853,7 @@ const _sfc_main$b = defineComponent({
     };
     function initListenerHandler(prop, value) {
       listeners[prop] = function(...args2) {
-        _$1.each(listeners[prop].queue, (listener) => {
+        privateLodash.each(listeners[prop].queue, (listener) => {
           listener == null ? void 0 : listener.apply(vm.configs, args2);
         });
       };
@@ -30933,8 +30861,8 @@ const _sfc_main$b = defineComponent({
     }
     function addListenerFromConfigs(currentConfigs) {
       const propsWillDeleteFromConfigs = [];
-      _$1.each(currentConfigs, (value, prop) => {
-        if (_$1.isListener(prop)) {
+      privateLodash.each(currentConfigs, (value, prop) => {
+        if (privateLodash.isListener(prop)) {
           propsWillDeleteFromConfigs.push(prop);
           if (listeners[prop]) {
             listeners[prop].queue.push(value);
@@ -30945,12 +30873,12 @@ const _sfc_main$b = defineComponent({
           }
         }
       });
-      _$1.each(propsWillDeleteFromConfigs, (prop) => {
+      privateLodash.each(propsWillDeleteFromConfigs, (prop) => {
         delete currentConfigs[prop];
       });
       return listeners;
     }
-    _$1.each(listeners, (value, prop) => initListenerHandler(prop, value));
+    privateLodash.each(listeners, (value, prop) => initListenerHandler(prop, value));
     addListenerFromConfigs(vm.configs);
     return {
       listeners,
@@ -30973,7 +30901,7 @@ const _sfc_main$b = defineComponent({
       if ((_b = (_a = this.configs) == null ? void 0 : _a.itemTips) == null ? void 0 : _b.type) {
         return {
           type: this.configs.itemTips.type,
-          msg: _$1.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
+          msg: privateLodash.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
         };
       } else {
         this.configs.itemTips = _itemTips;
@@ -30994,12 +30922,12 @@ const _sfc_main$b = defineComponent({
       const property = {};
       let slots = {};
       const pickAttrs = (properties) => {
-        _$1.each(properties, (value, prop) => {
+        privateLodash.each(properties, (value, prop) => {
           if ("slots" === prop) {
             slots = value;
             return;
           }
-          if (["placeholder"].includes(prop) && _$1.isFunction(value)) {
+          if (["placeholder"].includes(prop) && privateLodash.isFunction(value)) {
             property[prop] = value(vm);
             return;
           }
@@ -31055,10 +30983,10 @@ const _sfc_main$b = defineComponent({
       let label = (() => {
         const _label = this.configs.label;
         if (_label) {
-          if (_$1.isFunction(_label)) {
+          if (privateLodash.isFunction(_label)) {
             return _label();
           }
-          if (_$1.isString(_label) || _label.__v_isVNode) {
+          if (privateLodash.isString(_label) || _label.__v_isVNode) {
             return _label;
           }
         }
@@ -31102,8 +31030,8 @@ const _sfc_main$b = defineComponent({
     },
     setValidateInfo(rules) {
       let isRequired = false;
-      if (_$1.isArrayFill(rules)) {
-        isRequired = _$1.some(rules, {
+      if (privateLodash.isArrayFill(rules)) {
+        isRequired = privateLodash.some(rules, {
           name: "required"
         });
         const handleAfterCheck = ([prop, msg]) => {
@@ -31111,7 +31039,7 @@ const _sfc_main$b = defineComponent({
           if (prop) {
             if (msg) {
               this.setTips(TIPS_TYPE.error, msg);
-              if (_$1.isFunction(this.configs.onValidateFail)) {
+              if (privateLodash.isFunction(this.configs.onValidateFail)) {
                 this.configs.onValidateFail(this.configs);
               }
             } else {
@@ -31119,7 +31047,7 @@ const _sfc_main$b = defineComponent({
             }
           }
         };
-        const debounceCheckXItem = _$1.debounce(checkXItem, 300);
+        const debounceCheckXItem = privateLodash.debounce(checkXItem, 300);
         MutatingProps(this, "configs.validate", (eventType) => {
           const prop = `configs.validate.triggerEventsObj.${eventType}`;
           MutatingProps(this, prop, true);
@@ -31127,7 +31055,7 @@ const _sfc_main$b = defineComponent({
         });
         MutatingProps(this, "configs.validate.triggerEventsObj", {});
       } else {
-        if (_$1.isFunction(this.configs.validate)) {
+        if (privateLodash.isFunction(this.configs.validate)) {
           delete this.configs.validate;
         }
       }
@@ -31139,7 +31067,7 @@ const _sfc_main$b = defineComponent({
       return null;
     }
     const CurrentXItem = (() => {
-      if (_$1.isFunction(this.configs.itemType)) {
+      if (privateLodash.isFunction(this.configs.itemType)) {
         return this.configs.itemType;
       }
       return itemRenders[this.configs.itemType] || itemRenders.Input;
@@ -31171,7 +31099,7 @@ const _sfc_main$a = defineComponent({
       return `xForm_${this._.uid}`;
     },
     labelStyleText() {
-      return _$1.map(_$1.merge({
+      return privateLodash.map(privateLodash.merge({
         width: "120px",
         "text-align": "right"
       }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
@@ -31296,29 +31224,29 @@ const xButton = defineComponent({
       return this.configs.type;
     },
     title() {
-      if (_$1.isString(this.disabled) && this.disabled.length > 0) {
+      if (privateLodash.isString(this.disabled) && this.disabled.length > 0) {
         return this.disabled;
       }
-      if (_$1.isString(this.configs.title) && this.configs.title.length > 0) {
+      if (privateLodash.isString(this.configs.title) && this.configs.title.length > 0) {
         return this.configs.title;
       }
       return false;
     },
     disabled() {
-      if (_$1.isBoolean(this.configs.disabled)) {
+      if (privateLodash.isBoolean(this.configs.disabled)) {
         return this.configs.disabled;
       }
-      if (_$1.isFunction(this.configs.disabled)) {
+      if (privateLodash.isFunction(this.configs.disabled)) {
         return this.configs.disabled(this);
       }
       return false;
     },
     text() {
       var _a;
-      if (_$1.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
+      if (privateLodash.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
         return this.$slots.default(this);
       }
-      if (_$1.isFunction(this.configs.text)) {
+      if (privateLodash.isFunction(this.configs.text)) {
         return this.configs.text(this) || "";
       }
       return this.configs.text || "";
@@ -31337,7 +31265,7 @@ const xButton = defineComponent({
   methods: {
     async onClick() {
       var _a;
-      if (_$1.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
+      if (privateLodash.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
         this.loading = true;
         try {
           await this.configs.onClick.call(this.configs, this);
@@ -31350,7 +31278,7 @@ const xButton = defineComponent({
     }
   },
   render(h2) {
-    const configs = _$1.omit(this.configs, ["text", "onClick", "disabled"]);
+    const configs = privateLodash.omit(this.configs, ["text", "onClick", "disabled"]);
     if (this.title) {
       configs.title = this.title;
     }
@@ -31390,7 +31318,7 @@ const _sfc_main$9 = defineComponent({
         class: "center",
         text: vm.configs.text.normal,
         async onClick() {
-          if (_$1.isFunction(vm.configs.onClick)) {
+          if (privateLodash.isFunction(vm.configs.onClick)) {
             await vm.configs.onClick({
               countDown: vm.countDown
             });
@@ -31464,7 +31392,7 @@ const _sfc_main$8 = defineComponent({
         if (this.a) {
           gapStyle.margin = `${this.a}px`;
         } else {
-          _$1.map(POSITION_MAP, (prop, key) => {
+          privateLodash.map(POSITION_MAP, (prop, key) => {
             const value = this[key];
             if (value) {
               gapStyle[`margin-${prop}`] = `${value}px`;
@@ -31505,14 +31433,14 @@ const _sfc_main$7 = defineComponent({
     }
   },
   data() {
-    const id = _$1.genId("xChart");
+    const id = privateLodash.genId("xChart");
     return {
       id
     };
   },
   computed: {
     helper() {
-      if (_$1.isPlainObject(this.configs)) {
+      if (privateLodash.isPlainObject(this.configs)) {
         return this.configs;
       }
       return CONFIGS_MAP[this.configs];
@@ -31737,7 +31665,7 @@ const _sfc_main$5 = defineComponent(markRaw({
       };
     },
     iconKey() {
-      const _iconKey = _$1.camelCase(this.getIconPath()).replace(/\s/, "");
+      const _iconKey = privateLodash.camelCase(this.getIconPath()).replace(/\s/, "");
       return _iconKey;
     }
   },
@@ -31759,12 +31687,12 @@ const _sfc_main$5 = defineComponent(markRaw({
             return _SvgIconAny;
           }
           try {
-            _SvgIconAny = await _$1.asyncLoadText(this.getIconPath());
+            _SvgIconAny = await privateLodash.asyncLoadText(this.getIconPath());
           } catch (error) {
           }
           return _SvgIconAny;
         })();
-        if (_$1.isString(SvgIconAny) && SvgIconAny.length > 0) {
+        if (privateLodash.isString(SvgIconAny) && SvgIconAny.length > 0) {
           const SvgComponentByString = {
             name: this.icon,
             template: SvgIconAny
@@ -31836,7 +31764,7 @@ function defPagination(num_page = 1, num_size = 10, num_total = 0) {
 }
 function setPagination(StateTable, pagination) {
   const PAGINATION_MAP = lStorage.appConfigs.pagination;
-  _$1.each(pagination, (value, prop) => {
+  privateLodash.each(pagination, (value, prop) => {
     StateTable.pagination[PAGINATION_MAP[prop]] = value;
   });
 }
@@ -31864,7 +31792,7 @@ function defCol(options) {
 }
 function defColActions(options) {
   return {
-    [static_word.operation]: _$1.merge({
+    [static_word.operation]: privateLodash.merge({
       title: State_UI.$t("\u64CD\u4F5C").label,
       key: static_word.operation,
       prop: static_word.operation,
@@ -31889,8 +31817,8 @@ function defColActionsBtnlist(options) {
     "class": "flex middle"
   }, [createVNode(resolveComponent("xGap"), {
     "l": "4"
-  }, null), _$1.map(always, (btn) => {
-    const configs = _$1.merge({
+  }, null), privateLodash.map(always, (btn) => {
+    const configs = privateLodash.merge({
       type: "link",
       size: "small"
     }, btn);
@@ -31913,8 +31841,8 @@ function defColActionsBtnlist(options) {
       },
       overlay: () => {
         let _slot;
-        return createVNode(Fragment, null, [createVNode(resolveComponent("aMenu"), null, _isSlot$1(_slot = _$1.map(more, (btn) => {
-          const configs = _$1.merge({
+        return createVNode(Fragment, null, [createVNode(resolveComponent("aMenu"), null, _isSlot$1(_slot = privateLodash.map(more, (btn) => {
+          const configs = privateLodash.merge({
             type: "link",
             size: "small"
           }, btn);
@@ -31935,7 +31863,7 @@ function defColActionsBtnlist(options) {
   })()]);
 }
 function filterColIsShow(isShow, prop) {
-  if (_$1.isBoolean(isShow)) {
+  if (privateLodash.isBoolean(isShow)) {
     return isShow;
   } else {
     return true;
@@ -31994,7 +31922,7 @@ const xPagination = defineComponent({
     };
   },
   methods: {
-    onShowSizeChange: _$1.debounce(function(page2, size2) {
+    onShowSizeChange: privateLodash.debounce(function(page2, size2) {
       setPagination(this, {
         page: page2,
         size: size2
@@ -32056,7 +31984,7 @@ const _sfc_main$4 = defineComponent({
   data() {
     return {
       State: {
-        id: _$1.genId("xDataGrid")
+        id: privateLodash.genId("xDataGrid")
       }
     };
   },
@@ -32066,10 +31994,10 @@ const _sfc_main$4 = defineComponent({
         return this.configs.columns;
       }
       let columns = null;
-      columns = _$1.map(this.Cpt_ColumnsOrder, (prop) => _$1.find(this.configs.columns, {
+      columns = privateLodash.map(this.Cpt_ColumnsOrder, (prop) => privateLodash.find(this.configs.columns, {
         prop
       }));
-      columns = _$1.filter(columns, (i) => filterColIsShow(i == null ? void 0 : i.isShow, i == null ? void 0 : i.prop));
+      columns = privateLodash.filter(columns, (i) => filterColIsShow(i == null ? void 0 : i.isShow, i == null ? void 0 : i.prop));
       return columns;
     },
     Cpt_ColumnsOrder() {
@@ -32077,10 +32005,10 @@ const _sfc_main$4 = defineComponent({
         if (this.configs.columns_order) {
           return this.configs.columns_order;
         } else {
-          return _$1.map(this.configs.columns, (i) => i.prop);
+          return privateLodash.map(this.configs.columns, (i) => i.prop);
         }
       })();
-      return _$1.filter(order, (i) => !!i);
+      return privateLodash.filter(order, (i) => !!i);
     },
     Cpt_AntTableProperty() {
       if (this.configs.antTableProperty) {
@@ -32135,7 +32063,7 @@ const _sfc_main$4 = defineComponent({
             } = args2;
             if (column && column.renderCell) {
               const vNode = column.renderCell(args2);
-              if (_$1.isNull(vNode) || _$1.isUndefined(vNode)) {
+              if (privateLodash.isNull(vNode) || privateLodash.isUndefined(vNode)) {
                 return "";
               }
               return vNode;
@@ -32207,10 +32135,10 @@ const _sfc_main$3 = defineComponent({
   },
   methods: {
     handleChecked(col) {
-      const target = _$1.find(this.configs.columns, {
+      const target = privateLodash.find(this.configs.columns, {
         key: col.key
       });
-      target.isShow = _$1.isBoolean(target.isShow) ? !target.isShow : false;
+      target.isShow = privateLodash.isBoolean(target.isShow) ? !target.isShow : false;
     }
   },
   computed: {
@@ -32219,18 +32147,18 @@ const _sfc_main$3 = defineComponent({
         if (this.configs.columns_order) {
           return this.configs.columns_order;
         } else {
-          return _$1.map(this.configs.columns, (i) => i.prop);
+          return privateLodash.map(this.configs.columns, (i) => i.prop);
         }
       })();
-      return _$1.filter(order, (i) => !!i);
+      return privateLodash.filter(order, (i) => !!i);
     },
     Cpt_Columns() {
-      return _$1.map(this.Cpt_ColumnsOrder, (prop) => _$1.find(this.configs.columns, {
+      return privateLodash.map(this.Cpt_ColumnsOrder, (prop) => privateLodash.find(this.configs.columns, {
         prop
       }));
     },
     checkedList() {
-      return _$1.filter(this.Cpt_ColumnsOrder, (prop) => {
+      return privateLodash.filter(this.Cpt_ColumnsOrder, (prop) => {
         const {
           isShow
         } = this.configs.columns[prop];
@@ -32570,7 +32498,7 @@ const _sfc_main = defineComponent({
     this.$wrapperEle.off("scroll");
   },
   methods: {
-    setTop: _$1.debounce(function() {
+    setTop: privateLodash.debounce(function() {
       if (this.$refs.refWrapper) {
         this.$refs.refWrapper.scrollTo({
           top: this.top,
@@ -32771,7 +32699,7 @@ const xVirTableBody = defineComponent({
         isSelect,
         prop
       } = this.selectedConfigs || {};
-      if (_$1.isFunction(isSelect)) {
+      if (privateLodash.isFunction(isSelect)) {
         return (args2) => {
           return isSelect.call(this, args2);
         };
@@ -32788,7 +32716,7 @@ const xVirTableBody = defineComponent({
       const {
         isDisabled
       } = this.selectedConfigs || {};
-      if (_$1.isFunction(isDisabled)) {
+      if (privateLodash.isFunction(isDisabled)) {
         return () => {
           return isDisabled.call(this, args);
         };
@@ -32856,7 +32784,7 @@ const xVirTableBody = defineComponent({
       return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
     },
     vDomBodyTr1() {
-      return _$1.map(this.virs1, (data, rowIndex) => {
+      return privateLodash.map(this.virs1, (data, rowIndex) => {
         return createVNode("div", {
           "role": "tr",
           "class": "xVirTable-row flex horizon",
@@ -32864,7 +32792,7 @@ const xVirTableBody = defineComponent({
         }, [this.genSelectedVDom({
           rowIndex,
           rowData: data
-        }), _$1.map(this.columnOrder, (prop, index2) => {
+        }), privateLodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -32875,7 +32803,7 @@ const xVirTableBody = defineComponent({
       });
     },
     vDomBodyTr2() {
-      return _$1.map(this.virs2, (data, rowIndex) => {
+      return privateLodash.map(this.virs2, (data, rowIndex) => {
         return createVNode("div", {
           "role": "tr",
           "class": "xVirTable-row flex horizon",
@@ -32883,7 +32811,7 @@ const xVirTableBody = defineComponent({
         }, [this.genSelectedVDom({
           rowIndex,
           rowData: data
-        }), _$1.map(this.columnOrder, (prop, index2) => {
+        }), privateLodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -32894,7 +32822,7 @@ const xVirTableBody = defineComponent({
       });
     },
     vDomBodyTr3() {
-      return _$1.map(this.virs3, (data, rowIndex) => {
+      return privateLodash.map(this.virs3, (data, rowIndex) => {
         return createVNode("div", {
           "role": "tr",
           "class": "xVirTable-row flex horizon",
@@ -32902,7 +32830,7 @@ const xVirTableBody = defineComponent({
         }, [this.genSelectedVDom({
           rowIndex,
           rowData: data
-        }), _$1.map(this.columnOrder, (prop, index2) => {
+        }), privateLodash.map(this.columnOrder, (prop, index2) => {
           return createVNode(xVirTableTd, {
             "column": this.columns[prop],
             "data-index": index2,
@@ -32927,7 +32855,7 @@ const xVirTableBody = defineComponent({
         this.emitSelectedChange(e.target.checked, rowInfo.rowData[prop]);
       };
       let vDomChecked;
-      if (_$1.isString(isDisabled)) {
+      if (privateLodash.isString(isDisabled)) {
         isDisabled = true;
         const uiPopoverConfigs = {
           content: isDisabled
@@ -32956,13 +32884,13 @@ const xVirTableBody = defineComponent({
         id
       });
     },
-    setPerBlockHeight: _$1.debounce(function(viewportHeight) {
+    setPerBlockHeight: privateLodash.debounce(function(viewportHeight) {
       this.viewportHeight = viewportHeight;
       this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
       this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
       this.setHeight();
     }, 64),
-    setTop: _$1.debounce(function() {
+    setTop: privateLodash.debounce(function() {
       if (this.$refs.refWrapper) {
         this.$refs.refWrapper.scrollTo({
           top: this.top,
@@ -33021,23 +32949,23 @@ const xVirTableBody = defineComponent({
     }, [this.vDomBodyTr3])])]);
   }
 });
-function defineXVirTableConfigs(options) {
+function defXVirTableConfigs(options) {
   const required = ["rowHeight", "columns"];
-  if (_$1.some(required, (prop) => {
+  if (privateLodash.some(required, (prop) => {
     if (!options[prop]) {
-      alert("defineXVirTableConfigs miss required " + prop);
+      alert("defXVirTableConfigs miss required " + prop);
       return true;
     }
     return false;
   })) {
-    throw new Error("defineXVirTableConfigs miss required");
+    throw new Error("defXVirTableConfigs miss required");
   }
   if (options.selectedConfigs) {
     options.selected = options.selected || [];
   }
   return options;
 }
-defineXVirTableConfigs.type = {
+defXVirTableConfigs.type = {
   many: "many",
   one: "one"
 };
@@ -33074,7 +33002,7 @@ const xVirTable = defineComponent({
       if (!((_a = this.configs) == null ? void 0 : _a.selectedConfigs)) {
         return false;
       }
-      return ((_c = (_b = this.configs) == null ? void 0 : _b.selectedConfigs) == null ? void 0 : _c.type) || defineXVirTableConfigs.type.many;
+      return ((_c = (_b = this.configs) == null ? void 0 : _b.selectedConfigs) == null ? void 0 : _c.type) || defXVirTableConfigs.type.many;
     },
     selectedProp() {
       var _a, _b, _c, _d;
@@ -33091,7 +33019,7 @@ const xVirTable = defineComponent({
       if (!this.selectedType) {
         return false;
       }
-      if (_$1.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
+      if (privateLodash.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
         return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.fn;
       } else {
         return false;
@@ -33112,7 +33040,7 @@ const xVirTable = defineComponent({
       return Object.keys(((_c = this.configs) == null ? void 0 : _c.columns) || {});
     },
     columnWidthArray() {
-      const _columnWidthArray = _$1.reduce(this.columnOrder, (columnStyle, prop) => {
+      const _columnWidthArray = privateLodash.reduce(this.columnOrder, (columnStyle, prop) => {
         const configsColumn = this.configs.columns[prop] || {};
         const {
           width
@@ -33150,7 +33078,7 @@ const xVirTable = defineComponent({
       }, [createVNode("div", {
         "role": "tr",
         "class": "flex horizon"
-      }, [this.vDomTheadSelect, _$1.map(this.columnOrder, (prop, index2) => {
+      }, [this.vDomTheadSelect, privateLodash.map(this.columnOrder, (prop, index2) => {
         var _a;
         const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
         return createVNode(xVirTableTh, {
@@ -33199,7 +33127,7 @@ const xVirTable = defineComponent({
       } = e.target;
       if (checked) {
         this.selectedAll = true;
-        this.configs.selected = _$1.map(this.configs.dataSource, (i) => i[this.selectedProp]);
+        this.configs.selected = privateLodash.map(this.configs.dataSource, (i) => i[this.selectedProp]);
       } else {
         this.configs.selected = [];
       }
@@ -33209,7 +33137,7 @@ const xVirTable = defineComponent({
     }) {
       var _a;
       const isOnlyOne = this.selectedType === "one";
-      const index2 = _$1.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i) => i === id);
+      const index2 = privateLodash.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i) => i === id);
       if (index2 > -1) {
         if (isOnlyOne) {
           this.configs.selected = [];
@@ -33268,7 +33196,7 @@ const FormRules = {
       msg: msg || $t("\u5FC5\u586B\u9879").label,
       async validator(value) {
         if (value) {
-          if (_$1.isArray(value)) {
+          if (privateLodash.isArray(value)) {
             if (value.length > 0) {
               return SUCCESS;
             } else {
@@ -33277,9 +33205,9 @@ const FormRules = {
           }
           return SUCCESS;
         }
-        if (_$1.isBoolean(value))
+        if (privateLodash.isBoolean(value))
           return SUCCESS;
-        if (_$1.isNumber(value) && !_$1.isNaN(value))
+        if (privateLodash.isNumber(value) && !privateLodash.isNaN(value))
           return SUCCESS;
         return FAIL;
       },
@@ -33291,7 +33219,7 @@ const FormRules = {
       name: "Demo",
       msg: "Demo",
       async validator(value) {
-        await _$1.sleep(1e3);
+        await privateLodash.sleep(1e3);
         return FAIL;
       },
       trigger: [EVENT_TYPE.update, EVENT_TYPE.input, EVENT_TYPE.change, EVENT_TYPE.blur]
@@ -33415,14 +33343,6 @@ const READY = {
   }
 };
 const LayerUtils = {
-  lastIndex: 0,
-  layerIndexArray: [],
-  removeIndexFromLayerIndexArray(layerIndex) {
-    let currentIndex = _$1.findIndex(this.layerIndexArray, (i) => i === layerIndex);
-    if (currentIndex > -1) {
-      this.layerIndexArray.splice(currentIndex, 1);
-    }
-  },
   setZIndex(zIndex) {
     READY.zIndex = zIndex;
   },
@@ -33454,42 +33374,37 @@ const LayerUtils = {
     LayerUtils.cache = READY.config = $.extend({}, READY.config, options);
     LayerUtils.path = READY.config.path || LayerUtils.path;
     typeof options.extend === "string" && (options.extend = [options.extend]);
-    if (READY.config.path)
-      LayerUtils.ready();
     if (!options.extend)
       return this;
     return this;
   },
-  ready(callback) {
-    return this;
-  },
   open(options) {
-    const { _layerIndex } = new ClassLayer(options);
-    return _layerIndex;
+    const { _layerKey } = new ClassLayer(options);
+    return _layerKey;
   },
-  alert(content2, options, yes) {
+  alert(content, options, yes) {
     var type2 = typeof options === "function";
     if (type2)
       yes = options;
     return LayerUtils.open(
       $.extend(
         {
-          content: content2,
+          content,
           yes
         },
         type2 ? {} : options
       )
     );
   },
-  confirm(content2, options, yes, cancel) {
-    if (_$1.isFunction(options)) {
+  confirm(content, options, yes, cancel) {
+    if (privateLodash.isFunction(options)) {
       cancel = yes;
       yes = options;
     }
     return LayerUtils.open(
       $.extend(
         {
-          content: content2,
+          content,
           btn: READY.btn,
           yes,
           btn2: cancel
@@ -33498,19 +33413,19 @@ const LayerUtils = {
       )
     );
   },
-  msg(content2, options, end = () => null) {
-    var isOptionsIsFunction = _$1.isFunction(options), rskin = READY.config.skin;
-    var skin2 = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
+  msg(content, options, end = () => null) {
+    var isOptionsIsFunction = privateLodash.isFunction(options), rskin = READY.config.skin;
+    var skin = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
     var anim = DOMS_ANIM.length - 1;
     if (isOptionsIsFunction)
       end = options;
     return LayerUtils.open(
       $.extend(
         {
-          content: content2,
+          content,
           time: 3e3,
           shade: false,
-          skin: skin2,
+          skin,
           title: false,
           closeBtn: false,
           btn: false,
@@ -33518,12 +33433,12 @@ const LayerUtils = {
           end
         },
         isOptionsIsFunction && !READY.config.skin ? {
-          skin: skin2 + " layui-layer-hui",
+          skin: skin + " layui-layer-hui",
           anim
         } : function() {
           options = options || {};
           if (options.icon === -1 || options.icon === void 0 && !READY.config.skin) {
-            options.skin = skin2 + " " + (options.skin || "layui-layer-hui");
+            options.skin = skin + " " + (options.skin || "layui-layer-hui");
           }
           return options;
         }()
@@ -33543,12 +33458,12 @@ const LayerUtils = {
       )
     );
   },
-  tips(content2, followSelector, options) {
+  tips(content, followSelector, options) {
     return LayerUtils.open(
       $.extend(
         {
           type: LayerUtils.TIPS,
-          content: [content2, followSelector],
+          content: [content, followSelector],
           closeBtn: false,
           time: 3e3,
           shade: false,
@@ -33560,8 +33475,8 @@ const LayerUtils = {
       )
     );
   },
-  close(layerIndex) {
-    if (layerIndex <= 0) {
+  close(layerKey) {
+    if (!layerKey) {
       return Promise.reject();
     }
     return new Promise((resolve, reject) => {
@@ -33572,7 +33487,7 @@ const LayerUtils = {
           } else {
             if (type2 === TYPE_IFRAME) {
               try {
-                var iframe = $(`#${LAYUI_LAYER_CONTENT}${layerIndex}`)[0];
+                var iframe = $(`#${LAYUI_LAYER_CONTENT}${layerKey}`)[0];
                 iframe.contentWindow.document.write("");
                 iframe.contentWindow.close();
                 $eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
@@ -33583,12 +33498,12 @@ const LayerUtils = {
           $eleLayer[0].innerHTML = "";
           $eleLayer.remove();
           try {
-            READY.end[layerIndex] && READY.end[layerIndex]();
-            delete READY.end[layerIndex];
+            READY.end[layerKey] && READY.end[layerKey]();
+            delete READY.end[layerKey];
           } catch (e) {
           }
         };
-        var $eleLayer = $(`#${LAYUI_LAYER}${layerIndex}`);
+        var $eleLayer = $(`#${LAYUI_LAYER}${layerKey}`);
         var type2 = $eleLayer.attr("type");
         var closeAnim = "layer-anim-close";
         if ($eleLayer.length === 0) {
@@ -33597,16 +33512,15 @@ const LayerUtils = {
         if ($eleLayer.data("isOutAnim")) {
           $eleLayer.addClass("layer-anim " + closeAnim);
         }
-        $(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerIndex}`).remove();
+        $(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerKey}`).remove();
         LayerUtils.ie == 6 && READY.reselect();
-        READY.rescollbar(layerIndex);
+        READY.rescollbar(layerKey);
         if ($eleLayer.attr("minLeft")) {
           READY.minIndex--;
           READY.minLeft.push($eleLayer.attr("minLeft"));
         }
         setTimeout(function() {
           removeLayerDomFromHtml();
-          LayerUtils.removeIndexFromLayerIndexArray(layerIndex);
           resolve(true);
         }, 200);
       } catch (error) {
@@ -33616,11 +33530,11 @@ const LayerUtils = {
     });
   },
   getChildFrame(selector, index2) {
-    index2 = index2 || $(`.${LAYUI_LAYER_CONTENT}`).attr("data-index");
+    index2 = index2 || $(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
     return $("#" + LAYUI_LAYER + index2).find("iframe").contents().find(selector);
   },
   getFrameIndex(name) {
-    return $("#" + name).parents(`.${LAYUI_LAYER_CONTENT}`).attr("data-index");
+    return $("#" + name).parents(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
   },
   iframeAuto(index2) {
     if (!index2)
@@ -33732,11 +33646,8 @@ const LayerUtils = {
       $eleLayer.find(".layui-layer-min").hide();
     }, 100);
   },
-  title(name, index2) {
-    var $title = $("#" + LAYUI_LAYER + (index2 || LayerUtils.lastIndex)).find(
-      `.${LAYUI_LAYER_TITLE}`
-    );
-    $title.html(name);
+  title(name, layerKey) {
+    $(`#${LAYUI_LAYER}${layerKey}`).find(`.${LAYUI_LAYER_TITLE}`).html(name);
   },
   async closeAll(type2) {
     const needClose = [];
@@ -33744,10 +33655,10 @@ const LayerUtils = {
       const $ele = $(this);
       if (type2) {
         if ($ele.attr("type") === type2) {
-          needClose.push($ele.attr("data-index"));
+          needClose.push($ele.attr("data-layer-key"));
         }
       } else {
-        needClose.push($ele.attr("data-index"));
+        needClose.push($ele.attr("data-layer-key"));
       }
     });
     return await Promise.all(needClose.map(LayerUtils.close));
@@ -33761,28 +33672,9 @@ const LayerUtils = {
     }
   }
 };
-Object.defineProperty(LayerUtils, "lastIndex", {
-  get() {
-    const lastIndex = _$1.last(LayerUtils.layerIndexArray);
-    if (lastIndex) {
-      return lastIndex;
-    } else {
-      LayerUtils.layerIndexArray = [1];
-      return 1;
-    }
-  },
-  set(newIndex) {
-    const lastIndex = _$1.last(LayerUtils.layerIndexArray);
-    if (lastIndex) {
-      LayerUtils.layerIndexArray.push(newIndex);
-    } else {
-      return;
-    }
-  }
-});
 class ClassLayer {
   constructor(custumSettings) {
-    __publicField(this, "_layerIndex", 0);
+    __publicField(this, "_layerKey", 0);
     __publicField(this, "_IDLayer", LAYUI_LAYER);
     __publicField(this, "_IDShade", LAYUI_LAYER_SHADE);
     __publicField(this, "_IDContent", LAYUI_LAYER_CONTENT);
@@ -33830,7 +33722,7 @@ class ClassLayer {
       full: false,
       minStack: true
     });
-    this.initConfig(custumSettings).insertContainerAfterInitConfig().setPosition().setLayerSize().onMoveOrResize().addOperationListener().handleAnimation();
+    this.initConfig(custumSettings).insertLayer().addLayerListener().handleAnimation();
   }
   get cptDomShade() {
     const { config, _IDShade } = this;
@@ -33879,10 +33771,10 @@ class ClassLayer {
       if (typeof config.btn === "string") {
         config.btn = [config.btn, ""];
       }
-      if (_$1.every(config.btn, (i) => !i)) {
+      if (privateLodash.every(config.btn, (i) => !i)) {
         return "";
       }
-      const domButtons = _$1.reduce(
+      const domButtons = privateLodash.reduce(
         config.btn,
         (domButtonString, label) => {
           if (label) {
@@ -33905,29 +33797,43 @@ class ClassLayer {
       typeName,
       isContentTypeObject,
       zIndex,
-      _layerIndex,
+      _layerKey,
       _IDLayer,
       _IDContent
     } = this;
-    const typeClassname = ` layui-layer-${typeName}`;
-    const boderClassname = (config.type == 0 || config.type == 2) && !config.shade ? " layui-layer-border" : "";
-    const skinClassname = config.skin || "";
+    const fnValid = (i) => !!i;
+    const layerWrapperClassname = [
+      "flex vertical",
+      "elevation-4",
+      `layui-layer-${typeName}`,
+      LAYUI_LAYER,
+      config.skin,
+      (() => {
+        if ([LayerUtils.IFRAME, LayerUtils.MSG].includes(config.type) && !config.shade) {
+          return "layui-layer-border";
+        }
+        return "";
+      })()
+    ].filter(fnValid).join(" ");
     const classContent = [
       LAYUI_LAYER_CONTENT,
       config.contentClass,
       config.type == LayerUtils.MSG && config.icon !== -1 ? "layui-layer-padding" : "",
       config.type == LayerUtils.LOADING ? `layui-layer-loading${config.icon}` : ""
-    ].filter((i) => !!i).join(" ");
+    ].filter(fnValid).join(" ");
+    config.area;
     return `
-<div id="${_IDLayer}" 
-		layer-wrapper="${_IDLayer}"
+<div id="${_IDLayer}" layer-wrapper="${_IDLayer}" type="${typeName}"
+		class="${layerWrapperClassname}" 
 		data-z-index="${zIndex}"
-		type="${typeName}"
-		class="flex vertical elevation-4 ${LAYUI_LAYER}${typeClassname}${boderClassname}${skinClassname}" 
-		data-index="${_layerIndex}"
+		data-layer-key="${_layerKey}"
 		data-during-time="${config.during}"
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
-		style="z-index:${zIndex}; width:${config.area[0]}; height:${config.area[1]}; position:fixed;">
+		style="position:fixed;
+			z-index:${zIndex};
+			width:${config.area[0]}; 
+			height:${config.area[1]};"
+		>
 			${this.cptDomTitle}
 			<div class="${classContent}" id="${_IDContent}">
 				${this.cptDomIcon}
@@ -33949,10 +33855,10 @@ class ClassLayer {
     layerInstance.config.icon = custumSettings.type === LayerUtils.LOADING ? 0 : -1;
     layerInstance.config.maxWidth = $win.width() - 15 * 2;
     const { config } = layerInstance;
-    layerInstance._layerIndex = ++LayerUtils.lastIndex;
-    layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerIndex}`;
-    layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerIndex}`;
-    layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerIndex}`;
+    layerInstance._layerKey = privateLodash.genId("");
+    layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
+    layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerKey}`;
+    layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerKey}`;
     layerInstance.zIndex = READY.zIndex + layerInstance.config.zIndex;
     layerInstance.typeName = READY.type[config.type || 0];
     layerInstance.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
@@ -34016,22 +33922,19 @@ class ClassLayer {
     processContentFn && processContentFn();
     return layerInstance;
   }
-  setLayerSize() {
+  async setLayerPosition() {
+    await privateLodash.sleep(34);
     const layerInstance = this;
-    const { config } = layerInstance;
-    if (config.type == LayerUtils.TIPS) {
-      layerInstance.tips();
-    } else {
-      layerInstance.offset();
-      parseInt(
-        READY.getStyle(document.getElementById(LAYUI_LAYER_MOVE), "z-index")
-      ) || function() {
-        layerInstance.$eleLayer.css("visibility", "hidden");
-        LayerUtils.ready(function() {
-          layerInstance.offset();
-          layerInstance.$eleLayer.css("visibility", "visible");
-        });
-      }();
+    const { config, _layerKey } = layerInstance;
+    layerInstance.offset();
+    if (config.type === LayerUtils.TIPS) {
+      layerInstance.setTips();
+    }
+    layerInstance.$eleLayer.css("visibility", "visible");
+    if (config.fullscreen) {
+      setTimeout(() => {
+        LayerUtils.full(_layerKey);
+      }, 400);
     }
     if (config.fixed) {
       $win.on("resize", function() {
@@ -34040,15 +33943,16 @@ class ClassLayer {
           layerInstance.setPosition();
         }
         if (config.type == LayerUtils.tips) {
-          layerInstance.tips();
+          layerInstance.setTips();
         }
       });
     }
     if (typeof config.during === "number" && config.during > 0) {
       setTimeout(function() {
-        LayerUtils.close(layerInstance._layerIndex);
+        LayerUtils.close(layerInstance._layerKey);
       }, config.during);
     }
+    LayerUtils.setLayerTop(layerInstance.$eleLayer);
     return layerInstance;
   }
   handleAnimation() {
@@ -34068,97 +33972,48 @@ class ClassLayer {
     }
     return layerInstance;
   }
-  insertContainerAfterInitConfig() {
+  insertLayer() {
     const layerInstance = this;
     if (!READY.$moveMask) {
       READY.$moveMask = $(layerInstance.cptDomMoveMask);
       $body.append(READY.$moveMask);
     }
-    const { config, isContentTypeObject, _layerIndex, _IDLayer, _IDShade } = layerInstance;
-    $body.append(layerInstance.cptDomShade);
-    if (isContentTypeObject) {
-      if ([LayerUtils.IFRAME].includes(config.type || 0)) {
-        $body.append(layerInstance.cptDomContainer);
-      } else if ([LayerUtils.TIPS].includes(config.type || 0)) {
-        const $follow = $(config.follow);
-        $follow.offset();
-        const $domContainer = $(layerInstance.cptDomContainer);
-        $body.append($domContainer);
-      } else {
-        const $content = $(config.content);
-        const _$layerWrapper = $content.parents(`.${LAYUI_LAYER}`);
-        if (_$layerWrapper.length === 0) {
-          const $container = $(layerInstance.cptDomContainer);
-          $content.replaceWith($container);
-          $container.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
-        }
-      }
-    } else {
-      $body.append(layerInstance.cptDomContainer);
+    const { config, _layerKey, _IDShade } = layerInstance;
+    layerInstance.$eleLayer = $(layerInstance.cptDomContainer);
+    if (privateLodash.isObject(config.content) && (privateLodash.isString(config.content) || privateLodash.isString(config.content.jquery))) {
+      const $content = $(config.content);
+      layerInstance.$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
     }
-    layerInstance.$eleLayer = $(`#${_IDLayer}`);
-    layerInstance.$eleShade = $(`#${_IDShade}`);
-    if (!config.scrollbar) {
-      $html.css("overflow", "hidden").attr("layer-full", _layerIndex);
-    }
-    LayerUtils.setLayerTop(layerInstance.$eleLayer);
-    layerInstance.$eleShade.css({
-      "background-color": config.shade[1] || "#000",
-      opacity: config.shade[0] || config.shade
+    layerInstance.$eleLayer.css({
+      visibility: "hidden",
+      top: "100%",
+      left: "100%"
     });
-    if (config.type == LayerUtils.IFRAME && LayerUtils.ie == 6) {
-      layerInstance.$eleLayer.find("iframe").attr("src", content[0]);
+    $body.append(layerInstance.$eleLayer);
+    if (layerInstance.cptDomShade) {
+      $body.append(layerInstance.cptDomShade);
+      layerInstance.$eleShade = $(`#${_IDShade}`);
+      layerInstance.$eleShade.css({
+        "background-color": config.shade[1] || "#000",
+        opacity: config.shade[0] || config.shade
+      });
     }
-    return layerInstance;
-  }
-  setPosition() {
-    var layerInstance = this;
-    const { $eleLayer, config, _layerIndex } = layerInstance;
-    if (config.area[0] === "" && config.maxWidth > 0) {
-      if (LayerUtils.ie && LayerUtils.ie < 8 && config.btn) {
-        $eleLayer.width($eleLayer.innerWidth());
-      }
-      $eleLayer.outerWidth() > config.maxWidth && $eleLayer.width(config.maxWidth);
+    if (!config.scrollbar) {
+      $html.css("overflow", "hidden").attr("layer-full", _layerKey);
     }
-    var area = [$eleLayer.innerWidth(), $eleLayer.innerHeight()], titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0, btnHeight = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0, setHeight = function(elem) {
-      elem = $eleLayer.find(elem);
-      elem.height(
-        area[1] - titHeight - btnHeight - 2 * (parseFloat(elem.css("padding-top")) | 0)
-      );
-    };
-    switch (config.type) {
-      case LayerUtils.IFRAME: {
-        if (config.fullscreen) {
-          LayerUtils.full(_layerIndex);
-        }
-        break;
-      }
-      default: {
-        if (config.area[1] === "") {
-          if (config.maxHeight > 0 && $eleLayer.outerHeight() > config.maxHeight) {
-            area[1] = config.maxHeight;
-            setHeight(`.${LAYUI_LAYER_IFRAME}`);
-          } else if (config.fixed && area[1] >= $win.height()) {
-            area[1] = $win.height();
-            setHeight(`.${LAYUI_LAYER_IFRAME}`);
-          }
-        } else {
-          setHeight(`.${LAYUI_LAYER_IFRAME}`);
-        }
-        break;
-      }
-    }
+    layerInstance.setLayerPosition();
     return layerInstance;
   }
   offset() {
     var layerInstance = this, config = layerInstance.config, $eleLayer = layerInstance.$eleLayer;
     var area = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-    var type2 = typeof config.offset === "object";
+    var whetherOffsetIsObject = typeof config.offset === "object";
     layerInstance.offsetTop = ($win.height() - area[1]) / 2;
     layerInstance.offsetLeft = ($win.width() - area[0]) / 2;
-    if (type2) {
-      layerInstance.offsetTop = config.offset[0];
-      layerInstance.offsetLeft = config.offset[1] || layerInstance.offsetLeft;
+    if (whetherOffsetIsObject) {
+      const [top, left] = config.offset;
+      layerInstance.offsetTop = top;
+      layerInstance.offsetLeft = left || layerInstance.offsetLeft;
     } else if (config.offset !== "auto") {
       if (config.offset === "t") {
         layerInstance.offsetTop = 0;
@@ -34200,13 +34055,9 @@ class ClassLayer {
     });
     return layerInstance;
   }
-  async tips() {
+  async setTips() {
     const layerInstance = this;
-    const config = layerInstance.config;
-    const $eleLayer = layerInstance.$eleLayer;
-    await new Promise((r) => {
-      setTimeout(r, 34);
-    });
+    const { config, $eleLayer } = layerInstance;
     const [tipsDomWidth, tipsdomHeight] = [
       $eleLayer.outerWidth(),
       $eleLayer.outerHeight()
@@ -34223,15 +34074,17 @@ class ClassLayer {
       tipTop: 0,
       tipLeft: 0
     };
-    var tipsG = $eleLayer.find(".layui-layer-TipsG");
-    const [direction, customColor] = config.tips || ["1", ""];
-    if (!customColor) {
-      tipsG.remove();
+    if (config.openAtPoint) {
+      const { top, left } = config.openAtPoint;
+      followInfo.top = top;
+      followInfo.left = left;
     }
+    var $tipsG = $eleLayer.find(".layui-layer-TipsG");
+    const [direction, customColor] = config.tips || ["1", ""];
     function makeLeftAuto() {
       if (followInfo.left + tipsDomWidth - $win.width() > 0) {
         followInfo.tipLeft = followInfo.left + followInfo.width - tipsDomWidth;
-        tipsG.css({ right: 12, left: "auto" });
+        $tipsG.css({ right: 12, left: "auto" });
       } else {
         followInfo.tipLeft = followInfo.left;
       }
@@ -34240,26 +34093,26 @@ class ClassLayer {
       [LayerUtils.UP]() {
         makeLeftAuto();
         followInfo.tipTop = followInfo.top - tipsdomHeight - 10;
-        tipsG.removeClass("layui-layer-TipsB").addClass("layui-layer-TipsT").css("border-right-color", customColor);
-        followInfo.top - ($win.scrollTop() + tipsdomHeight + 8 * 2) < 0 && followInfo.where[2]();
+        $tipsG.removeClass("layui-layer-TipsB").addClass("layui-layer-TipsT").css("border-right-color", customColor);
+        followInfo.top - ($win.scrollTop() + tipsdomHeight + 8 * 2) < 0 && direction_strategy[2]();
       },
       [LayerUtils.RIGHT]() {
         followInfo.tipLeft = followInfo.left + followInfo.width + 10;
         followInfo.tipTop = followInfo.top;
-        tipsG.removeClass("layui-layer-TipsL").addClass("layui-layer-TipsR").css("border-bottom-color", customColor);
-        $win.width() - (followInfo.left + followInfo.width + tipsDomWidth + 8 * 2) > 0 || followInfo.where[3]();
+        $tipsG.removeClass("layui-layer-TipsL").addClass("layui-layer-TipsR").css("border-bottom-color", customColor);
+        $win.width() - (followInfo.left + followInfo.width + tipsDomWidth + 8 * 2) > 0 || direction_strategy[3]();
       },
       [LayerUtils.BOTTOM]() {
         makeLeftAuto();
         followInfo.tipTop = followInfo.top + followInfo.height + 10;
-        tipsG.removeClass("layui-layer-TipsT").addClass("layui-layer-TipsB").css("border-right-color", customColor);
-        followInfo.top - $win.scrollTop() + followInfo.height + tipsdomHeight + 8 * 2 - $win.height() > 0 && followInfo.where[0]();
+        $tipsG.removeClass("layui-layer-TipsT").addClass("layui-layer-TipsB").css("border-right-color", customColor);
+        followInfo.top - $win.scrollTop() + followInfo.height + tipsdomHeight + 8 * 2 - $win.height() > 0 && direction_strategy[4]();
       },
       [LayerUtils.LEFT]() {
         followInfo.tipLeft = followInfo.left - tipsDomWidth - 10;
         followInfo.tipTop = followInfo.top;
-        tipsG.removeClass("layui-layer-TipsR").addClass("layui-layer-TipsL").css("border-bottom-color", customColor);
-        tipsDomWidth + 8 * 2 - followInfo.left > 0 && followInfo.where[1]();
+        $tipsG.removeClass("layui-layer-TipsR").addClass("layui-layer-TipsL").css("border-bottom-color", customColor);
+        tipsDomWidth + 8 * 2 - followInfo.left > 0 && direction_strategy[1]();
       }
     };
     direction_strategy[direction] && direction_strategy[direction]();
@@ -34271,15 +34124,14 @@ class ClassLayer {
     $eleLayer.css({
       left: followInfo.tipLeft - $win.scrollLeft(),
       top: followInfo.tipTop - $win.scrollTop(),
-      transform: "scale(0)"
+      "transform-origin": [
+        $tipsG.hasClass("layui-layer-TipsT") ? "top" : "bottem",
+        $tipsG.hasClass("layui-layer-TipsL") ? "left" : "right"
+      ].join(" ")
     });
-    setTimeout(() => {
-      $eleLayer.css({
-        transform: "scale(1)",
-        visibility: "unset",
-        "z-index": 1
-      });
-    }, 200);
+    if (!customColor) {
+      $tipsG.remove();
+    }
   }
   onMoveOrResize() {
     var layerInstance = this;
@@ -34311,43 +34163,40 @@ class ClassLayer {
     });
     return layerInstance;
   }
-  addOperationListener() {
+  addLayerListener() {
     const layerInstance = this;
     const { $eleLayer, config } = layerInstance;
     if (config.success) {
       if (config.type == LayerUtils.IFRAME) {
         $eleLayer.find("iframe").on("load", function() {
-          config.success.call(this, $eleLayer, layerInstance._layerIndex);
+          config.success.call(this, $eleLayer, layerInstance._layerKey);
         });
       } else {
-        config.success($eleLayer, layerInstance._layerIndex);
+        config.success($eleLayer, layerInstance._layerKey);
       }
-    }
-    if (LayerUtils.ie == 6) {
-      layerInstance.IE6($eleLayer);
     }
     $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).children("a").on("click", function() {
       var index2 = $(this).index();
       if (index2 === 0) {
         if (config.yes) {
-          config.yes(layerInstance._layerIndex, $eleLayer);
+          config.yes(layerInstance._layerKey, $eleLayer);
         } else if (config["btn1"]) {
-          config["btn1"](layerInstance._layerIndex, $eleLayer);
+          config["btn1"](layerInstance._layerKey, $eleLayer);
         } else {
-          LayerUtils.close(layerInstance._layerIndex);
+          LayerUtils.close(layerInstance._layerKey);
         }
       } else {
-        var close = config["btn" + (index2 + 1)] && config["btn" + (index2 + 1)](layerInstance._layerIndex, $eleLayer);
-        close === false || LayerUtils.close(layerInstance._layerIndex);
+        var close = config["btn" + (index2 + 1)] && config["btn" + (index2 + 1)](layerInstance._layerKey, $eleLayer);
+        close === false || LayerUtils.close(layerInstance._layerKey);
       }
     });
     $eleLayer.find(`.${LAYUI_LAYER_CLOSE}`).on("click", async function handleClickCloseBtn() {
       var isClosed = false;
       if (config.cancel) {
-        isClosed = config.cancel(layerInstance._layerIndex, $eleLayer);
+        isClosed = config.cancel(layerInstance._layerKey, $eleLayer);
       }
       if (!isClosed) {
-        isClosed = await LayerUtils.close(layerInstance._layerIndex);
+        isClosed = await LayerUtils.close(layerInstance._layerKey);
       }
       if (!isClosed) {
         await LayerUtils.close($(this).attr("data-layer-id"));
@@ -34355,37 +34204,33 @@ class ClassLayer {
     });
     if (config.shadeClose) {
       layerInstance.$eleShade.on("click", function() {
-        LayerUtils.close(layerInstance._layerIndex);
+        LayerUtils.close(layerInstance._layerKey);
       });
     }
     $eleLayer.find(".layui-layer-min").on("click", function() {
-      var min = config.min && config.min($eleLayer, layerInstance._layerIndex);
-      min === false || LayerUtils.min(layerInstance._layerIndex, config);
+      var min = config.min && config.min($eleLayer, layerInstance._layerKey);
+      min === false || LayerUtils.min(layerInstance._layerKey, config);
     });
     $eleLayer.find(".layui-layer-max").on("click", function() {
       if ($(this).hasClass("layui-layer-maxmin")) {
-        LayerUtils.restore(layerInstance._layerIndex);
-        config.restore && config.restore($eleLayer, layerInstance._layerIndex);
+        LayerUtils.restore(layerInstance._layerKey);
+        config.restore && config.restore($eleLayer, layerInstance._layerKey);
       } else {
-        LayerUtils.full(layerInstance._layerIndex, config);
+        LayerUtils.full(layerInstance._layerKey, config);
         setTimeout(function() {
-          config.full && config.full($eleLayer, layerInstance._layerIndex);
+          config.full && config.full($eleLayer, layerInstance._layerKey);
         }, 100);
       }
     });
-    config.end && (READY.end[layerInstance._layerIndex] = config.end);
+    if (config.end) {
+      READY.end[layerInstance._layerKey] = config.end;
+    }
+    if (![LayerUtils.TIPS, LayerUtils.MSG, LayerUtils.LOADING].includes(
+      config.type
+    )) {
+      layerInstance.onMoveOrResize();
+    }
     return layerInstance;
-  }
-  IE6($eleLayer) {
-    $("select").each(function(index2, value) {
-      var sthis = $(this);
-      if (!sthis.parents("." + LAYUI_LAYER)[0]) {
-        sthis.css("display") === "none" || sthis.attr({
-          layer: "1"
-        }).hide();
-      }
-      sthis = null;
-    });
   }
 }
 LayerUtils.cache || {};
@@ -34396,7 +34241,7 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event) => {
 }).on(
   "mousemove",
   ".layui-layer-move",
-  _$1.throttle(function(e) {
+  privateLodash.throttle(function(e) {
     if (READY.moveOrResizeInstance instanceof ClassLayer) {
       const { $eleLayer, config } = READY.moveOrResizeInstance;
       if (READY.moveOrResizeType === "move") {
@@ -34449,8 +34294,8 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event) => {
   }
 });
 const TIMEOUT_DELAY = 200;
-const popverOptionsCollection = {};
-const popverIndexCollection = {};
+const tipsOptionsCollection = {};
+const tipsKeys = {};
 const appAddPlugin = {};
 const appDependState = {};
 const timer4CloseTips = {};
@@ -34463,7 +34308,7 @@ function fnShowTips({
   appId,
   event
 }) {
-  const options = popverOptionsCollection[followId] || {
+  const options = tipsOptionsCollection[followId] || {
     content: ""
   };
   if (!options.content) {
@@ -34486,11 +34331,27 @@ function fnShowTips({
     return;
   }
   let app;
+  const placement = (() => {
+    const placement_strategy = {
+      top: 1,
+      right: 2,
+      bottom: 3,
+      left: 4
+    };
+    return placement_strategy[options.placement || "top"];
+  })();
   let layerTipsOptions = {
-    tips: [LayerUtils.UP, "#fff"],
+    tips: [placement, "#fff"],
     during: 1e3 * 60 * 10
   };
-  if (_$1.isPlainObject(options.content)) {
+  const isOpenAtPoint = $ele.attr("data-open-at-point");
+  if (isOpenAtPoint) {
+    layerTipsOptions.openAtPoint = {
+      left: $ele.clientX,
+      top: $ele.clientY
+    };
+  }
+  if (privateLodash.isPlainObject(options.content)) {
     const id = `${followId}_content`;
     tipsContent = `<div id="${id}"></div>`;
     layerTipsOptions.success = function success(indexPanel, layerIndex) {
@@ -34510,22 +34371,22 @@ function fnShowTips({
   }
   setTimeout(() => {
     if (visibleArea[followId]) {
-      popverIndexCollection[followId] = LayerUtils.tips(tipsContent, `#${followId}`, layerTipsOptions);
+      tipsKeys[followId] = LayerUtils.tips(tipsContent, `#${followId}`, layerTipsOptions);
     }
-  }, options.delay || 240);
+  }, options.delay || 32);
 }
 function installPopoverDirective(app, appSettings) {
-  const appId = _$1.genId("appId");
+  const appId = privateLodash.genId("appId");
   appAddPlugin[appId] = appSettings.appPlugins;
   appDependState[appId] = appSettings.dependState;
   app.directive("uiPopover", {
     mounted(el, binding) {
-      var _a, _b, _c;
-      const followId = _$1.genId("xPopoverTarget");
+      var _a, _b, _c, _d;
+      const followId = privateLodash.genId("xPopoverTarget");
       const $ele = $(el);
       $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
       if (binding.value) {
-        popverOptionsCollection[followId] = binding.value;
+        tipsOptionsCollection[followId] = binding.value;
         if ((_a = binding.value) == null ? void 0 : _a.trigger) {
           $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
           const classStrategy = {
@@ -34533,13 +34394,16 @@ function installPopoverDirective(app, appSettings) {
           };
           $ele.addClass(classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer");
         }
+        if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
+          $ele.attr("data-open-at-point", true);
+        }
       }
     },
     unmounted(el) {
       const followId = $(el).attr(DATA_FOLLOW_ID);
-      LayerUtils.close(popverIndexCollection[followId]);
-      delete popverOptionsCollection[followId];
-      delete popverIndexCollection[followId];
+      LayerUtils.close(tipsKeys[followId]);
+      delete tipsOptionsCollection[followId];
+      delete visibleArea[followId];
     }
   });
 }
@@ -34553,10 +34417,11 @@ function inVisibleArea(followId) {
 function closeTips(followId, options = {}) {
   delete visibleArea[followId];
   timer4CloseTips[followId] = setTimeout(() => {
-    const layerIndex = popverIndexCollection[followId];
-    if (typeof layerIndex === "number") {
+    const layerIndex = tipsKeys[followId];
+    if (layerIndex) {
       LayerUtils.close(layerIndex).then(() => {
-        delete popverIndexCollection[followId];
+        delete tipsKeys[followId];
+        delete timer4CloseTips[followId];
       });
     }
   }, TIMEOUT_DELAY);
@@ -34567,7 +34432,7 @@ function handleClick(event) {
   const followId = $ele.attr(DATA_FOLLOW_ID);
   const appId = $ele.attr(DATA_APP_ID);
   visibleArea[followId] = true;
-  if (popverIndexCollection[followId]) {
+  if (tipsKeys[followId]) {
     closeTips(followId);
   } else {
     fnShowTips({
@@ -34588,7 +34453,7 @@ $(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event) {
   } else {
     const appId = $ele.attr(DATA_APP_ID);
     inVisibleArea(followId);
-    if (popverIndexCollection[followId]) {
+    if (tipsKeys[followId]) {
       return;
     }
     if ($ele.attr("data-trigger") === "click") {
@@ -34631,7 +34496,6 @@ const installUIDialogComponent = (UI2, {
     let $container = $("<div/>", {
       id
     });
-    $container.appendTo($("body"));
     const __elId = `#${id}`;
     if (dialogOptions.yes) {
       dialogOptions._yes = dialogOptions.yes;
@@ -34656,7 +34520,7 @@ const installUIDialogComponent = (UI2, {
         handleEcsPress = null;
       }
     };
-    LayerUtils.open(_$1.merge({
+    LayerUtils.open(privateLodash.merge({
       contentClass: "flex1",
       type: 1,
       title: [title || ""],
@@ -34726,7 +34590,7 @@ const installUIDialogComponent = (UI2, {
                 if (this.dialogOptions.hideButtons) {
                   return null;
                 }
-                if (_$1.isFunction(this.dialogOptions.renderButtons)) {
+                if (privateLodash.isFunction(this.dialogOptions.renderButtons)) {
                   let vDomButtons = (() => {
                     let _vDomButtons = this.dialogOptions.renderButtons(this);
                     if (!_vDomButtons) {
@@ -34830,10 +34694,10 @@ function defItem(options) {
     options.prop = `xItem${xItemNoPropCount++}`;
     console.error(`no xItem prop replace by ${options.prop}`);
   }
-  if (!_$1.isInput(options.isShow)) {
+  if (!privateLodash.isInput(options.isShow)) {
     options.isShow = true;
   }
-  const configs = reactive(_$1.merge({
+  const configs = reactive(privateLodash.merge({
     itemTips: {},
     itemType: options.itemType || "Input"
   }, {
@@ -34885,7 +34749,7 @@ function antColKey(prop, makeRenderCell) {
 }
 const get$head = () => {
   let $head = $("html head");
-  if (!_$1.is$Selected($head)) {
+  if (!privateLodash.is$Selected($head)) {
     $head = $("<head/>");
     $head.prependTo($("html"));
   }
@@ -34894,7 +34758,7 @@ const get$head = () => {
 const get$title = () => {
   let $head = get$head();
   let $title = $head.find("title");
-  if (!_$1.is$Selected($title)) {
+  if (!privateLodash.is$Selected($title)) {
     $title = $("<title/>");
     $title.prependTo($head);
   }
@@ -34903,7 +34767,7 @@ const get$title = () => {
 const get$cssVariables = () => {
   let $head = get$head();
   let $cssVariables = $head.find("#cssVariables");
-  if (!_$1.is$Selected($cssVariables)) {
+  if (!privateLodash.is$Selected($cssVariables)) {
     $cssVariables = $("<style/>", { id: "cssVariables" });
     $cssVariables.appendTo($head);
   }
@@ -34914,19 +34778,16 @@ const setDocumentTitle = (title) => {
 };
 const setCSSVariables = (colors) => {
   let $cssVariables = get$cssVariables();
-  const cssContent = _$1.map(colors, (value, prop) => `--${prop}:${value}`).join(
-    ";"
-  );
+  const cssContent = privateLodash.map(colors, (value, prop) => `--${prop}:${value}`).join(";");
   $cssVariables.text(`:root{${cssContent}}`);
 };
 const pickValueFrom = (configs) => {
-  return _$1.reduce(
+  return privateLodash.reduce(
     configs,
     (target, config, prop) => {
       try {
         target[prop] = JSON.parse(JSON.stringify(config.value));
       } catch (error) {
-        console.error(error);
       }
       return target;
     },
@@ -34934,7 +34795,7 @@ const pickValueFrom = (configs) => {
   );
 };
 const setValueTo = (configs, values) => {
-  return _$1.map(
+  return privateLodash.map(
     values,
     (value, prop) => {
       if (configs[prop]) {
@@ -34945,7 +34806,7 @@ const setValueTo = (configs, values) => {
   );
 };
 const resetValueOf = (state, initState) => {
-  _$1.each(initState, (value, prop) => {
+  privateLodash.each(initState, (value, prop) => {
     state[prop] = JSON.parse(JSON.stringify(value));
   });
   return state;
@@ -34953,7 +34814,7 @@ const resetValueOf = (state, initState) => {
 const useModel = (type2) => {
   return ({
     title = "",
-    content: content2 = ""
+    content = ""
   }) => {
     return new Promise((resolve, reject) => {
       title = ((isDefault) => {
@@ -34976,7 +34837,7 @@ const useModel = (type2) => {
           "type": "image/svg+xml",
           "href": "/ExclamationCircleOutlined.svg"
         }, null),
-        content: content2,
+        content,
         onOk() {
           resolve("ok");
         },
@@ -35025,17 +34886,17 @@ const UI = {
     },
     delete({
       title,
-      content: content2
+      content
     } = {}) {
       title = title || State_UI.$t("\u5220\u9664").label;
-      content2 = content2 || State_UI.$t("\u5220\u9664\u786E\u8BA4\u63D0\u793A").label;
+      content = content || State_UI.$t("\u5220\u9664\u786E\u8BA4\u63D0\u793A").label;
       return new Promise((resolve, reject) => {
         Modal.confirm({
           title,
           icon: createVNode(resolveComponent("ExclamationCircleOutlined"), {
             "style": "color:red"
           }, null),
-          content: content2,
+          content,
           okType: "danger",
           okText: State_UI.$t("\u786E\u5B9A").label,
           cancelText: State_UI.$t("\u53D6\u6D88").label,
@@ -35056,7 +34917,7 @@ const UI = {
       return new Proxy(m, {
         apply(target2, thisArg, argArray) {
           if (typeof argArray[0] === "string") {
-            argArray[0] = _$1.merge({
+            argArray[0] = vUtils.merge({
               message: argArray[0]
             }, argArray[1] || {});
           }
@@ -35093,8 +34954,8 @@ function compileVNode(template, state) {
   const render2 = compile(template);
   return render2.call(state, state);
 }
-window.dayjs = dayjs$1;
-window.moment = dayjs$1;
+window.dayjs = dayjs;
+window.moment = dayjs;
 window.jquery = $;
 const componentMyUI = {
   xButton,
@@ -35122,11 +34983,11 @@ const VentoseUIWithInstall = {
     installDirective(app);
     installPopoverDirective(app, options);
     installUIDialogComponent(UI, options);
-    _$1.each(components, (component, name) => {
+    privateLodash.each(components, (component, name) => {
       if (component.name) {
         name = component.name;
       } else {
-        _$1.doNothing(name, `miss name`);
+        privateLodash.doNothing(name, `miss name`);
       }
       app.component(component.name || name, component);
     });
@@ -35142,24 +35003,22 @@ export {
   RegexFn,
   State_UI,
   UI,
-  Utils,
   VNodeCollection,
   VentoseUIWithInstall,
-  default3 as _,
   antColKey,
   compileVNode,
   components,
-  default4 as dayjs,
+  default3 as dayjs,
   defCol,
   defColActions,
   defColActionsBtnlist,
   defDataGridOption,
   defItem,
   defPagination,
-  defineXVirTableConfigs,
+  defXVirTableConfigs,
   getPaginationPageSize,
   lStorage,
-  default5 as moment,
+  default4 as moment,
   pickValueFrom,
   resetValueOf,
   setCSSVariables,
@@ -35168,5 +35027,6 @@ export {
   setPagination,
   setValueTo,
   vModel,
+  privateLodash as vUtils,
   validateForm
 };

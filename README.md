@@ -24,7 +24,9 @@
 在编辑sfc文件时，可以手工使用vue的高亮语法。之所以不用vue后缀，是因为以后可能还有其他的解析，不与官方的混淆。
 ![](README.md_assets/2022-12-07-15-50-24.png)
 
+## dev
 
+`___VENTOSE_UI_IS_DEV_MODE`
 
 ## Reference
 
