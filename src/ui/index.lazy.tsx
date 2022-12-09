@@ -42,7 +42,7 @@ import {
 /* 表单提示信息 */
 import "ant-design-vue/es/form/style/index.css";
 import $ from "jquery";
-import { installPopoverDirective } from "./xSingle/popover";
+import { installPopoverDirective } from "./xSingle/directive/popover";
 import xRender from "./xRender/xRender.jsx";
 import xItem from "./xForm/xItem.vue";
 import xForm from "./xForm/xForm.vue";

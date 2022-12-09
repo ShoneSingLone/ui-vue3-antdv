@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { defineComponent, h, reactive, markRaw } from "vue";
-import { State_UI, xU, UI, compileVNode, defCol, Utils } from "../ui";
+import { State_UI, xU, UI, compileVNode, defCol, $ } from "../ui";
 import { DialogSourceCode } from "./DialogSourceCode";
 import { defXVirTableConfigs } from "./../ui/xDataGrid/xVirTable/xVirTable";
 const { $t } = State_UI;
@@ -38,7 +38,8 @@ export const DemoAndCode = defineComponent({
 					UI,
 					compileVNode,
 					defXVirTableConfigs,
-					defCol
+					defCol,
+					$
 				}
 			);
 

@@ -28,7 +28,7 @@ import { xU } from "./ventoseUtils";
 import { State_UI, Cpt_UI_locale } from "./State_UI";
 import dayjs from "dayjs";
 import { RegexFn, FormRules } from "./xForm/FormRules";
-import { installPopoverDirective } from "./xSingle/popover";
+import { installPopoverDirective } from "./xSingle/directive/popover";
 import { installUIDialogComponent } from "./xSingle/dialog/dialog";
 import { installDirective } from "./directive";
 
@@ -121,7 +121,6 @@ export { compileVNode as compileVNode };
 export const VentoseUIWithInstall = {
 	install: (app, options /* {appPlugins,dependState} */) => {
 		installDirective(app, options);
-		installPopoverDirective(app, options);
 		installUIDialogComponent(UI, options);
 		xU.each(components, (component, name) => {
 			if (component.name) {

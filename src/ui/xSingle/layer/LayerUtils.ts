@@ -4,6 +4,7 @@
 import $ from "jquery";
 import { xU } from "../../ventoseUtils";
 import { i_layerOptions } from "./i_layerOptions";
+
 export const KEY = {
 	right: 39,
 	left: 37,
@@ -22,6 +23,8 @@ const $body = $("body");
 
 /* 缓存常用字符 */
 export const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
+export const DATA_V_UI_MOVE = "data-directive-ui-move";
+
 const TYPE_DIALOG = "dialog";
 const TYPE_PAGE = "page";
 const TYPE_IFRAME = "iframe";
@@ -45,9 +48,15 @@ const DOMS_ANIM = [
 	"layer-anim-06"
 ];
 
-const READY: {
+
+export const $MoveMask: JQuery = $(`<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`);
+setTimeout(() => {
+	$body.append($MoveMask);
+}, 0);
+
+
+export const READY: {
 	zIndex: number;
-	$moveMask: JQuery;
 	/* layerInstanceForMoveOrResize */
 	moveOrResizeInstance: any;
 	moveOrResizeWH: any[];
@@ -747,12 +756,6 @@ class ClassLayer {
 </div>`;
 	}
 
-	get cptDomMoveMask() {
-		return $(
-			`<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
-		);
-	}
-
 	initConfig(custumSettings: i_layerOptions) {
 		const layerInstance = this;
 		layerInstance.config = Object.assign(layerInstance.config, custumSettings);
@@ -914,10 +917,6 @@ class ClassLayer {
 		/* 容器 */
 		const layerInstance = this;
 		/* moving 的遮罩是单例 */
-		if (!READY.$moveMask) {
-			READY.$moveMask = $(layerInstance.cptDomMoveMask);
-			$body.append(READY.$moveMask);
-		}
 		const { config, _layerKey, _IDShade } = layerInstance;
 		layerInstance.$eleLayer = $(layerInstance.cptDomContainer);
 		/*  */
@@ -1165,7 +1164,7 @@ class ClassLayer {
 					e.clientX - parseFloat($eleLayer.css("left")),
 					e.clientY - parseFloat($eleLayer.css("top"))
 				];
-				READY.$moveMask.css("cursor", "move").show();
+				$MoveMask.css("cursor", "move").show();
 			}
 		});
 
@@ -1176,7 +1175,7 @@ class ClassLayer {
 			READY.moveOrResizeType = "resize";
 			READY.pointMousedown = [e.clientX, e.clientY];
 			READY.moveOrResizeWH = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
-			READY.$moveMask.css("cursor", "se-resize").show();
+			$MoveMask.css("cursor", "se-resize").show();
 		});
 
 		return layerInstance;
@@ -1274,7 +1273,7 @@ class ClassLayer {
 }
 
 var cache = LayerUtils.cache || {};
-
+/* eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee */
 /* 点击层zIndex在最上层 */
 $document
 	.on("click.setLayerTop", "[layer-wrapper]", event => {
@@ -1284,12 +1283,14 @@ $document
 	})
 	.on(
 		"mousemove",
-		".layui-layer-move",
+		`.${LAYUI_LAYER_MOVE}`,
 		xU.throttle(function (e) {
+
+			const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
 			/* 拖拽移动 */
-			if (READY.moveOrResizeInstance instanceof ClassLayer) {
-				const { $eleLayer, config } = READY.moveOrResizeInstance;
-				if (READY.moveOrResizeType === "move") {
+			if (moveOrResizeInstance instanceof ClassLayer) {
+				const { $eleLayer, config } = moveOrResizeInstance;
+				if (moveOrResizeType === "move") {
 					e.preventDefault();
 					let X = e.clientX - READY.pointMousedown[0];
 					let Y = e.clientY - READY.pointMousedown[1];
@@ -1336,20 +1337,22 @@ $document
 						config.onResizing && config.onResizing($eleLayer);
 					}
 				}
+			} else if (typeof onMoving == 'function') {
+				onMoving(event)
 			}
 
 			/* Resize */
 		}, 100)
 	)
-	.on("mouseup", ".layui-layer-move", function (e) {
+	.on("mouseup", function (e) {
 		if (READY.moveOrResizeInstance instanceof ClassLayer) {
 			const { config } = READY.moveOrResizeInstance;
 			if (config.onMoveEnd) {
 				config.onMoveEnd(READY.moveOrResizeInstance);
 			}
 			READY.moveOrResizeInstance = false;
-			READY.$moveMask.hide();
 		}
+		$MoveMask.hide();
 	});
 
 /* 暴露模块 */

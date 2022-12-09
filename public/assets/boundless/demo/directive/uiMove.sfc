@@ -1,0 +1,51 @@
+<template>
+	<mkit md="## title" />
+	<div
+		class="elevation-2"
+		style="
+			width: 500px;
+			height: 500px;
+			border: 1px solid #d0d0e7;
+			border-radius: 10px;
+			padding: 10px;
+			position: relative;
+		">
+		<div
+			v-uiMove="configsResize"
+			style="
+				width: 50px;
+				height: 50px;
+				background: gray;
+				border-radius: 4px;
+				position: absolute;
+				top: 0;
+				left: 0;
+			"></div>
+	</div>
+</template>
+
+<script>
+async function sfc({ defineComponent, markRaw, State_UI, xU, UI, $ }) {
+	/* 查看DemoAndCode组件传入的变量 */
+	const { $t } = State_UI;
+
+	return defineComponent({
+		TEMPLATE_PLACEHOLDER,
+		setup() {},
+		data() {
+			return {
+				configsResize: {
+					onMoving({ $ele, clickEvent, movingEvent }) {
+						const offset = $ele.offset();
+						const left = offset.left + movingEvent.clientX - clickEvent.clientX;
+						const top = offset.top + movingEvent.clientY - clickEvent.clientY;
+						console.log(left, top);
+						$ele.css({ left, top });
+					}
+				}
+			};
+		},
+		methods: {}
+	});
+}
+</script>

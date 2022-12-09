@@ -1,9 +1,8 @@
-//@ts-nocheck
 import $ from "jquery";
-import { LayerUtils, DATA_TIPS_FOLLOW_ID } from "./layer/LayerUtils";
-import { i_layerOptions } from "./layer/i_layerOptions";
-import { xU } from "../ventoseUtils";
 import { createApp } from "vue";
+import { xU } from "../ventoseUtils";
+import { DATA_TIPS_FOLLOW_ID, LayerUtils } from "../xSingle/layer/LayerUtils";
+import { appAddPlugin, appDependState, DATA_APP_ID, DATA_FOLLOW_ID, timer4CloseTips, visibleArea } from "./directiveState";
 type t_trigger = "click" | "rightClick";
 type t_uiPopoverOptions = {
 	content: string;
@@ -19,13 +18,6 @@ const tipsOptionsCollection: {
 const tipsKeys: {
 	[prop: string]: Number;
 } = {};
-const appAddPlugin: any = {};
-const appDependState: any = {};
-const timer4CloseTips: any = {};
-const visibleArea: any = {};
-
-const DATA_APP_ID = "data-app-id";
-const DATA_FOLLOW_ID = "data-follow-id";
 
 function fnShowTips({ $ele, followId, appId, event }: any) {
 	const options = tipsOptionsCollection[followId] || { content: "" };
@@ -62,6 +54,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			bottom: 3,
 			left: 4
 		};
+		/* @ts-ignore */
 		return placement_strategy[options.placement || "top"];
 	})();
 	let layerTipsOptions: i_layerOptions = {
@@ -73,6 +66,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 
 	const isOpenAtPoint = $ele.attr("data-open-at-point");
 	if (isOpenAtPoint) {
+		/* @ts-ignore */
 		layerTipsOptions.openAtPoint = {
 			left: $ele.clientX,
 			top: $ele.clientY
@@ -84,10 +78,13 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 		const id = `${followId}_content`;
 		/* 桩 */
 		tipsContent = `<div id="${id}"></div>`;
+		/* @ts-ignore */
 		layerTipsOptions.success = function success(indexPanel, layerIndex) {
+			/* @ts-ignore */
 			app = createApp(options.content);
 			app.use(appAddPlugin[appId], { dependState: appDependState[appId] });
 			app.mount(`#${id}`);
+			/* @ts-ignore */
 			options.afterOpenDialoag && options.afterOpenDialoag(app);
 		};
 		layerTipsOptions.end = function end() {
@@ -107,6 +104,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 			);
 		}
 		/* 如果delay之后还存在，再展示 */
+		/* @ts-ignore */
 	}, options.delay || 32);
 }
 
@@ -117,6 +115,7 @@ export function installPopoverDirective(app: any, appSettings: any) {
 	appDependState[appId] = appSettings.dependState;
 
 	app.directive("uiPopover", {
+		/* @ts-ignore */
 		mounted(el: HTMLInputElement, binding) {
 			const followId = xU.genId("xPopoverTarget");
 			const $ele = $(el);
@@ -132,17 +131,20 @@ export function installPopoverDirective(app: any, appSettings: any) {
 					const classStrategy = {
 						rightClick: "pointer-right-click"
 					};
+					/* @ts-ignore */
 					$ele.addClass(classStrategy[binding.value?.trigger] || "pointer");
 				}
 				/* 弹窗在click的点 */
 				if (binding.value?.openAtPoint) {
+					/* @ts-ignore */
 					$ele.attr("data-open-at-point", true);
 				}
 			}
 		},
 		unmounted(el: HTMLInputElement) {
 			const followId: any = $(el).attr(DATA_FOLLOW_ID);
-			if (typeof tipsKeys[followId] == 'string') {
+			if (typeof tipsKeys[followId] == 'string' && tipsKeys[followId]) {
+				/* @ts-ignore */
 				LayerUtils.close(tipsKeys[followId]);
 			}
 			delete tipsOptionsCollection[followId];
@@ -165,6 +167,7 @@ function closeTips(followId: string, options = {}) {
 	timer4CloseTips[followId] = setTimeout(() => {
 		const layerIndex = tipsKeys[followId];
 		if (layerIndex) {
+			/* @ts-ignore */
 			LayerUtils.close(layerIndex).then(() => {
 				delete tipsKeys[followId];
 				delete timer4CloseTips[followId];
@@ -175,8 +178,9 @@ function closeTips(followId: string, options = {}) {
 
 /* listener */
 
-function handleClick(event) {
+function handleClick(event: any) {
 	event.preventDefault();
+	/* @ts-ignore */
 	const $ele: any = $(this);
 	const followId = $ele.attr(DATA_FOLLOW_ID);
 	const appId = $ele.attr(DATA_APP_ID);
@@ -230,6 +234,7 @@ $(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
 $(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function (event) {
 	const followId = $(this).attr(DATA_FOLLOW_ID);
 	/*如果鼠标又移动到TIPS范围内，则不close*/
+	/* @ts-ignore */
 	closeTips(followId);
 });
 
@@ -242,6 +247,7 @@ $(document).on(
 	`[${DATA_TIPS_FOLLOW_ID}]`,
 	function (event) {
 		const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
+		/* @ts-ignore */
 		inVisibleArea(followId);
 	}
 );
