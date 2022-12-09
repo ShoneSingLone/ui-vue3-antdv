@@ -57,14 +57,14 @@
 ```js
 const genMenu = () => {
 	const MenuItemRender = menuInfo => {
-		if (vUtils.isArrayFill(menuInfo.children)) {
+		if (xU.isArrayFill(menuInfo.children)) {
 			/* 第一种 */
 			return (
 				<SubMenu
 					v-slots={{
 						icon: () => <AppleOutlined />,
 						title: () => menuInfo.label,
-						default: () => vUtils.map(menuInfo.children, MenuItemRender)
+						default: () => xU.map(menuInfo.children, MenuItemRender)
 					}}
 				/>
 			);
@@ -80,7 +80,7 @@ const genMenu = () => {
 			);
 		}
 	};
-	return vUtils.map(props.tree, MenuItemRender);
+	return xU.map(props.tree, MenuItemRender);
 };
 ```
 

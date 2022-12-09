@@ -1,6 +1,6 @@
 //@ts-nocheck
 
-import { vUtils } from "../../ventoseUtils";
+import { xU } from "../../ventoseUtils";
 import $ from "jquery";
 import { LayerUtils, KEY } from "../layer/LayerUtils";
 import { createApp, defineComponent, reactive, h } from "vue";
@@ -60,7 +60,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 			};
 
 			LayerUtils.open(
-				vUtils.merge(
+				xU.merge(
 					{
 						/* 传入自定义样式 */
 						contentClass: "flex1",
@@ -142,7 +142,7 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 													return null;
 												}
 												if (
-													vUtils.isFunction(this.dialogOptions.renderButtons)
+													xU.isFunction(this.dialogOptions.renderButtons)
 												) {
 													/* 提供 handleClickOk、handleClickCancel*/
 													let vDomButtons = (() => {

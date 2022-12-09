@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { defineComponent } from "vue";
-import { vUtils } from "../../ventoseUtils";
+import { xU } from "../../ventoseUtils";
 import { usefnObserveDomResize } from "../../compositionAPI/useDomResize";
 import { xVirTableTd } from "./xVirTableTd";
 
@@ -49,7 +49,7 @@ export const xVirTableBody = defineComponent({
 	computed: {
 		fnIsSelected() {
 			const { isSelect, prop } = this.selectedConfigs || {};
-			if (vUtils.isFunction(isSelect)) {
+			if (xU.isFunction(isSelect)) {
 				return args => {
 					return isSelect.call(this, args);
 				};
@@ -62,7 +62,7 @@ export const xVirTableBody = defineComponent({
 		},
 		fnIsDisabled() {
 			const { isDisabled } = this.selectedConfigs || {};
-			if (vUtils.isFunction(isDisabled)) {
+			if (xU.isFunction(isDisabled)) {
 				return () => {
 					return isDisabled.call(this, args);
 				};
@@ -155,14 +155,14 @@ export const xVirTableBody = defineComponent({
 			}px)`;
 		},
 		vDomBodyTr1() {
-			return vUtils.map(this.virs1, (data: object, rowIndex: number) => {
+			return xU.map(this.virs1, (data: object, rowIndex: number) => {
 				return (
 					<div
 						role="tr"
 						class="xVirTable-row flex horizon"
 						data-row-key={rowIndex}>
 						{this.genSelectedVDom({ rowIndex, rowData: data })}
-						{vUtils.map(this.columnOrder, (prop: string, index: number) => {
+						{xU.map(this.columnOrder, (prop: string, index: number) => {
 							return (
 								<xVirTableTd
 									column={this.columns[prop]}
@@ -177,14 +177,14 @@ export const xVirTableBody = defineComponent({
 			});
 		},
 		vDomBodyTr2() {
-			return vUtils.map(this.virs2, (data: object, rowIndex: number) => {
+			return xU.map(this.virs2, (data: object, rowIndex: number) => {
 				return (
 					<div
 						role="tr"
 						class="xVirTable-row flex horizon"
 						data-row-key={rowIndex}>
 						{this.genSelectedVDom({ rowIndex, rowData: data })}
-						{vUtils.map(this.columnOrder, (prop: string, index: number) => {
+						{xU.map(this.columnOrder, (prop: string, index: number) => {
 							return (
 								<xVirTableTd
 									column={this.columns[prop]}
@@ -199,14 +199,14 @@ export const xVirTableBody = defineComponent({
 			});
 		},
 		vDomBodyTr3() {
-			return vUtils.map(this.virs3, (data: object, rowIndex: number) => {
+			return xU.map(this.virs3, (data: object, rowIndex: number) => {
 				return (
 					<div
 						role="tr"
 						class="xVirTable-row flex horizon"
 						data-row-key={rowIndex}>
 						{this.genSelectedVDom({ rowIndex, rowData: data })}
-						{vUtils.map(this.columnOrder, (prop: string, index: number) => {
+						{xU.map(this.columnOrder, (prop: string, index: number) => {
 							return (
 								<xVirTableTd
 									column={this.columns[prop]}
@@ -233,7 +233,7 @@ export const xVirTableBody = defineComponent({
 				this.emitSelectedChange(e.target.checked, rowInfo.rowData[prop]);
 			};
 			let vDomChecked;
-			if (vUtils.isString(isDisabled)) {
+			if (xU.isString(isDisabled)) {
 				isDisabled = true;
 				const uiPopoverConfigs = { content: isDisabled };
 				vDomChecked = (
@@ -266,13 +266,13 @@ export const xVirTableBody = defineComponent({
 		emitSelectedChange(checked, id) {
 			this.$emit("selectedChange", { checked, id });
 		},
-		setPerBlockHeight: vUtils.debounce(function (viewportHeight: number) {
+		setPerBlockHeight: xU.debounce(function (viewportHeight: number) {
 			this.viewportHeight = viewportHeight;
 			this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
 			this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
 			this.setHeight();
 		}, 64),
-		setTop: vUtils.debounce(function () {
+		setTop: xU.debounce(function () {
 			if (this.$refs.refWrapper) {
 				this.$refs.refWrapper.scrollTo({
 					top: this.top,

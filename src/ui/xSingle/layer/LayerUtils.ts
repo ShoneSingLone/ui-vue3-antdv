@@ -2,7 +2,7 @@
 
 /* https://www.layuiweb.com/doc/modules/layer.html#closeBtn */
 import $ from "jquery";
-import { vUtils } from "../../ventoseUtils";
+import { xU } from "../../ventoseUtils";
 import { i_layerOptions } from "./i_layerOptions";
 export const KEY = {
 	right: 39,
@@ -187,7 +187,7 @@ const LayerUtils = {
 		);
 	},
 	confirm(content, options, yes, cancel) {
-		if (vUtils.isFunction(options)) {
+		if (xU.isFunction(options)) {
 			cancel = yes;
 			yes = options;
 		}
@@ -205,7 +205,7 @@ const LayerUtils = {
 	},
 	msg(content, options: i_layerOptions, end = () => null) {
 		/*最常用提示层*/
-		var isOptionsIsFunction = vUtils.isFunction(options),
+		var isOptionsIsFunction = xU.isFunction(options),
 			rskin = READY.config.skin;
 		var skin = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
 		var anim = DOMS_ANIM.length - 1;
@@ -653,11 +653,11 @@ class ClassLayer {
 				config.btn = [config.btn, ""];
 			}
 			/* 没一个能用,则不显示 */
-			if (vUtils.every(config.btn, i => !i)) {
+			if (xU.every(config.btn, i => !i)) {
 				return "";
 			}
 
-			const domButtons = vUtils.reduce(
+			const domButtons = xU.reduce(
 				config.btn,
 				(domButtonString, label) => {
 					if (label) {
@@ -764,7 +764,7 @@ class ClassLayer {
 
 		const { config } = layerInstance;
 		/* 随layer 的增减变动 */
-		layerInstance._layerKey = vUtils.genId("");
+		layerInstance._layerKey = xU.genId("");
 		layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
 		layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerKey}`;
 		layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerKey}`;
@@ -849,7 +849,7 @@ class ClassLayer {
 
 	/* 调整位置并显示 */
 	async setLayerPosition() {
-		await vUtils.sleep(34);
+		await xU.sleep(34);
 		const layerInstance = this;
 		const { config, _layerKey } = layerInstance;
 		/* 首次弹出时，若 css 尚未加载，则等待 css 加载完毕后，重新设定尺寸 */
@@ -922,9 +922,9 @@ class ClassLayer {
 		layerInstance.$eleLayer = $(layerInstance.cptDomContainer);
 		/*  */
 		if (
-			vUtils.isObject(config.content) &&
-			(vUtils.isString(config.content) ||
-				vUtils.isString(config.content.jquery))
+			xU.isObject(config.content) &&
+			(xU.isString(config.content) ||
+				xU.isString(config.content.jquery))
 		) {
 			const $content = $(config.content);
 			layerInstance.$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
@@ -1285,7 +1285,7 @@ $document
 	.on(
 		"mousemove",
 		".layui-layer-move",
-		vUtils.throttle(function (e) {
+		xU.throttle(function (e) {
 			/* 拖拽移动 */
 			if (READY.moveOrResizeInstance instanceof ClassLayer) {
 				const { $eleLayer, config } = READY.moveOrResizeInstance;

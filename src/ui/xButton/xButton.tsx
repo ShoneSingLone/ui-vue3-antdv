@@ -1,7 +1,7 @@
 //@ts-nocheck
 
 import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import { State_UI } from "../State_UI";
 import { Button } from "ant-design-vue";
 
@@ -83,11 +83,11 @@ export default defineComponent({
 			return this.configs.type;
 		},
 		title() {
-			if (vUtils.isString(this.disabled) && this.disabled.length > 0) {
+			if (xU.isString(this.disabled) && this.disabled.length > 0) {
 				return this.disabled;
 			}
 			if (
-				vUtils.isString(this.configs.title) &&
+				xU.isString(this.configs.title) &&
 				this.configs.title.length > 0
 			) {
 				return this.configs.title;
@@ -95,21 +95,21 @@ export default defineComponent({
 			return false;
 		},
 		disabled() {
-			if (vUtils.isBoolean(this.configs.disabled)) {
+			if (xU.isBoolean(this.configs.disabled)) {
 				return this.configs.disabled;
 			}
-			if (vUtils.isFunction(this.configs.disabled)) {
+			if (xU.isFunction(this.configs.disabled)) {
 				return this.configs.disabled(this);
 			}
 			return false;
 		},
 		text() {
 			/* slot优先 */
-			if (vUtils.isFunction(this.$slots?.default)) {
+			if (xU.isFunction(this.$slots?.default)) {
 				return this.$slots.default(this);
 			}
 			/* text作为render */
-			if (vUtils.isFunction(this.configs.text)) {
+			if (xU.isFunction(this.configs.text)) {
 				return this.configs.text(this) || "";
 			}
 			/* text 作为 string */
@@ -127,7 +127,7 @@ export default defineComponent({
 	created() {},
 	methods: {
 		async onClick() {
-			if (vUtils.isFunction(this?.configs?.onClick)) {
+			if (xU.isFunction(this?.configs?.onClick)) {
 				this.loading = true;
 				try {
 					await this.configs.onClick.call(this.configs, this);
@@ -140,7 +140,7 @@ export default defineComponent({
 		}
 	},
 	render(h) {
-		const configs = vUtils.omit(this.configs, ["text", "onClick", "disabled"]);
+		const configs = xU.omit(this.configs, ["text", "onClick", "disabled"]);
 		if (this.title) {
 			configs.title = this.title;
 		}

@@ -1,6 +1,6 @@
 <script lang="jsx">
 import { defineComponent } from "vue";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import $ from "jquery";
 
 export default defineComponent({
@@ -23,9 +23,9 @@ export default defineComponent({
 			return `xForm_${this._.uid}`;
 		},
 		labelStyleText() {
-			return vUtils
+			return xU
 				.map(
-					vUtils.merge(
+					xU.merge(
 						{ width: "120px", "text-align": "right" },
 						this.labelStyle
 					),

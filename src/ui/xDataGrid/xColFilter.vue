@@ -1,6 +1,6 @@
 <script lang="jsx">
 import { defineComponent } from "vue";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import { filterColIsShow } from "./common";
 
 export default defineComponent({
@@ -15,8 +15,8 @@ export default defineComponent({
 	},
 	methods: {
 		handleChecked(col) {
-			const target = vUtils.find(this.configs.columns, { key: col.key });
-			target.isShow = vUtils.isBoolean(target.isShow) ? !target.isShow : false;
+			const target = xU.find(this.configs.columns, { key: col.key });
+			target.isShow = xU.isBoolean(target.isShow) ? !target.isShow : false;
 		}
 	},
 	computed: {
@@ -26,21 +26,21 @@ export default defineComponent({
 				if (this.configs.columns_order) {
 					return this.configs.columns_order;
 				} else {
-					return vUtils.map(this.configs.columns, i => i.prop);
+					return xU.map(this.configs.columns, i => i.prop);
 				}
 			})();
-			return vUtils.filter(order, i => !!i);
+			return xU.filter(order, i => !!i);
 		},
 
 		/*列*/
 		Cpt_Columns() {
-			return vUtils.map(this.Cpt_ColumnsOrder, prop =>
-				vUtils.find(this.configs.columns, { prop })
+			return xU.map(this.Cpt_ColumnsOrder, prop =>
+				xU.find(this.configs.columns, { prop })
 			);
 		},
 
 		checkedList() {
-			return vUtils.filter(this.Cpt_ColumnsOrder, prop => {
+			return xU.filter(this.Cpt_ColumnsOrder, prop => {
 				const { isShow } = this.configs.columns[prop];
 				return filterColIsShow(isShow, prop);
 			});

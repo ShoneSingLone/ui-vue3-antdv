@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { defineComponent, h, reactive, markRaw } from "vue";
-import { State_UI, vUtils, UI, compileVNode, defCol, Utils } from "../ui";
+import { State_UI, xU, UI, compileVNode, defCol, Utils } from "../ui";
 import { DialogSourceCode } from "./DialogSourceCode";
 import { defXVirTableConfigs } from "./../ui/xDataGrid/xVirTable/xVirTable";
 const { $t } = State_UI;
@@ -26,7 +26,7 @@ export const DemoAndCode = defineComponent({
 		async reurn(scfObjSourceCode) {
 			/* TODO: 弹窗修改加载的代码 */
 			/* 重新运行 */
-			const _BussinessComponent = await vUtils.getVueComponentBySourceCode(
+			const _BussinessComponent = await xU.getVueComponentBySourceCode(
 				this.sfcURL,
 				scfObjSourceCode,
 				{
@@ -34,7 +34,7 @@ export const DemoAndCode = defineComponent({
 					defineComponent,
 					markRaw,
 					State_UI,
-					vUtils,
+					xU,
 					UI,
 					compileVNode,
 					defXVirTableConfigs,
@@ -46,10 +46,10 @@ export const DemoAndCode = defineComponent({
 			this.isLoading = false;
 		},
 		async getBussinessComponent() {
-			this.BussinessComponentSourceCode = await vUtils.asyncLoadText(
+			this.BussinessComponentSourceCode = await xU.asyncLoadText(
 				this.sfcURL
 			);
-			const scfObjSourceCode = vUtils.VueLoader(
+			const scfObjSourceCode = xU.VueLoader(
 				this.BussinessComponentSourceCode
 			);
 			this.reurn(scfObjSourceCode);

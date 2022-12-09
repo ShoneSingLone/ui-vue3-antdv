@@ -145,7 +145,7 @@ const privateLodash = {
 	 * 通过check,
 	 * 为真则返回value,
 	 * 否则返回false,
-	 * 默认check为 vUtils.isInput
+	 * 默认check为 xU.isInput
 	 * @param arr
 	 * @param fnCheck
 	 * @return {firstValue|false}
@@ -505,4 +505,4 @@ const privateLodash = {
 	}
 };
 
-export { privateLodash as vUtils };
+export { privateLodash as xU };

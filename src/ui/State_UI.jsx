@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import "dayjs/locale/en-au";
 import { lStorage } from "./tools/storage";
-import { vUtils } from "./ventoseUtils";
+import { xU } from "./ventoseUtils";
 
 /* 可以与外部通信，可以增改 */
 
@@ -33,11 +33,11 @@ let _State_UI = {
 	$t(prop, payload = {}, i18nMessage = false) {
 		/* this指向 */
 		const result = { label: prop, prop: prop };
-		vUtils.templateSettings.interpolate = /{([\s\S]+?)}/g;
+		xU.templateSettings.interpolate = /{([\s\S]+?)}/g;
 		if (State_UI.i18nMessage) {
 			const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
 			if (temp) {
-				result.label = vUtils.template(temp)(payload);
+				result.label = xU.template(temp)(payload);
 				if (!result.label) {
 					result.label = prop;
 					console.error(`i18n:${prop} "NOT_FOUND"`);
@@ -65,7 +65,7 @@ watch(
 );
 
 export const Cpt_UI_locale = computed(() => {
-	const currentLanguage = vUtils.camelCase(State_UI.language);
+	const currentLanguage = xU.camelCase(State_UI.language);
 	const locale = State_UI.LANGUAGE[currentLanguage];
 	return locale;
 });

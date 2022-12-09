@@ -1,8 +1,8 @@
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 
 export const lStorage = new Proxy(localStorage, {
 	set(_localStorage, prop, value) {
-		if (vUtils.isPlainObject(value)) {
+		if (xU.isPlainObject(value)) {
 			_localStorage[prop] = JSON.stringify(value);
 		} else {
 			_localStorage[prop] = value;

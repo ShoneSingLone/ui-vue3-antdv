@@ -1,9 +1,9 @@
 import $ from "jquery";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 
 const get$head = () => {
 	let $head = $("html head");
-	if (!vUtils.is$Selected($head)) {
+	if (!xU.is$Selected($head)) {
 		$head = $("<head/>");
 		$head.prependTo($("html"));
 	}
@@ -13,7 +13,7 @@ const get$head = () => {
 const get$title = () => {
 	let $head = get$head();
 	let $title = $head.find("title");
-	if (!vUtils.is$Selected($title)) {
+	if (!xU.is$Selected($title)) {
 		$title = $("<title/>");
 		$title.prependTo($head);
 	}
@@ -23,7 +23,7 @@ const get$title = () => {
 const get$cssVariables = () => {
 	let $head = get$head();
 	let $cssVariables = $head.find("#cssVariables");
-	if (!vUtils.is$Selected($cssVariables)) {
+	if (!xU.is$Selected($cssVariables)) {
 		$cssVariables = $("<style/>", { id: "cssVariables" });
 		$cssVariables.appendTo($head);
 	}
@@ -46,7 +46,7 @@ export const setDocumentTitle = title => {
  */
 export const setCSSVariables = colors => {
 	let $cssVariables = get$cssVariables();
-	const cssContent = vUtils
+	const cssContent = xU
 		.map(colors, (value, prop) => `--${prop}:${value}`)
 		.join(";");
 	$cssVariables.text(`:root{${cssContent}}`);

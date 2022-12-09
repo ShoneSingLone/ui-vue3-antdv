@@ -1,5 +1,5 @@
 import { Cpt_UI_locale } from "../../State_UI";
-import { vUtils } from "../../ventoseUtils";
+import { xU } from "../../ventoseUtils";
 import { resolveComponent } from "vue";
 
 /**
@@ -14,10 +14,10 @@ export default ({ property, slots, listeners }) => {
 
 	/*let value = "";
 	if (property.value) {
-		if (vUtils.isArray(property.value)) {
+		if (xU.isArray(property.value)) {
 			value = [
-				vUtils.safeDate(property.value[0]),
-				vUtils.safeDate(property.value[1])
+				xU.safeDate(property.value[0]),
+				xU.safeDate(property.value[1])
 			];
 		}
 	}*/

@@ -1,7 +1,7 @@
 import { DatePicker } from "ant-design-vue";
 import dayjs from "dayjs";
 import { Cpt_UI_locale } from "../../State_UI";
-import { vUtils } from "../../ventoseUtils";
+import { xU } from "../../ventoseUtils";
 
 /**
  * @Description
@@ -14,9 +14,9 @@ export default ({ property, slots, listeners }) => {
 	let value = "";
 	if (property.value) {
 		value = dayjs(property.value);
-		vUtils.doNothing(value, property.value);
+		xU.doNothing(value, property.value);
 		if (value === "Invalid Date") {
-			vUtils.doNothing("property.value", property.value);
+			xU.doNothing("property.value", property.value);
 			value = "";
 		}
 	}

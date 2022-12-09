@@ -1,6 +1,6 @@
 <script lang="jsx">
 import { defineComponent } from "vue";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 
 export default defineComponent({
 	name: "XButtonCountDown",
@@ -23,7 +23,7 @@ export default defineComponent({
 				class: "center",
 				text: vm.configs.text.normal,
 				async onClick() {
-					if (vUtils.isFunction(vm.configs.onClick)) {
+					if (xU.isFunction(vm.configs.onClick)) {
 						await vm.configs.onClick({ countDown: vm.countDown });
 					}
 				}

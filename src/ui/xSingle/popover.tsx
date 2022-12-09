@@ -2,7 +2,7 @@
 import $ from "jquery";
 import { LayerUtils, DATA_TIPS_FOLLOW_ID } from "./layer/LayerUtils";
 import { i_layerOptions } from "./layer/i_layerOptions";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import { createApp } from "vue";
 type t_trigger = "click" | "rightClick";
 type t_uiPopoverOptions = {
@@ -80,7 +80,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 	}
 
 	/* TODO:目前只考虑vue组件对象 */
-	if (vUtils.isPlainObject(options.content)) {
+	if (xU.isPlainObject(options.content)) {
 		const id = `${followId}_content`;
 		/* 桩 */
 		tipsContent = `<div id="${id}"></div>`;
@@ -112,13 +112,13 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 
 /* 监听 触发popover的事件 hover click */
 export function installPopoverDirective(app: any, appSettings: any) {
-	const appId = vUtils.genId("appId");
+	const appId = xU.genId("appId");
 	appAddPlugin[appId] = appSettings.appPlugins;
 	appDependState[appId] = appSettings.dependState;
 
 	app.directive("uiPopover", {
 		mounted(el: HTMLInputElement, binding) {
-			const followId = vUtils.genId("xPopoverTarget");
+			const followId = xU.genId("xPopoverTarget");
 			const $ele = $(el);
 			$ele
 				.addClass("x-ui-popover")

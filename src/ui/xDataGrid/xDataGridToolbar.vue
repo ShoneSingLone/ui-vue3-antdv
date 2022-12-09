@@ -1,6 +1,6 @@
 <script lang="jsx">
 import { defineComponent } from "vue";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import { setPagination } from "./common";
 import xColFilter from "./xColFilter.vue";
 

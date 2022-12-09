@@ -30696,7 +30696,7 @@ const checkXItem = async (xItemConfigs, handlerResult) => {
 const Checkbox = ({
   property
 }) => {
-  const _property = vUtils.merge({}, property, {
+  const _property = xU.merge({}, property, {
     checked: property.value,
     onClick() {
       _property["onUpdate:value"](!_property.value, EVENT_TYPE.update);
@@ -35030,6 +35030,6 @@ export {
   setPagination,
   setValueTo,
   vModel,
-  privateLodash as vUtils,
-  validateForm
+  validateForm,
+  privateLodash as xU
 };

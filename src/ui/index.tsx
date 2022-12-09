@@ -24,7 +24,7 @@ import {
 	defXVirTableConfigs as defXVirTableConfigs,
 	xVirTable
 } from "./xDataGrid/xVirTable/xVirTable";
-import { vUtils } from "./ventoseUtils";
+import { xU } from "./ventoseUtils";
 import { State_UI, Cpt_UI_locale } from "./State_UI";
 import dayjs from "dayjs";
 import { RegexFn, FormRules } from "./xForm/FormRules";
@@ -86,7 +86,7 @@ export { VNodeCollection as VNodeCollection };
 export { UI as UI };
 export { dayjs as moment };
 export { dayjs as dayjs };
-export { vUtils as vUtils };
+export { xU as xU };
 export { $ as $ };
 export { defPagination as defPagination };
 export { defCol as defCol };
@@ -123,11 +123,11 @@ export const VentoseUIWithInstall = {
 		installDirective(app, options);
 		installPopoverDirective(app, options);
 		installUIDialogComponent(UI, options);
-		vUtils.each(components, (component, name) => {
+		xU.each(components, (component, name) => {
 			if (component.name) {
 				name = component.name;
 			} else {
-				vUtils.doNothing(name, `miss name`);
+				xU.doNothing(name, `miss name`);
 			}
 			app.component(component.name || name, component);
 		});

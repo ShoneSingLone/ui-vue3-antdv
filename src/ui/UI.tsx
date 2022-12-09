@@ -10,7 +10,7 @@ import {
 	ModalFuncProps
 } from "ant-design-vue";
 import $ from "jquery";
-import { vUtils } from "./ventoseUtils";
+import { xU } from "./ventoseUtils";
 
 /* 静态方法，与APP实例无关，引用有直接可用 */
 
@@ -120,7 +120,7 @@ export const UI = {
 			return new Proxy(m, {
 				apply(target, thisArg, argArray) {
 					if (typeof argArray[0] === "string") {
-						argArray[0] = vUtils.merge(
+						argArray[0] = xU.merge(
 							{ message: argArray[0] },
 							argArray[1] || {}
 						);

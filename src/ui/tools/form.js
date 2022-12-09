@@ -1,7 +1,7 @@
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 
 export const pickValueFrom = configs => {
-	return vUtils.reduce(
+	return xU.reduce(
 		configs,
 		(target, config, prop) => {
 			try {
@@ -13,7 +13,7 @@ export const pickValueFrom = configs => {
 	);
 };
 export const setValueTo = (configs, values) => {
-	return vUtils.map(
+	return xU.map(
 		values,
 		(value, prop) => {
 			if (configs[prop]) {
@@ -26,7 +26,7 @@ export const setValueTo = (configs, values) => {
 
 /*重置reactive数据*/
 export const resetValueOf = (state, initState) => {
-	vUtils.each(initState, (value, prop) => {
+	xU.each(initState, (value, prop) => {
 		state[prop] = JSON.parse(JSON.stringify(value));
 	});
 	return state;

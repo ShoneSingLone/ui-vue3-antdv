@@ -1,6 +1,6 @@
 <script lang="jsx">
 import { line } from "./configs/line";
-import { vUtils } from "../ventoseUtils";
+import { xU } from "../ventoseUtils";
 import { defineComponent } from "vue";
 const CONFIGS_MAP = { line };
 
@@ -29,12 +29,12 @@ export default defineComponent({
 		}
 	},
 	data() {
-		const id = vUtils.genId("xChart");
+		const id = xU.genId("xChart");
 		return { id };
 	},
 	computed: {
 		helper() {
-			if (vUtils.isPlainObject(this.configs)) {
+			if (xU.isPlainObject(this.configs)) {
 				return this.configs;
 			}
 			return CONFIGS_MAP[this.configs];

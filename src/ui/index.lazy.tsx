@@ -57,7 +57,7 @@ import xCellLabel from "./xDataGrid/xCellLabel.vue";
 import { xPagination } from "./xDataGrid/xPagination";
 import xColFilter from "./xDataGrid/xColFilter.vue";
 import { installUIDialogComponent } from "./xSingle/dialog/dialog";
-import { vUtils as mylodash } from "./ventoseUtils.js";
+import { xU as mylodash } from "./ventoseUtils.js";
 import { State_UI, Cpt_UI_locale } from "./State_UI";
 import dayjs from "dayjs";
 /* @ts-ignore */

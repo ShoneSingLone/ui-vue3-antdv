@@ -2,14 +2,14 @@
 import { defineComponent } from "vue";
 import $ from "jquery";
 import { MkitCsslist } from "./MkitCsslist";
-import { State_UI, vUtils } from "../ui";
+import { State_UI, xU } from "../ui";
 
 export const setTheme = async theme => {
 	theme =
 		theme || localStorage.markdownHightlightTheme || "monokai-sublime.css";
 	const cssURL = `${State_UI.assetsPath}/highlightstyles/${theme}`;
 	localStorage.markdownHightlightTheme = theme;
-	const content = await vUtils.asyncLoadText(cssURL);
+	const content = await xU.asyncLoadText(cssURL);
 	const id = `markdonw-hightlight-style`;
 	const $style = $(`#${id}`);
 	if ($style.length == 0) {
@@ -43,7 +43,7 @@ export const MkitTheme = defineComponent({
 	render() {
 		return (
 			<select class="markdown-theme" v-model={this.theme}>
-				{vUtils.map(MkitCsslist, i => {
+				{xU.map(MkitCsslist, i => {
 					return (
 						<option key={i.value} value={i.value}>
 							{i.label}

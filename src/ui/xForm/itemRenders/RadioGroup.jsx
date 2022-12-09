@@ -1,5 +1,5 @@
 import { resolveComponent } from "vue";
-import { vUtils } from "../../ventoseUtils";
+import { xU } from "../../ventoseUtils";
 
 /**
  * @Description
@@ -14,15 +14,15 @@ export default ({ property, slots, listeners }) => {
 	const RadioButton = resolveComponent("aRadioButton");
 
 	const PROPERTY_OPTIONS = property.options;
-	const componentPropertyOmitOptions = vUtils.omit(property, ["options"]);
+	const componentPropertyOmitOptions = xU.omit(property, ["options"]);
 
 	const renderOptions = () => {
 		if (property.isButton) {
-			return vUtils.map(PROPERTY_OPTIONS, option => {
+			return xU.map(PROPERTY_OPTIONS, option => {
 				return <RadioButton value={option.value}>{option.label}</RadioButton>;
 			});
 		}
-		return vUtils.map(PROPERTY_OPTIONS, option => {
+		return xU.map(PROPERTY_OPTIONS, option => {
 			return <Radio value={option.value}>{option.label}</Radio>;
 		});
 	};

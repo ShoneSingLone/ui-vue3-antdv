@@ -30698,7 +30698,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   const Checkbox = ({
     property
   }) => {
-    const _property = vUtils.merge({}, property, {
+    const _property = xU.merge({}, property, {
       checked: property.value,
       onClick() {
         _property["onUpdate:value"](!_property.value, EVENT_TYPE.update);
@@ -35040,7 +35040,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   exports2.setPagination = setPagination;
   exports2.setValueTo = setValueTo;
   exports2.vModel = vModel;
-  exports2.vUtils = privateLodash;
   exports2.validateForm = validateForm;
+  exports2.xU = privateLodash;
   Object.defineProperties(exports2, { __esModule: { value: true }, [Symbol.toStringTag]: { value: "Module" } });
 });
