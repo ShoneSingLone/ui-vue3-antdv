@@ -1,7 +1,7 @@
 import _ from "lodash";
 import dayjs from "dayjs";
 import $ from "jquery";
-import { get as idbGet, set as idbSet } from "idb-keyval";
+import { iStorage } from "./tools/storage";
 
 /* 组件属性是否是on开头，组件的事件监听*/
 const onRE = /^on[^a-z]/;
@@ -345,7 +345,7 @@ const privateLodash = {
 		/* 在开发模式下App.vue 会设置这个对象 */
 		/* @ts-ignore */
 		if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-			const res = await idbGet(url);
+			const res = await iStorage(url);
 			if (res) {
 				return res;
 			}
@@ -361,7 +361,7 @@ const privateLodash = {
 				success(...args) {
 					/* @ts-ignore */
 					if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-						idbSet(url, args[0]);
+						iStorage(url, args[0]);
 					}
 					/* @ts-ignore */
 					resolve.apply(null, args);

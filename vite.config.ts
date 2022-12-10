@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import useVue from "@vitejs/plugin-vue";
 import useVueJsx from "@vitejs/plugin-vue-jsx";
 import { useDevServer } from "./plugins/vite/devServer";
+import { injectHtml } from "vite-plugin-html";
 import path from "path";
 import svgHelper from "./plugins/vite/svg";
 /* css in js =>lib 用 */

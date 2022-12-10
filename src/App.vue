@@ -1,7 +1,6 @@
 <script setup lang="ts">
 //@ts-nocheck
 import AppLayout from "./components/AppLayout.vue";
-window.___VENTOSE_UI_IS_DEV_MODE = true;
 </script>
 
 <template>

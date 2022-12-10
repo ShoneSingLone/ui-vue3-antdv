@@ -30068,34 +30068,6 @@ var enAu = { exports: {} };
     return t.default.locale(_2, null, true), _2;
   });
 })(enAu);
-function promisifyRequest(request) {
-  return new Promise((resolve, reject) => {
-    request.oncomplete = request.onsuccess = () => resolve(request.result);
-    request.onabort = request.onerror = () => reject(request.error);
-  });
-}
-function createStore(dbName, storeName) {
-  const request = indexedDB.open(dbName);
-  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
-  const dbp = promisifyRequest(request);
-  return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
-}
-let defaultGetStoreFunc;
-function defaultGetStore() {
-  if (!defaultGetStoreFunc) {
-    defaultGetStoreFunc = createStore("keyval-store", "keyval");
-  }
-  return defaultGetStoreFunc;
-}
-function get(key, customStore = defaultGetStore()) {
-  return customStore("readonly", (store) => promisifyRequest(store.get(key)));
-}
-function set(key, value, customStore = defaultGetStore()) {
-  return customStore("readwrite", (store) => {
-    store.put(value, key);
-    return promisifyRequest(store.transaction);
-  });
-}
 const onRE = /^on[^a-z]/;
 const VueComponents = {};
 const privateLodash = {
@@ -30340,7 +30312,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   },
   asyncLoadText: async function(url) {
     if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-      const res = await get(url);
+      const res = await iStorage(url);
       if (res) {
         return res;
       }
@@ -30353,7 +30325,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         dataType: "text",
         success(...args2) {
           if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-            set(url, args2[0]);
+            iStorage(url, args2[0]);
           }
           resolve.apply(null, args2);
         },
@@ -30491,6 +30463,34 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     return item;
   }
 };
+function promisifyRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.oncomplete = request.onsuccess = () => resolve(request.result);
+    request.onabort = request.onerror = () => reject(request.error);
+  });
+}
+function createStore(dbName, storeName) {
+  const request = indexedDB.open(dbName);
+  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
+  const dbp = promisifyRequest(request);
+  return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
+}
+let defaultGetStoreFunc;
+function defaultGetStore() {
+  if (!defaultGetStoreFunc) {
+    defaultGetStoreFunc = createStore("keyval-store", "keyval");
+  }
+  return defaultGetStoreFunc;
+}
+function get(key, customStore = defaultGetStore()) {
+  return customStore("readonly", (store) => promisifyRequest(store.get(key)));
+}
+function set(key, value, customStore = defaultGetStore()) {
+  return customStore("readwrite", (store) => {
+    store.put(value, key);
+    return promisifyRequest(store.transaction);
+  });
+}
 const lStorage = new Proxy(localStorage, {
   set(_localStorage, prop, value) {
     if (privateLodash.isPlainObject(value)) {
@@ -30517,6 +30517,15 @@ lStorage.appConfigs = lStorage.appConfigs || {
     page: "page",
     size: "size",
     total: "total"
+  }
+};
+const iStorage = async (key, val) => {
+  const keyPrefix = privateLodash.camelCase(window.location.hostname);
+  key = keyPrefix + key;
+  if (privateLodash.isInput(val)) {
+    return await set(key, val);
+  } else {
+    return await get(key);
   }
 };
 let _State_UI = {
@@ -31219,18 +31228,6 @@ const BTN_PRESET_MAP = {
 };
 const xButton = defineComponent({
   name: "xButton",
-  components: {
-    Button
-  },
-  beforeMount() {
-    const presetFn = BTN_PRESET_MAP[this.configs.preset];
-    if (presetFn) {
-      const preset = presetFn(this.configs);
-      this.configs.text = createVNode(Fragment, null, [preset.icon, createVNode("span", {
-        "class": "ml4"
-      }, [preset.text])]);
-    }
-  },
   props: {
     payload: {
       type: Object,
@@ -31243,6 +31240,22 @@ const xButton = defineComponent({
       default() {
         return {};
       }
+    }
+  },
+  components: {
+    Button
+  },
+  beforeMount() {
+    if (!this.configs) {
+      debugger;
+      return;
+    }
+    const presetFn = BTN_PRESET_MAP[this.configs.preset];
+    if (presetFn) {
+      const preset = presetFn(this.configs);
+      this.configs.text = createVNode(Fragment, null, [preset.icon, createVNode("span", {
+        "class": "ml4"
+      }, [preset.text])]);
     }
   },
   data() {
@@ -31716,7 +31729,7 @@ const _sfc_main$5 = defineComponent(markRaw({
           if (_SvgIconAny) {
             return _SvgIconAny;
           }
-          _SvgIconAny = await get(this.iconKey);
+          _SvgIconAny = await iStorage(this.iconKey);
           if (_SvgIconAny) {
             return _SvgIconAny;
           }
@@ -31731,7 +31744,7 @@ const _sfc_main$5 = defineComponent(markRaw({
             name: this.icon,
             template: SvgIconAny
           };
-          await set(this.iconKey, SvgIconAny);
+          await iStorage(this.iconKey, SvgIconAny);
           insideIcons[this.icon] = SvgComponentByString;
           this.svgIcon = createVNode(SvgComponentByString, this.baseAttrs, null);
         } else if ((SvgIconAny == null ? void 0 : SvgIconAny.render) || (SvgIconAny == null ? void 0 : SvgIconAny.template)) {

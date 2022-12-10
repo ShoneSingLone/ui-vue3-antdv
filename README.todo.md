@@ -1,5 +1,11 @@
 [Home](./README.md)
 
+
+## 通用
+- [x] indexeddb 前缀，方便清理和枚举
+
+## 组件 
+
 - [x] Demo页面加载独立的vue文档，弹窗展示源码
   ![](README.md_assets/2022-12-02-16-25-39.png)
 - [x] 使用boundless方式加载demo文件

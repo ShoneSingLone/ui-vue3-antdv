@@ -1,7 +1,8 @@
 import { xU } from "../ventoseUtils";
+import { get as idbGet, set as idbSet } from "idb-keyval";
 
 export const lStorage = new Proxy(localStorage, {
-	set(_localStorage, prop, value) {
+	set(_localStorage, prop: string, value) {
 		if (xU.isPlainObject(value)) {
 			_localStorage[prop] = JSON.stringify(value);
 		} else {
@@ -9,7 +10,7 @@ export const lStorage = new Proxy(localStorage, {
 		}
 		return true;
 	},
-	get(_localStorage, prop) {
+	get(_localStorage, prop: string) {
 		const objString = _localStorage[prop];
 		try {
 			return JSON.parse(objString);
@@ -27,5 +28,21 @@ lStorage.appConfigs = lStorage.appConfigs || {
 		page: "page",
 		size: "size",
 		total: "total"
+	}
+};
+
+/**
+ *
+ * @param key
+ * @param val 存在即set，不存在即get
+ * @returns
+ */
+export const iStorage = async (key: string, val?: any) => {
+	const keyPrefix = xU.camelCase(window.location.hostname);
+	key = keyPrefix + key;
+	if (xU.isInput(val)) {
+		return await idbSet(key, val);
+	} else {
+		return await idbGet(key);
 	}
 };

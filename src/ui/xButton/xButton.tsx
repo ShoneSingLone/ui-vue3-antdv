@@ -40,22 +40,6 @@ export type t_buttonOptions = {
 
 export default defineComponent({
 	name: "xButton",
-	components: {
-		Button
-	},
-	beforeMount() {
-		/* 预置 */
-		const presetFn = BTN_PRESET_MAP[this.configs.preset];
-		if (presetFn) {
-			const preset = presetFn(this.configs);
-			this.configs.text = (
-				<>
-					{preset.icon}
-					<span class="ml4">{preset.text}</span>
-				</>
-			);
-		}
-	},
 	props: {
 		payload: {
 			type: Object,
@@ -68,6 +52,26 @@ export default defineComponent({
 			default() {
 				return {};
 			}
+		}
+	},
+	components: {
+		Button
+	},
+	beforeMount() {
+		if (!this.configs) {
+			debugger;
+			return;
+		}
+		/* 预置 */
+		const presetFn = BTN_PRESET_MAP[this.configs.preset];
+		if (presetFn) {
+			const preset = presetFn(this.configs);
+			this.configs.text = (
+				<>
+					{preset.icon}
+					<span class="ml4">{preset.text}</span>
+				</>
+			);
 		}
 	},
 	data() {
