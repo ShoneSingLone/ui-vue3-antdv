@@ -8,6 +8,13 @@ let xItemNoPropCount = 0;
 
 /*make item configs */
 export function defItem(options: t_itemConfigs) {
+	const configs = defItem.item(options);
+	return {
+		[configs.prop]: configs
+	};
+}
+
+defItem.item = (options: t_itemConfigs) => {
 	if (!options.prop) {
 		options.prop = `xItem${xItemNoPropCount++}`;
 		console.error(`no xItem prop replace by ${options.prop}`);
@@ -27,11 +34,8 @@ export function defItem(options: t_itemConfigs) {
 			{ ...options }
 		)
 	);
-
-	return {
-		[configs.prop]: configs
-	};
-}
+	return configs;
+};
 
 defItem.labelWithTips = ({ label, tips, icon }) => {
 	return (

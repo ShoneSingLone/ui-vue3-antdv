@@ -3,7 +3,6 @@
 import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
 import { xU } from "../ventoseUtils";
 import { State_UI } from "../State_UI";
-import { Button } from "ant-design-vue";
 
 /*$t 可能会变，所以每次render用新的数据*/
 const BTN_PRESET_MAP = {
@@ -53,9 +52,6 @@ export default defineComponent({
 				return {};
 			}
 		}
-	},
-	components: {
-		Button
 	},
 	beforeMount() {
 		if (!this.configs) {
@@ -146,7 +142,7 @@ export default defineComponent({
 			configs.title = this.title;
 		}
 		return (
-			<Button
+			<aButton
 				class="x-button"
 				onClick={this.onClick}
 				loading={this.loading}
@@ -154,7 +150,7 @@ export default defineComponent({
 				type={this.type}
 				{...configs}>
 				{this.text}
-			</Button>
+			</aButton>
 		);
 	}
 });

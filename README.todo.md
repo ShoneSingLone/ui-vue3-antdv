@@ -9,6 +9,7 @@
 - [x] Demo页面加载独立的vue文档，弹窗展示源码
   ![](README.md_assets/2022-12-02-16-25-39.png)
 - [x] 使用boundless方式加载demo文件
+  - [ ] css scoped 的解析  
 - [ ] ![](README.todo.md_assets/2022-12-08-18-42-03.png)
 - [ ] 允许动态修改demo文件，然后主动触发运行
 - [ ] datagrid
@@ -30,8 +31,11 @@
     - [x] layerIndex 动态增减
 - [ ] 虚拟列表 onSelectedChange emit
 - [ ] 组件的单独加载？
-- [ ] 路由默认约定方式
     - [ ] 路由与视图的 import 加载，默认文件夹？
+
+### xItem
+
+- [ ] readonly模式
 
 ## 指令
 

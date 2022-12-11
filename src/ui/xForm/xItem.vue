@@ -30,7 +30,6 @@ export default defineComponent({
 	emits: ["update:modelValue"],
 	setup(props) {
 		let Cpt_isShowXItem = true;
-		let Cpt_isDisabled = false;
 		/*isShow*/
 		if (xU.isFunction(props.configs.isShow)) {
 			Cpt_isShowXItem = computed(props.configs.isShow);
@@ -38,17 +37,10 @@ export default defineComponent({
 			Cpt_isShowXItem = props.configs.isShow;
 		}
 
-		/*disabled*/
-		if (xU.isFunction(props.configs.disabled)) {
-			Cpt_isDisabled = computed(props.configs.disabled);
-		} else if (xU.isBoolean(props.configs.disabled)) {
-			Cpt_isDisabled = props.configs.disabled;
-		}
 		/*readonly*/
 
 		return {
 			Cpt_isShowXItem,
-			Cpt_isDisabled
 		};
 	},
 	data() {
@@ -122,12 +114,22 @@ export default defineComponent({
 		return {
 			listeners,
 			/* validateInfo */
-			isRequired: false
+			isRequired: false,
 			/* validateInfo */
+			isDisabled: false,
 		};
 	},
 
 	computed: {
+		isDisabled() {
+			/*disabled*/
+			if (xU.isFunction(props.configs.disabled)) {
+				return computed(props.configs.disabled);
+			} else if (xU.isBoolean(props.configs.disabled)) {
+				debugger;
+				return props.configs.disabled;
+			}
+		},
 		isChecking() {
 			return Boolean(this.configs.checking);
 		},
@@ -180,10 +182,9 @@ export default defineComponent({
 					}
 
 					/* 用于xForm 控件，以下配置信息跟UI库控件相关，用不上，遂删除 */
-					if (["itemTips", "rules"].includes(prop)) {
+					if (["itemTips", "rules", "labelVNodeRender"].includes(prop)) {
 						return;
 					}
-
 					property[prop] = value;
 					return;
 				});
@@ -192,7 +193,7 @@ export default defineComponent({
 			pickAttrs(this.configs);
 			pickAttrs(this.$attrs);
 
-			if (this.Cpt_isDisabled) {
+			if (this.isDisabled) {
 				property.disabled = true;
 			} else {
 				delete property.disabled;
@@ -271,7 +272,7 @@ export default defineComponent({
 			handler(rules) {
 				this.setValidateInfo(rules);
 			}
-		}
+		},
 	},
 	mounted() {
 		if (this.configs?.once) {
@@ -283,11 +284,11 @@ export default defineComponent({
 		MutatingProps(this, "configs.FormItemId", this.FormItemId);
 
 		/* $(`[formitemid="${this.FormItemId}"]`).on("blur", (e) => {
-      this.componentSettings.listener();
-    }); */
+	  this.componentSettings.listener();
+	}); */
 	},
 	/* beforeUnmount() {
-    $(`[formitemid="${this.FormItemId}"]`).off("blur");
+	$(`[formitemid="${this.FormItemId}"]`).off("blur");
   }, */
 	methods: {
 		setTips(type = "", msg = "") {

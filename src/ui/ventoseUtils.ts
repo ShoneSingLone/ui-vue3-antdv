@@ -344,7 +344,7 @@ const privateLodash = {
 	asyncLoadText: async function (url: string) {
 		/* 在开发模式下App.vue 会设置这个对象 */
 		/* @ts-ignore */
-		if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+		if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
 			const res = await iStorage(url);
 			if (res) {
 				return res;
@@ -360,7 +360,7 @@ const privateLodash = {
 				dataType: "text",
 				success(...args) {
 					/* @ts-ignore */
-					if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+					if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
 						iStorage(url, args[0]);
 					}
 					/* @ts-ignore */
@@ -396,6 +396,9 @@ const privateLodash = {
 	 * @returns
 	 */
 	dateFormat: function (date: dayjs.ConfigType, format = "YYYY-MM-DD") {
+		if (typeof date === 'number') {
+            date = dayjs.unix(date);
+        }
 		/* @ts-ignore */
 		if (format === 1) {
 			format = "YYYY-MM-DD HH:mm:ss";

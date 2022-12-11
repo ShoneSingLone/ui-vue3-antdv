@@ -1,13 +1,11 @@
 <template>
+	<DemoAndCode path="/boundless/demo/xForm/DialogDemoXItem.sfc" />
 	<aCard>
 		{{ valueFromConfigs }}
 		<xButton :configs="configsValidBtn" />
 		<mkit :md="tips1" />
 		<span class="mr10">{{ formData.inputValue }}</span>
-		<xItem
-			:configs="xForm.search"
-			class="flex1"
-			v-model="formData.inputValue" />
+		<xItem :configs="xForm.search" class="flex1" v-model="formData.inputValue" />
 		<mkit :md="tips2" />
 
 		<div class="flex middle mt10">
@@ -53,7 +51,7 @@ export default {
 		DemoXFormWithForm
 	},
 	methods: {
-		valid() {}
+		valid() { }
 	},
 	setup(props) {
 		return {
@@ -176,7 +174,7 @@ export default {
 				inputValue: "v-model"
 			},
 			xForm,
-			tips1: `### 可以单独使用v-model绑定数据
+			tips1: `### 
 \`\`\`js
 <xItem :configs="xForm.search" class="flex1" v-model="formData.inputValue" />
 formData: {
@@ -224,4 +222,6 @@ formData: {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>

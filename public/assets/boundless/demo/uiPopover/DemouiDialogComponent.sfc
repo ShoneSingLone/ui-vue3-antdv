@@ -49,7 +49,13 @@ async function sfc({ defineComponent, State_UI, UI }) {
 								UI.dialog.component({
 									title: $t("DemoXFormWithForm").label,
 									component: defineComponent({
-										template: `<p class="padding20">不添加area</p>`
+										template: `<p class="padding20">不添加area</p>`,
+										mounted() {
+											debugger;
+										},
+										beforeUnmount() {
+											debugger;
+										},
 									}),
 									maxmin: true,
 									async onOk(instance) {
