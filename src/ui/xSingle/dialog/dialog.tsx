@@ -28,35 +28,58 @@ const xDialogFooter = defineComponent({
 	props: ["configs"],
 	computed: {
 		onCancel() {
-			return this.configs.onCancel
+			return this.configs.onCancel;
 		},
 		onOk() {
-			return this.configs.onOk
+			return this.configs.onOk;
 		},
 		vDomOk() {
 			if (this.configs?.hideOk) {
 				return null;
 			}
-			return <aButton type="primary" class="ml10" onClick={this.onOk} > {xU.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("确定").label} </aButton>
+			const configs = {
+				text: xU.isInput(this.configs.textOk)
+					? this.configs.textOk
+					: State_UI.$t("确定").label,
+				disabled: xU.isInput(this.configs.disabledOk)
+					? this.configs.disabledOk
+					: false,
+				onClick: this.onOk || xU.doNothing
+			};
+			return <xButton type="primary" class="ml10" configs={configs} />;
 		},
 		vDomCancel() {
 			if (this.configs?.hideCancel) {
 				return null;
 			}
-			return <aButton onClick={this.onCancel} > {xU.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("取消").label} </aButton>
-
-		},
+			const configs = {
+				text: xU.isInput(this.configs.textCancel)
+					? this.configs.textCancel
+					: State_UI.$t("取消").label,
+				disabled: xU.isInput(this.configs.disabledCancel)
+					? this.configs.disabledCancel
+					: false,
+				onClick: this.onCancel || xU.doNothing
+			};
+			return <xButton class="ml10" configs={configs} />;
+		}
 	},
 	render() {
-		return <div class="flex middle end ant-modal-footer">
-			{this.vDomCancel}
-			{this.vDomOk}
-		</div >
+		return (
+			<div class="flex middle end ant-modal-footer">
+				{this.vDomCancel}
+				{this.vDomOk}
+			</div>
+		);
 	}
-})
+});
 
-export const installUIDialogComponent = (UI, { appPlugins, dependState }, app) => {
-	app.component("xDialogFooter", xDialogFooter)
+export const installUIDialogComponent = (
+	UI,
+	{ appPlugins, dependState },
+	app
+) => {
+	app.component("xDialogFooter", xDialogFooter);
 	UI.dialog.component = async (dialogOptions: t_dialogOptions) =>
 		new Promise((resolve, reject) => {
 			const { component: BussinessComponent, title, area } = dialogOptions;
@@ -69,10 +92,17 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }, app) =
 				delete dialogOptions.yes;
 			}
 
-			dialogOptions.closeDialog = () => {
+			dialogOptions.closeDialog = async () => {
 				let isCloseDialog = true;
 				if (dialogOptions.onBeforeClose) {
-					isCloseDialog = Boolean(dialogOptions.onBeforeClose({ dialogOptions, _layerKey: "", $eleLayer: '' }));
+					const res = await dialogOptions.onBeforeClose({
+						dialogOptions,
+						_layerKey: "",
+						$eleLayer: ""
+					});
+					if (xU.isBoolean(res) && !res) {
+						isCloseDialog = false;
+					}
 				}
 				if (isCloseDialog) {
 					LayerUtils.close(handleEcsPress._layerKey);
@@ -85,11 +115,14 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }, app) =
 			/* 处理按Esc键关闭弹窗 */
 			let handleEcsPress = {
 				_layerKey: "",
-				handler(event) {
-					const code = event.keyCode;
-					event.preventDefault();
-					if (code === KEY.esc) {
-						dialogOptions.closeDialog()
+				async handler(event) {
+					const $antModal = $(".ant-modal-root");
+					/* 如果有ant的弹窗就不关闭layer */
+					if ($antModal.length > 0) {
+						return;
+					}
+					if (event.keyCode === KEY.esc) {
+						await dialogOptions.closeDialog();
 					}
 				},
 				on(_layerKey) {
@@ -102,75 +135,81 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }, app) =
 				}
 			};
 
-			const layerOptions =
-				xU.merge(
-					dialogOptions,
-					{
-						/* 传入自定义样式 */
-						contentClass: "flex1",
-						type: LayerUtils.DIALOG,
-						title: [title || ""],
-						area: area || ["800px"],
-						content: $container,
-						offset: ["160px", null],
-						/* 无按钮 */
-						btn: [ /*'确定', '取消'*/],
-						success($eleLayer, _layerKey) {
-							handleEcsPress.on(_layerKey);
-							/* dialog jQuery 实例 */
-							dialogOptions._dialog$ele = $eleLayer;
-							dialogOptions._layerKey = _layerKey;
-							try {
-								dialogVueApp = createApp(
-									defineComponent({
-										components: { BussinessComponent },
-										created() {
-											this.dialogOptions._contentInstance = this;
-											resolve(this);
-										},
-										mounted() {
-											if (this.dialogOptions.fullscreen) {
-												LayerUtils.full(_layerKey);
-											}
-										},
-										data() {
-											return { dialogOptions };
-										},
-										render() {
-											return (
-												<div class="ventose-dialog-content" data-el-id={_dialogId}>
-													<BussinessComponent propDialogOptions={this.dialogOptions} />
-												</div>
-											);
+			const layerOptions = xU.merge(
+				dialogOptions,
+				{
+					/* 传入自定义样式 */
+					contentClass: "flex1",
+					type: LayerUtils.DIALOG,
+					title: [title || ""],
+					area: area || ["800px"],
+					content: $container,
+					offset: ["160px", null],
+					/* 无按钮 */
+					btn: [
+						/*'确定', '取消'*/
+					],
+					success($eleLayer, _layerKey) {
+						handleEcsPress.on(_layerKey);
+						/* dialog jQuery 实例 */
+						dialogOptions._dialog$ele = $eleLayer;
+						dialogOptions._layerKey = _layerKey;
+						try {
+							dialogVueApp = createApp(
+								defineComponent({
+									components: { BussinessComponent },
+									created() {
+										this.dialogOptions._contentInstance = this;
+										resolve(this);
+									},
+									mounted() {
+										if (this.dialogOptions.fullscreen) {
+											LayerUtils.full(_layerKey);
 										}
-									})
-								);
-								dialogVueApp.use(appPlugins, { dependState });
-								dialogVueApp.mount(_dialogId);
-							} catch (e) {
-								console.error(e);
-							}
-							dialogOptions.onAfterOpenDialoag && dialogOptions.onAfterOpenDialoag(dialogVueApp);
-						},
-						cancel() {
-							dialogOptions.closeDialog();
-							return false;
-						},
-						end() {
-							handleEcsPress.off();
-							$container.remove();
-							$container = null;
-							if (dialogVueApp) {
-								dialogVueApp.unmount();
-								dialogVueApp = null;
-							}
-							dialogOptions.payload = null;
-							dialogOptions._contentInstance = null;
-							dialogOptions = null;
+									},
+									data() {
+										return { dialogOptions };
+									},
+									render() {
+										return (
+											<div
+												class="ventose-dialog-content"
+												data-el-id={_dialogId}>
+												<BussinessComponent
+													propDialogOptions={this.dialogOptions}
+												/>
+											</div>
+										);
+									}
+								})
+							);
+							dialogVueApp.use(appPlugins, { dependState });
+							dialogVueApp.mount(_dialogId);
+						} catch (e) {
+							console.error(e);
 						}
+						dialogOptions.onAfterOpenDialoag &&
+							dialogOptions.onAfterOpenDialoag(dialogVueApp);
 					},
-					xU.omit(dialogOptions, ["end", "cancel", "success", "content"])
-				);
+					cancel() {
+						dialogOptions.closeDialog();
+						return false;
+					},
+					end() {
+						handleEcsPress.off();
+						$container.remove();
+						$container = null;
+						if (dialogVueApp) {
+							dialogVueApp.unmount();
+							dialogVueApp = null;
+						}
+						dialogOptions.payload = null;
+						dialogOptions._contentInstance = null;
+						dialogOptions = null;
+					}
+				},
+				xU.omit(dialogOptions, ["end", "cancel", "success", "content"])
+			);
 
 			LayerUtils.open(layerOptions);
 		});

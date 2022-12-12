@@ -87,10 +87,17 @@ export const UI = {
 		error: useModel("error"),
 		warning: useModel("warning"),
 		confirm: (options: ModalFuncProps) => {
-			options.okText = options.okText || State_UI.$t("确定").label;
-			options.cancelText = options.cancelText || State_UI.$t("取消").label;
-
-			Modal.confirm.call(Modal, options);
+			return new Promise(async (resolve, reject) => {
+				options.okText = options.okText || State_UI.$t("确定").label;
+				options.cancelText = options.cancelText || State_UI.$t("取消").label;
+				options.onOk = () => {
+					resolve("ok");
+				};
+				options.onCancel = () => {
+					reject();
+				};
+				Modal.confirm(options);
+			});
 		},
 		delete({ title, content } = {}) {
 			title = title || State_UI.$t("删除").label;

@@ -72,17 +72,17 @@ export const READY: {
 		var jsPath = document.currentScript
 			? document.currentScript.src
 			: (function () {
-				var js = document.scripts,
-					last = js.length - 1,
-					src;
-				for (var i = last; i > 0; i--) {
-					if (js[i].readyState === "interactive") {
-						src = js[i].src;
-						break;
+					var js = document.scripts,
+						last = js.length - 1,
+						src;
+					for (var i = last; i > 0; i--) {
+						if (js[i].readyState === "interactive") {
+							src = js[i].src;
+							break;
+						}
 					}
-				}
-				return src || js[last].src;
-			})();
+					return src || js[last].src;
+			  })();
 		const GLOBAL = {};
 		return GLOBAL.layer_dir || jsPath.substring(0, jsPath.lastIndexOf("/") + 1);
 	})(),
@@ -234,19 +234,19 @@ const LayerUtils = {
 				},
 				isOptionsIsFunction && !READY.config.skin
 					? {
-						skin: skin + " layui-layer-hui",
-						anim: anim
-					}
+							skin: skin + " layui-layer-hui",
+							anim: anim
+					  }
 					: (function () {
-						options = options || {};
-						if (
-							options.icon === -1 ||
-							(options.icon === undefined && !READY.config.skin)
-						) {
-							options.skin = skin + " " + (options.skin || "layui-layer-hui");
-						}
-						return options;
-					})()
+							options = options || {};
+							if (
+								options.icon === -1 ||
+								(options.icon === undefined && !READY.config.skin)
+							) {
+								options.skin = skin + " " + (options.skin || "layui-layer-hui");
+							}
+							return options;
+					  })()
 			)
 		);
 	},
@@ -307,7 +307,7 @@ const LayerUtils = {
 								iframe.contentWindow.document.write("");
 								iframe.contentWindow.close();
 								$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
-							} catch (e) { }
+							} catch (e) {}
 						}
 					}
 
@@ -596,8 +596,9 @@ class ClassLayer {
 		if (!config.shade) {
 			return "";
 		}
-		return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${this.zIndex - 1
-			};"></div>`;
+		return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${
+			this.zIndex - 1
+		};"></div>`;
 	}
 
 	get cptDomTitle() {
@@ -644,8 +645,8 @@ class ClassLayer {
 						(config.title
 							? config.closeBtn
 							: config.type == LayerUtils.TIPS
-								? "1"
-								: "2") +
+							? "1"
+							: "2") +
 						'" href="javascript:;"></a>';
 				}
 				return closebtn;
@@ -676,8 +677,9 @@ class ClassLayer {
 				},
 				""
 			);
-			return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${config.btnAlign || ""
-				}">${domButtons}</div>`;
+			return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${
+				config.btnAlign || ""
+			}">${domButtons}</div>`;
 		}
 		return "";
 	}
@@ -783,15 +785,20 @@ class ClassLayer {
 		layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
 		layerInstance.isContentTypeObject = typeof config.content === "object";
 
-		layerInstance.config.onClickClose = async (params) => {
+		layerInstance.config.onClickClose = async params => {
+			/* 明确返回Boolean false 则为false */
+			const isFalse = val => xU.isBoolean(val) && !val;
 			if (custumSettings.onClickClose) {
-				return await custumSettings.onClickClose(params)
-			}
-			if (custumSettings.onBeforeClose) {
-				return await custumSettings.onBeforeClose(params)
+				if (isFalse(await custumSettings.onClickClose(params))) {
+					return false;
+				}
+			} else if (custumSettings.onBeforeClose) {
+				if (isFalse(await custumSettings.onBeforeClose(params))) {
+					return false;
+				}
 			}
 			return true;
-		}
+		};
 
 		const { isContentTypeObject } = layerInstance;
 
@@ -1236,7 +1243,7 @@ class ClassLayer {
 				const isNeedClose = await config.onClickClose({
 					_layerKey: layerInstance._layerKey,
 					$eleLayer,
-					dialogOptions: ''
+					dialogOptions: ""
 				});
 
 				if (isNeedClose) {
@@ -1247,7 +1254,6 @@ class ClassLayer {
 						await LayerUtils.close($(this).attr("data-layer-id"));
 					}
 				}
-
 			});
 		/* 点遮罩关闭 */
 		if (config.shadeClose) {
