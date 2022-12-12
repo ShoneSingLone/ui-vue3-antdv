@@ -20,13 +20,15 @@ let _State_UI = {
 	/* 放svg文件的文件夹路径*/
 	assetsSvgPath: "",
 	assetsPath: "",
+	bashPath: "",
 	setAssetsBaseById(eleId) {
 		const img = document.getElementById(eleId);
 		if (img) {
-			const src = String(img.src);
+			const src = String(img.href);
 			const index = src.match(/assets(.*)/)?.index || 0;
 			this.assetsSvgPath = src.substring(0, index) + "assets/svg";
 			this.assetsPath = src.substring(0, index) + "assets";
+			this.bashPath = src.substring(0, index);
 		}
 	},
 	/*i18n  使用 {变量名} 赋值 */

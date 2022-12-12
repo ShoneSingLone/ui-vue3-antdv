@@ -28,19 +28,27 @@ export default defineComponent({
 		}
 	},
 	emits: ["update:modelValue"],
-	setup(props) {
+	setup(props, { attrs, slots, emit, expose }) {
 		let Cpt_isShowXItem = true;
+		let Cpt_isDisabled = false;
 		/*isShow*/
 		if (xU.isFunction(props.configs.isShow)) {
 			Cpt_isShowXItem = computed(props.configs.isShow);
 		} else if (xU.isBoolean(props.configs.isShow)) {
-			Cpt_isShowXItem = props.configs.isShow;
+			Cpt_isShowXItem = computed(() => props.configs.isShow);
 		}
 
+		/*disabled*/
+		if (xU.isFunction(props.configs.disabled)) {
+			Cpt_isDisabled = computed(props.configs.disabled);
+		} else if (xU.isBoolean(props.configs.disabled)) {
+			Cpt_isDisabled = computed(() => props.configs.disabled);
+		}
 		/*readonly*/
 
 		return {
 			Cpt_isShowXItem,
+			Cpt_isDisabled
 		};
 	},
 	data() {
@@ -114,22 +122,12 @@ export default defineComponent({
 		return {
 			listeners,
 			/* validateInfo */
-			isRequired: false,
+			isRequired: false
 			/* validateInfo */
-			isDisabled: false,
 		};
 	},
 
 	computed: {
-		isDisabled() {
-			/*disabled*/
-			if (xU.isFunction(props.configs.disabled)) {
-				return computed(props.configs.disabled);
-			} else if (xU.isBoolean(props.configs.disabled)) {
-				debugger;
-				return props.configs.disabled;
-			}
-		},
 		isChecking() {
 			return Boolean(this.configs.checking);
 		},
@@ -193,7 +191,7 @@ export default defineComponent({
 			pickAttrs(this.configs);
 			pickAttrs(this.$attrs);
 
-			if (this.isDisabled) {
+			if (this.Cpt_isDisabled) {
 				property.disabled = true;
 			} else {
 				delete property.disabled;
@@ -272,7 +270,7 @@ export default defineComponent({
 			handler(rules) {
 				this.setValidateInfo(rules);
 			}
-		},
+		}
 	},
 	mounted() {
 		if (this.configs?.once) {

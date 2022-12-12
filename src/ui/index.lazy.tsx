@@ -178,7 +178,7 @@ export { resetValueOf as resetValueOf };
 export const VentoseUIWithInstall = {
 	install: (app, options /* {appPlugins,dependState} */) => {
 		installPopoverDirective(app, options);
-		installUIDialogComponent(UI, options);
+		installUIDialogComponent(UI, options, app);
 		mylodash.each(components, (component, name) => {
 			if (component.name) {
 				name = component.name;

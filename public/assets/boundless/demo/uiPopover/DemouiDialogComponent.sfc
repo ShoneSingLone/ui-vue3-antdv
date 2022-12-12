@@ -1,10 +1,6 @@
 <template>
 	<mkit md="## UI.dialog.component" />
-	<xButton :configs="configs.btn.noBtn" />
-	<xGap t="10" />
 	<xButton :configs="configs.btn.customBtn" />
-	<xGap t="10" />
-	<xButton :configs="configs.btn.normal" />
 </template>
 
 <script>
@@ -13,135 +9,72 @@ async function sfc({ defineComponent, State_UI, UI }) {
 
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
-		setup() { },
+		setup() {},
 		data() {
 			return {
 				configs: {
 					btn: {
-						noBtn: {
-							text: () => {
-								return $t("无按钮").label;
-							},
-							async onClick() {
-								const dialogOptions = await UI.dialog.component({
-									title: $t("DemoXFormWithForm").label,
-									component: defineComponent({
-										template: `<p class="padding20">演示使用bundless的形式，使用template，不使用jsx</p>`
-									}),
-									hideButtons: true,
-									hideCancel: true,
-									hideOk: true,
-									maxmin: true,
-									payload: {
-										row: {
-											name: "name"
-										}
-									},
-									area: ["694px", "440px"]
-								});
-							}
-						},
-						normal: {
-							text: () => {
-								return $t("一般").label;
-							},
-							async onClick() {
-								UI.dialog.component({
-									title: $t("DemoXFormWithForm").label,
-									component: defineComponent({
-										template: `<p class="padding20">不添加area</p>`,
-										mounted() {
-											debugger;
-										},
-										beforeUnmount() {
-											debugger;
-										},
-									}),
-									maxmin: true,
-									async onOk(instance) {
-										const { close, payload } = instance;
-										const { Methods } = payload;
-										try {
-											if (await Methods.verifyForm()) {
-												const params = Methods.getParams();
-												console.log(params);
-												close();
-											}
-										} catch (e) {
-											logError(e?.error?.msg);
-										}
-									}
-								});
-							}
-						},
 						customBtn: {
 							text: () => {
 								return $t("自定义按钮").label;
 							},
 							async onClick() {
-								let count = 0;
 								UI.dialog.component({
 									title: $t("DemoXFormWithForm").label,
+									maxmin: true,
 									component: defineComponent({
 										props: ["propDialogOptions"],
 										methods: {
-											/**
-											 * 这个例子有点绕，目的只是表达可以这样引用。
-											 * 实际上，隐藏了按钮：hideButtons 之后，可以直接在组件里面添加footer里面的内容
-											 */
-											setBtnDefault() {
-												const dialogInstance = this.dialogInstance;
-												if (count++ % 2 === 0) {
-													/* renderButtons是组件内部实现的属性 */
-													this.propDialogOptions.renderButtons = () =>
-														defineComponent({
-															template: `<aButton @click="handleClick">${dialogInstance.cancelText}${count}</aButton>
-														<xGap l="10" />
-														<aButton @click="handleClick">count: ${count}</aButton>
-													`,
-															methods: {
-																handleClick() {
-																	return dialogInstance.handleClickCancel();
-																}
-															}
-														});
-												} else {
-													this.propDialogOptions.renderButtons =
-														dialogInstance.vDomDefaultButton;
-												}
-												/*options 本身不是响应式，需要在instance赋值再来触发*/
-												this.dialogInstance.dialogOptions = {
-													...this.propDialogOptions
-												};
+											setBtn() {
+												this.isShowCancel = this.count++ % 2 == 0;
+											},
+											close() {
+												this.propDialogOptions.closeDialog();
 											}
+										},
+										mounted() {
+											this.propDialogOptions.onBeforeClose = () => {
+												return this.isShowCancel;
+											};
 										},
 										computed: {
 											dialogInstance() {
-												return this.propDialogOptions.__dialogInstance;
+												return this.propDialogOptions._contentInstance;
+											},
+											dialogDefautBtn() {
+												return {
+													onOk: this.propDialogOptions.closeDialog,
+													onCancel: this.propDialogOptions.closeDialog,
+													hideOk: !this.isShowCancel,
+													hideCancel: this.isShowCancel,
+													textOk: this.$t("只有确定可以关闭").label,
+													textCancel: this.$t("动态添加了onBeforeClose属性").label
+												};
 											}
 										},
-										template: `<div class="padding20">
+										data() {
+											return {
+												count: 1,
+												isShowCancel: true
+											};
+										},
+										template: `<div class="padding20 flex1">
 											<p>演示使用bundless的形式，使用template，不使用jsx</p>
-											<div>
-												<p>作为弹出的组件，有prop字段propDialogOptions，本身是传入dialog的参数options，经过实例化，添加了实例引用__dialogInstance，和DOM id __elId。当前DOM id {{propDialogOptions.__elId}}</p>
-												<p>this.propDialogOptions.__dialogInstance = this;</p>
-												<p>this.propDialogOptions.__elId = __elId; </p>
-											</div>
+											<ul>
+												<li>作为弹出的组件，有prop字段propDialogOptions，本身是传入dialog的参数options</li>
+												<li>经过实例化，添加了dialog jQuery 实例  _dialog$ele</li>
+												<li>添加了component 实例 _contentInstance，和DOM id _dialog$ele</li>
+												<li>propDialogOptions._dialog$ele.attr("id")=>当前DOM id {{propDialogOptions._dialog$ele.attr("id")}}</li>
+												<li>this.propDialogOptions._contentInstance = this;</li>
+												<li>this.propDialogOptions._dialog$ele = _dialog$ele; </li>
+											</ul>
 											<div class="flex">
 												<xGap f="1" />
-												<aButton @click="setBtnDefault">改变按钮</aButton>
+												<aButton @click="setBtn">改变按钮</aButton>
 											</div>
-										</div>`
-									}),
-									renderButtons: dialogInstance => {
-										return dialogInstance.vDomDefaultButton;
-									},
-									maxmin: true,
-									payload: {
-										row: {
-											name: "name"
-										}
-									}
+										</div>
+										<xDialogFooter :configs="dialogDefautBtn"/>`
+									})
 								});
 							}
 						}

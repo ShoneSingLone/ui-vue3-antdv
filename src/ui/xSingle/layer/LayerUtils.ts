@@ -72,17 +72,17 @@ export const READY: {
 		var jsPath = document.currentScript
 			? document.currentScript.src
 			: (function () {
-					var js = document.scripts,
-						last = js.length - 1,
-						src;
-					for (var i = last; i > 0; i--) {
-						if (js[i].readyState === "interactive") {
-							src = js[i].src;
-							break;
-						}
+				var js = document.scripts,
+					last = js.length - 1,
+					src;
+				for (var i = last; i > 0; i--) {
+					if (js[i].readyState === "interactive") {
+						src = js[i].src;
+						break;
 					}
-					return src || js[last].src;
-			  })();
+				}
+				return src || js[last].src;
+			})();
 		const GLOBAL = {};
 		return GLOBAL.layer_dir || jsPath.substring(0, jsPath.lastIndexOf("/") + 1);
 	})(),
@@ -234,19 +234,19 @@ const LayerUtils = {
 				},
 				isOptionsIsFunction && !READY.config.skin
 					? {
-							skin: skin + " layui-layer-hui",
-							anim: anim
-					  }
+						skin: skin + " layui-layer-hui",
+						anim: anim
+					}
 					: (function () {
-							options = options || {};
-							if (
-								options.icon === -1 ||
-								(options.icon === undefined && !READY.config.skin)
-							) {
-								options.skin = skin + " " + (options.skin || "layui-layer-hui");
-							}
-							return options;
-					  })()
+						options = options || {};
+						if (
+							options.icon === -1 ||
+							(options.icon === undefined && !READY.config.skin)
+						) {
+							options.skin = skin + " " + (options.skin || "layui-layer-hui");
+						}
+						return options;
+					})()
 			)
 		);
 	},
@@ -307,7 +307,7 @@ const LayerUtils = {
 								iframe.contentWindow.document.write("");
 								iframe.contentWindow.close();
 								$eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
-							} catch (e) {}
+							} catch (e) { }
 						}
 					}
 
@@ -578,7 +578,7 @@ class ClassLayer {
 		tipsMore: false,
 		success: false,
 		yes: false,
-		cancel: false,
+		onClickClose: false,
 		end: false,
 		full: false,
 		minStack: true
@@ -596,9 +596,8 @@ class ClassLayer {
 		if (!config.shade) {
 			return "";
 		}
-		return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${
-			this.zIndex - 1
-		};"></div>`;
+		return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${this.zIndex - 1
+			};"></div>`;
 	}
 
 	get cptDomTitle() {
@@ -645,8 +644,8 @@ class ClassLayer {
 						(config.title
 							? config.closeBtn
 							: config.type == LayerUtils.TIPS
-							? "1"
-							: "2") +
+								? "1"
+								: "2") +
 						'" href="javascript:;"></a>';
 				}
 				return closebtn;
@@ -677,9 +676,8 @@ class ClassLayer {
 				},
 				""
 			);
-			return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${
-				config.btnAlign || ""
-			}">${domButtons}</div>`;
+			return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${config.btnAlign || ""
+				}">${domButtons}</div>`;
 		}
 		return "";
 	}
@@ -766,6 +764,7 @@ class ClassLayer {
 			custumSettings.type === LayerUtils.LOADING ? 0 : -1;
 		/* 初始最大宽度：当前屏幕宽，左右留 15px 边距 */
 		layerInstance.config.maxWidth = ($win.width() as number) - 15 * 2;
+		layerInstance.config.custumSettings = custumSettings;
 
 		const { config } = layerInstance;
 		/* 随layer 的增减变动 */
@@ -783,6 +782,16 @@ class ClassLayer {
 		);
 		layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
 		layerInstance.isContentTypeObject = typeof config.content === "object";
+
+		layerInstance.config.onClickClose = async (params) => {
+			if (custumSettings.onClickClose) {
+				return await custumSettings.onClickClose(params)
+			}
+			if (custumSettings.onBeforeClose) {
+				return await custumSettings.onBeforeClose(params)
+			}
+			return true;
+		}
 
 		const { isContentTypeObject } = layerInstance;
 
@@ -1223,16 +1232,22 @@ class ClassLayer {
 			.find(`.${LAYUI_LAYER_CLOSE}`)
 			.on("click", async function handleClickCloseBtn() {
 				/* 关闭 */
-				var isClosed = false;
-				if (config.cancel) {
-					isClosed = config.cancel(layerInstance._layerKey, $eleLayer);
+				let isClosed = false;
+				const isNeedClose = await config.onClickClose({
+					_layerKey: layerInstance._layerKey,
+					$eleLayer,
+					dialogOptions: ''
+				});
+
+				if (isNeedClose) {
+					if (!isClosed) {
+						isClosed = await LayerUtils.close(layerInstance._layerKey);
+					}
+					if (!isClosed) {
+						await LayerUtils.close($(this).attr("data-layer-id"));
+					}
 				}
-				if (!isClosed) {
-					isClosed = await LayerUtils.close(layerInstance._layerKey);
-				}
-				if (!isClosed) {
-					await LayerUtils.close($(this).attr("data-layer-id"));
-				}
+
 			});
 		/* 点遮罩关闭 */
 		if (config.shadeClose) {

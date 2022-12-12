@@ -15,7 +15,7 @@
     "bs": "npm i --legacy-peer-deps",
     "npmpatch": "npm version patch",
     "up": "npm publish --access public",
-    "start": "cross-env runPlugin=useDevServer vite --open",
+    "start": "cross-env runPlugin=useDevServer vite --open --port 3011",
     "cleandist": "node ./plugins/ci/clean.js",
     "build": "npm run build:lib && npm run build:app",
     "build:lib": "vue-tsc --noEmit && vite build && npm run cleandist",

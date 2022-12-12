@@ -21,5 +21,6 @@ export default ({ property, slots, listeners }) => {
 	} else if (property.isSearch) {
 		component = resolveComponent("aInputSearch");
 	}
+	// property.disabled=true;
 	return <component {...property} {...listeners} v-slots={slots} />;
 };

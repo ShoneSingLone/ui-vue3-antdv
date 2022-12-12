@@ -2096,6 +2096,14 @@ div.xVirTable-row > div.xVirTable-cell::after {
   width: 100%;
   height: 100%;
   border-right: 1px solid #f0f0f0;
+}
+
+.ventose-dialog-content {
+  overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 100%;
 }/*!
  * 
  * ant-design-vue v3.2.13
@@ -29539,18 +29547,18 @@ div[id^=lazy-svg_] {
   z-index: 4;
   text-align: center;
 }
-.table-options {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
+.table-options {\r
+	display: flex;\r
+	flex-flow: row nowrap;\r
+	align-items: center;\r
 	padding: 10px 0;
 }
-.table-filter {
+.table-filter {\r
 	margin-left: 4px;
 }
-.table-pagination {
+.table-pagination {\r
 	padding: 10px 0;
-}
+}\r
 .vir-item-component {
   height: 100%;
   overflow: auto;
@@ -30313,7 +30321,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       return `k${privateLodash.camelCase(someString)}`;
     },
     asyncLoadText: async function(url) {
-      if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+      if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
         const res = await iStorage(url);
         if (res) {
           return res;
@@ -30326,7 +30334,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           url,
           dataType: "text",
           success(...args2) {
-            if (!window.___VENTOSE_UI_IS_DEV_MODE) {
+            if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
               iStorage(url, args2[0]);
             }
             resolve.apply(null, args2);
@@ -30346,6 +30354,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       };
     },
     dateFormat: function(date, format = "YYYY-MM-DD") {
+      if (typeof date === "number") {
+        date = dayjs__default.default.unix(date);
+      }
       if (format === 1) {
         format = "YYYY-MM-DD HH:mm:ss";
       }
@@ -30540,14 +30551,16 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     i18nMessage: {},
     assetsSvgPath: "",
     assetsPath: "",
+    bashPath: "",
     setAssetsBaseById(eleId) {
       var _a;
       const img = document.getElementById(eleId);
       if (img) {
-        const src = String(img.src);
+        const src = String(img.href);
         const index2 = ((_a = src.match(/assets(.*)/)) == null ? void 0 : _a.index) || 0;
         this.assetsSvgPath = src.substring(0, index2) + "assets/svg";
         this.assetsPath = src.substring(0, index2) + "assets";
+        this.bashPath = src.substring(0, index2);
       }
     },
     $t(prop, payload = {}, i18nMessage = false) {
@@ -30850,18 +30863,23 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }
     },
     emits: ["update:modelValue"],
-    setup(props) {
+    setup(props, {
+      attrs,
+      slots,
+      emit,
+      expose
+    }) {
       let Cpt_isShowXItem = true;
       let Cpt_isDisabled = false;
       if (privateLodash.isFunction(props.configs.isShow)) {
         Cpt_isShowXItem = vue.computed(props.configs.isShow);
       } else if (privateLodash.isBoolean(props.configs.isShow)) {
-        Cpt_isShowXItem = props.configs.isShow;
+        Cpt_isShowXItem = vue.computed(() => props.configs.isShow);
       }
       if (privateLodash.isFunction(props.configs.disabled)) {
         Cpt_isDisabled = vue.computed(props.configs.disabled);
       } else if (privateLodash.isBoolean(props.configs.disabled)) {
-        Cpt_isDisabled = props.configs.disabled;
+        Cpt_isDisabled = vue.computed(() => props.configs.disabled);
       }
       return {
         Cpt_isShowXItem,
@@ -30976,7 +30994,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
               property[prop] = value(vm);
               return;
             }
-            if (["itemTips", "rules"].includes(prop)) {
+            if (["itemTips", "rules", "labelVNodeRender"].includes(prop)) {
               return;
             }
             property[prop] = value;
@@ -31244,9 +31262,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         }
       }
     },
-    components: {
-      Button: Antd.Button
-    },
     beforeMount() {
       if (!this.configs) {
         debugger;
@@ -31331,7 +31346,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       if (this.title) {
         configs.title = this.title;
       }
-      return vue.createVNode(Antd.Button, vue.mergeProps({
+      return vue.createVNode(vue.resolveComponent("aButton"), vue.mergeProps({
         "class": "x-button",
         "onClick": this.onClick,
         "loading": this.loading,
@@ -33773,7 +33788,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         tipsMore: false,
         success: false,
         yes: false,
-        cancel: false,
+        onClickClose: false,
         end: false,
         full: false,
         minStack: true
@@ -33905,6 +33920,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       layerInstance.config = Object.assign(layerInstance.config, custumSettings);
       layerInstance.config.icon = custumSettings.type === LayerUtils.LOADING ? 0 : -1;
       layerInstance.config.maxWidth = $win.width() - 15 * 2;
+      layerInstance.config.custumSettings = custumSettings;
       const { config } = layerInstance;
       layerInstance._layerKey = privateLodash.genId("");
       layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
@@ -33917,6 +33933,15 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       );
       layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
       layerInstance.isContentTypeObject = typeof config.content === "object";
+      layerInstance.config.onClickClose = async (params) => {
+        if (custumSettings.onClickClose) {
+          return await custumSettings.onClickClose(params);
+        }
+        if (custumSettings.onBeforeClose) {
+          return await custumSettings.onBeforeClose(params);
+        }
+        return true;
+      };
       const { isContentTypeObject } = layerInstance;
       if (typeof config.area === "string") {
         config.area = config.area === "auto" ? ["", ""] : [config.area, ""];
@@ -34238,15 +34263,19 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         }
       });
       $eleLayer.find(`.${LAYUI_LAYER_CLOSE}`).on("click", async function handleClickCloseBtn() {
-        var isClosed = false;
-        if (config.cancel) {
-          isClosed = config.cancel(layerInstance._layerKey, $eleLayer);
-        }
-        if (!isClosed) {
-          isClosed = await LayerUtils.close(layerInstance._layerKey);
-        }
-        if (!isClosed) {
-          await LayerUtils.close($__default.default(this).attr("data-layer-id"));
+        let isClosed = false;
+        const isNeedClose = await config.onClickClose({
+          _layerKey: layerInstance._layerKey,
+          $eleLayer,
+          dialogOptions: ""
+        });
+        if (isNeedClose) {
+          if (!isClosed) {
+            isClosed = await LayerUtils.close(layerInstance._layerKey);
+          }
+          if (!isClosed) {
+            await LayerUtils.close($__default.default(this).attr("data-layer-id"));
+          }
         }
       });
       if (config.shadeClose) {
@@ -34343,10 +34372,51 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     }
     $MoveMask.hide();
   });
+  const xDialogFooter = vue.defineComponent({
+    props: ["configs"],
+    computed: {
+      onCancel() {
+        return this.configs.onCancel;
+      },
+      onOk() {
+        return this.configs.onOk;
+      },
+      vDomOk() {
+        var _a;
+        if ((_a = this.configs) == null ? void 0 : _a.hideOk) {
+          return null;
+        }
+        return vue.createVNode(vue.resolveComponent("aButton"), {
+          "type": "primary",
+          "class": "ml10",
+          "onClick": this.onOk
+        }, {
+          default: () => [vue.createTextVNode(" "), privateLodash.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label, vue.createTextVNode(" ")]
+        });
+      },
+      vDomCancel() {
+        var _a;
+        if ((_a = this.configs) == null ? void 0 : _a.hideCancel) {
+          return null;
+        }
+        return vue.createVNode(vue.resolveComponent("aButton"), {
+          "onClick": this.onCancel
+        }, {
+          default: () => [vue.createTextVNode(" "), privateLodash.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label, vue.createTextVNode(" ")]
+        });
+      }
+    },
+    render() {
+      return vue.createVNode("div", {
+        "class": "flex middle end ant-modal-footer"
+      }, [this.vDomCancel, this.vDomOk]);
+    }
+  });
   const installUIDialogComponent = (UI2, {
     appPlugins,
     dependState
-  }) => {
+  }, app) => {
+    app.component("xDialogFooter", xDialogFooter);
     UI2.dialog.component = async (dialogOptions) => new Promise((resolve, reject) => {
       const {
         component: BussinessComponent,
@@ -34357,52 +34427,67 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       let $container = $__default.default("<div/>", {
         id
       });
-      const __elId = `#${id}`;
+      const _dialogId = `#${id}`;
       if (dialogOptions.yes) {
         dialogOptions._yes = dialogOptions.yes;
         delete dialogOptions.yes;
       }
+      dialogOptions.closeDialog = () => {
+        let isCloseDialog = true;
+        if (dialogOptions.onBeforeClose) {
+          isCloseDialog = Boolean(dialogOptions.onBeforeClose({
+            dialogOptions,
+            _layerKey: "",
+            $eleLayer: ""
+          }));
+        }
+        if (isCloseDialog) {
+          LayerUtils.close(handleEcsPress._layerKey);
+        }
+      };
       let dialogVueApp = null;
       let handleEcsPress = {
-        layerIndex: "",
+        _layerKey: "",
         handler(event2) {
           const code = event2.keyCode;
           event2.preventDefault();
           if (code === KEY.esc) {
-            LayerUtils.close(handleEcsPress.layerIndex);
+            dialogOptions.closeDialog();
           }
         },
-        on(layerIndex) {
-          handleEcsPress.layerIndex = layerIndex;
-          $__default.default(document).on(`keyup.${__elId}`, handleEcsPress.handler);
+        on(_layerKey) {
+          handleEcsPress._layerKey = _layerKey;
+          $__default.default(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
         },
         off() {
-          $__default.default(document).off(`keyup.${__elId}`, handleEcsPress.handler);
+          $__default.default(document).off(`keyup.${_dialogId}`, handleEcsPress.handler);
           handleEcsPress = null;
         }
       };
-      LayerUtils.open(privateLodash.merge({
+      const layerOptions = privateLodash.merge(dialogOptions, {
         contentClass: "flex1",
-        type: 1,
+        type: LayerUtils.DIALOG,
         title: [title || ""],
         area: area || ["800px"],
         content: $container,
         offset: ["160px", null],
         btn: [],
-        success(indexPanel, layerIndex) {
-          handleEcsPress.on(layerIndex);
+        success($eleLayer, _layerKey) {
+          handleEcsPress.on(_layerKey);
+          dialogOptions._dialog$ele = $eleLayer;
+          dialogOptions._layerKey = _layerKey;
           try {
             dialogVueApp = vue.createApp(vue.defineComponent({
-              beforeMount() {
-                resolve(this);
+              components: {
+                BussinessComponent
               },
               created() {
-                this.dialogOptions.__dialogInstance = this;
-                this.dialogOptions.__elId = __elId;
+                this.dialogOptions._contentInstance = this;
+                resolve(this);
               },
               mounted() {
                 if (this.dialogOptions.fullscreen) {
-                  this.fullDialog();
+                  LayerUtils.full(_layerKey);
                 }
               },
               data() {
@@ -34410,111 +34495,26 @@ return (${scfObjSourceCode})(argVue,argPayload);`
                   dialogOptions
                 };
               },
-              methods: {
-                fullDialog() {
-                  LayerUtils.full(layerIndex);
-                },
-                async handleClickOk() {
-                  if (dialogOptions.onOk) {
-                    await dialogOptions.onOk(dialogOptions);
-                  } else {
-                    await this.handleClickCancel();
-                  }
-                },
-                async handleClickCancel() {
-                  let isClose = true;
-                  if (dialogOptions.beforeCancel) {
-                    isClose = await dialogOptions.beforeCancel();
-                  }
-                  if (isClose) {
-                    LayerUtils.close(layerIndex);
-                  } else {
-                    return false;
-                  }
-                }
-              },
-              computed: {
-                okText() {
-                  return this.dialogOptions.okText || this.$t("\u786E\u5B9A").label;
-                },
-                cancelText() {
-                  return this.dialogOptions.cancelText || this.$t("\u53D6\u6D88").label;
-                },
-                renderContent() {
-                  return vue.createVNode(BussinessComponent, {
-                    "propDialogOptions": dialogOptions,
-                    "class": "flex1",
-                    "style": "overflow:auto;"
-                  }, null);
-                },
-                renderButtons() {
-                  if (this.dialogOptions.hideButtons) {
-                    return null;
-                  }
-                  if (privateLodash.isFunction(this.dialogOptions.renderButtons)) {
-                    let vDomButtons = (() => {
-                      let _vDomButtons = this.dialogOptions.renderButtons(this);
-                      if (!_vDomButtons) {
-                        return null;
-                      } else if (_vDomButtons.template) {
-                        return vue.h(_vDomButtons);
-                      } else {
-                        return _vDomButtons;
-                      }
-                    })();
-                    return vDomButtons;
-                  }
-                  return this.vDomDefaultButton;
-                },
-                vDomDefaultButton() {
-                  const [isShowCancel, isShowOk] = (() => {
-                    return [!this.dialogOptions.hideCancel || null, !this.dialogOptions.hideOk || null];
-                  })();
-                  return vue.createVNode(vue.Fragment, null, [isShowCancel && vue.createVNode(vue.resolveComponent("xButton"), {
-                    "configs": {
-                      onClick: this.handleClickCancel
-                    }
-                  }, {
-                    default: () => [this.cancelText]
-                  }), vue.createVNode(vue.resolveComponent("xGap"), {
-                    "l": "10"
-                  }, null), isShowOk && vue.createVNode(vue.resolveComponent("xButton"), {
-                    "configs": {
-                      onClick: this.handleClickOk,
-                      type: "primary"
-                    }
-                  }, {
-                    default: () => [this.okText]
-                  })]);
-                }
-              },
               render() {
                 return vue.createVNode("div", {
-                  "class": "flex vertical h100 width100",
-                  "data-el-id": __elId
-                }, [this.renderContent, vue.createVNode("div", {
-                  "class": "flex middle end ant-modal-footer"
-                }, [this.renderButtons])]);
+                  "class": "ventose-dialog-content",
+                  "data-el-id": _dialogId
+                }, [vue.createVNode(BussinessComponent, {
+                  "propDialogOptions": this.dialogOptions
+                }, null)]);
               }
             }));
             dialogVueApp.use(appPlugins, {
               dependState
             });
-            dialogVueApp.mount(__elId);
+            dialogVueApp.mount(_dialogId);
           } catch (e) {
             console.error(e);
           }
-          dialogOptions.layerIndex = layerIndex;
-          dialogOptions.close = () => {
-            LayerUtils.close(layerIndex);
-          };
-          dialogOptions.afterOpenDialoag && dialogOptions.afterOpenDialoag(dialogVueApp);
+          dialogOptions.onAfterOpenDialoag && dialogOptions.onAfterOpenDialoag(dialogVueApp);
         },
         cancel() {
-          var _a, _b;
-          if (dialogVueApp) {
-            (_b = (_a = dialogVueApp._instance) == null ? void 0 : _a.proxy) == null ? void 0 : _b.handleClickCancel();
-          }
+          dialogOptions.closeDialog();
           return false;
         },
         end() {
@@ -34526,10 +34526,11 @@ return (${scfObjSourceCode})(argVue,argPayload);`
             dialogVueApp = null;
           }
           dialogOptions.payload = null;
-          dialogOptions.__dialogInstance = null;
+          dialogOptions._contentInstance = null;
           dialogOptions = null;
         }
-      }, dialogOptions));
+      }, privateLodash.omit(dialogOptions, ["end", "cancel", "success", "content"]));
+      LayerUtils.open(layerOptions);
     });
   };
   const appAddPlugin = {};
@@ -34780,6 +34781,12 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   }
   let xItemNoPropCount = 0;
   function defItem(options) {
+    const configs = defItem.item(options);
+    return {
+      [configs.prop]: configs
+    };
+  }
+  defItem.item = (options) => {
     if (!options.prop) {
       options.prop = `xItem${xItemNoPropCount++}`;
       console.error(`no xItem prop replace by ${options.prop}`);
@@ -34793,10 +34800,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     }, {
       ...options
     }));
-    return {
-      [configs.prop]: configs
-    };
-  }
+    return configs;
+  };
   defItem.labelWithTips = ({
     label,
     tips,
@@ -35071,7 +35076,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   const VentoseUIWithInstall = {
     install: (app, options) => {
       installDirective(app, options);
-      installUIDialogComponent(UI, options);
+      installUIDialogComponent(UI, options, app);
       privateLodash.each(components, (component, name) => {
         if (component.name) {
           name = component.name;

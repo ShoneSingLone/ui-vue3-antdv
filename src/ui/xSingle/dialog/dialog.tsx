@@ -4,221 +4,156 @@ import { xU } from "../../ventoseUtils";
 import $ from "jquery";
 import { LayerUtils, KEY } from "../layer/LayerUtils";
 import { createApp, defineComponent, reactive, h } from "vue";
+import { State_UI } from "../../State_UI";
 
 export type t_dialogOptions = {
-	__dialogInstance?: object;
-	__elId?: string;
-	/* 在component里面将需要的数据放在payload里面，onOK作为options里的参数传入，可以用于表单数据获取 */
-	payload?: Object;
+	/* 传入的组件的实例 */
+	_contentInstance?: object;
+	/* dialog jQuery 实例 */
+	_dialog$ele?: JQuery;
+	/* 在component里面propDialogOptions作为参数传入*/
 	title: string;
 	component: object;
-	/*关闭方法*/
-	close?: Function;
 	area?: string[];
 	/* layer 索引，用于layer close */
-	layerIndex?: number;
+	_layerKey?: number;
+	/*关闭方法*/
+	closeDialog?: Function;
 	/* hook: 完成组件首次加载 */
-	afterOpenDialoag?: Function;
-	onOk: Function;
-	beforeCancel?: Function;
-	hideButtons?: boolean;
-	renderButtons?: Function;
+	onAfterOpenDialoag?: Function;
+	onBeforeClose?: Function;
 };
-export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
+
+const xDialogFooter = defineComponent({
+	props: ["configs"],
+	computed: {
+		onCancel() {
+			return this.configs.onCancel
+		},
+		onOk() {
+			return this.configs.onOk
+		},
+		vDomOk() {
+			if (this.configs?.hideOk) {
+				return null;
+			}
+			return <aButton type="primary" class="ml10" onClick={this.onOk} > {xU.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("确定").label} </aButton>
+		},
+		vDomCancel() {
+			if (this.configs?.hideCancel) {
+				return null;
+			}
+			return <aButton onClick={this.onCancel} > {xU.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("取消").label} </aButton>
+
+		},
+	},
+	render() {
+		return <div class="flex middle end ant-modal-footer">
+			{this.vDomCancel}
+			{this.vDomOk}
+		</div >
+	}
+})
+
+export const installUIDialogComponent = (UI, { appPlugins, dependState }, app) => {
+	app.component("xDialogFooter", xDialogFooter)
 	UI.dialog.component = async (dialogOptions: t_dialogOptions) =>
 		new Promise((resolve, reject) => {
 			const { component: BussinessComponent, title, area } = dialogOptions;
 			const id = `xDialog_${Date.now()}`;
 			let $container = $("<div/>", { id });
-			const __elId = `#${id}`;
+			const _dialogId = `#${id}`;
 			/* FIXED: */
 			if (dialogOptions.yes) {
 				dialogOptions._yes = dialogOptions.yes;
 				delete dialogOptions.yes;
 			}
+
+			dialogOptions.closeDialog = () => {
+				let isCloseDialog = true;
+				if (dialogOptions.onBeforeClose) {
+					isCloseDialog = Boolean(dialogOptions.onBeforeClose({ dialogOptions, _layerKey: "", $eleLayer: '' }));
+				}
+				if (isCloseDialog) {
+					LayerUtils.close(handleEcsPress._layerKey);
+				}
+			};
+
 			/*dialog 的vue app*/
 			let dialogVueApp = null;
 
 			/* 处理按Esc键关闭弹窗 */
 			let handleEcsPress = {
-				layerIndex: "",
+				_layerKey: "",
 				handler(event) {
 					const code = event.keyCode;
 					event.preventDefault();
 					if (code === KEY.esc) {
-						LayerUtils.close(handleEcsPress.layerIndex);
+						dialogOptions.closeDialog()
 					}
 				},
-				on(layerIndex) {
-					handleEcsPress.layerIndex = layerIndex;
-					$(document).on(`keyup.${__elId}`, handleEcsPress.handler);
+				on(_layerKey) {
+					handleEcsPress._layerKey = _layerKey;
+					$(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
 				},
 				off() {
-					$(document).off(`keyup.${__elId}`, handleEcsPress.handler);
+					$(document).off(`keyup.${_dialogId}`, handleEcsPress.handler);
 					handleEcsPress = null;
 				}
 			};
 
-			LayerUtils.open(
+			const layerOptions =
 				xU.merge(
+					dialogOptions,
 					{
 						/* 传入自定义样式 */
 						contentClass: "flex1",
-						type: 1,
+						type: LayerUtils.DIALOG,
 						title: [title || ""],
 						area: area || ["800px"],
 						content: $container,
 						offset: ["160px", null],
-						btn: [
-							/*'确定', '取消'*/
-						],
-						success(indexPanel, layerIndex) {
-							handleEcsPress.on(layerIndex);
+						/* 无按钮 */
+						btn: [ /*'确定', '取消'*/],
+						success($eleLayer, _layerKey) {
+							handleEcsPress.on(_layerKey);
+							/* dialog jQuery 实例 */
+							dialogOptions._dialog$ele = $eleLayer;
+							dialogOptions._layerKey = _layerKey;
 							try {
 								dialogVueApp = createApp(
 									defineComponent({
-										beforeMount() {
-											resolve(this);
-										},
+										components: { BussinessComponent },
 										created() {
-											this.dialogOptions.__dialogInstance = this;
-											this.dialogOptions.__elId = __elId;
+											this.dialogOptions._contentInstance = this;
+											resolve(this);
 										},
 										mounted() {
 											if (this.dialogOptions.fullscreen) {
-												this.fullDialog();
+												LayerUtils.full(_layerKey);
 											}
 										},
 										data() {
 											return { dialogOptions };
 										},
-										methods: {
-											fullDialog() {
-												LayerUtils.full(layerIndex);
-											},
-											async handleClickOk() {
-												if (dialogOptions.onOk) {
-													await dialogOptions.onOk(dialogOptions);
-												} else {
-													await this.handleClickCancel();
-												}
-											},
-											async handleClickCancel() {
-												let isClose = true;
-												if (dialogOptions.beforeCancel) {
-													isClose = await dialogOptions.beforeCancel();
-												}
-												if (isClose) {
-													LayerUtils.close(layerIndex);
-												} else {
-													return false;
-												}
-											}
-										},
-										computed: {
-											okText() {
-												return (
-													this.dialogOptions.okText || this.$t("确定").label
-												);
-											},
-											cancelText() {
-												return (
-													this.dialogOptions.cancelText || this.$t("取消").label
-												);
-											},
-											/* 主要内容 */
-											renderContent() {
-												return (
-													<BussinessComponent
-														propDialogOptions={dialogOptions}
-														class="flex1"
-														style="overflow:auto;"
-													/>
-												);
-											},
-											/* 下方按钮 */
-											renderButtons() {
-												if (this.dialogOptions.hideButtons) {
-													return null;
-												}
-												if (xU.isFunction(this.dialogOptions.renderButtons)) {
-													/* 提供 handleClickOk、handleClickCancel*/
-													let vDomButtons = (() => {
-														let _vDomButtons =
-															this.dialogOptions.renderButtons(this);
-														if (!_vDomButtons) {
-															return null;
-														} else if (_vDomButtons.template) {
-															return h(_vDomButtons);
-														} else {
-															return _vDomButtons;
-														}
-													})();
-
-													return vDomButtons;
-												}
-												return this.vDomDefaultButton;
-											},
-											vDomDefaultButton() {
-												const [isShowCancel, isShowOk] = (() => {
-													return [
-														!this.dialogOptions.hideCancel || null,
-														!this.dialogOptions.hideOk || null
-													];
-												})();
-												return (
-													<>
-														{isShowCancel && (
-															<xButton
-																configs={{ onClick: this.handleClickCancel }}>
-																{this.cancelText}
-															</xButton>
-														)}
-														<xGap l="10" />
-														{isShowOk && (
-															<xButton
-																configs={{
-																	onClick: this.handleClickOk,
-																	type: "primary"
-																}}>
-																{this.okText}
-															</xButton>
-														)}
-													</>
-												);
-											}
-										},
 										render() {
 											return (
-												<div
-													class="flex vertical h100 width100"
-													data-el-id={__elId}>
-													{this.renderContent}
-													<div class="flex middle end ant-modal-footer">
-														{this.renderButtons}
-													</div>
+												<div class="ventose-dialog-content" data-el-id={_dialogId}>
+													<BussinessComponent propDialogOptions={this.dialogOptions} />
 												</div>
 											);
 										}
 									})
 								);
 								dialogVueApp.use(appPlugins, { dependState });
-								dialogVueApp.mount(__elId);
+								dialogVueApp.mount(_dialogId);
 							} catch (e) {
 								console.error(e);
 							}
-							dialogOptions.layerIndex = layerIndex;
-							dialogOptions.close = () => {
-								LayerUtils.close(layerIndex);
-							};
-							dialogOptions.afterOpenDialoag &&
-								dialogOptions.afterOpenDialoag(dialogVueApp);
+							dialogOptions.onAfterOpenDialoag && dialogOptions.onAfterOpenDialoag(dialogVueApp);
 						},
 						cancel() {
-							/*点击右上角的关闭按钮*/
-							if (dialogVueApp) {
-								dialogVueApp._instance?.proxy?.handleClickCancel();
-							}
+							dialogOptions.closeDialog();
 							return false;
 						},
 						end() {
@@ -230,12 +165,13 @@ export const installUIDialogComponent = (UI, { appPlugins, dependState }) => {
 								dialogVueApp = null;
 							}
 							dialogOptions.payload = null;
-							dialogOptions.__dialogInstance = null;
+							dialogOptions._contentInstance = null;
 							dialogOptions = null;
 						}
 					},
-					dialogOptions
-				)
-			);
+					xU.omit(dialogOptions, ["end", "cancel", "success", "content"])
+				);
+
+			LayerUtils.open(layerOptions);
 		});
 };
