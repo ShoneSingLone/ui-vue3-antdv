@@ -30894,8 +30894,8 @@ const _sfc_main$b = defineComponent({
       "onUpdate:value": (val, ...args2) => {
         configs.value = val;
         this.$emit("update:modelValue", val);
-        if (privateLodash.isFunction(listeners.onAfterValueChange)) {
-          listeners.onAfterValueChange.call(configs, val);
+        if (privateLodash.isFunction(listeners.onAfterValueEmit)) {
+          listeners.onAfterValueEmit.call(configs, val);
         }
         handleConfigsValidate(EVENT_TYPE.update);
       },
@@ -33932,11 +33932,15 @@ class ClassLayer {
     layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
     layerInstance.isContentTypeObject = typeof config.content === "object";
     layerInstance.config.onClickClose = async (params) => {
+      const isFalse = (val) => privateLodash.isBoolean(val) && !val;
       if (custumSettings.onClickClose) {
-        return await custumSettings.onClickClose(params);
-      }
-      if (custumSettings.onBeforeClose) {
-        return await custumSettings.onBeforeClose(params);
+        if (isFalse(await custumSettings.onClickClose(params))) {
+          return false;
+        }
+      } else if (custumSettings.onBeforeClose) {
+        if (isFalse(await custumSettings.onBeforeClose(params))) {
+          return false;
+        }
       }
       return true;
     };
@@ -34008,7 +34012,7 @@ class ClassLayer {
     if (config.fullscreen) {
       setTimeout(() => {
         LayerUtils.full(_layerKey);
-      }, 400);
+      }, 500);
     }
     if (config.fixed) {
       $win.on("resize", function() {
@@ -34370,6 +34374,16 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
   }
   $MoveMask.hide();
 });
+const EcsPressHandler = privateLodash.debounce(async function(event2, dialogOptions) {
+  const $antModal = $(".ant-modal-root");
+  if ($antModal.length > 0) {
+    return;
+  }
+  console.log(event2);
+  if (event2.keyCode === KEY.esc) {
+    await dialogOptions.closeDialog();
+  }
+}, 100);
 const xDialogFooter = defineComponent({
   props: ["configs"],
   computed: {
@@ -34384,24 +34398,31 @@ const xDialogFooter = defineComponent({
       if ((_a = this.configs) == null ? void 0 : _a.hideOk) {
         return null;
       }
-      return createVNode(resolveComponent("aButton"), {
+      const configs = {
+        text: privateLodash.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label,
+        disabled: privateLodash.isInput(this.configs.disabledOk) ? this.configs.disabledOk : false,
+        onClick: this.onOk || privateLodash.doNothing
+      };
+      return createVNode(resolveComponent("xButton"), {
         "type": "primary",
         "class": "ml10",
-        "onClick": this.onOk
-      }, {
-        default: () => [createTextVNode(" "), privateLodash.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label, createTextVNode(" ")]
-      });
+        "configs": configs
+      }, null);
     },
     vDomCancel() {
       var _a;
       if ((_a = this.configs) == null ? void 0 : _a.hideCancel) {
         return null;
       }
-      return createVNode(resolveComponent("aButton"), {
-        "onClick": this.onCancel
-      }, {
-        default: () => [createTextVNode(" "), privateLodash.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label, createTextVNode(" ")]
-      });
+      const configs = {
+        text: privateLodash.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label,
+        disabled: privateLodash.isInput(this.configs.disabledCancel) ? this.configs.disabledCancel : false,
+        onClick: this.onCancel || privateLodash.doNothing
+      };
+      return createVNode(resolveComponent("xButton"), {
+        "class": "ml10",
+        "configs": configs
+      }, null);
     }
   },
   render() {
@@ -34430,14 +34451,17 @@ const installUIDialogComponent = (UI2, {
       dialogOptions._yes = dialogOptions.yes;
       delete dialogOptions.yes;
     }
-    dialogOptions.closeDialog = () => {
+    dialogOptions.closeDialog = async () => {
       let isCloseDialog = true;
       if (dialogOptions.onBeforeClose) {
-        isCloseDialog = Boolean(dialogOptions.onBeforeClose({
+        const res = await dialogOptions.onBeforeClose({
           dialogOptions,
           _layerKey: "",
           $eleLayer: ""
-        }));
+        });
+        if (privateLodash.isBoolean(res) && !res) {
+          isCloseDialog = false;
+        }
       }
       if (isCloseDialog) {
         LayerUtils.close(handleEcsPress._layerKey);
@@ -34446,13 +34470,7 @@ const installUIDialogComponent = (UI2, {
     let dialogVueApp = null;
     let handleEcsPress = {
       _layerKey: "",
-      handler(event2) {
-        const code = event2.keyCode;
-        event2.preventDefault();
-        if (code === KEY.esc) {
-          dialogOptions.closeDialog();
-        }
-      },
+      handler: (event2) => EcsPressHandler(event2, dialogOptions),
       on(_layerKey) {
         handleEcsPress._layerKey = _layerKey;
         $(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
@@ -34482,11 +34500,6 @@ const installUIDialogComponent = (UI2, {
             created() {
               this.dialogOptions._contentInstance = this;
               resolve(this);
-            },
-            mounted() {
-              if (this.dialogOptions.fullscreen) {
-                LayerUtils.full(_layerKey);
-              }
             },
             data() {
               return {
@@ -34973,9 +34986,17 @@ const UI = {
     error: useModel("error"),
     warning: useModel("warning"),
     confirm: (options) => {
-      options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
-      options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
-      Modal.confirm.call(Modal, options);
+      return new Promise(async (resolve, reject) => {
+        options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
+        options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
+        options.onOk = () => {
+          resolve("ok");
+        };
+        options.onCancel = () => {
+          reject();
+        };
+        Modal.confirm(options);
+      });
     },
     delete({
       title,

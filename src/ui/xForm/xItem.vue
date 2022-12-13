@@ -64,8 +64,8 @@ export default defineComponent({
 			"onUpdate:value": (val, ...args) => {
 				configs.value = val;
 				this.$emit("update:modelValue", val);
-				if (xU.isFunction(listeners.onAfterValueChange)) {
-					listeners.onAfterValueChange.call(configs, val);
+				if (xU.isFunction(listeners.onAfterValueEmit)) {
+					listeners.onAfterValueEmit.call(configs, val);
 				}
 				/* TODO: rule检测*/
 				handleConfigsValidate(EVENT_TYPE.update);
@@ -315,7 +315,7 @@ export default defineComponent({
 					}
 				};
 				const debounceCheckXItem = xU.debounce(checkXItem, 300);
-				/* 如果有检验规则，添加可执行校验方法 */
+				/* 如果有检验规则，添加可执行校验方法  configs.validate = */
 				MutatingProps(this, "configs.validate", eventType => {
 					/* 短时间内，多个事件触发统一校验，使用队列，任一一个触发 */
 					const prop = `configs.validate.triggerEventsObj.${eventType}`;

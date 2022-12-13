@@ -30896,8 +30896,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         "onUpdate:value": (val, ...args2) => {
           configs.value = val;
           this.$emit("update:modelValue", val);
-          if (privateLodash.isFunction(listeners.onAfterValueChange)) {
-            listeners.onAfterValueChange.call(configs, val);
+          if (privateLodash.isFunction(listeners.onAfterValueEmit)) {
+            listeners.onAfterValueEmit.call(configs, val);
           }
           handleConfigsValidate(EVENT_TYPE.update);
         },
@@ -33934,11 +33934,15 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
       layerInstance.isContentTypeObject = typeof config.content === "object";
       layerInstance.config.onClickClose = async (params) => {
+        const isFalse = (val) => privateLodash.isBoolean(val) && !val;
         if (custumSettings.onClickClose) {
-          return await custumSettings.onClickClose(params);
-        }
-        if (custumSettings.onBeforeClose) {
-          return await custumSettings.onBeforeClose(params);
+          if (isFalse(await custumSettings.onClickClose(params))) {
+            return false;
+          }
+        } else if (custumSettings.onBeforeClose) {
+          if (isFalse(await custumSettings.onBeforeClose(params))) {
+            return false;
+          }
         }
         return true;
       };
@@ -34010,7 +34014,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       if (config.fullscreen) {
         setTimeout(() => {
           LayerUtils.full(_layerKey);
-        }, 400);
+        }, 500);
       }
       if (config.fixed) {
         $win.on("resize", function() {
@@ -34372,6 +34376,16 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     }
     $MoveMask.hide();
   });
+  const EcsPressHandler = privateLodash.debounce(async function(event2, dialogOptions) {
+    const $antModal = $__default.default(".ant-modal-root");
+    if ($antModal.length > 0) {
+      return;
+    }
+    console.log(event2);
+    if (event2.keyCode === KEY.esc) {
+      await dialogOptions.closeDialog();
+    }
+  }, 100);
   const xDialogFooter = vue.defineComponent({
     props: ["configs"],
     computed: {
@@ -34386,24 +34400,31 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         if ((_a = this.configs) == null ? void 0 : _a.hideOk) {
           return null;
         }
-        return vue.createVNode(vue.resolveComponent("aButton"), {
+        const configs = {
+          text: privateLodash.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label,
+          disabled: privateLodash.isInput(this.configs.disabledOk) ? this.configs.disabledOk : false,
+          onClick: this.onOk || privateLodash.doNothing
+        };
+        return vue.createVNode(vue.resolveComponent("xButton"), {
           "type": "primary",
           "class": "ml10",
-          "onClick": this.onOk
-        }, {
-          default: () => [vue.createTextVNode(" "), privateLodash.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label, vue.createTextVNode(" ")]
-        });
+          "configs": configs
+        }, null);
       },
       vDomCancel() {
         var _a;
         if ((_a = this.configs) == null ? void 0 : _a.hideCancel) {
           return null;
         }
-        return vue.createVNode(vue.resolveComponent("aButton"), {
-          "onClick": this.onCancel
-        }, {
-          default: () => [vue.createTextVNode(" "), privateLodash.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label, vue.createTextVNode(" ")]
-        });
+        const configs = {
+          text: privateLodash.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label,
+          disabled: privateLodash.isInput(this.configs.disabledCancel) ? this.configs.disabledCancel : false,
+          onClick: this.onCancel || privateLodash.doNothing
+        };
+        return vue.createVNode(vue.resolveComponent("xButton"), {
+          "class": "ml10",
+          "configs": configs
+        }, null);
       }
     },
     render() {
@@ -34432,14 +34453,17 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         dialogOptions._yes = dialogOptions.yes;
         delete dialogOptions.yes;
       }
-      dialogOptions.closeDialog = () => {
+      dialogOptions.closeDialog = async () => {
         let isCloseDialog = true;
         if (dialogOptions.onBeforeClose) {
-          isCloseDialog = Boolean(dialogOptions.onBeforeClose({
+          const res = await dialogOptions.onBeforeClose({
             dialogOptions,
             _layerKey: "",
             $eleLayer: ""
-          }));
+          });
+          if (privateLodash.isBoolean(res) && !res) {
+            isCloseDialog = false;
+          }
         }
         if (isCloseDialog) {
           LayerUtils.close(handleEcsPress._layerKey);
@@ -34448,13 +34472,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       let dialogVueApp = null;
       let handleEcsPress = {
         _layerKey: "",
-        handler(event2) {
-          const code = event2.keyCode;
-          event2.preventDefault();
-          if (code === KEY.esc) {
-            dialogOptions.closeDialog();
-          }
-        },
+        handler: (event2) => EcsPressHandler(event2, dialogOptions),
         on(_layerKey) {
           handleEcsPress._layerKey = _layerKey;
           $__default.default(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
@@ -34484,11 +34502,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
               created() {
                 this.dialogOptions._contentInstance = this;
                 resolve(this);
-              },
-              mounted() {
-                if (this.dialogOptions.fullscreen) {
-                  LayerUtils.full(_layerKey);
-                }
               },
               data() {
                 return {
@@ -34975,9 +34988,17 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       error: useModel("error"),
       warning: useModel("warning"),
       confirm: (options) => {
-        options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
-        options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
-        Antd.Modal.confirm.call(Antd.Modal, options);
+        return new Promise(async (resolve, reject) => {
+          options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
+          options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
+          options.onOk = () => {
+            resolve("ok");
+          };
+          options.onCancel = () => {
+            reject();
+          };
+          Antd.Modal.confirm(options);
+        });
       },
       delete({
         title,

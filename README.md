@@ -191,7 +191,7 @@ import {watch} from "vue";
 
 const inputConfigs = defItem({
     type: ITEM_TYPE.input,
-    onAfterValueChange: (configs) => {
+    onAfterValueEmit: (configs) => {
         State_App.count++;
     }
 });

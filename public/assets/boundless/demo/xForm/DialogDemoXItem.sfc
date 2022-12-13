@@ -73,7 +73,7 @@ async function sfc({ defineComponent, markRaw, State_UI, xU, UI, defItem }) {
                         value: "BBB"
                     }
                 ],
-                onAfterValueChange(val) {
+                onAfterValueEmit(val) {
                     vm.xForm.input.disabled = val;
                 }
             });

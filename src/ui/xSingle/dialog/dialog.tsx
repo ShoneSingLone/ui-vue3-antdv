@@ -6,6 +6,19 @@ import { LayerUtils, KEY } from "../layer/LayerUtils";
 import { createApp, defineComponent, reactive, h } from "vue";
 import { State_UI } from "../../State_UI";
 
+const EcsPressHandler = xU.debounce(async function (event, dialogOptions) {
+	const $antModal = $(".ant-modal-root");
+	/* 如果有ant的弹窗就不关闭layer */
+	if ($antModal.length > 0) {
+		return;
+	}
+	console.log(event);
+	if (event.keyCode === KEY.esc) {
+		await dialogOptions.closeDialog();
+	}
+}, 100);
+
+
 export type t_dialogOptions = {
 	/* 传入的组件的实例 */
 	_contentInstance?: object;
@@ -115,16 +128,7 @@ export const installUIDialogComponent = (
 			/* 处理按Esc键关闭弹窗 */
 			let handleEcsPress = {
 				_layerKey: "",
-				async handler(event) {
-					const $antModal = $(".ant-modal-root");
-					/* 如果有ant的弹窗就不关闭layer */
-					if ($antModal.length > 0) {
-						return;
-					}
-					if (event.keyCode === KEY.esc) {
-						await dialogOptions.closeDialog();
-					}
-				},
+				handler: event => EcsPressHandler(event, dialogOptions),
 				on(_layerKey) {
 					handleEcsPress._layerKey = _layerKey;
 					$(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
@@ -142,7 +146,7 @@ export const installUIDialogComponent = (
 					contentClass: "flex1",
 					type: LayerUtils.DIALOG,
 					title: [title || ""],
-					area: area || ["800px"],
+					area: area || [],
 					content: $container,
 					offset: ["160px", null],
 					/* 无按钮 */
@@ -160,12 +164,7 @@ export const installUIDialogComponent = (
 									components: { BussinessComponent },
 									created() {
 										this.dialogOptions._contentInstance = this;
-										resolve(this);
-									},
-									mounted() {
-										if (this.dialogOptions.fullscreen) {
-											LayerUtils.full(_layerKey);
-										}
+										resolve(this.dialogOptions);
 									},
 									data() {
 										return { dialogOptions };

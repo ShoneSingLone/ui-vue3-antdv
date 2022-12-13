@@ -86,7 +86,7 @@ export default {
 				prop: "search",
 				placeholder: "Input",
 				allowClear: true,
-				onAfterValueChange(val) {
+				onAfterValueEmit(val) {
 					console.log("🚀:", "search configs", this, val);
 				}
 			}),
@@ -184,7 +184,7 @@ formData: {
 	prop: "search",
 	placeholder: "Input",
 	allowClear: true,
-	onAfterValueChange(val) {
+	onAfterValueEmit(val) {
 		console.log("🚀:", "search configs", this, val);
 	}
 }),

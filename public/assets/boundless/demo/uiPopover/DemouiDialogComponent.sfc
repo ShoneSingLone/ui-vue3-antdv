@@ -1,5 +1,7 @@
 <template>
 	<mkit md="## UI.dialog.component" />
+	<xButton :configs="configs.btn.open" />
+	<xGap t="10" />
 	<xButton :configs="configs.btn.customBtn" />
 </template>
 
@@ -9,11 +11,82 @@ async function sfc({ defineComponent, State_UI, UI }) {
 
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
-		setup() { },
+		setup() {},
 		data() {
 			return {
 				configs: {
 					btn: {
+						open: {
+							text: () => {
+								return $t("弹窗里面再打开弹窗").label;
+							},
+							async onClick() {
+								const dialogOptions = UI.dialog.component({
+									title: $t("DemoXFormWithForm").label,
+									maxmin: true,
+									fullscreen: true,
+									component: defineComponent({
+										props: ["propDialogOptions"],
+										methods: {
+											open() {
+												const dialogOptions = UI.dialog.component({
+													title: $t("DemoXFormWithForm").label,
+													maxmin: true,
+													component: defineComponent({
+														props: ["propDialogOptions"],
+														methods: {
+															setBtn() {
+																this.count = ++this.count % 7;
+															},
+															close() {
+																this.propDialogOptions.closeDialog();
+															}
+														},
+														computed: {
+															dialogDefautBtn() {
+																return {
+																	onOk: this.propDialogOptions.closeDialog,
+																	onCancel: this.propDialogOptions.closeDialog
+																};
+															}
+														},
+														data() {
+															return {
+																count: 0
+															};
+														},
+														template: `<div class="padding20 flex1">
+												<aButton @click="setBtn"></aButton>
+										</div>
+										<xDialogFooter :configs="dialogDefautBtn"/>`
+													})
+												});
+											},
+											close() {
+												this.propDialogOptions.closeDialog();
+											}
+										},
+										computed: {
+											dialogDefautBtn() {
+												return {
+													onOk: this.propDialogOptions.closeDialog,
+													onCancel: this.propDialogOptions.closeDialog
+												};
+											}
+										},
+										data() {
+											return {
+												count: 0
+											};
+										},
+										template: `<div class="padding20 flex1">
+												<aButton @click="open">open</aButton>
+										</div>
+										<xDialogFooter :configs="dialogDefautBtn"/>`
+									})
+								});
+							}
+						},
 						customBtn: {
 							text: () => {
 								return $t("自定义按钮").label;
@@ -24,7 +97,10 @@ async function sfc({ defineComponent, State_UI, UI }) {
 									maxmin: true,
 									async onBeforeClose() {
 										try {
-											await UI.dialog.confirm({ title: "随便选", content: "取消就是不关闭，确定就是关闭" });
+											await UI.dialog.confirm({
+												title: "随便选",
+												content: "取消就是不关闭，确定就是关闭"
+											});
 											return true;
 										} catch (error) {
 											return false;
@@ -56,7 +132,7 @@ async function sfc({ defineComponent, State_UI, UI }) {
 										},
 										data() {
 											return {
-												count: 0,
+												count: 0
 											};
 										},
 										template: `<div class="padding20 flex1">
