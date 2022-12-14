@@ -19,8 +19,11 @@
     - [ ] tips
     - [ ] dialog
       - [x] resize
+      - [x] esc 一次只退出一个
       - [ ] esc 退出最上层dialog
     - [ ] confirm
+      - [ ] 改成用layer
+      - [ ] 样式FLIP 动画
     - [ ] tips 的样式
       - [用SVG实现一个优雅的提示框](https://zhuanlan.zhihu.com/p/143876210)
       - [daimabiji](http://demo.daimabiji.com/1553/)

@@ -2101,6 +2101,7 @@ div.xVirTable-row > div.xVirTable-cell::after {
 .ventose-dialog-content {
   overflow: auto;
   display: flex;
+  flex: 1;
   flex-flow: column nowrap;
   width: 100%;
   height: 100%;
@@ -30875,6 +30876,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         Cpt_isShowXItem = vue.computed(props.configs.isShow);
       } else if (privateLodash.isBoolean(props.configs.isShow)) {
         Cpt_isShowXItem = vue.computed(() => props.configs.isShow);
+      } else {
+        props.configs.isShow = true;
+        Cpt_isShowXItem = vue.computed(() => props.configs.isShow);
       }
       if (privateLodash.isFunction(props.configs.disabled)) {
         Cpt_isDisabled = vue.computed(props.configs.disabled);
@@ -31140,7 +31144,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         "class": this.itemWrapperClass
       }, [this.labelVNode, vue.createVNode("div", {
         "class": "ant-form-item-control"
-      }, [vue.createVNode(CurrentXItem, this.componentSettings, null), this.tipsVNode])]);
+      }, [vue.createVNode(CurrentXItem, this.componentSettings, null), this.tipsVNode]), this.$slots.afterControll && this.$slots.afterControll()]);
     }
   });
   const _sfc_main$a = vue.defineComponent({
@@ -31220,6 +31224,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       }, null),
       text: State_UI.$t("\u5237\u65B0").label
     }),
+    cancel: () => ({
+      text: State_UI.$t("\u53D6\u6D88").label
+    }),
     save: () => ({
       icon: vue.createVNode(vue.resolveComponent("xIcon"), {
         "class": "x-button_icon-wrapper",
@@ -31282,7 +31289,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     },
     computed: {
       type() {
-        if (this.configs.preset === "query") {
+        if (["query", "save"].includes(this.configs.preset)) {
           return "primary";
         }
         return this.configs.type;
@@ -31306,10 +31313,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         return false;
       },
       text() {
-        var _a;
-        if (privateLodash.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
-          return this.$slots.default(this);
-        }
         if (privateLodash.isFunction(this.configs.text)) {
           return this.configs.text(this) || "";
         }
@@ -31328,11 +31331,14 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     },
     methods: {
       async onClick() {
-        var _a;
-        if (privateLodash.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
+        var _a, _b, _c;
+        if (privateLodash.isFunction((_a = this.$attrs) == null ? void 0 : _a.onClick)) {
+          return false;
+        }
+        if (privateLodash.isFunction((_b = this == null ? void 0 : this.configs) == null ? void 0 : _b.onClick)) {
           this.loading = true;
           try {
-            await this.configs.onClick.call(this.configs, this);
+            await ((_c = this == null ? void 0 : this.configs) == null ? void 0 : _c.onClick.call(this.configs, this));
           } catch (e) {
             console.error(e);
           } finally {
@@ -31347,13 +31353,16 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         configs.title = this.title;
       }
       return vue.createVNode(vue.resolveComponent("aButton"), vue.mergeProps({
-        "class": "x-button",
+        "class": "x-button antdv-button",
         "onClick": this.onClick,
         "loading": this.loading,
         "disabled": !!this.disabled,
         "type": this.type
       }, configs), {
-        default: () => [this.text]
+        default: () => {
+          const vDomDefautl = this.$slots.default && this.$slots.default();
+          return vue.createVNode(vue.Fragment, null, [this.text, vDomDefautl]);
+        }
       });
     }
   });
@@ -34425,12 +34434,19 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           "class": "ml10",
           "configs": configs
         }, null);
+      },
+      vDomContent() {
+        if (this.$slots.default) {
+          return this.$slots.default();
+        } else {
+          return vue.createVNode(vue.Fragment, null, [this.vDomCancel, this.vDomOk]);
+        }
       }
     },
     render() {
       return vue.createVNode("div", {
         "class": "flex middle end ant-modal-footer"
-      }, [this.vDomCancel, this.vDomOk]);
+      }, [this.vDomContent]);
     }
   });
   const installUIDialogComponent = (UI2, {
@@ -34486,7 +34502,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         contentClass: "flex1",
         type: LayerUtils.DIALOG,
         title: [title || ""],
-        area: area || ["800px"],
+        area: area || [],
         content: $container,
         offset: ["160px", null],
         btn: [],
@@ -34501,7 +34517,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
               },
               created() {
                 this.dialogOptions._contentInstance = this;
-                resolve(this);
+                resolve(this.dialogOptions);
               },
               data() {
                 return {
@@ -34803,9 +34819,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     if (!options.prop) {
       options.prop = `xItem${xItemNoPropCount++}`;
       console.error(`no xItem prop replace by ${options.prop}`);
-    }
-    if (!privateLodash.isInput(options.isShow)) {
-      options.isShow = true;
     }
     const configs = vue.reactive(privateLodash.merge({
       itemTips: {},

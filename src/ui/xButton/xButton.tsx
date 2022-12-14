@@ -14,6 +14,9 @@ const BTN_PRESET_MAP = {
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideSyncOutlined" />,
 		text: State_UI.$t("刷新").label
 	}),
+	cancel: () => ({
+		text: State_UI.$t("取消").label
+	}),
 	save: () => ({
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideSaveOutlined" />,
 		text: State_UI.$t("保存").label
@@ -51,7 +54,7 @@ export default defineComponent({
 			default() {
 				return {};
 			}
-		}
+		},
 	},
 	beforeMount() {
 		if (!this.configs) {
@@ -77,7 +80,7 @@ export default defineComponent({
 	},
 	computed: {
 		type() {
-			if (this.configs.preset === "query") {
+			if (["query", "save"].includes(this.configs.preset)) {
 				return "primary";
 			}
 			return this.configs.type;
@@ -101,10 +104,6 @@ export default defineComponent({
 			return false;
 		},
 		text() {
-			/* slot优先 */
-			if (xU.isFunction(this.$slots?.default)) {
-				return this.$slots.default(this);
-			}
 			/* text作为render */
 			if (xU.isFunction(this.configs.text)) {
 				return this.configs.text(this) || "";
@@ -121,13 +120,16 @@ export default defineComponent({
 			}
 		}
 	},
-	created() {},
+	created() { },
 	methods: {
 		async onClick() {
+			if (xU.isFunction(this.$attrs?.onClick)) {
+				return false;
+			}
 			if (xU.isFunction(this?.configs?.onClick)) {
 				this.loading = true;
 				try {
-					await this.configs.onClick.call(this.configs, this);
+					await this?.configs?.onClick.call(this.configs, this);
 				} catch (e) {
 					console.error(e);
 				} finally {
@@ -143,13 +145,21 @@ export default defineComponent({
 		}
 		return (
 			<aButton
-				class="x-button"
+				class="x-button antdv-button"
 				onClick={this.onClick}
 				loading={this.loading}
 				disabled={!!this.disabled}
 				type={this.type}
 				{...configs}>
-				{this.text}
+				{{
+					default: () => {
+						const vDomDefautl = this.$slots.default && this.$slots.default();
+						return <>
+							{this.text}
+							{vDomDefautl}
+						</>
+					}
+				}}
 			</aButton>
 		);
 	}

@@ -36,6 +36,9 @@ export default defineComponent({
 			Cpt_isShowXItem = computed(props.configs.isShow);
 		} else if (xU.isBoolean(props.configs.isShow)) {
 			Cpt_isShowXItem = computed(() => props.configs.isShow);
+		} else {
+			props.configs.isShow = true;
+			Cpt_isShowXItem = computed(() => props.configs.isShow);
 		}
 
 		/*disabled*/
@@ -354,6 +357,7 @@ export default defineComponent({
 					{/* 提示信息 */}
 					{this.tipsVNode}
 				</div>
+				{this.$slots.afterControll && this.$slots.afterControll()}
 			</div>
 		);
 	}

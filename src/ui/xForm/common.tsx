@@ -19,9 +19,7 @@ defItem.item = (options: t_itemConfigs) => {
 		options.prop = `xItem${xItemNoPropCount++}`;
 		console.error(`no xItem prop replace by ${options.prop}`);
 	}
-	if (!xU.isInput(options.isShow)) {
-		options.isShow = true;
-	}
+	
 	const configs = reactive(
 		xU.merge(
 			{

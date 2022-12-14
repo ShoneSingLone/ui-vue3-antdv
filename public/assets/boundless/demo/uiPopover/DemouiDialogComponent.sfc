@@ -2,11 +2,13 @@
 	<mkit md="## UI.dialog.component" />
 	<xButton :configs="configs.btn.open" />
 	<xGap t="10" />
+	<xButton :configs="configs.btn.defaultBtn" />
+	<xGap t="10" />
 	<xButton :configs="configs.btn.customBtn" />
 </template>
 
 <script>
-async function sfc({ defineComponent, State_UI, UI }) {
+async function sfc({ defineComponent, State_UI, UI, xU}) {
 	const { $t } = State_UI;
 
 	return defineComponent({
@@ -87,9 +89,9 @@ async function sfc({ defineComponent, State_UI, UI }) {
 								});
 							}
 						},
-						customBtn: {
+						defaultBtn: {
 							text: () => {
-								return $t("自定义按钮").label;
+								return $t("配置默认按钮").label;
 							},
 							async onClick() {
 								const dialogOptions = UI.dialog.component({
@@ -151,6 +153,27 @@ async function sfc({ defineComponent, State_UI, UI }) {
 											</div>
 										</div>
 										<xDialogFooter :configs="dialogDefautBtn"/>`
+									})
+								});
+							}
+						},
+						customBtn: {
+							text: () => {
+								return $t("纯自定义按钮").label;
+							},
+							async onClick() {
+								const dialogOptions = UI.dialog.component({
+									title: $t("DemoXFormWithForm").label,
+									component: defineComponent({
+										props: ["propDialogOptions"],
+										template: `<div class="padding20 flex1">
+											<p>演示使用bundless的形式，使用template，不使用jsx</p>
+										</div>
+										<xDialogFooter>
+											<xButton @click="propDialogOptions.closeDialog">
+												纯按钮
+											<xButton>
+										</xDialogFooter>`
 									})
 								});
 							}

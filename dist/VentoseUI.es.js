@@ -2101,6 +2101,7 @@ div.xVirTable-row > div.xVirTable-cell::after {
 .ventose-dialog-content {
   overflow: auto;
   display: flex;
+  flex: 1;
   flex-flow: column nowrap;
   width: 100%;
   height: 100%;
@@ -30873,6 +30874,9 @@ const _sfc_main$b = defineComponent({
       Cpt_isShowXItem = computed(props.configs.isShow);
     } else if (privateLodash.isBoolean(props.configs.isShow)) {
       Cpt_isShowXItem = computed(() => props.configs.isShow);
+    } else {
+      props.configs.isShow = true;
+      Cpt_isShowXItem = computed(() => props.configs.isShow);
     }
     if (privateLodash.isFunction(props.configs.disabled)) {
       Cpt_isDisabled = computed(props.configs.disabled);
@@ -31138,7 +31142,7 @@ const _sfc_main$b = defineComponent({
       "class": this.itemWrapperClass
     }, [this.labelVNode, createVNode("div", {
       "class": "ant-form-item-control"
-    }, [createVNode(CurrentXItem, this.componentSettings, null), this.tipsVNode])]);
+    }, [createVNode(CurrentXItem, this.componentSettings, null), this.tipsVNode]), this.$slots.afterControll && this.$slots.afterControll()]);
   }
 });
 const _sfc_main$a = defineComponent({
@@ -31218,6 +31222,9 @@ const BTN_PRESET_MAP = {
     }, null),
     text: State_UI.$t("\u5237\u65B0").label
   }),
+  cancel: () => ({
+    text: State_UI.$t("\u53D6\u6D88").label
+  }),
   save: () => ({
     icon: createVNode(resolveComponent("xIcon"), {
       "class": "x-button_icon-wrapper",
@@ -31280,7 +31287,7 @@ const xButton = defineComponent({
   },
   computed: {
     type() {
-      if (this.configs.preset === "query") {
+      if (["query", "save"].includes(this.configs.preset)) {
         return "primary";
       }
       return this.configs.type;
@@ -31304,10 +31311,6 @@ const xButton = defineComponent({
       return false;
     },
     text() {
-      var _a;
-      if (privateLodash.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
-        return this.$slots.default(this);
-      }
       if (privateLodash.isFunction(this.configs.text)) {
         return this.configs.text(this) || "";
       }
@@ -31326,11 +31329,14 @@ const xButton = defineComponent({
   },
   methods: {
     async onClick() {
-      var _a;
-      if (privateLodash.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
+      var _a, _b, _c;
+      if (privateLodash.isFunction((_a = this.$attrs) == null ? void 0 : _a.onClick)) {
+        return false;
+      }
+      if (privateLodash.isFunction((_b = this == null ? void 0 : this.configs) == null ? void 0 : _b.onClick)) {
         this.loading = true;
         try {
-          await this.configs.onClick.call(this.configs, this);
+          await ((_c = this == null ? void 0 : this.configs) == null ? void 0 : _c.onClick.call(this.configs, this));
         } catch (e) {
           console.error(e);
         } finally {
@@ -31345,13 +31351,16 @@ const xButton = defineComponent({
       configs.title = this.title;
     }
     return createVNode(resolveComponent("aButton"), mergeProps({
-      "class": "x-button",
+      "class": "x-button antdv-button",
       "onClick": this.onClick,
       "loading": this.loading,
       "disabled": !!this.disabled,
       "type": this.type
     }, configs), {
-      default: () => [this.text]
+      default: () => {
+        const vDomDefautl = this.$slots.default && this.$slots.default();
+        return createVNode(Fragment, null, [this.text, vDomDefautl]);
+      }
     });
   }
 });
@@ -34423,12 +34432,19 @@ const xDialogFooter = defineComponent({
         "class": "ml10",
         "configs": configs
       }, null);
+    },
+    vDomContent() {
+      if (this.$slots.default) {
+        return this.$slots.default();
+      } else {
+        return createVNode(Fragment, null, [this.vDomCancel, this.vDomOk]);
+      }
     }
   },
   render() {
     return createVNode("div", {
       "class": "flex middle end ant-modal-footer"
-    }, [this.vDomCancel, this.vDomOk]);
+    }, [this.vDomContent]);
   }
 });
 const installUIDialogComponent = (UI2, {
@@ -34484,7 +34500,7 @@ const installUIDialogComponent = (UI2, {
       contentClass: "flex1",
       type: LayerUtils.DIALOG,
       title: [title || ""],
-      area: area || ["800px"],
+      area: area || [],
       content: $container,
       offset: ["160px", null],
       btn: [],
@@ -34499,7 +34515,7 @@ const installUIDialogComponent = (UI2, {
             },
             created() {
               this.dialogOptions._contentInstance = this;
-              resolve(this);
+              resolve(this.dialogOptions);
             },
             data() {
               return {
@@ -34801,9 +34817,6 @@ defItem.item = (options) => {
   if (!options.prop) {
     options.prop = `xItem${xItemNoPropCount++}`;
     console.error(`no xItem prop replace by ${options.prop}`);
-  }
-  if (!privateLodash.isInput(options.isShow)) {
-    options.isShow = true;
   }
   const configs = reactive(privateLodash.merge({
     itemTips: {},

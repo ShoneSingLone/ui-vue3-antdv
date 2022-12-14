@@ -1,5 +1,6 @@
 <template>
 	<DemoAndCode path="/boundless/demo/xForm/DialogDemoXItem.sfc" />
+	<DemoAndCode path="/boundless/demo/xForm/xItemSlot.sfc" />
 	<aCard>
 		{{ valueFromConfigs }}
 		<xButton :configs="configsValidBtn" />

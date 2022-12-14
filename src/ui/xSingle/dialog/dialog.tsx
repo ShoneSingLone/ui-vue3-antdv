@@ -75,13 +75,22 @@ const xDialogFooter = defineComponent({
 				onClick: this.onCancel || xU.doNothing
 			};
 			return <xButton class="ml10" configs={configs} />;
+		},
+		vDomContent() {
+			if (this.$slots.default) {
+				return this.$slots.default();
+			} else {
+				return <>
+					{this.vDomCancel}
+					{this.vDomOk}
+				</>
+			}
 		}
 	},
 	render() {
 		return (
 			<div class="flex middle end ant-modal-footer">
-				{this.vDomCancel}
-				{this.vDomOk}
+				{this.vDomContent}
 			</div>
 		);
 	}

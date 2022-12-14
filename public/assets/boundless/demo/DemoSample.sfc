@@ -1,0 +1,21 @@
+<template>
+	<mkit md="## title" />
+</template>
+
+<script>
+async function sfc({ defineComponent, markRaw, State_UI, xU, UI, defItem ,compileVNode,resolveComponent}) {
+    /* 查看DemoAndCode组件传入的变量 */
+	const { $t } = State_UI;
+
+	return defineComponent({
+		TEMPLATE_PLACEHOLDER,
+		setup() {},
+		data() {
+			return {};
+		},
+		methods: {
+
+        }
+	});
+}
+</script>
