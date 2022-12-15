@@ -3,6 +3,7 @@ import { defineComponent, h, reactive, markRaw, resolveComponent } from "vue";
 import { State_UI, xU, UI, compileVNode, defCol, $, defItem } from "../ui";
 import { DialogSourceCode } from "./DialogSourceCode";
 import { defXVirTableConfigs } from "./../ui/xDataGrid/xVirTable/xVirTable";
+import App from "../App.vue";
 const { $t } = State_UI;
 
 export const DemoAndCode = defineComponent({
@@ -41,7 +42,8 @@ export const DemoAndCode = defineComponent({
 					defCol,
 					$,
 					defItem,
-					resolveComponent
+					resolveComponent,
+					App
 				}
 			);
 

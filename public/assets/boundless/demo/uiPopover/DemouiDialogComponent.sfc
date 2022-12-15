@@ -8,12 +8,19 @@
 </template>
 
 <script>
-async function sfc({ defineComponent, State_UI, UI, xU}) {
+async function sfc({ defineComponent, State_UI, UI, xU, App }) {
 	const { $t } = State_UI;
 
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
 		setup() {},
+		mounted() {
+			/* 不然会无限弹窗 */
+			if (!window.isOpenAppFirst) {
+				this.openAppFirst();
+				window.isOpenAppFirst = true;
+			}
+		},
 		data() {
 			return {
 				configs: {
@@ -182,7 +189,16 @@ async function sfc({ defineComponent, State_UI, UI, xU}) {
 				}
 			};
 		},
-		methods: {}
+		methods: {
+			openAppFirst() {
+				const dialogOptions = UI.dialog.component({
+					title: $t("transition").label,
+					maxmin: true,
+					fullscreen: true,
+					component: App
+				});
+			}
+		}
 	});
 }
 </script>

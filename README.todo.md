@@ -18,6 +18,7 @@
     - [ ] 弹窗效果从点击位置打开，openAtPoint
     - [ ] tips
     - [ ] dialog
+      - [ ] 动画 fullscreen
       - [x] resize
       - [x] esc 一次只退出一个
       - [ ] esc 退出最上层dialog

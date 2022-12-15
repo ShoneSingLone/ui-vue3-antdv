@@ -367,6 +367,15 @@ div[id^="svg-icon_"] {
 	z-index: 10;
 }
 
+.color- {
+	&error {
+		color: red;
+	}
+	&primary {
+		color: #1890ff;
+	}
+}
+
 ::-webkit-scrollbar {
 	width: 6px;
 	height: 6px;
