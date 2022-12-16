@@ -125,30 +125,23 @@ export function installPopoverDirective(app: any, appSettings: any) {
 
 	app.directive("uiPopover", {
 		/* @ts-ignore */
-		mounted(el: HTMLInputElement, binding) {
-			const followId = xU.genId("xPopoverTarget");
-			const $ele = $(el);
-			$ele
-				.addClass("x-ui-popover")
-				.attr("id", followId)
-				.attr(DATA_APP_ID, appId)
-				.attr(DATA_FOLLOW_ID, followId);
-			if (binding.value) {
-				tipsOptionsCollection[followId] = binding.value;
-				if (binding.value?.trigger) {
-					$ele.attr("data-trigger", binding.value?.trigger);
-					const classStrategy = {
-						rightClick: "pointer-right-click"
-					};
-					/* @ts-ignore */
-					$ele.addClass(classStrategy[binding.value?.trigger] || "pointer");
-				}
-				/* 弹窗在click的点 */
-				if (binding.value?.openAtPoint) {
-					/* @ts-ignore */
-					$ele.attr("data-open-at-point", true);
-				}
+		mounted(el: HTMLInputElement, binding: any) {
+			init();
+
+			updateMounted(el, binding);
+
+			function init() {
+				const followId = xU.genId("xPopoverTarget");
+				const $ele = $(el);
+				$ele
+					.addClass("x-ui-popover")
+					.attr("id", followId)
+					.attr(DATA_APP_ID, appId)
+					.attr(DATA_FOLLOW_ID, followId);
 			}
+		},
+		beforeUpdate(el: HTMLInputElement, binding: any) {
+			updateMounted(el, binding);
 		},
 		unmounted(el: HTMLInputElement) {
 			const followId: any = $(el).attr(DATA_FOLLOW_ID);
@@ -160,6 +153,33 @@ export function installPopoverDirective(app: any, appSettings: any) {
 			delete visibleArea[followId];
 		}
 	});
+
+	function updateMounted(el: HTMLInputElement, binding: any) {
+		const $ele = $(el);
+		const followId: any = $ele.attr(DATA_FOLLOW_ID);
+		if (binding.value) {
+			tipsOptionsCollection[followId] = binding.value;
+			if (binding.value?.trigger) {
+				$ele.attr("data-trigger", binding.value?.trigger);
+				const classStrategy = {
+					rightClick: "pointer-right-click"
+				};
+
+				/* @ts-ignore */
+				const className = classStrategy[binding.value?.trigger] || "pointer";
+
+				if (!$ele.hasClass(className)) {
+					/* @ts-ignore */
+					$ele.addClass();
+				}
+			}
+			/* 弹窗在click的点 */
+			if (binding.value?.openAtPoint) {
+				/* @ts-ignore */
+				$ele.attr("data-open-at-point", true);
+			}
+		}
+	}
 }
 
 function inVisibleArea(followId: string) {

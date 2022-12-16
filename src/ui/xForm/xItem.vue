@@ -66,9 +66,11 @@ export default defineComponent({
 		const listeners = {
 			"onUpdate:value": (val, ...args) => {
 				configs.value = val;
+				vm.raw$Value = val;
+				vm.raw$Args = args;
 				this.$emit("update:modelValue", val);
 				if (xU.isFunction(listeners.onAfterValueEmit)) {
-					listeners.onAfterValueEmit.call(configs, val);
+					listeners.onAfterValueEmit.call(vm, val, { xItemVm: vm });
 				}
 				/* TODO: rule检测*/
 				handleConfigsValidate(EVENT_TYPE.update);

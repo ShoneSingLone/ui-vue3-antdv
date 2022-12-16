@@ -69,7 +69,7 @@ export default defineComponent(
 						try {
 							/* public asset remote 加载 svg 字符串 */
 							_SvgIconAny = await xU.asyncLoadText(this.getIconPath());
-						} catch (error) { }
+						} catch (error) {}
 						return _SvgIconAny;
 					})();
 

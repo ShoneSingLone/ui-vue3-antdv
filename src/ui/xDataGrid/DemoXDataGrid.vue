@@ -1,5 +1,10 @@
 <template>
-	<DemoAndCode path="/boundless/demo/table/DemoXDataGridxVirTable.sfc" />
+	<DemoAndCode
+		title="xVirTable：虚拟列表用于无分页的大量数据展示"
+		path="/boundless/demo/table/DemoXDataGridxVirTable.sfc" />
+	<DemoAndCode
+		title="xVirTable动态添加行记录"
+		path="/boundless/demo/table/DemoXDataGridxVirTableDynamicAdd.sfc" />
 	<mkit md="### xDataGrid" />
 	<xDataGrid :configs="configs_table" />
 	<mkit md="### xPagination" />

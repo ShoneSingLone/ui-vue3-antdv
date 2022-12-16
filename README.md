@@ -263,7 +263,7 @@ export const State_UI = reactive({
 ```
 
 xItem msg 可以是 function 根据传入的参数显示不同信息
-
+raw$Value update:value
 ## 动态加载 svg icon
 
 ```js

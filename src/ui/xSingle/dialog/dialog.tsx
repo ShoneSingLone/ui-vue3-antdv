@@ -18,7 +18,6 @@ const EcsPressHandler = xU.debounce(async function (event, dialogOptions) {
 	}
 }, 100);
 
-
 export type t_dialogOptions = {
 	/* 传入的组件的实例 */
 	_contentInstance?: object;
@@ -80,18 +79,18 @@ const xDialogFooter = defineComponent({
 			if (this.$slots.default) {
 				return this.$slots.default();
 			} else {
-				return <>
-					{this.vDomCancel}
-					{this.vDomOk}
-				</>
+				return (
+					<>
+						{this.vDomCancel}
+						{this.vDomOk}
+					</>
+				);
 			}
 		}
 	},
 	render() {
 		return (
-			<div class="flex middle end ant-modal-footer">
-				{this.vDomContent}
-			</div>
+			<div class="flex middle end ant-modal-footer">{this.vDomContent}</div>
 		);
 	}
 });

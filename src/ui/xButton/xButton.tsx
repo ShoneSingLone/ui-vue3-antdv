@@ -54,7 +54,7 @@ export default defineComponent({
 			default() {
 				return {};
 			}
-		},
+		}
 	},
 	beforeMount() {
 		if (!this.configs) {
@@ -120,7 +120,7 @@ export default defineComponent({
 			}
 		}
 	},
-	created() { },
+	created() {},
 	methods: {
 		async onClick() {
 			if (xU.isFunction(this.$attrs?.onClick)) {
@@ -154,10 +154,12 @@ export default defineComponent({
 				{{
 					default: () => {
 						const vDomDefautl = this.$slots.default && this.$slots.default();
-						return <>
-							{this.text}
-							{vDomDefautl}
-						</>
+						return (
+							<>
+								{this.text}
+								{vDomDefautl}
+							</>
+						);
 					}
 				}}
 			</aButton>

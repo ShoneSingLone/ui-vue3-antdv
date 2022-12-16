@@ -396,9 +396,9 @@ const privateLodash = {
 	 * @returns
 	 */
 	dateFormat: function (date: dayjs.ConfigType, format = "YYYY-MM-DD") {
-		if (typeof date === 'number') {
-            date = dayjs.unix(date);
-        }
+		if (typeof date === "number") {
+			date = dayjs.unix(date);
+		}
 		/* @ts-ignore */
 		if (format === 1) {
 			format = "YYYY-MM-DD HH:mm:ss";

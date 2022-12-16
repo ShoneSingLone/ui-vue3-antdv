@@ -14,6 +14,8 @@
 - [ ] 允许动态修改demo文件，然后主动触发运行
 - [ ] datagrid
   - [ ] isHideFilter: true,
+  - [x] selectedConfigs  如果有，就是单选或者多选
+  - [x] 添加class，通过文本的形式
 - [ ] layer
     - [ ] 弹窗效果从点击位置打开，openAtPoint
     - [ ] tips

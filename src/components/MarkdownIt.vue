@@ -54,7 +54,7 @@ export default {
 				highlight: code => hljs.highlightAuto(code).value
 			});
 		}
-	},
+	}
 };
 </script>
 

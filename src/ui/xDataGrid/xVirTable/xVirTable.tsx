@@ -94,6 +94,13 @@ export const xVirTable = defineComponent({
 				return false;
 			}
 		},
+		customClass() {
+			if (xU.isFunction(this.configs?.customClass)) {
+				return this.configs?.customClass(this.xVirTableId);
+			} else {
+				return "";
+			}
+		},
 		rowHeight() {
 			return this.configs?.rowHeight || 32;
 		},
@@ -172,7 +179,7 @@ export const xVirTable = defineComponent({
 				`#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
 				`#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
 				`#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
-			].concat(this.columnWidthArray);
+			].concat(this.columnWidthArray, this.customClass);
 			return allStyleArray.join("\n");
 		}
 	},

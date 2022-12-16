@@ -30910,9 +30910,13 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       const listeners = {
         "onUpdate:value": (val, ...args2) => {
           configs.value = val;
+          vm.raw$Value = val;
+          vm.raw$Args = args2;
           this.$emit("update:modelValue", val);
           if (privateLodash.isFunction(listeners.onAfterValueEmit)) {
-            listeners.onAfterValueEmit.call(configs, val);
+            listeners.onAfterValueEmit.call(vm, val, {
+              xItemVm: vm
+            });
           }
           handleConfigsValidate(EVENT_TYPE.update);
         },
@@ -33109,6 +33113,14 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           return false;
         }
       },
+      customClass() {
+        var _a, _b;
+        if (privateLodash.isFunction((_a = this.configs) == null ? void 0 : _a.customClass)) {
+          return (_b = this.configs) == null ? void 0 : _b.customClass(this.xVirTableId);
+        } else {
+          return "";
+        }
+      },
       rowHeight() {
         var _a;
         return ((_a = this.configs) == null ? void 0 : _a.rowHeight) || 32;
@@ -33177,7 +33189,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
           `#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
           `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
           `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
-        ].concat(this.columnWidthArray);
+        ].concat(this.columnWidthArray, this.customClass);
         return allStyleArray.join("\n");
       }
     },
@@ -34661,23 +34673,16 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     appDependState[appId] = appSettings.dependState;
     app.directive("uiPopover", {
       mounted(el, binding) {
-        var _a, _b, _c, _d;
-        const followId = privateLodash.genId("xPopoverTarget");
-        const $ele = $__default.default(el);
-        $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
-        if (binding.value) {
-          tipsOptionsCollection[followId] = binding.value;
-          if ((_a = binding.value) == null ? void 0 : _a.trigger) {
-            $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
-            const classStrategy = {
-              rightClick: "pointer-right-click"
-            };
-            $ele.addClass(classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer");
-          }
-          if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
-            $ele.attr("data-open-at-point", true);
-          }
+        init();
+        updateMounted(el, binding);
+        function init() {
+          const followId = privateLodash.genId("xPopoverTarget");
+          const $ele = $__default.default(el);
+          $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
         }
+      },
+      beforeUpdate(el, binding) {
+        updateMounted(el, binding);
       },
       unmounted(el) {
         const followId = $__default.default(el).attr(DATA_FOLLOW_ID);
@@ -34688,6 +34693,27 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         delete visibleArea[followId];
       }
     });
+    function updateMounted(el, binding) {
+      var _a, _b, _c, _d;
+      const $ele = $__default.default(el);
+      const followId = $ele.attr(DATA_FOLLOW_ID);
+      if (binding.value) {
+        tipsOptionsCollection[followId] = binding.value;
+        if ((_a = binding.value) == null ? void 0 : _a.trigger) {
+          $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
+          const classStrategy = {
+            rightClick: "pointer-right-click"
+          };
+          const className = classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer";
+          if (!$ele.hasClass(className)) {
+            $ele.addClass();
+          }
+        }
+        if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
+          $ele.attr("data-open-at-point", true);
+        }
+      }
+    }
   }
   function inVisibleArea(followId) {
     if (timer4CloseTips[followId]) {
@@ -34932,6 +34958,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       (value, prop) => {
         if (configs[prop]) {
           configs[prop].value = value;
+          if (privateLodash.isFunction(configs[prop].onChange)) {
+            configs[prop].onChange(value);
+          }
         }
       },
       {}

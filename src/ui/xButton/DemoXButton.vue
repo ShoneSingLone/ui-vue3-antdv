@@ -1,5 +1,7 @@
 <template>
-	<DemoAndCode path="/boundless/demo/xButton/xButtonBase.sfc" />
+	<DemoAndCode
+		title="xButton的基本配置"
+		path="/boundless/demo/xButton/xButtonBase.sfc" />
 </template>
 <script>
 export default {};
