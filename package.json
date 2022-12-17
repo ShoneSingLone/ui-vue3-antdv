@@ -1,6 +1,6 @@
 {
   "name": "@ventose/ui",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "main": "./dist/VentoseUI.es.js",
   "module": "./dist/VentoseUI.es.js",
   "types": "./src/ui/index.tsx",
