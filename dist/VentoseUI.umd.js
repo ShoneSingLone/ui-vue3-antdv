@@ -29559,18 +29559,18 @@ div[id^=lazy-svg_] {
   z-index: 4;
   text-align: center;
 }
-.table-options {\r
-	display: flex;\r
-	flex-flow: row nowrap;\r
-	align-items: center;\r
+.table-options {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
 	padding: 10px 0;
 }
-.table-filter {\r
+.table-filter {
 	margin-left: 4px;
 }
-.table-pagination {\r
+.table-pagination {
 	padding: 10px 0;
-}\r
+}
 .vir-item-component {
   height: 100%;
   overflow: auto;
@@ -30909,9 +30909,13 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       };
       const listeners = {
         "onUpdate:value": (val, ...args2) => {
-          configs.value = val;
-          vm.raw$Value = val;
-          vm.raw$Args = args2;
+          if (privateLodash.isInput(configs.value)) {
+            if (configs.value === val) {
+              return;
+            } else {
+              configs.value = val;
+            }
+          }
           this.$emit("update:modelValue", val);
           if (privateLodash.isFunction(listeners.onAfterValueEmit)) {
             listeners.onAfterValueEmit.call(vm, val, {
@@ -30945,7 +30949,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         const propsWillDeleteFromConfigs = [];
         privateLodash.each(currentConfigs, (value, prop) => {
           if (privateLodash.isListener(prop)) {
-            propsWillDeleteFromConfigs.push(prop);
             if (listeners[prop]) {
               listeners[prop].queue.push(value);
               return;
@@ -31000,8 +31003,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       componentSettings() {
         const vm = this;
         const configs = vm.configs;
-        configs.value = configs.value !== void 0 ? configs.value : vm.modelValue;
-        const property = {};
+        const property = {
+          value: vm.modelValue !== void 0 ? vm.modelValue : configs.value !== void 0 ? configs.value : (cosole.error("either configs.value or modelValue"), "")
+        };
         let slots = {};
         const pickAttrs = (properties) => {
           privateLodash.each(properties, (value, prop) => {
@@ -33072,6 +33076,13 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       };
     },
     computed: {
+      dataFilter() {
+        if (privateLodash.isFunction(this.configs.dataSourceFilter)) {
+          return this.configs.dataSourceFilter;
+        } else {
+          return (i) => i;
+        }
+      },
       selectedIndeterminate() {
         var _a, _b;
         const dataLength = ((_b = (_a = this.configs) == null ? void 0 : _a.dataSource) == null ? void 0 : _b.length) || 0;
@@ -33259,7 +33270,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         "class": "xVirTable-header-wrapper",
         "style": "padding-right: 6px;"
       }, [this.vDomThead]), vue.createVNode(xVirTableBody, {
-        "dataSource": this.configs.dataSource,
+        "dataSource": this.dataFilter(this.configs.dataSource),
         "columnOrder": this.columnOrder,
         "columns": (_a = this.configs) == null ? void 0 : _a.columns,
         "rowHeight": this.rowHeight,
@@ -34855,7 +34866,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   defItem.item = (options) => {
     if (!options.prop) {
       options.prop = `xItem${xItemNoPropCount++}`;
-      console.error(`no xItem prop replace by ${options.prop}`);
     }
     const configs = vue.reactive(privateLodash.merge({
       itemTips: {},
@@ -35119,9 +35129,13 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       })])]);
     }
   };
-  function compileVNode(template, state) {
-    const render2 = vue.compile(template);
-    return render2.call(state, state);
+  function compileVNode(template, setupReturn) {
+    return vue.h(vue.defineComponent({
+      template,
+      setup() {
+        return setupReturn;
+      }
+    }));
   }
   window.dayjs = dayjs__default.default;
   window.moment = dayjs__default.default;

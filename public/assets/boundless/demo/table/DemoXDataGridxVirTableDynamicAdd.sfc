@@ -1,14 +1,33 @@
 <template>
-	<mkit md="### xVirTable动态增加行记录" />
+	<mkit md="### updateDataSource的作用
+- dataSourceFilter 用来配置renderCell的xItem
+- renderCell里的xItem数据变动不会引起整个virTable行数据的响应，数据只在xItem作用范围内
+- syncDataSource 是将xItem的数据与dataSource的数据进行同步，
+	- syncDataSource里面也可以有校验行为，
+	- 检验的处理方式可以参考xForm xItem的itemTips处理方式
+- add和del时进行同步，
+" />
+	<div class="flex">
+		<aButton @click="add">add</aButton>
+		<xGap l="10" />
+		<aButton @click="syncDataSource">syncDataSource</aButton>
+	</div>
 	<div class="flex horizon">
-		<pre class="flex1">
-			<code>{{JSON.stringify(configs_xVirTable.dataSource,null,2)}}</code>
-		</pre>
+		<div style="width: 100%; height: 300px;overflow: auto;" class="flex1">
+			<table style="width: 100%;">
+				<tr v-for=" item in configs_xVirTable.dataSource">
+					<td>{{ item.name }}</td>
+					<td>{{ item.type }}</td>
+					<td>===xItem configs===</td>
+					<td>{{ item?.configsName?.value }}</td>
+					<td>{{ item?.configsType?.value }}</td>
+				</tr>
+			</table>
+		</div>
 		<div style="width: 100%; height: 300px" class="flex1">
 			<xVirTable :configs="configs_xVirTable" />
 		</div>
 	</div>
-	<aButton @click="add">add</aButton>
 </template>
 
 <script>
@@ -26,69 +45,102 @@ async function sfc({
 }) {
 	const { $t } = State_UI;
 
+	const OPTIONS = [
+		{
+			label: $t("ACTIVATION").label,
+			value: "ACTIVATION"
+		},
+		{
+			label: $t("DOWN").label,
+			value: "DOWN"
+		}
+	];
+
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
-		setup() {},
+		setup() { },
 		data(vm) {
 			return {
-				configsItem: {
-					...defItem({
-						prop: "name",
-						onAfterValueEmit: (val, { xItemVm }) => {
-							vm.setTableValue(xItemVm.$attrs.recordId, "name", val)
-						}
-					})
-				},
 				configs_xVirTable: defXVirTableConfigs({
 					rowHeight: 32,
 					dataSource: [],
+					/* 非必要，除非cell的渲染函数需要一些额外的configs信息 */
+					dataSourceFilter(dataSource) {
+						return xU.map(dataSource, rowRecord => {
+							rowRecord.configsName = defItem.item({
+								value: rowRecord.name,
+							});
+							rowRecord.configsType = defItem.item({
+								value: rowRecord.type,
+								itemType: "Select",
+								options: OPTIONS
+							});
+							return rowRecord;
+						});
+					},
 					columns: {
 						...defCol({
 							prop: "name",
 							label: vm.$t("名称").label,
-							renderCell:({record})=>{
-								return compileVNode(`<xItem :configs="configsItem" :recordId="record.id" v-model="record.name"/>`,{configsItem:vm.configsItem.name,record})
-							}
+							renderCell: ({ record }) => compileVNode(
+								`<xItem :configs="record.configsName"/>`,
+								{ record }
+							)
+						}),
+						...defCol({
+							prop: "type",
+							label: vm.$t("类型").label,
+							renderCell: ({ record }) => compileVNode(
+								`<xItem :configs="record.configsType"/>`,
+								{ record }
+							)
 						}),
 						...defCol({
 							label: vm.$t("操作").label,
 							prop: "operations",
-							width:"40px",
-							renderHeader:()=>null,
-							renderCell:({record})=>{
-								return compileVNode(`<a @click="del(record.id)">del</a>`,{del:vm.del,record})
-							}
-						}),
+							width: "40px",
+							renderHeader: () => null,
+							renderCell: ({ record }) => compileVNode(
+								`<a @click="del(record.id)">del</a>`,
+								{ record, del: vm.del })
+						})
 					}
 				})
 			};
 		},
-		mounted(){
+		mounted() {
 			this.genNewData();
 		},
 		methods: {
-			setTableValue(key, prop, val) {
-				const recordIndex = xU.findIndex(this.configs_table.dataSource, { key })
-				if (~recordIndex) {
-					this.configs_table.dataSource[recordIndex][prop] = val;
+			syncDataSource() {
+				xU.each(this.configs_xVirTable.dataSource, rowRecord => {
+					rowRecord.name = rowRecord.configsName.value;
+					rowRecord.type = rowRecord.configsType.value;
+				});
+			},
+			del(id) {
+				const index = xU.findIndex(this.configs_xVirTable.dataSource, { id });
+				if (~index) {
+					this.syncDataSource();
+					this.configs_xVirTable.dataSource.splice(index, 1);
 				}
 			},
-			del(id){
-				const index = xU.findIndex(this.configs_xVirTable.dataSource,{id});
-				if(~index){
-					this.configs_xVirTable.dataSource.splice(index,1);
-				}
-			},
-			add(){
-				this.configs_xVirTable.dataSource.unshift(
-					{ id: xU.genId("id"), name: "name" }
-				)
+			add() {
+				this.syncDataSource();
+				this.configs_xVirTable.dataSource.unshift({
+					id: xU.genId("id"),
+					name: xU.genId("name"),
+					type: Date.now() % 2 === 0 ? "ACTIVATION" : "DOWN"
+				});
 			},
 			genNewData: xU.debounce(function () {
-				this.configs_xVirTable.dataSource = [...new Array(2)].map((i, ii) => {
-					return { id: xU.genId("id"), name: "name" + ii };
-				});
-			}, 10)
+				this.configs_xVirTable.dataSource = [...new Array(2)]
+					.map((i, ii) => ({
+						id: xU.genId("id"),
+						name: "name" + ii,
+						type: ii % 2 === 0 ? "ACTIVATION" : "DOWN"
+					}));
+			}, 10),
 		}
 	});
 }

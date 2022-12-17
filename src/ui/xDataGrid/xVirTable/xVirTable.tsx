@@ -49,6 +49,13 @@ export const xVirTable = defineComponent({
 		};
 	},
 	computed: {
+		dataFilter() {
+			if (xU.isFunction(this.configs.dataSourceFilter)) {
+				return this.configs.dataSourceFilter;
+			} else {
+				return i => i;
+			}
+		},
 		selectedIndeterminate() {
 			const dataLength = this.configs?.dataSource?.length || 0;
 			const selectedLength = this.selected.length;
@@ -247,7 +254,7 @@ export const xVirTable = defineComponent({
 					{this.vDomThead}
 				</div>
 				<xVirTableBody
-					dataSource={this.configs.dataSource}
+					dataSource={this.dataFilter(this.configs.dataSource)}
 					columnOrder={this.columnOrder}
 					columns={this.configs?.columns}
 					rowHeight={this.rowHeight}
