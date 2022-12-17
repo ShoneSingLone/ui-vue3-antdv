@@ -178,6 +178,7 @@ html #layuicss-layer {
   animation-name: layer-shake;
 }
 .layui-layer-title {
+  font-weight: 500;
   padding: 0 80px 0 20px;
   height: 50px;
   line-height: 50px;
@@ -186,6 +187,8 @@ html #layuicss-layer {
   color: #333;
   overflow: hidden;
   border-radius: 2px 2px 0 0;
+  text-shadow: 1px 1px #e9e4ed;
+  font-family: sans-serif;
 }
 .layui-layer-setwin {
   position: absolute;
@@ -1578,6 +1581,14 @@ div[id^=svg-icon_] {
   z-index: 10;
 }
 
+.color-error {
+  color: red;
+}
+
+.color-primary {
+  color: #1890ff;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -2096,6 +2107,15 @@ div.xVirTable-row > div.xVirTable-cell::after {
   width: 100%;
   height: 100%;
   border-right: 1px solid #f0f0f0;
+}
+
+.ventose-dialog-content {
+  overflow: auto;
+  display: flex;
+  flex: 1;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 100%;
 }/*!
  * 
  * ant-design-vue v3.2.13
@@ -29577,10 +29597,10 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-import Antd, { DatePicker as DatePicker$3, Checkbox as Checkbox$1, Switch as Switch$1, Button, Table, Modal, message, notification } from "ant-design-vue";
+import Antd, { DatePicker as DatePicker$3, Checkbox as Checkbox$1, Switch as Switch$1, Table, Modal, message, notification } from "ant-design-vue";
 import $ from "jquery";
 import { default as default2 } from "jquery";
-import { defineComponent, markRaw, h, resolveComponent, createVNode, mergeProps, reactive, watch, computed, createTextVNode, openBlock, createElementBlock, renderSlot, Fragment, createBlock, withDirectives, vShow, createElementVNode, isVNode, withCtx, renderList, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, createApp, compile } from "vue";
+import { defineComponent, markRaw, h, resolveComponent, createVNode, mergeProps, reactive, watch, computed, createTextVNode, openBlock, createElementBlock, renderSlot, Fragment, createBlock, withDirectives, vShow, createElementVNode, isVNode, withCtx, renderList, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, createApp } from "vue";
 import dayjs from "dayjs";
 import { default as default3, default as default4 } from "dayjs";
 import _ from "lodash";
@@ -30068,34 +30088,6 @@ var enAu = { exports: {} };
     return t.default.locale(_2, null, true), _2;
   });
 })(enAu);
-function promisifyRequest(request) {
-  return new Promise((resolve, reject) => {
-    request.oncomplete = request.onsuccess = () => resolve(request.result);
-    request.onabort = request.onerror = () => reject(request.error);
-  });
-}
-function createStore(dbName, storeName) {
-  const request = indexedDB.open(dbName);
-  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
-  const dbp = promisifyRequest(request);
-  return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
-}
-let defaultGetStoreFunc;
-function defaultGetStore() {
-  if (!defaultGetStoreFunc) {
-    defaultGetStoreFunc = createStore("keyval-store", "keyval");
-  }
-  return defaultGetStoreFunc;
-}
-function get(key, customStore = defaultGetStore()) {
-  return customStore("readonly", (store) => promisifyRequest(store.get(key)));
-}
-function set(key, value, customStore = defaultGetStore()) {
-  return customStore("readwrite", (store) => {
-    store.put(value, key);
-    return promisifyRequest(store.transaction);
-  });
-}
 const onRE = /^on[^a-z]/;
 const VueComponents = {};
 const privateLodash = {
@@ -30339,8 +30331,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     return `k${privateLodash.camelCase(someString)}`;
   },
   asyncLoadText: async function(url) {
-    if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-      const res = await get(url);
+    if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
+      const res = await iStorage(url);
       if (res) {
         return res;
       }
@@ -30352,8 +30344,8 @@ return (${scfObjSourceCode})(argVue,argPayload);`
         url,
         dataType: "text",
         success(...args2) {
-          if (!window.___VENTOSE_UI_IS_DEV_MODE) {
-            set(url, args2[0]);
+          if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
+            iStorage(url, args2[0]);
           }
           resolve.apply(null, args2);
         },
@@ -30372,6 +30364,9 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     };
   },
   dateFormat: function(date, format = "YYYY-MM-DD") {
+    if (typeof date === "number") {
+      date = dayjs.unix(date);
+    }
     if (format === 1) {
       format = "YYYY-MM-DD HH:mm:ss";
     }
@@ -30491,6 +30486,34 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     return item;
   }
 };
+function promisifyRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.oncomplete = request.onsuccess = () => resolve(request.result);
+    request.onabort = request.onerror = () => reject(request.error);
+  });
+}
+function createStore(dbName, storeName) {
+  const request = indexedDB.open(dbName);
+  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
+  const dbp = promisifyRequest(request);
+  return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
+}
+let defaultGetStoreFunc;
+function defaultGetStore() {
+  if (!defaultGetStoreFunc) {
+    defaultGetStoreFunc = createStore("keyval-store", "keyval");
+  }
+  return defaultGetStoreFunc;
+}
+function get(key, customStore = defaultGetStore()) {
+  return customStore("readonly", (store) => promisifyRequest(store.get(key)));
+}
+function set(key, value, customStore = defaultGetStore()) {
+  return customStore("readwrite", (store) => {
+    store.put(value, key);
+    return promisifyRequest(store.transaction);
+  });
+}
 const lStorage = new Proxy(localStorage, {
   set(_localStorage, prop, value) {
     if (privateLodash.isPlainObject(value)) {
@@ -30519,6 +30542,15 @@ lStorage.appConfigs = lStorage.appConfigs || {
     total: "total"
   }
 };
+const iStorage = async (key, val) => {
+  const keyPrefix = privateLodash.camelCase(window.location.hostname);
+  key = keyPrefix + key;
+  if (privateLodash.isInput(val)) {
+    return await set(key, val);
+  } else {
+    return await get(key);
+  }
+};
 let _State_UI = {
   language: lStorage["language"] || "zh-CN",
   onLanguageChange: false,
@@ -30529,14 +30561,16 @@ let _State_UI = {
   i18nMessage: {},
   assetsSvgPath: "",
   assetsPath: "",
+  bashPath: "",
   setAssetsBaseById(eleId) {
     var _a;
     const img = document.getElementById(eleId);
     if (img) {
-      const src = String(img.src);
+      const src = String(img.href);
       const index2 = ((_a = src.match(/assets(.*)/)) == null ? void 0 : _a.index) || 0;
       this.assetsSvgPath = src.substring(0, index2) + "assets/svg";
       this.assetsPath = src.substring(0, index2) + "assets";
+      this.bashPath = src.substring(0, index2);
     }
   },
   $t(prop, payload = {}, i18nMessage = false) {
@@ -30839,18 +30873,26 @@ const _sfc_main$b = defineComponent({
     }
   },
   emits: ["update:modelValue"],
-  setup(props) {
+  setup(props, {
+    attrs,
+    slots,
+    emit,
+    expose
+  }) {
     let Cpt_isShowXItem = true;
     let Cpt_isDisabled = false;
     if (privateLodash.isFunction(props.configs.isShow)) {
       Cpt_isShowXItem = computed(props.configs.isShow);
     } else if (privateLodash.isBoolean(props.configs.isShow)) {
-      Cpt_isShowXItem = props.configs.isShow;
+      Cpt_isShowXItem = computed(() => props.configs.isShow);
+    } else {
+      props.configs.isShow = true;
+      Cpt_isShowXItem = computed(() => props.configs.isShow);
     }
     if (privateLodash.isFunction(props.configs.disabled)) {
       Cpt_isDisabled = computed(props.configs.disabled);
     } else if (privateLodash.isBoolean(props.configs.disabled)) {
-      Cpt_isDisabled = props.configs.disabled;
+      Cpt_isDisabled = computed(() => props.configs.disabled);
     }
     return {
       Cpt_isShowXItem,
@@ -30865,10 +30907,18 @@ const _sfc_main$b = defineComponent({
     };
     const listeners = {
       "onUpdate:value": (val, ...args2) => {
-        configs.value = val;
+        if (privateLodash.isInput(configs.value)) {
+          if (configs.value === val) {
+            return;
+          } else {
+            configs.value = val;
+          }
+        }
         this.$emit("update:modelValue", val);
-        if (privateLodash.isFunction(listeners.onAfterValueChange)) {
-          listeners.onAfterValueChange.call(configs, val);
+        if (privateLodash.isFunction(listeners.onAfterValueEmit)) {
+          listeners.onAfterValueEmit.call(vm, val, {
+            xItemVm: vm
+          });
         }
         handleConfigsValidate(EVENT_TYPE.update);
       },
@@ -30897,7 +30947,6 @@ const _sfc_main$b = defineComponent({
       const propsWillDeleteFromConfigs = [];
       privateLodash.each(currentConfigs, (value, prop) => {
         if (privateLodash.isListener(prop)) {
-          propsWillDeleteFromConfigs.push(prop);
           if (listeners[prop]) {
             listeners[prop].queue.push(value);
             return;
@@ -30952,8 +31001,9 @@ const _sfc_main$b = defineComponent({
     componentSettings() {
       const vm = this;
       const configs = vm.configs;
-      configs.value = configs.value !== void 0 ? configs.value : vm.modelValue;
-      const property = {};
+      const property = {
+        value: vm.modelValue !== void 0 ? vm.modelValue : configs.value !== void 0 ? configs.value : (cosole.error("either configs.value or modelValue"), "")
+      };
       let slots = {};
       const pickAttrs = (properties) => {
         privateLodash.each(properties, (value, prop) => {
@@ -30965,7 +31015,7 @@ const _sfc_main$b = defineComponent({
             property[prop] = value(vm);
             return;
           }
-          if (["itemTips", "rules"].includes(prop)) {
+          if (["itemTips", "rules", "labelVNodeRender"].includes(prop)) {
             return;
           }
           property[prop] = value;
@@ -31111,7 +31161,7 @@ const _sfc_main$b = defineComponent({
       "class": this.itemWrapperClass
     }, [this.labelVNode, createVNode("div", {
       "class": "ant-form-item-control"
-    }, [createVNode(CurrentXItem, this.componentSettings, null), this.tipsVNode])]);
+    }, [createVNode(CurrentXItem, this.componentSettings, null), this.tipsVNode]), this.$slots.afterControll && this.$slots.afterControll()]);
   }
 });
 const _sfc_main$a = defineComponent({
@@ -31191,6 +31241,9 @@ const BTN_PRESET_MAP = {
     }, null),
     text: State_UI.$t("\u5237\u65B0").label
   }),
+  cancel: () => ({
+    text: State_UI.$t("\u53D6\u6D88").label
+  }),
   save: () => ({
     icon: createVNode(resolveComponent("xIcon"), {
       "class": "x-button_icon-wrapper",
@@ -31219,18 +31272,6 @@ const BTN_PRESET_MAP = {
 };
 const xButton = defineComponent({
   name: "xButton",
-  components: {
-    Button
-  },
-  beforeMount() {
-    const presetFn = BTN_PRESET_MAP[this.configs.preset];
-    if (presetFn) {
-      const preset = presetFn(this.configs);
-      this.configs.text = createVNode(Fragment, null, [preset.icon, createVNode("span", {
-        "class": "ml4"
-      }, [preset.text])]);
-    }
-  },
   props: {
     payload: {
       type: Object,
@@ -31245,6 +31286,19 @@ const xButton = defineComponent({
       }
     }
   },
+  beforeMount() {
+    if (!this.configs) {
+      debugger;
+      return;
+    }
+    const presetFn = BTN_PRESET_MAP[this.configs.preset];
+    if (presetFn) {
+      const preset = presetFn(this.configs);
+      this.configs.text = createVNode(Fragment, null, [preset.icon, createVNode("span", {
+        "class": "ml4"
+      }, [preset.text])]);
+    }
+  },
   data() {
     return {
       loading: true
@@ -31252,7 +31306,7 @@ const xButton = defineComponent({
   },
   computed: {
     type() {
-      if (this.configs.preset === "query") {
+      if (["query", "save"].includes(this.configs.preset)) {
         return "primary";
       }
       return this.configs.type;
@@ -31276,10 +31330,6 @@ const xButton = defineComponent({
       return false;
     },
     text() {
-      var _a;
-      if (privateLodash.isFunction((_a = this.$slots) == null ? void 0 : _a.default)) {
-        return this.$slots.default(this);
-      }
       if (privateLodash.isFunction(this.configs.text)) {
         return this.configs.text(this) || "";
       }
@@ -31298,11 +31348,14 @@ const xButton = defineComponent({
   },
   methods: {
     async onClick() {
-      var _a;
-      if (privateLodash.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
+      var _a, _b, _c;
+      if (privateLodash.isFunction((_a = this.$attrs) == null ? void 0 : _a.onClick)) {
+        return false;
+      }
+      if (privateLodash.isFunction((_b = this == null ? void 0 : this.configs) == null ? void 0 : _b.onClick)) {
         this.loading = true;
         try {
-          await this.configs.onClick.call(this.configs, this);
+          await ((_c = this == null ? void 0 : this.configs) == null ? void 0 : _c.onClick.call(this.configs, this));
         } catch (e) {
           console.error(e);
         } finally {
@@ -31316,14 +31369,17 @@ const xButton = defineComponent({
     if (this.title) {
       configs.title = this.title;
     }
-    return createVNode(Button, mergeProps({
-      "class": "x-button",
+    return createVNode(resolveComponent("aButton"), mergeProps({
+      "class": "x-button antdv-button",
       "onClick": this.onClick,
       "loading": this.loading,
       "disabled": !!this.disabled,
       "type": this.type
     }, configs), {
-      default: () => [this.text]
+      default: () => {
+        const vDomDefautl = this.$slots.default && this.$slots.default();
+        return createVNode(Fragment, null, [this.text, vDomDefautl]);
+      }
     });
   }
 });
@@ -31716,7 +31772,7 @@ const _sfc_main$5 = defineComponent(markRaw({
           if (_SvgIconAny) {
             return _SvgIconAny;
           }
-          _SvgIconAny = await get(this.iconKey);
+          _SvgIconAny = await iStorage(this.iconKey);
           if (_SvgIconAny) {
             return _SvgIconAny;
           }
@@ -31731,7 +31787,7 @@ const _sfc_main$5 = defineComponent(markRaw({
             name: this.icon,
             template: SvgIconAny
           };
-          await set(this.iconKey, SvgIconAny);
+          await iStorage(this.iconKey, SvgIconAny);
           insideIcons[this.icon] = SvgComponentByString;
           this.svgIcon = createVNode(SvgComponentByString, this.baseAttrs, null);
         } else if ((SvgIconAny == null ? void 0 : SvgIconAny.render) || (SvgIconAny == null ? void 0 : SvgIconAny.template)) {
@@ -33018,6 +33074,13 @@ const xVirTable = defineComponent({
     };
   },
   computed: {
+    dataFilter() {
+      if (privateLodash.isFunction(this.configs.dataSourceFilter)) {
+        return this.configs.dataSourceFilter;
+      } else {
+        return (i) => i;
+      }
+    },
     selectedIndeterminate() {
       var _a, _b;
       const dataLength = ((_b = (_a = this.configs) == null ? void 0 : _a.dataSource) == null ? void 0 : _b.length) || 0;
@@ -33057,6 +33120,14 @@ const xVirTable = defineComponent({
         return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.fn;
       } else {
         return false;
+      }
+    },
+    customClass() {
+      var _a, _b;
+      if (privateLodash.isFunction((_a = this.configs) == null ? void 0 : _a.customClass)) {
+        return (_b = this.configs) == null ? void 0 : _b.customClass(this.xVirTableId);
+      } else {
+        return "";
       }
     },
     rowHeight() {
@@ -33127,7 +33198,7 @@ const xVirTable = defineComponent({
         `#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
         `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
         `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
-      ].concat(this.columnWidthArray);
+      ].concat(this.columnWidthArray, this.customClass);
       return allStyleArray.join("\n");
     }
   },
@@ -33197,7 +33268,7 @@ const xVirTable = defineComponent({
       "class": "xVirTable-header-wrapper",
       "style": "padding-right: 6px;"
     }, [this.vDomThead]), createVNode(xVirTableBody, {
-      "dataSource": this.configs.dataSource,
+      "dataSource": this.dataFilter(this.configs.dataSource),
       "columnOrder": this.columnOrder,
       "columns": (_a = this.configs) == null ? void 0 : _a.columns,
       "rowHeight": this.rowHeight,
@@ -33758,7 +33829,7 @@ class ClassLayer {
       tipsMore: false,
       success: false,
       yes: false,
-      cancel: false,
+      onClickClose: false,
       end: false,
       full: false,
       minStack: true
@@ -33890,6 +33961,7 @@ class ClassLayer {
     layerInstance.config = Object.assign(layerInstance.config, custumSettings);
     layerInstance.config.icon = custumSettings.type === LayerUtils.LOADING ? 0 : -1;
     layerInstance.config.maxWidth = $win.width() - 15 * 2;
+    layerInstance.config.custumSettings = custumSettings;
     const { config } = layerInstance;
     layerInstance._layerKey = privateLodash.genId("");
     layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
@@ -33902,6 +33974,19 @@ class ClassLayer {
     );
     layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
     layerInstance.isContentTypeObject = typeof config.content === "object";
+    layerInstance.config.onClickClose = async (params) => {
+      const isFalse = (val) => privateLodash.isBoolean(val) && !val;
+      if (custumSettings.onClickClose) {
+        if (isFalse(await custumSettings.onClickClose(params))) {
+          return false;
+        }
+      } else if (custumSettings.onBeforeClose) {
+        if (isFalse(await custumSettings.onBeforeClose(params))) {
+          return false;
+        }
+      }
+      return true;
+    };
     const { isContentTypeObject } = layerInstance;
     if (typeof config.area === "string") {
       config.area = config.area === "auto" ? ["", ""] : [config.area, ""];
@@ -33970,7 +34055,7 @@ class ClassLayer {
     if (config.fullscreen) {
       setTimeout(() => {
         LayerUtils.full(_layerKey);
-      }, 400);
+      }, 500);
     }
     if (config.fixed) {
       $win.on("resize", function() {
@@ -34223,15 +34308,19 @@ class ClassLayer {
       }
     });
     $eleLayer.find(`.${LAYUI_LAYER_CLOSE}`).on("click", async function handleClickCloseBtn() {
-      var isClosed = false;
-      if (config.cancel) {
-        isClosed = config.cancel(layerInstance._layerKey, $eleLayer);
-      }
-      if (!isClosed) {
-        isClosed = await LayerUtils.close(layerInstance._layerKey);
-      }
-      if (!isClosed) {
-        await LayerUtils.close($(this).attr("data-layer-id"));
+      let isClosed = false;
+      const isNeedClose = await config.onClickClose({
+        _layerKey: layerInstance._layerKey,
+        $eleLayer,
+        dialogOptions: ""
+      });
+      if (isNeedClose) {
+        if (!isClosed) {
+          isClosed = await LayerUtils.close(layerInstance._layerKey);
+        }
+        if (!isClosed) {
+          await LayerUtils.close($(this).attr("data-layer-id"));
+        }
       }
     });
     if (config.shadeClose) {
@@ -34328,10 +34417,75 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
   }
   $MoveMask.hide();
 });
+const EcsPressHandler = privateLodash.debounce(async function(event2, dialogOptions) {
+  const $antModal = $(".ant-modal-root");
+  if ($antModal.length > 0) {
+    return;
+  }
+  console.log(event2);
+  if (event2.keyCode === KEY.esc) {
+    await dialogOptions.closeDialog();
+  }
+}, 100);
+const xDialogFooter = defineComponent({
+  props: ["configs"],
+  computed: {
+    onCancel() {
+      return this.configs.onCancel;
+    },
+    onOk() {
+      return this.configs.onOk;
+    },
+    vDomOk() {
+      var _a;
+      if ((_a = this.configs) == null ? void 0 : _a.hideOk) {
+        return null;
+      }
+      const configs = {
+        text: privateLodash.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label,
+        disabled: privateLodash.isInput(this.configs.disabledOk) ? this.configs.disabledOk : false,
+        onClick: this.onOk || privateLodash.doNothing
+      };
+      return createVNode(resolveComponent("xButton"), {
+        "type": "primary",
+        "class": "ml10",
+        "configs": configs
+      }, null);
+    },
+    vDomCancel() {
+      var _a;
+      if ((_a = this.configs) == null ? void 0 : _a.hideCancel) {
+        return null;
+      }
+      const configs = {
+        text: privateLodash.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label,
+        disabled: privateLodash.isInput(this.configs.disabledCancel) ? this.configs.disabledCancel : false,
+        onClick: this.onCancel || privateLodash.doNothing
+      };
+      return createVNode(resolveComponent("xButton"), {
+        "class": "ml10",
+        "configs": configs
+      }, null);
+    },
+    vDomContent() {
+      if (this.$slots.default) {
+        return this.$slots.default();
+      } else {
+        return createVNode(Fragment, null, [this.vDomCancel, this.vDomOk]);
+      }
+    }
+  },
+  render() {
+    return createVNode("div", {
+      "class": "flex middle end ant-modal-footer"
+    }, [this.vDomContent]);
+  }
+});
 const installUIDialogComponent = (UI2, {
   appPlugins,
   dependState
-}) => {
+}, app) => {
+  app.component("xDialogFooter", xDialogFooter);
   UI2.dialog.component = async (dialogOptions) => new Promise((resolve, reject) => {
     const {
       component: BussinessComponent,
@@ -34342,164 +34496,86 @@ const installUIDialogComponent = (UI2, {
     let $container = $("<div/>", {
       id
     });
-    const __elId = `#${id}`;
+    const _dialogId = `#${id}`;
     if (dialogOptions.yes) {
       dialogOptions._yes = dialogOptions.yes;
       delete dialogOptions.yes;
     }
+    dialogOptions.closeDialog = async () => {
+      let isCloseDialog = true;
+      if (dialogOptions.onBeforeClose) {
+        const res = await dialogOptions.onBeforeClose({
+          dialogOptions,
+          _layerKey: "",
+          $eleLayer: ""
+        });
+        if (privateLodash.isBoolean(res) && !res) {
+          isCloseDialog = false;
+        }
+      }
+      if (isCloseDialog) {
+        LayerUtils.close(handleEcsPress._layerKey);
+      }
+    };
     let dialogVueApp = null;
     let handleEcsPress = {
-      layerIndex: "",
-      handler(event2) {
-        const code = event2.keyCode;
-        event2.preventDefault();
-        if (code === KEY.esc) {
-          LayerUtils.close(handleEcsPress.layerIndex);
-        }
-      },
-      on(layerIndex) {
-        handleEcsPress.layerIndex = layerIndex;
-        $(document).on(`keyup.${__elId}`, handleEcsPress.handler);
+      _layerKey: "",
+      handler: (event2) => EcsPressHandler(event2, dialogOptions),
+      on(_layerKey) {
+        handleEcsPress._layerKey = _layerKey;
+        $(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
       },
       off() {
-        $(document).off(`keyup.${__elId}`, handleEcsPress.handler);
+        $(document).off(`keyup.${_dialogId}`, handleEcsPress.handler);
         handleEcsPress = null;
       }
     };
-    LayerUtils.open(privateLodash.merge({
+    const layerOptions = privateLodash.merge(dialogOptions, {
       contentClass: "flex1",
-      type: 1,
+      type: LayerUtils.DIALOG,
       title: [title || ""],
-      area: area || ["800px"],
+      area: area || [],
       content: $container,
       offset: ["160px", null],
       btn: [],
-      success(indexPanel, layerIndex) {
-        handleEcsPress.on(layerIndex);
+      success($eleLayer, _layerKey) {
+        handleEcsPress.on(_layerKey);
+        dialogOptions._dialog$ele = $eleLayer;
+        dialogOptions._layerKey = _layerKey;
         try {
           dialogVueApp = createApp(defineComponent({
-            beforeMount() {
-              resolve(this);
+            components: {
+              BussinessComponent
             },
             created() {
-              this.dialogOptions.__dialogInstance = this;
-              this.dialogOptions.__elId = __elId;
-            },
-            mounted() {
-              if (this.dialogOptions.fullscreen) {
-                this.fullDialog();
-              }
+              this.dialogOptions._contentInstance = this;
+              resolve(this.dialogOptions);
             },
             data() {
               return {
                 dialogOptions
               };
             },
-            methods: {
-              fullDialog() {
-                LayerUtils.full(layerIndex);
-              },
-              async handleClickOk() {
-                if (dialogOptions.onOk) {
-                  await dialogOptions.onOk(dialogOptions);
-                } else {
-                  await this.handleClickCancel();
-                }
-              },
-              async handleClickCancel() {
-                let isClose = true;
-                if (dialogOptions.beforeCancel) {
-                  isClose = await dialogOptions.beforeCancel();
-                }
-                if (isClose) {
-                  LayerUtils.close(layerIndex);
-                } else {
-                  return false;
-                }
-              }
-            },
-            computed: {
-              okText() {
-                return this.dialogOptions.okText || this.$t("\u786E\u5B9A").label;
-              },
-              cancelText() {
-                return this.dialogOptions.cancelText || this.$t("\u53D6\u6D88").label;
-              },
-              renderContent() {
-                return createVNode(BussinessComponent, {
-                  "propDialogOptions": dialogOptions,
-                  "class": "flex1",
-                  "style": "overflow:auto;"
-                }, null);
-              },
-              renderButtons() {
-                if (this.dialogOptions.hideButtons) {
-                  return null;
-                }
-                if (privateLodash.isFunction(this.dialogOptions.renderButtons)) {
-                  let vDomButtons = (() => {
-                    let _vDomButtons = this.dialogOptions.renderButtons(this);
-                    if (!_vDomButtons) {
-                      return null;
-                    } else if (_vDomButtons.template) {
-                      return h(_vDomButtons);
-                    } else {
-                      return _vDomButtons;
-                    }
-                  })();
-                  return vDomButtons;
-                }
-                return this.vDomDefaultButton;
-              },
-              vDomDefaultButton() {
-                const [isShowCancel, isShowOk] = (() => {
-                  return [!this.dialogOptions.hideCancel || null, !this.dialogOptions.hideOk || null];
-                })();
-                return createVNode(Fragment, null, [isShowCancel && createVNode(resolveComponent("xButton"), {
-                  "configs": {
-                    onClick: this.handleClickCancel
-                  }
-                }, {
-                  default: () => [this.cancelText]
-                }), createVNode(resolveComponent("xGap"), {
-                  "l": "10"
-                }, null), isShowOk && createVNode(resolveComponent("xButton"), {
-                  "configs": {
-                    onClick: this.handleClickOk,
-                    type: "primary"
-                  }
-                }, {
-                  default: () => [this.okText]
-                })]);
-              }
-            },
             render() {
               return createVNode("div", {
-                "class": "flex vertical h100 width100",
-                "data-el-id": __elId
-              }, [this.renderContent, createVNode("div", {
-                "class": "flex middle end ant-modal-footer"
-              }, [this.renderButtons])]);
+                "class": "ventose-dialog-content",
+                "data-el-id": _dialogId
+              }, [createVNode(BussinessComponent, {
+                "propDialogOptions": this.dialogOptions
+              }, null)]);
             }
           }));
           dialogVueApp.use(appPlugins, {
             dependState
           });
-          dialogVueApp.mount(__elId);
+          dialogVueApp.mount(_dialogId);
         } catch (e) {
           console.error(e);
         }
-        dialogOptions.layerIndex = layerIndex;
-        dialogOptions.close = () => {
-          LayerUtils.close(layerIndex);
-        };
-        dialogOptions.afterOpenDialoag && dialogOptions.afterOpenDialoag(dialogVueApp);
+        dialogOptions.onAfterOpenDialoag && dialogOptions.onAfterOpenDialoag(dialogVueApp);
       },
       cancel() {
-        var _a, _b;
-        if (dialogVueApp) {
-          (_b = (_a = dialogVueApp._instance) == null ? void 0 : _a.proxy) == null ? void 0 : _b.handleClickCancel();
-        }
+        dialogOptions.closeDialog();
         return false;
       },
       end() {
@@ -34511,10 +34587,11 @@ const installUIDialogComponent = (UI2, {
           dialogVueApp = null;
         }
         dialogOptions.payload = null;
-        dialogOptions.__dialogInstance = null;
+        dialogOptions._contentInstance = null;
         dialogOptions = null;
       }
-    }, dialogOptions));
+    }, privateLodash.omit(dialogOptions, ["end", "cancel", "success", "content"]));
+    LayerUtils.open(layerOptions);
   });
 };
 const appAddPlugin = {};
@@ -34605,23 +34682,16 @@ function installPopoverDirective(app, appSettings) {
   appDependState[appId] = appSettings.dependState;
   app.directive("uiPopover", {
     mounted(el, binding) {
-      var _a, _b, _c, _d;
-      const followId = privateLodash.genId("xPopoverTarget");
-      const $ele = $(el);
-      $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
-      if (binding.value) {
-        tipsOptionsCollection[followId] = binding.value;
-        if ((_a = binding.value) == null ? void 0 : _a.trigger) {
-          $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
-          const classStrategy = {
-            rightClick: "pointer-right-click"
-          };
-          $ele.addClass(classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer");
-        }
-        if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
-          $ele.attr("data-open-at-point", true);
-        }
+      init();
+      updateMounted(el, binding);
+      function init() {
+        const followId = privateLodash.genId("xPopoverTarget");
+        const $ele = $(el);
+        $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
       }
+    },
+    beforeUpdate(el, binding) {
+      updateMounted(el, binding);
     },
     unmounted(el) {
       const followId = $(el).attr(DATA_FOLLOW_ID);
@@ -34632,6 +34702,27 @@ function installPopoverDirective(app, appSettings) {
       delete visibleArea[followId];
     }
   });
+  function updateMounted(el, binding) {
+    var _a, _b, _c, _d;
+    const $ele = $(el);
+    const followId = $ele.attr(DATA_FOLLOW_ID);
+    if (binding.value) {
+      tipsOptionsCollection[followId] = binding.value;
+      if ((_a = binding.value) == null ? void 0 : _a.trigger) {
+        $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
+        const classStrategy = {
+          rightClick: "pointer-right-click"
+        };
+        const className = classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer";
+        if (!$ele.hasClass(className)) {
+          $ele.addClass();
+        }
+      }
+      if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
+        $ele.attr("data-open-at-point", true);
+      }
+    }
+  }
 }
 function inVisibleArea(followId) {
   if (timer4CloseTips[followId]) {
@@ -34765,12 +34856,14 @@ function _isSlot(s) {
 }
 let xItemNoPropCount = 0;
 function defItem(options) {
+  const configs = defItem.item(options);
+  return {
+    [configs.prop]: configs
+  };
+}
+defItem.item = (options) => {
   if (!options.prop) {
     options.prop = `xItem${xItemNoPropCount++}`;
-    console.error(`no xItem prop replace by ${options.prop}`);
-  }
-  if (!privateLodash.isInput(options.isShow)) {
-    options.isShow = true;
   }
   const configs = reactive(privateLodash.merge({
     itemTips: {},
@@ -34778,10 +34871,8 @@ function defItem(options) {
   }, {
     ...options
   }));
-  return {
-    [configs.prop]: configs
-  };
-}
+  return configs;
+};
 defItem.labelWithTips = ({
   label,
   tips,
@@ -34875,6 +34966,9 @@ const setValueTo = (configs, values) => {
     (value, prop) => {
       if (configs[prop]) {
         configs[prop].value = value;
+        if (privateLodash.isFunction(configs[prop].onChange)) {
+          configs[prop].onChange(value);
+        }
       }
     },
     {}
@@ -34955,9 +35049,17 @@ const UI = {
     error: useModel("error"),
     warning: useModel("warning"),
     confirm: (options) => {
-      options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
-      options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
-      Modal.confirm.call(Modal, options);
+      return new Promise(async (resolve, reject) => {
+        options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
+        options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
+        options.onOk = () => {
+          resolve("ok");
+        };
+        options.onCancel = () => {
+          reject();
+        };
+        Modal.confirm(options);
+      });
     },
     delete({
       title,
@@ -35025,9 +35127,13 @@ const VNodeCollection = {
     })])]);
   }
 };
-function compileVNode(template, state) {
-  const render2 = compile(template);
-  return render2.call(state, state);
+function compileVNode(template, setupReturn) {
+  return h(defineComponent({
+    template,
+    setup() {
+      return setupReturn;
+    }
+  }));
 }
 window.dayjs = dayjs;
 window.moment = dayjs;
@@ -35056,7 +35162,7 @@ const components = {
 const VentoseUIWithInstall = {
   install: (app, options) => {
     installDirective(app, options);
-    installUIDialogComponent(UI, options);
+    installUIDialogComponent(UI, options, app);
     privateLodash.each(components, (component, name) => {
       if (component.name) {
         name = component.name;

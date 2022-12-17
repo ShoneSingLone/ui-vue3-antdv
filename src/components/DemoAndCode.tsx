@@ -1,28 +1,41 @@
 //@ts-nocheck
-import { defineComponent, h, reactive, markRaw } from "vue";
-import { State_UI, xU, UI, compileVNode, defCol, $ } from "../ui";
+import { defineComponent, h, reactive, markRaw, resolveComponent } from "vue";
+import { State_UI, xU, UI, compileVNode, defCol, $, defItem } from "../ui";
 import { DialogSourceCode } from "./DialogSourceCode";
 import { defXVirTableConfigs } from "./../ui/xDataGrid/xVirTable/xVirTable";
+import App from "../App.vue";
 const { $t } = State_UI;
 
 export const DemoAndCode = defineComponent({
-	props: ["path"],
+	props: ["path", "title"],
 	computed: {
 		sfcURL() {
 			return `${State_UI.assetsPath}${this.path}`;
+		},
+		styleContainer() {
+			return {
+				position: "relative",
+				overflow: this.isFold ? "hidden" : "unset",
+				height: this.isFold ? "48px" : "unset"
+			};
 		}
-	},
-	created() {
-		this.getBussinessComponent();
 	},
 	data() {
 		return {
+			isInitDone: false,
+			isFold: true,
 			isLoading: true,
 			BussinessComponent: false,
 			BussinessComponentSourceCode: ""
 		};
 	},
 	methods: {
+		toggleFold() {
+			this.isFold = !this.isFold;
+			if (!this.isInitDone) {
+				this.getBussinessComponent();
+			}
+		},
 		async reurn(scfObjSourceCode) {
 			/* TODO: 弹窗修改加载的代码 */
 			/* 重新运行 */
@@ -39,7 +52,10 @@ export const DemoAndCode = defineComponent({
 					compileVNode,
 					defXVirTableConfigs,
 					defCol,
-					$
+					$,
+					defItem,
+					resolveComponent,
+					App
 				}
 			);
 
@@ -66,42 +82,45 @@ ${this.BussinessComponentSourceCode}
 		}
 	},
 	render() {
-		if (this.BussinessComponent) {
-			return (
+		return (
+			<div
+				class="padding10"
+				style={this.styleContainer}
+				v-loading={this.isLoading}>
 				<div
-					class="padding10"
-					style={{ position: "relative" }}
-					v-loading={this.isLoading}>
-					<xIcon
-						icon="rerun"
-						onClick={this.getBussinessComponent}
-						class="mb10 pointer"
-						style={{
-							position: "absolute",
-							right: "32px",
-							width: "32px",
-							height: "32px",
-							zIndex: 1
-						}}>
-						rerun
-					</xIcon>
-					<xIcon
-						icon="sourcecode"
-						onClick={this.showSourceCodeDialog}
-						class="mb10 pointer"
-						style={{
-							position: "absolute",
-							right: 0,
-							width: "32px",
-							height: "32px",
-							zIndex: 1
-						}}>
-						SourceCode
-					</xIcon>
-					{h(this.BussinessComponent)}
+					class="pointer"
+					onClick={this.toggleFold}
+					style={`color: rgba(0, 0, 0, 0.85); font-weight: 600; font-size:18px;`}>
+					{this.title || this.sfcURL}
+					<xIcon icon={this.isFold ? "fold" : "unfold"} class="mb10 ml10" />
 				</div>
-			);
-		}
-		return null;
+
+				<xIcon
+					icon="rerun"
+					onClick={this.getBussinessComponent}
+					class="mb10 pointer"
+					style={{
+						position: "absolute",
+						top: "48px",
+						right: "20px",
+						width: "16px",
+						height: "16px",
+						zIndex: 1
+					}}></xIcon>
+				<xIcon
+					icon="sourcecode"
+					onClick={this.showSourceCodeDialog}
+					class="mb10 pointer"
+					style={{
+						position: "absolute",
+						top: "48px",
+						right: 0,
+						width: "16px",
+						height: "16px",
+						zIndex: 1
+					}}></xIcon>
+				{this.BussinessComponent ? h(this.BussinessComponent) : null}
+			</div>
+		);
 	}
 });

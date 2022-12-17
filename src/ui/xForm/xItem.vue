@@ -28,21 +28,24 @@ export default defineComponent({
 		}
 	},
 	emits: ["update:modelValue"],
-	setup(props) {
+	setup(props, { attrs, slots, emit, expose }) {
 		let Cpt_isShowXItem = true;
 		let Cpt_isDisabled = false;
 		/*isShow*/
 		if (xU.isFunction(props.configs.isShow)) {
 			Cpt_isShowXItem = computed(props.configs.isShow);
 		} else if (xU.isBoolean(props.configs.isShow)) {
-			Cpt_isShowXItem = props.configs.isShow;
+			Cpt_isShowXItem = computed(() => props.configs.isShow);
+		} else {
+			props.configs.isShow = true;
+			Cpt_isShowXItem = computed(() => props.configs.isShow);
 		}
 
 		/*disabled*/
 		if (xU.isFunction(props.configs.disabled)) {
 			Cpt_isDisabled = computed(props.configs.disabled);
 		} else if (xU.isBoolean(props.configs.disabled)) {
-			Cpt_isDisabled = props.configs.disabled;
+			Cpt_isDisabled = computed(() => props.configs.disabled);
 		}
 		/*readonly*/
 
@@ -54,7 +57,6 @@ export default defineComponent({
 	data() {
 		const vm = this;
 		const configs = vm.configs;
-
 		const handleConfigsValidate = eventType => {
 			configs.validate && configs.validate(eventType);
 		};
@@ -62,10 +64,17 @@ export default defineComponent({
 		/* 需要一个事件分发，拦截所有事件，再根据配置信息   */
 		const listeners = {
 			"onUpdate:value": (val, ...args) => {
-				configs.value = val;
+				/* 使用configs.value的形式，一般是configs与组件是一对一的关系,configs需要是reactive的  */
+				if (xU.isInput(configs.value)) {
+					if (configs.value === val) {
+						return;
+					} else {
+						configs.value = val;
+					}
+				}
 				this.$emit("update:modelValue", val);
-				if (xU.isFunction(listeners.onAfterValueChange)) {
-					listeners.onAfterValueChange.call(configs, val);
+				if (xU.isFunction(listeners.onAfterValueEmit)) {
+					listeners.onAfterValueEmit.call(vm, val, { xItemVm: vm });
 				}
 				/* TODO: rule检测*/
 				handleConfigsValidate(EVENT_TYPE.update);
@@ -100,7 +109,7 @@ export default defineComponent({
 			xU.each(currentConfigs, (value, prop) => {
 				/* FIX: 监听函数单独出来。listener不知道在哪里被覆盖了，inputPassword  被 pop 包裹，childListener被修改了,UI库？？*/
 				if (xU.isListener(prop)) {
-					propsWillDeleteFromConfigs.push(prop);
+					// propsWillDeleteFromConfigs.push(prop);
 					if (listeners[prop]) {
 						listeners[prop].queue.push(value);
 						return;
@@ -162,9 +171,15 @@ export default defineComponent({
 		componentSettings() {
 			const vm = this;
 			const configs = vm.configs;
-			configs.value =
-				configs.value !== undefined ? configs.value : vm.modelValue;
-			const property = {};
+			/* v-model的权重大一些 */
+			const property = {
+				value:
+					vm.modelValue !== undefined
+						? vm.modelValue
+						: configs.value !== undefined
+						? configs.value
+						: (cosole.error("either configs.value or modelValue"), "")
+			};
 			let slots = {};
 
 			const pickAttrs = properties => {
@@ -180,10 +195,9 @@ export default defineComponent({
 					}
 
 					/* 用于xForm 控件，以下配置信息跟UI库控件相关，用不上，遂删除 */
-					if (["itemTips", "rules"].includes(prop)) {
+					if (["itemTips", "rules", "labelVNodeRender"].includes(prop)) {
 						return;
 					}
-
 					property[prop] = value;
 					return;
 				});
@@ -283,11 +297,11 @@ export default defineComponent({
 		MutatingProps(this, "configs.FormItemId", this.FormItemId);
 
 		/* $(`[formitemid="${this.FormItemId}"]`).on("blur", (e) => {
-      this.componentSettings.listener();
-    }); */
+	  this.componentSettings.listener();
+	}); */
 	},
 	/* beforeUnmount() {
-    $(`[formitemid="${this.FormItemId}"]`).off("blur");
+	$(`[formitemid="${this.FormItemId}"]`).off("blur");
   }, */
 	methods: {
 		setTips(type = "", msg = "") {
@@ -316,7 +330,7 @@ export default defineComponent({
 					}
 				};
 				const debounceCheckXItem = xU.debounce(checkXItem, 300);
-				/* 如果有检验规则，添加可执行校验方法 */
+				/* 如果有检验规则，添加可执行校验方法  configs.validate = */
 				MutatingProps(this, "configs.validate", eventType => {
 					/* 短时间内，多个事件触发统一校验，使用队列，任一一个触发 */
 					const prop = `configs.validate.triggerEventsObj.${eventType}`;
@@ -338,6 +352,7 @@ export default defineComponent({
 		if (!this.Cpt_isShowXItem) {
 			return null;
 		}
+
 		const CurrentXItem = (() => {
 			if (xU.isFunction(this.configs.itemType)) {
 				return this.configs.itemType;
@@ -355,6 +370,7 @@ export default defineComponent({
 					{/* 提示信息 */}
 					{this.tipsVNode}
 				</div>
+				{this.$slots.afterControll && this.$slots.afterControll()}
 			</div>
 		);
 	}

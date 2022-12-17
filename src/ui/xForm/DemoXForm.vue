@@ -1,4 +1,10 @@
 <template>
+	<DemoAndCode
+		title="xItem基本用法"
+		path="/boundless/demo/xForm/DialogDemoXItem.sfc" />
+	<DemoAndCode
+		title="xItem特殊slot"
+		path="/boundless/demo/xForm/xItemSlot.sfc" />
 	<aCard>
 		{{ valueFromConfigs }}
 		<xButton :configs="configsValidBtn" />
@@ -88,7 +94,7 @@ export default {
 				prop: "search",
 				placeholder: "Input",
 				allowClear: true,
-				onAfterValueChange(val) {
+				onAfterValueEmit(val) {
 					console.log("🚀:", "search configs", this, val);
 				}
 			}),
@@ -176,7 +182,7 @@ export default {
 				inputValue: "v-model"
 			},
 			xForm,
-			tips1: `### 可以单独使用v-model绑定数据
+			tips1: `### 
 \`\`\`js
 <xItem :configs="xForm.search" class="flex1" v-model="formData.inputValue" />
 formData: {
@@ -186,7 +192,7 @@ formData: {
 	prop: "search",
 	placeholder: "Input",
 	allowClear: true,
-	onAfterValueChange(val) {
+	onAfterValueEmit(val) {
 		console.log("🚀:", "search configs", this, val);
 	}
 }),

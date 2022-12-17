@@ -3,7 +3,6 @@
 import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
 import { xU } from "../ventoseUtils";
 import { State_UI } from "../State_UI";
-import { Button } from "ant-design-vue";
 
 /*$t 可能会变，所以每次render用新的数据*/
 const BTN_PRESET_MAP = {
@@ -14,6 +13,9 @@ const BTN_PRESET_MAP = {
 	refresh: () => ({
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideSyncOutlined" />,
 		text: State_UI.$t("刷新").label
+	}),
+	cancel: () => ({
+		text: State_UI.$t("取消").label
 	}),
 	save: () => ({
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideSaveOutlined" />,
@@ -40,22 +42,6 @@ export type t_buttonOptions = {
 
 export default defineComponent({
 	name: "xButton",
-	components: {
-		Button
-	},
-	beforeMount() {
-		/* 预置 */
-		const presetFn = BTN_PRESET_MAP[this.configs.preset];
-		if (presetFn) {
-			const preset = presetFn(this.configs);
-			this.configs.text = (
-				<>
-					{preset.icon}
-					<span class="ml4">{preset.text}</span>
-				</>
-			);
-		}
-	},
 	props: {
 		payload: {
 			type: Object,
@@ -70,6 +56,23 @@ export default defineComponent({
 			}
 		}
 	},
+	beforeMount() {
+		if (!this.configs) {
+			debugger;
+			return;
+		}
+		/* 预置 */
+		const presetFn = BTN_PRESET_MAP[this.configs.preset];
+		if (presetFn) {
+			const preset = presetFn(this.configs);
+			this.configs.text = (
+				<>
+					{preset.icon}
+					<span class="ml4">{preset.text}</span>
+				</>
+			);
+		}
+	},
 	data() {
 		return {
 			loading: true
@@ -77,7 +80,7 @@ export default defineComponent({
 	},
 	computed: {
 		type() {
-			if (this.configs.preset === "query") {
+			if (["query", "save"].includes(this.configs.preset)) {
 				return "primary";
 			}
 			return this.configs.type;
@@ -101,10 +104,6 @@ export default defineComponent({
 			return false;
 		},
 		text() {
-			/* slot优先 */
-			if (xU.isFunction(this.$slots?.default)) {
-				return this.$slots.default(this);
-			}
 			/* text作为render */
 			if (xU.isFunction(this.configs.text)) {
 				return this.configs.text(this) || "";
@@ -124,10 +123,13 @@ export default defineComponent({
 	created() {},
 	methods: {
 		async onClick() {
+			if (xU.isFunction(this.$attrs?.onClick)) {
+				return false;
+			}
 			if (xU.isFunction(this?.configs?.onClick)) {
 				this.loading = true;
 				try {
-					await this.configs.onClick.call(this.configs, this);
+					await this?.configs?.onClick.call(this.configs, this);
 				} catch (e) {
 					console.error(e);
 				} finally {
@@ -142,15 +144,25 @@ export default defineComponent({
 			configs.title = this.title;
 		}
 		return (
-			<Button
-				class="x-button"
+			<aButton
+				class="x-button antdv-button"
 				onClick={this.onClick}
 				loading={this.loading}
 				disabled={!!this.disabled}
 				type={this.type}
 				{...configs}>
-				{this.text}
-			</Button>
+				{{
+					default: () => {
+						const vDomDefautl = this.$slots.default && this.$slots.default();
+						return (
+							<>
+								{this.text}
+								{vDomDefautl}
+							</>
+						);
+					}
+				}}
+			</aButton>
 		);
 	}
 });

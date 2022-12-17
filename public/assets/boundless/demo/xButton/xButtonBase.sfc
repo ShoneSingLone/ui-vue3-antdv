@@ -1,0 +1,107 @@
+<template>
+	<mkit md="## title" />
+	<xButton :configs="configs.btn.cancel" />
+	<xButton :configs="configs.btn.normal" />
+	<xButton :configs="configs.btn.query" />
+	<xButton :configs="configs.btn.refresh" />
+	<xButton :configs="configs.btn.save" />
+	<xButton :configs="configs.btn.upload" />
+	<xButton :configs="configs.btn.delete" />
+	<xButton> <xIcon icon="user" />user </xButton>
+</template>
+
+<script>
+async function sfc({
+	resolveComponent,
+	defineComponent,
+	markRaw,
+	State_UI,
+	xU,
+	UI,
+	defItem,
+	compileVNode
+}) {
+	/* 查看DemoAndCode组件传入的变量 */
+	const { $t } = State_UI;
+
+	async function log() {
+		const text = this.text;
+		this.text = "loading...";
+		await xU.sleep(1000);
+		this.text = text;
+	}
+
+	return defineComponent({
+		TEMPLATE_PLACEHOLDER,
+		setup() {},
+		mounted() {
+			this.timer = setInterval(() => {
+				this.count++;
+			}, 1000);
+		},
+		beforeUnmount() {
+			clearInterval(this.timer);
+		},
+		data() {
+			const vm = this;
+			return {
+				timer: null,
+				count: 0,
+				formItems: {
+					...defItem({
+						value: "",
+						prop: "authText",
+						placeholder: "口令：authText",
+						allowClear: true
+					})
+				},
+				configs: {
+					btn: {
+						normal: {
+							text: () => {
+								return vm.$t("编辑").label + vm.count;
+							},
+							disabled: () => {
+								return vm.count % 3 === 0;
+							},
+							onClick: async () => {
+								await xU.sleep(1000);
+							}
+						},
+						cancel: { preset: "cancel", onClick: log },
+						query: { preset: "query", onClick: log },
+						refresh: { preset: "refresh", onClick: log },
+						save: { preset: "save", onClick: log },
+						upload: { preset: "upload", onClick: log },
+						delete: {
+							preset: "delete",
+							onClick() {
+								/* 应该是confirm delete */
+								UI.dialog.component({
+									title: "确认删除 XXX 吗？",
+									component: defineComponent({
+										template: `<div>
+						<aAlert message="警告：此操作非常危险!" type="warning" />
+						<div style="marginTop:16px;">
+							<b>请输入权限口令确认此操作:</b>
+							<xItem :configs="formItems.authText" />
+						</div>
+					</div>`,
+										data() {
+											return {
+												formItems: vm.formItems
+											};
+										}
+									}),
+									iconType: "delete"
+								});
+							}
+						}
+					}
+				}
+			};
+		},
+		methods: {}
+	});
+}
+</script>

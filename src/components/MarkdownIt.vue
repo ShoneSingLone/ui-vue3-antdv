@@ -36,14 +36,24 @@ export default {
 		};
 	},
 	async mounted() {
-		this.originHTML = this.md || this.$slots.default()[0].children;
-		const { Renderer } = marked;
-		marked.options = { langClass: "hljs" };
-		const renderer = new Renderer();
-		this.html = marked(this.originHTML, {
-			renderer,
-			highlight: code => hljs.highlightAuto(code).value
-		});
+		this.init();
+	},
+	watch: {
+		md() {
+			this.init();
+		}
+	},
+	methods: {
+		init() {
+			this.originHTML = this.md || this.$slots.default()[0].children;
+			const { Renderer } = marked;
+			marked.options = { langClass: "hljs" };
+			const renderer = new Renderer();
+			this.html = marked(this.originHTML, {
+				renderer,
+				highlight: code => hljs.highlightAuto(code).value
+			});
+		}
 	}
 };
 </script>

@@ -49,6 +49,13 @@ export const xVirTable = defineComponent({
 		};
 	},
 	computed: {
+		dataFilter() {
+			if (xU.isFunction(this.configs.dataSourceFilter)) {
+				return this.configs.dataSourceFilter;
+			} else {
+				return i => i;
+			}
+		},
 		selectedIndeterminate() {
 			const dataLength = this.configs?.dataSource?.length || 0;
 			const selectedLength = this.selected.length;
@@ -92,6 +99,13 @@ export const xVirTable = defineComponent({
 				return this.configs?.selectedConfigs?.fn;
 			} else {
 				return false;
+			}
+		},
+		customClass() {
+			if (xU.isFunction(this.configs?.customClass)) {
+				return this.configs?.customClass(this.xVirTableId);
+			} else {
+				return "";
 			}
 		},
 		rowHeight() {
@@ -172,7 +186,7 @@ export const xVirTable = defineComponent({
 				`#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
 				`#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
 				`#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
-			].concat(this.columnWidthArray);
+			].concat(this.columnWidthArray, this.customClass);
 			return allStyleArray.join("\n");
 		}
 	},
@@ -240,7 +254,7 @@ export const xVirTable = defineComponent({
 					{this.vDomThead}
 				</div>
 				<xVirTableBody
-					dataSource={this.configs.dataSource}
+					dataSource={this.dataFilter(this.configs.dataSource)}
 					columnOrder={this.columnOrder}
 					columns={this.configs?.columns}
 					rowHeight={this.rowHeight}

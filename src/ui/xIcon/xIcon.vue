@@ -3,8 +3,6 @@
 import { defineComponent, markRaw } from "vue";
 import { xU } from "../ventoseUtils";
 import { State_UI } from "../State_UI";
-import { get, set } from "idb-keyval";
-
 import InsideDeleteOutlined from "../../assets/svg/DeleteOutlined.svg";
 import InsideExclamationCircleOutlined from "../../assets/svg/ExclamationCircleOutlined.svg";
 import InsideLoadingOutlined from "../../assets/svg/LoadingOutlined.svg";
@@ -13,6 +11,7 @@ import InsideSearchOutlined from "../../assets/svg/SearchOutlined.svg";
 import InsideSyncOutlined from "../../assets/svg/SyncOutlined.svg";
 import InsideUploadOutlined from "../../assets/svg/UploadOutlined.svg";
 import Insidetips from "../../assets/svg/tips.svg";
+import { iStorage } from "../tools/storage";
 
 /* const icons = import.meta.glob("../../assets/svg/*.svg"); */
 const insideIcons = {
@@ -63,7 +62,7 @@ export default defineComponent(
 							return _SvgIconAny;
 						}
 						/* indexedDB 缓存成字符串 */
-						_SvgIconAny = await get(this.iconKey);
+						_SvgIconAny = await iStorage(this.iconKey);
 						if (_SvgIconAny) {
 							return _SvgIconAny;
 						}
@@ -80,7 +79,7 @@ export default defineComponent(
 							template: SvgIconAny
 						};
 						/* indexedDB 缓存 字符串*/
-						await set(this.iconKey, SvgIconAny);
+						await iStorage(this.iconKey, SvgIconAny);
 						/* 内存 缓存 */
 						insideIcons[this.icon] = SvgComponentByString;
 						this.svgIcon = <SvgComponentByString {...this.baseAttrs} />;
@@ -116,6 +115,7 @@ export default defineComponent(
 .xIcon {
 	width: 16px;
 	height: 16px;
+
 	&.auto-size {
 		width: unset;
 		height: unset;

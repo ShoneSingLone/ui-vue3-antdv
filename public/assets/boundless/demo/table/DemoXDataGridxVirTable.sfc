@@ -74,6 +74,10 @@ async function sfc({
 				configs_xVirTable: defXVirTableConfigs({
 					rowHeight: 32,
 					selected: [],
+					/* 自定义virTable 范围内的样式，通过 id 权重*/
+					customClass(tableId){
+						return `#${tableId} [role="body"] [data-prop=name]{color:blue;}`
+					},
 					selectedConfigs: {
 						type: defXVirTableConfigs.type.many,
 						prop: "id",

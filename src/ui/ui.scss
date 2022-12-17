@@ -367,6 +367,15 @@ div[id^="svg-icon_"] {
 	z-index: 10;
 }
 
+.color- {
+	&error {
+		color: red;
+	}
+	&primary {
+		color: #1890ff;
+	}
+}
+
 ::-webkit-scrollbar {
 	width: 6px;
 	height: 6px;
@@ -383,3 +392,4 @@ div[id^="svg-icon_"] {
 
 @import "./MdButton.scss";
 @import "./xDataGrid/xVirTable/xVirTable.scss";
+@import "./xSingle/dialog/dialog.scss";

@@ -178,6 +178,10 @@ App.vue 中完成
 
 错误信息可以单独提供，默认是在 formItem 下方展示 tips ，也可以利用错误信息做其他展现方式，比如 popup， 提供 id 定位，方便滑动定位 vModel 与配置信息分开
 
+
+xItem 作为 controller ，具体的render 如 input 提供具体的处理能力，1，editor（disabled是editor的能力） 2，readonly 模式（只做展示，可以更个性化）itemType接受的是render函数
+![](README.md_assets/2022-12-15-14-36-29.png)
+
 - 参考
   - `src/views/user/LoginCredentials.vue`
   - `src/views/user/State_Login.jsx`
@@ -191,7 +195,7 @@ import {watch} from "vue";
 
 const inputConfigs = defItem({
     type: ITEM_TYPE.input,
-    onAfterValueChange: (configs) => {
+    onAfterValueEmit: (configs) => {
         State_App.count++;
     }
 });
@@ -259,7 +263,7 @@ export const State_UI = reactive({
 ```
 
 xItem msg 可以是 function 根据传入的参数显示不同信息
-
+raw$Value update:value
 ## 动态加载 svg icon
 
 ```js

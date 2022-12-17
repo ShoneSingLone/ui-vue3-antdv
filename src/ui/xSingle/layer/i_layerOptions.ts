@@ -240,10 +240,9 @@ export interface i_layerOptions {
     
     该回调携带两个参数，分别为：当前层索引参数（index）、当前层的DOM对象（layero），默认会自动触发关闭。如果不想关闭，return false即可，如；
      */
-	cancel?: Function | false;
+	onClickClose?: Function | false;
 	/* end - 层销毁后触发的回调;
     类型：Function，默认：null
-    
     无论是确认还是取消，只要层被销毁了，end都会执行，不携带任何参数。
      */
 	end?: Function | false;

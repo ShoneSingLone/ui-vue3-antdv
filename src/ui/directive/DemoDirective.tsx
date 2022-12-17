@@ -5,7 +5,10 @@ export default defineComponent({
 		return (
 			<>
 				{/* @ts-ignore */}
-				<DemoAndCode path="/boundless/demo/directive/uiMove.sfc" />
+				<DemoAndCode
+					title="使用v-uiMove完成移动监听"
+					path="/boundless/demo/directive/uiMove.sfc"
+				/>
 			</>
 		);
 	}

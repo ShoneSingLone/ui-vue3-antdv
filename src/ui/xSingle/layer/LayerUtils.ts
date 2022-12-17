@@ -578,7 +578,7 @@ class ClassLayer {
 		tipsMore: false,
 		success: false,
 		yes: false,
-		cancel: false,
+		onClickClose: false,
 		end: false,
 		full: false,
 		minStack: true
@@ -766,6 +766,7 @@ class ClassLayer {
 			custumSettings.type === LayerUtils.LOADING ? 0 : -1;
 		/* 初始最大宽度：当前屏幕宽，左右留 15px 边距 */
 		layerInstance.config.maxWidth = ($win.width() as number) - 15 * 2;
+		layerInstance.config.custumSettings = custumSettings;
 
 		const { config } = layerInstance;
 		/* 随layer 的增减变动 */
@@ -783,6 +784,21 @@ class ClassLayer {
 		);
 		layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
 		layerInstance.isContentTypeObject = typeof config.content === "object";
+
+		layerInstance.config.onClickClose = async params => {
+			/* 明确返回Boolean false 则为false */
+			const isFalse = val => xU.isBoolean(val) && !val;
+			if (custumSettings.onClickClose) {
+				if (isFalse(await custumSettings.onClickClose(params))) {
+					return false;
+				}
+			} else if (custumSettings.onBeforeClose) {
+				if (isFalse(await custumSettings.onBeforeClose(params))) {
+					return false;
+				}
+			}
+			return true;
+		};
 
 		const { isContentTypeObject } = layerInstance;
 
@@ -866,7 +882,7 @@ class ClassLayer {
 		if (config.fullscreen) {
 			setTimeout(() => {
 				LayerUtils.full(_layerKey);
-			}, 400);
+			}, 500);
 		}
 
 		/* 如果是固定定位 */
@@ -1223,15 +1239,20 @@ class ClassLayer {
 			.find(`.${LAYUI_LAYER_CLOSE}`)
 			.on("click", async function handleClickCloseBtn() {
 				/* 关闭 */
-				var isClosed = false;
-				if (config.cancel) {
-					isClosed = config.cancel(layerInstance._layerKey, $eleLayer);
-				}
-				if (!isClosed) {
-					isClosed = await LayerUtils.close(layerInstance._layerKey);
-				}
-				if (!isClosed) {
-					await LayerUtils.close($(this).attr("data-layer-id"));
+				let isClosed = false;
+				const isNeedClose = await config.onClickClose({
+					_layerKey: layerInstance._layerKey,
+					$eleLayer,
+					dialogOptions: ""
+				});
+
+				if (isNeedClose) {
+					if (!isClosed) {
+						isClosed = await LayerUtils.close(layerInstance._layerKey);
+					}
+					if (!isClosed) {
+						await LayerUtils.close($(this).attr("data-layer-id"));
+					}
 				}
 			});
 		/* 点遮罩关闭 */

@@ -18,6 +18,10 @@ export const setValueTo = (configs, values) => {
 		(value, prop) => {
 			if (configs[prop]) {
 				configs[prop].value = value;
+				/* onChange */
+				if (xU.isFunction(configs[prop].onChange)) {
+					configs[prop].onChange(value);
+				}
 			}
 		},
 		{}
