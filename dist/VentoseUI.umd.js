@@ -30098,6 +30098,18 @@ var __publicField = (obj, key, value) => {
       INVALID_DATE: "Invalid Date",
       format_ymd: "YYYY-MM-DD"
     },
+    hashCode(str) {
+      var hash = 0, i, chr;
+      if (str.length === 0) {
+        return "0";
+      }
+      for (i = 0; i < str.length; i++) {
+        chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0;
+      }
+      return String(hash);
+    },
     getLeftTopFromAbsolute($ele) {
       const _top = $ele.css("top");
       const _left = $ele.css("left");
@@ -30909,7 +30921,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       };
       const listeners = {
         "onUpdate:value": (val, ...args2) => {
-          if (privateLodash.isInput(configs.value)) {
+          if (configs.value !== void 0) {
             if (configs.value === val) {
               return;
             } else {
@@ -34424,7 +34436,6 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     if ($antModal.length > 0) {
       return;
     }
-    console.log(event2);
     if (event2.keyCode === KEY.esc) {
       await dialogOptions.closeDialog();
     }
@@ -35129,13 +35140,59 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       })])]);
     }
   };
-  function compileVNode(template, setupReturn) {
-    return vue.h(vue.defineComponent({
-      template,
-      setup() {
-        return setupReturn;
+  const DELAY = 60 * 5;
+  const CACHE = {};
+  const WILL_DELETE_PROPS = {
+    cache: {},
+    add(prop) {
+      const count = this.cache[prop] || 0;
+      this.cache[prop] = count + 1;
+    },
+    remove(prop) {
+      const count = this.cache[prop] || 0;
+      const val = count - 1;
+      this.cache[prop] = val < 0 ? 0 : val;
+    }
+  };
+  const deleteUnmountedInstance = (prop) => {
+    WILL_DELETE_PROPS.add(prop);
+    delayDeleteUnmountedInstance();
+  };
+  const delayDeleteUnmountedInstance = privateLodash.debounce(function() {
+    privateLodash.each(WILL_DELETE_PROPS.cache, (count, prop) => {
+      if (count > 0) {
+        delete CACHE[prop];
+        delete this.cache[prop];
       }
-    }));
+      if (!Object.keys(CACHE).includes(prop)) {
+        console.log(prop, this.cache[prop]);
+        delete this.cache[prop];
+      }
+    });
+  }, 1e3 * DELAY);
+  function compileVNode(template, setupReturn, prop) {
+    if (!prop) {
+      alert("miss uniq id" + template);
+    }
+    if (CACHE[prop]) {
+      WILL_DELETE_PROPS.remove(prop);
+      delayDeleteUnmountedInstance();
+      return CACHE[prop];
+    } else {
+      return vue.h(vue.defineComponent({
+        template,
+        mounted() {
+          WILL_DELETE_PROPS.remove(prop);
+          CACHE[prop] = this._.vnode;
+        },
+        unmounted() {
+          deleteUnmountedInstance(prop);
+        },
+        setup() {
+          return setupReturn;
+        }
+      }));
+    }
   }
   window.dayjs = dayjs__default.default;
   window.moment = dayjs__default.default;

@@ -12,7 +12,6 @@ const EcsPressHandler = xU.debounce(async function (event, dialogOptions) {
 	if ($antModal.length > 0) {
 		return;
 	}
-	console.log(event);
 	if (event.keyCode === KEY.esc) {
 		await dialogOptions.closeDialog();
 	}

@@ -1,5 +1,6 @@
 <template>
-	<mkit md="### updateDataSource的作用
+	<mkit
+		md="### updateDataSource的作用
 - dataSourceFilter 用来配置renderCell的xItem
 - renderCell里的xItem数据变动不会引起整个virTable行数据的响应，数据只在xItem作用范围内
 - syncDataSource 是将xItem的数据与dataSource的数据进行同步，
@@ -13,9 +14,9 @@
 		<aButton @click="syncDataSource">syncDataSource</aButton>
 	</div>
 	<div class="flex horizon">
-		<div style="width: 100%; height: 300px;overflow: auto;" class="flex1">
-			<table style="width: 100%;">
-				<tr v-for=" item in configs_xVirTable.dataSource">
+		<div style="width: 100%; height: 300px; overflow: auto" class="flex1">
+			<table style="width: 100%">
+				<tr v-for="item in configs_xVirTable.dataSource">
 					<td>{{ item.name }}</td>
 					<td>{{ item.type }}</td>
 					<td>===xItem configs===</td>
@@ -56,9 +57,13 @@ async function sfc({
 		}
 	];
 
+	const ID_NAME = xU.genId("name");
+	const ID_TYPE = xU.genId("type");
+	const ID_OPERATIONS = xU.genId("operations");
+
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
-		setup() { },
+		setup() {},
 		data(vm) {
 			return {
 				configs_xVirTable: defXVirTableConfigs({
@@ -68,7 +73,7 @@ async function sfc({
 					dataSourceFilter(dataSource) {
 						return xU.map(dataSource, rowRecord => {
 							rowRecord.configsName = defItem.item({
-								value: rowRecord.name,
+								value: rowRecord.name
 							});
 							rowRecord.configsType = defItem.item({
 								value: rowRecord.type,
@@ -82,27 +87,34 @@ async function sfc({
 						...defCol({
 							prop: "name",
 							label: vm.$t("名称").label,
-							renderCell: ({ record }) => compileVNode(
-								`<xItem :configs="record.configsName"/>`,
-								{ record }
-							)
+							renderCell: ({ record }) =>
+								compileVNode(
+									`<xItem :configs="record.configsName"/>`,
+									{ record },
+									ID_NAME + record.id
+								)
 						}),
 						...defCol({
 							prop: "type",
 							label: vm.$t("类型").label,
-							renderCell: ({ record }) => compileVNode(
-								`<xItem :configs="record.configsType"/>`,
-								{ record }
-							)
+							renderCell: ({ record }) =>
+								compileVNode(
+									`<xItem :configs="record.configsType"/>`,
+									{ record },
+									ID_TYPE + record.id
+								)
 						}),
 						...defCol({
 							label: vm.$t("操作").label,
 							prop: "operations",
 							width: "40px",
 							renderHeader: () => null,
-							renderCell: ({ record }) => compileVNode(
-								`<a @click="del(record.id)">del</a>`,
-								{ record, del: vm.del })
+							renderCell: ({ record }) =>
+								compileVNode(
+									`<a @click="del(record.id)">del</a>`,
+									{ record, del: vm.del },
+									ID_OPERATIONS + record.id
+								)
 						})
 					}
 				})
@@ -134,13 +146,11 @@ async function sfc({
 				});
 			},
 			genNewData: xU.debounce(function () {
-				this.configs_xVirTable.dataSource = [...new Array(2)]
-					.map((i, ii) => ({
-						id: xU.genId("id"),
-						name: "name" + ii,
-						type: ii % 2 === 0 ? "ACTIVATION" : "DOWN"
-					}));
-			}, 10),
+				this.configs_xVirTable.dataSource = [
+					{ id: "ACTIVATION", name: "ACTIVATION", type: "ACTIVATION" },
+					{ id: "DOWN", name: "DOWN", type: "DOWN" }
+				]
+			}, 10)
 		}
 	});
 }

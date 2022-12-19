@@ -14,6 +14,19 @@ const privateLodash = {
 		INVALID_DATE: "Invalid Date",
 		format_ymd: "YYYY-MM-DD"
 	},
+	hashCode(str: string) {
+		var hash = 0, i, chr;
+		if (str.length === 0) {
+			return "0";
+		}
+		for (i = 0; i < str.length; i++) {
+			chr = str.charCodeAt(i);
+			hash = ((hash << 5) - hash) + chr;
+			/* Convert to 32bit integer */
+			hash |= 0;
+		}
+		return String(hash);
+	},
 	/* 从jQuery对象中，获取leftTop的数值 */
 	getLeftTopFromAbsolute($ele: JQuery) {
 		const _top = $ele.css("top");

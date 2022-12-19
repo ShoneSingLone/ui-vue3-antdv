@@ -65,7 +65,7 @@ export default defineComponent({
 		const listeners = {
 			"onUpdate:value": (val, ...args) => {
 				/* 使用configs.value的形式，一般是configs与组件是一对一的关系,configs需要是reactive的  */
-				if (xU.isInput(configs.value)) {
+				if (configs.value !== undefined) {
 					if (configs.value === val) {
 						return;
 					} else {
