@@ -23,12 +23,11 @@ const WILL_DELETE_PROPS = {
 
 const deleteUnmountedInstance = (prop: string) => {
 	/* @ts-ignore */
-	WILL_DELETE_PROPS.add(prop)
+	WILL_DELETE_PROPS.add(prop);
 	/* console.log(`will delete [${prop}] after ${DELAY}s`); */
 	/* console.log(`WILL_DELETE_INSTANCE_PROPS`, WILL_DELETE_PROPS.cache); */
 	delayDeleteUnmountedInstance();
-}
-
+};
 
 const delayDeleteUnmountedInstance = xU.debounce(function () {
 	xU.each(WILL_DELETE_PROPS.cache, (count, prop) => {
@@ -41,7 +40,6 @@ const delayDeleteUnmountedInstance = xU.debounce(function () {
 			/* console.error(`deleted ${prop}`) */
 		}
 
-
 		/* 如果缓存中已无相关引用，删除索引 */
 		if (!Object.keys(CACHE).includes(prop)) {
 			/* @ts-ignore */
@@ -49,15 +47,17 @@ const delayDeleteUnmountedInstance = xU.debounce(function () {
 			/* @ts-ignore */
 			delete this.cache[prop];
 		}
-
 	});
-}, 1000 * DELAY)
-
+}, 1000 * DELAY);
 
 /* resolveComponent 需要放在渲染函数中，因为在rendering ，才有instance 才能获取当前实例注册的components，instance =》 app 又是一路查找上去*/
-export function compileVNode(template: string, setupReturn: object, prop: string) {
+export function compileVNode(
+	template: string,
+	setupReturn: object,
+	prop: string
+) {
 	if (!prop) {
-		alert("miss uniq id" + template)
+		alert("miss uniq id" + template);
 	}
 
 	if (CACHE[prop]) {

@@ -15,13 +15,15 @@ const privateLodash = {
 		format_ymd: "YYYY-MM-DD"
 	},
 	hashCode(str: string) {
-		var hash = 0, i, chr;
+		var hash = 0,
+			i,
+			chr;
 		if (str.length === 0) {
 			return "0";
 		}
 		for (i = 0; i < str.length; i++) {
 			chr = str.charCodeAt(i);
-			hash = ((hash << 5) - hash) + chr;
+			hash = (hash << 5) - hash + chr;
 			/* Convert to 32bit integer */
 			hash |= 0;
 		}
