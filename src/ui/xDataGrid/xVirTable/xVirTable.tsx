@@ -49,13 +49,6 @@ export const xVirTable = defineComponent({
 		};
 	},
 	computed: {
-		dataFilter() {
-			if (xU.isFunction(this.configs.dataSourceFilter)) {
-				return this.configs.dataSourceFilter;
-			} else {
-				return i => i;
-			}
-		},
 		selectedIndeterminate() {
 			const dataLength = this.configs?.dataSource?.length || 0;
 			const selectedLength = this.selected.length;
@@ -201,6 +194,13 @@ export const xVirTable = defineComponent({
 		}
 	},
 	methods: {
+		dataFilter(dataSourceArray) {
+			if (xU.isFunction(this.configs.dataSourceFilter)) {
+				return this.configs.dataSourceFilter(dataSourceArray);
+			} else {
+				return dataSourceArray;
+			}
+		},
 		initStyle() {
 			const $form = $(`#${this.xVirTableId}`);
 			const $style = $("<style/>", { id: `style_${this.xVirTableId}` }).append(

@@ -309,7 +309,79 @@ const privateLodash = {
 		/* @ts-ignore */
 		return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
 	},
-
+	/**
+	 *
+	 * @param {*} cssname
+	 * @returns
+	 */
+	loadCss(cssname: string) {
+		const cssPath = `${cssname}`;
+		let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
+		$link.appendTo($("head"));
+		/* @ts-ignore */
+		$link[0].href = `${cssPath}?_t=${Date.now()}`;
+		/* destroy 的时候移除已加载的模块css，酌情使用 */
+		return () => {
+			$link.remove();
+			/* @ts-ignore */
+			$link = null;
+		};
+	},
+	async asyncLoadStyle(cssURL: string, options?: object) {
+		/* @ts-ignore */
+		let { isReplace, id } = options || { isReplace: false, id: "" };
+		/* 提供ID 用于替换同一个style 元素的内容 */
+		id = id || _.camelCase(cssURL);
+		let content;
+		const $style = $(`#${id}`);
+		if ($style.length == 0) {
+			/* 如果不存在，加载内容 */
+			$("body").append($("<style/>", { id }));
+			content = await privateLodash.asyncLoadText(cssURL);
+			$style.html(content);
+		} else if (isReplace) {
+			/* 如果存在，且明确表示要替换同一个 */
+			content = await privateLodash.asyncLoadText(cssURL);
+			$style.html(content);
+		}
+		/* 如果已存在，不处理 */
+	},
+	/**
+	 *
+	 * @param {*} url
+	 * @returns
+	 */
+	asyncLoadText: async function (url: string) {
+		/* 在开发模式下App.vue 会设置这个对象 */
+		/* @ts-ignore */
+		if (localStorage.___VENTOSE_UI_IS_DEV_MODE !== "VENTOSE_UI_IS_DEV_MODE") {
+			const res = await iStorage(url);
+			if (res) {
+				return res;
+			}
+		}
+		/* https://learn.jquery.com/ */
+		/* https://api.jquery.com/jQuery.ajax/  */
+		return new Promise((resolve, reject) =>
+			$.ajax({
+				type: "GET",
+				async: true,
+				url,
+				dataType: "text",
+				success(...args) {
+					/* @ts-ignore */
+					if (
+						localStorage.___VENTOSE_UI_IS_DEV_MODE !== "VENTOSE_UI_IS_DEV_MODE"
+					) {
+						iStorage(url, args[0]);
+					}
+					/* @ts-ignore */
+					resolve.apply(null, args);
+				},
+				error: reject
+			})
+		);
+	},
 	/**
 	 * 异步加载js 在window中名为globalName的全局变量
 	 * @param {string} url
@@ -329,6 +401,23 @@ const privateLodash = {
 			return window[globalName];
 		});
 		$style.attr("src", url);
+	},
+	asyncGlobalJS: async (globalName: string, url: string) => {
+		/* @ts-ignore */
+		if (window[globalName]) {
+			/* @ts-ignore */
+			return window[globalName];
+		}
+		if (!url) {
+			alert("asyncGlobalJS miss url" + globalName);
+			return {};
+		}
+		/* @ts-ignore */
+		const jsString = await mylodash.asyncLoadText(url);
+		const fn = new Function(jsString);
+		fn();
+		/* @ts-ignore */
+		return window[globalName];
 	},
 	ensureValueDone: async (fnGetValue: Function) => {
 		return new Promise(async resolve => {
@@ -353,64 +442,11 @@ const privateLodash = {
 	},
 	/**
 	 *
-	 * @param {*} url
-	 * @returns
-	 */
-	asyncLoadText: async function (url: string) {
-		/* 在开发模式下App.vue 会设置这个对象 */
-		/* @ts-ignore */
-		if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
-			const res = await iStorage(url);
-			if (res) {
-				return res;
-			}
-		}
-		/* https://learn.jquery.com/ */
-		/* https://api.jquery.com/jQuery.ajax/  */
-		return new Promise((resolve, reject) =>
-			$.ajax({
-				type: "GET",
-				async: true,
-				url,
-				dataType: "text",
-				success(...args) {
-					/* @ts-ignore */
-					if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
-						iStorage(url, args[0]);
-					}
-					/* @ts-ignore */
-					resolve.apply(null, args);
-				},
-				error: reject
-			})
-		);
-	},
-	/**
-	 *
-	 * @param {*} cssname
-	 * @returns
-	 */
-	loadCss: function (cssname: string) {
-		const cssPath = `${cssname}`;
-		let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
-		$link.appendTo($("head"));
-		/* @ts-ignore */
-		$link[0].href = `${cssPath}?_t=${Date.now()}`;
-		/* destroy 的时候移除已加载的模块css，酌情使用 */
-		return () => {
-			$link.remove();
-			/* @ts-ignore */
-			$link = null;
-		};
-	},
-
-	/**
-	 *
 	 * @param date type dayjs.ConfigType = string | number | Date | dayjs.Dayjs | null | undefined
 	 * @param format 默认 "YYYY-MM-DD" 1："YYYY-MM-DD HH:mm:ss"
 	 * @returns
 	 */
-	dateFormat: function (date: dayjs.ConfigType, format = "YYYY-MM-DD") {
+	dateFormat: (date: dayjs.ConfigType, format = "YYYY-MM-DD") => {
 		if (typeof date === "number") {
 			date = dayjs.unix(date);
 		}

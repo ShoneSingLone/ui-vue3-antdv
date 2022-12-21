@@ -28,13 +28,16 @@ export const xVirTableBody = defineComponent({
 	data(vm) {
 		return {
 			isLoading: false,
-			perBlockHeight: 0,
+			perBlockHeight: 1,
 			perBlockRowCount: 0,
 			blockInViewCount: 0,
 			styleWrapperAll: {
 				height: 0,
 				position: "relative"
-			}
+			},
+			virs1: [],
+			virs2: [],
+			virs3: []
 		};
 	},
 	mounted() {
@@ -42,6 +45,28 @@ export const xVirTableBody = defineComponent({
 		this.fnObserveDomResize(this.$refs.wrapper, () => {
 			this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
 		});
+		this.$watch(
+			() => {
+				return `${this.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper1}`;
+			},
+			() => {
+				this.setVirs1();
+			}
+		);
+		this.$watch(
+			() =>
+				`${this.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper2}`,
+			() => {
+				this.setVirs2();
+			}
+		);
+		this.$watch(
+			() =>
+				`${this.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper3}`,
+			() => {
+				this.setVirs3();
+			}
+		);
 	},
 	beforeUnmount() {
 		this.fnUnobserveDomResize(this.$refs.wrapper);
@@ -74,39 +99,6 @@ export const xVirTableBody = defineComponent({
 		},
 		positionBlock() {
 			return this.blockInViewCount % 3;
-		},
-		virs1() {
-			const position =
-				Number(this.styleWrapper1.match(/(\d)/g).join("")) /
-				this.perBlockHeight;
-			const start = position * this.perBlockRowCount;
-			const end = start + this.perBlockRowCount;
-			return this.dataSource.slice(start, end).map((i, index) => ({
-				...i,
-				index: start + 1 + index
-			}));
-		},
-		virs2() {
-			const position =
-				Number(this.styleWrapper2.match(/(\d)/g).join("")) /
-				this.perBlockHeight;
-			const start = position * this.perBlockRowCount;
-			const end = start + this.perBlockRowCount;
-			return this.dataSource.slice(start, end).map((i, index) => ({
-				...i,
-				index: start + 1 + index
-			}));
-		},
-		virs3() {
-			const position =
-				Number(this.styleWrapper3.match(/(\d)/g).join("")) /
-				this.perBlockHeight;
-			const start = position * this.perBlockRowCount;
-			const end = start + this.perBlockRowCount;
-			return this.dataSource.slice(start, end).map((i, index) => ({
-				...i,
-				index: start + 1 + index
-			}));
 		},
 		/* style */
 		styleWrapper1() {
@@ -222,6 +214,36 @@ export const xVirTableBody = defineComponent({
 		}
 	},
 	methods: {
+		setVirs1() {
+			const position =
+				Number(this.styleWrapper1.match(/(\d)/g).join("")) /
+				this.perBlockHeight;
+			const start = position * this.perBlockRowCount;
+			const end = start + this.perBlockRowCount;
+			this.virs1 = this.fragment(start, end);
+		},
+		setVirs2() {
+			const position =
+				Number(this.styleWrapper2.match(/(\d)/g).join("")) /
+				this.perBlockHeight;
+			const start = position * this.perBlockRowCount;
+			const end = start + this.perBlockRowCount;
+			this.virs2 = this.fragment(start, end);
+		},
+		setVirs3() {
+			const position =
+				Number(this.styleWrapper3.match(/(\d)/g).join("")) /
+				this.perBlockHeight;
+			const start = position * this.perBlockRowCount;
+			const end = start + this.perBlockRowCount;
+			this.virs3 = this.fragment(start, end);
+		},
+		fragment(start: number, end: number): any {
+			return this.dataSource.slice(start, end).map((i, index) => ({
+				...i,
+				index: start + 1 + index
+			}));
+		},
 		genSelectedVDom(rowInfo) {
 			if (!this.selectedConfigs) {
 				return null;

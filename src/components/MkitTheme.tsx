@@ -9,13 +9,9 @@ export const setTheme = async theme => {
 		theme || localStorage.markdownHightlightTheme || "monokai-sublime.css";
 	const cssURL = `${State_UI.assetsPath}/highlightstyles/${theme}`;
 	localStorage.markdownHightlightTheme = theme;
-	const content = await xU.asyncLoadText(cssURL);
 	const id = `markdonw-hightlight-style`;
-	const $style = $(`#${id}`);
-	if ($style.length == 0) {
-		$("body").append($("<style/>", { id }));
-	}
-	$style.html(content);
+	/* 同一个style block 不同的url */
+	await xU.asyncLoadStyle(cssURL, { isReplace: true, id });
 };
 
 export const MkitTheme = defineComponent({

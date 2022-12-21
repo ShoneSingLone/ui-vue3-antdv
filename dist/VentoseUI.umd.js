@@ -30326,6 +30326,19 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       });
       $style.attr("src", url);
     },
+    asyncGlobalJS: async (globalName, url) => {
+      if (window[globalName]) {
+        return window[globalName];
+      }
+      if (!url) {
+        alert("asyncGlobalJS miss url" + globalName);
+        return {};
+      }
+      const jsString = await mylodash.asyncLoadText(url);
+      const fn = new Function(jsString);
+      fn();
+      return window[globalName];
+    },
     ensureValueDone: async (fnGetValue) => {
       return new Promise(async (resolve) => {
         let exeFnGetValue = async function() {

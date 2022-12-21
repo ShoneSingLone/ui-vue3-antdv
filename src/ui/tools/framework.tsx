@@ -83,7 +83,11 @@ export function compileVNode(
 					deleteUnmountedInstance(prop);
 				},
 				setup() {
-					return setupReturn;
+					if (xU.isFunction(setupReturn)) {
+						return setupReturn();
+					} else {
+						return setupReturn;
+					}
 				}
 			})
 		);

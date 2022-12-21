@@ -60,6 +60,8 @@ async function sfc({
 			value: "DOWN"
 		}
 	];
+	const ID_NAME = xU.genId("status");
+	const ID_CAPACITY = xU.genId("capacity");
 
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
@@ -67,7 +69,7 @@ async function sfc({
 		data(vm) {
 			return {
 				dataSource: [],
-				total: 9999,
+				total: 9,
 				filter: {
 					status: []
 				},
@@ -75,8 +77,8 @@ async function sfc({
 					rowHeight: 32,
 					selected: [],
 					/* 自定义virTable 范围内的样式，通过 id 权重*/
-					customClass(tableId){
-						return `#${tableId} [role="body"] [data-prop=name]{color:blue;}`
+					customClass(tableId) {
+						return `#${tableId} [role="body"] [data-prop=name]{color:blue;}`;
 					},
 					selectedConfigs: {
 						type: defXVirTableConfigs.type.many,
@@ -90,6 +92,12 @@ async function sfc({
 						}
 					},
 					dataSource: [],
+					dataSourceFilter(dataSource) {
+						return xU.map(dataSource, rowRecord => {
+							rowRecord._reactive = { capacity: rowRecord.capacity };
+							return rowRecord;
+						});
+					},
 					columns: {
 						...defCol({
 							prop: "name",
@@ -103,17 +111,9 @@ async function sfc({
 									`<aSelect v-model:value="filter.status" mode="multiple" style="width: 100%" placeholder="类型" max-tag-count="1" :options="OPTIONS" allowClear />`,
 									{
 										OPTIONS,
-										filter: new Proxy(
-											{},
-											{
-												get: () => vm.filter.status,
-												set(obj, prop, val) {
-													vm.filter.status = val;
-													return true;
-												}
-											}
-										)
-									}
+										filter: vm.filter
+									},
+									ID_NAME + label
 								);
 							}
 						}),
@@ -125,25 +125,11 @@ async function sfc({
 							prop: "capacity_editor",
 							label: vm.$t("总容量输入框").label,
 							renderCell({ record, cell }) {
+								debugger;
 								return compileVNode(
-									`{{key}}<aInput v-model:value="record.capacity" :key="key"/>`,
-									{
-										key: record._index,
-										record: new Proxy(record, {
-											get: obj => obj.capacity,
-											set(obj, prop, val) {
-												const currentItemIndex = xU.findIndex(
-													vm.configs_xVirTable.dataSource,
-													{ _index: obj._index }
-												);
-												/* TODO: 主要是Boundless模式下 `compileVNode` 没有做成响应式，目前这个写法有点尴尬，暂时没想好怎么处理 */
-												vm.configs_xVirTable.dataSource[
-													currentItemIndex
-												].capacity = val;
-												return true;
-											}
-										})
-									}
+									`{{record.capacity}}<aInput v-model:value="record.capacity"/>`,
+									{ record },
+									ID_CAPACITY + record.id
 								);
 							}
 						}),
@@ -171,7 +157,8 @@ async function sfc({
 									`<div class="ellipsis" v-uiPopover="{ onlyEllipsis: true }"> {{upperName}} </div>`,
 									{
 										upperName: record.upperName
-									}
+									},
+									ID_NAME + record.id
 								);
 							}
 						}),
@@ -191,6 +178,13 @@ async function sfc({
 			};
 		},
 		watch: {
+			dataSource: {
+				deep: true,
+				immediate: true,
+				handler() {
+					this.updateData();
+				}
+			},
 			filter: {
 				deep: true,
 				immediate: true,
@@ -218,7 +212,7 @@ async function sfc({
 			genNewData: xU.debounce(function (total) {
 				this.configs_xVirTable.selected = [];
 				this.filter.status = [];
-				this.dataSource = [...new Array(total)].map((i, ii) => {
+				const dataSource = [...new Array(total)].map((i, ii) => {
 					let upperName = ii + " 正常显示";
 					if (ii % 5 === 0) {
 						upperName =
@@ -239,6 +233,7 @@ async function sfc({
 						endDate: Date.now()
 					};
 				});
+				this.dataSource = dataSource;
 			}, 1000)
 		}
 	});
