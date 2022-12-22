@@ -30314,6 +30314,53 @@ return (${scfObjSourceCode})(argVue,argPayload);`
     const prop = keyArray[0];
     return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
   },
+  loadCss(cssname) {
+    const cssPath = `${cssname}`;
+    let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
+    $link.appendTo($("head"));
+    $link[0].href = `${cssPath}?_t=${Date.now()}`;
+    return () => {
+      $link.remove();
+      $link = null;
+    };
+  },
+  async asyncLoadStyle(cssURL, options) {
+    let { isReplace, id } = options || { isReplace: false, id: "" };
+    id = id || _.camelCase(cssURL);
+    let content;
+    const $style = $(`#${id}`);
+    if ($style.length == 0) {
+      $("body").append($("<style/>", { id }));
+      content = await privateLodash.asyncLoadText(cssURL);
+      $style.html(content);
+    } else if (isReplace) {
+      content = await privateLodash.asyncLoadText(cssURL);
+      $style.html(content);
+    }
+  },
+  asyncLoadText: async function(url) {
+    if (localStorage.___VENTOSE_UI_IS_DEV_MODE !== "VENTOSE_UI_IS_DEV_MODE") {
+      const res = await iStorage(url);
+      if (res) {
+        return res;
+      }
+    }
+    return new Promise(
+      (resolve, reject) => $.ajax({
+        type: "GET",
+        async: true,
+        url,
+        dataType: "text",
+        success(...args2) {
+          if (localStorage.___VENTOSE_UI_IS_DEV_MODE !== "VENTOSE_UI_IS_DEV_MODE") {
+            iStorage(url, args2[0]);
+          }
+          resolve.apply(null, args2);
+        },
+        error: reject
+      })
+    );
+  },
   asyncLoadJS: async (url, globalName) => {
     if (window[globalName]) {
       return window[globalName];
@@ -30329,11 +30376,11 @@ return (${scfObjSourceCode})(argVue,argPayload);`
       return window[globalName];
     }
     if (!url) {
-      alert("asyncGlobalJS miss url" + globalName);
+      alert("asyncGlobalJS miss url " + globalName);
       return {};
     }
-    const jsString = await mylodash.asyncLoadText(url);
-    const fn = new Function(jsString);
+    const jsString = await privateLodash.asyncLoadText(url);
+    const fn = new Function(`with(window){${jsString}}`);
     fn();
     return window[globalName];
   },
@@ -30355,40 +30402,7 @@ return (${scfObjSourceCode})(argVue,argPayload);`
   genProp: (someString) => {
     return `k${privateLodash.camelCase(someString)}`;
   },
-  asyncLoadText: async function(url) {
-    if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
-      const res = await iStorage(url);
-      if (res) {
-        return res;
-      }
-    }
-    return new Promise(
-      (resolve, reject) => $.ajax({
-        type: "GET",
-        async: true,
-        url,
-        dataType: "text",
-        success(...args2) {
-          if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
-            iStorage(url, args2[0]);
-          }
-          resolve.apply(null, args2);
-        },
-        error: reject
-      })
-    );
-  },
-  loadCss: function(cssname) {
-    const cssPath = `${cssname}`;
-    let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
-    $link.appendTo($("head"));
-    $link[0].href = `${cssPath}?_t=${Date.now()}`;
-    return () => {
-      $link.remove();
-      $link = null;
-    };
-  },
-  dateFormat: function(date, format = "YYYY-MM-DD") {
+  dateFormat: (date, format = "YYYY-MM-DD") => {
     if (typeof date === "number") {
       date = dayjs.unix(date);
     }
@@ -32791,18 +32805,32 @@ const xVirTableBody = defineComponent({
   data(vm) {
     return {
       isLoading: false,
-      perBlockHeight: 0,
+      perBlockHeight: 1,
       perBlockRowCount: 0,
       blockInViewCount: 0,
       styleWrapperAll: {
         height: 0,
         position: "relative"
-      }
+      },
+      virs1: [],
+      virs2: [],
+      virs3: []
     };
   },
   mounted() {
     this.fnObserveDomResize(this.$refs.wrapper, () => {
       this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
+    });
+    this.$watch(() => {
+      return `${this.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper1}`;
+    }, () => {
+      this.setVirs1();
+    });
+    this.$watch(() => `${this.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper2}`, () => {
+      this.setVirs2();
+    });
+    this.$watch(() => `${this.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper3}`, () => {
+      this.setVirs3();
     });
   },
   beforeUnmount() {
@@ -32843,33 +32871,6 @@ const xVirTableBody = defineComponent({
     },
     positionBlock() {
       return this.blockInViewCount % 3;
-    },
-    virs1() {
-      const position = Number(this.styleWrapper1.match(/(\d)/g).join("")) / this.perBlockHeight;
-      const start = position * this.perBlockRowCount;
-      const end = start + this.perBlockRowCount;
-      return this.dataSource.slice(start, end).map((i, index2) => ({
-        ...i,
-        index: start + 1 + index2
-      }));
-    },
-    virs2() {
-      const position = Number(this.styleWrapper2.match(/(\d)/g).join("")) / this.perBlockHeight;
-      const start = position * this.perBlockRowCount;
-      const end = start + this.perBlockRowCount;
-      return this.dataSource.slice(start, end).map((i, index2) => ({
-        ...i,
-        index: start + 1 + index2
-      }));
-    },
-    virs3() {
-      const position = Number(this.styleWrapper3.match(/(\d)/g).join("")) / this.perBlockHeight;
-      const start = position * this.perBlockRowCount;
-      const end = start + this.perBlockRowCount;
-      return this.dataSource.slice(start, end).map((i, index2) => ({
-        ...i,
-        index: start + 1 + index2
-      }));
     },
     styleWrapper1() {
       if (this.positionBlock === 0) {
@@ -32957,6 +32958,30 @@ const xVirTableBody = defineComponent({
     }
   },
   methods: {
+    setVirs1() {
+      const position = Number(this.styleWrapper1.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      this.virs1 = this.fragment(start, end);
+    },
+    setVirs2() {
+      const position = Number(this.styleWrapper2.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      this.virs2 = this.fragment(start, end);
+    },
+    setVirs3() {
+      const position = Number(this.styleWrapper3.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      this.virs3 = this.fragment(start, end);
+    },
+    fragment(start, end) {
+      return this.dataSource.slice(start, end).map((i, index2) => ({
+        ...i,
+        index: start + 1 + index2
+      }));
+    },
     genSelectedVDom(rowInfo) {
       if (!this.selectedConfigs) {
         return null;
@@ -33099,13 +33124,6 @@ const xVirTable = defineComponent({
     };
   },
   computed: {
-    dataFilter() {
-      if (privateLodash.isFunction(this.configs.dataSourceFilter)) {
-        return this.configs.dataSourceFilter;
-      } else {
-        return (i) => i;
-      }
-    },
     selectedIndeterminate() {
       var _a, _b;
       const dataLength = ((_b = (_a = this.configs) == null ? void 0 : _a.dataSource) == null ? void 0 : _b.length) || 0;
@@ -33238,6 +33256,13 @@ const xVirTable = defineComponent({
     }
   },
   methods: {
+    dataFilter(dataSourceArray) {
+      if (privateLodash.isFunction(this.configs.dataSourceFilter)) {
+        return this.configs.dataSourceFilter(dataSourceArray);
+      } else {
+        return dataSourceArray;
+      }
+    },
     initStyle() {
       const $form = $(`#${this.xVirTableId}`);
       const $style = $("<style/>", {
@@ -35200,7 +35225,11 @@ function compileVNode(template, setupReturn, prop) {
         deleteUnmountedInstance(prop);
       },
       setup() {
-        return setupReturn;
+        if (privateLodash.isFunction(setupReturn)) {
+          return setupReturn();
+        } else {
+          return setupReturn;
+        }
       }
     }));
   }
@@ -35267,6 +35296,7 @@ export {
   defPagination,
   defXVirTableConfigs,
   getPaginationPageSize,
+  iStorage,
   lStorage,
   default4 as moment,
   pickValueFrom,

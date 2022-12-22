@@ -52,7 +52,7 @@ import {
 import { defItem, vModel, antColKey } from "./xForm/common.jsx";
 import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
 import { setDocumentTitle, setCSSVariables } from "./tools/dom.js";
-import { lStorage } from "./tools/storage.js";
+import { lStorage, iStorage } from "./tools/storage.js";
 import { pickValueFrom, resetValueOf, setValueTo } from "./tools/form.js";
 import { UI } from "./UI";
 import { VNodeCollection } from "./tools/VNodeRender";
@@ -99,6 +99,7 @@ export { setDataGridInfo as setDataGridInfo };
 export { State_UI as State_UI };
 export { Cpt_UI_locale as Cpt_UI_locale };
 export { lStorage as lStorage };
+export { iStorage as iStorage };
 export { EVENT_TYPE as EVENT_TYPE };
 
 export { setPagination as setPagination };

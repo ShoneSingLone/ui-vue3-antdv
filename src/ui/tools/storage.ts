@@ -38,11 +38,19 @@ lStorage.appConfigs = lStorage.appConfigs || {
  * @returns
  */
 export const iStorage = async (key: string, val?: any) => {
-	const keyPrefix = xU.camelCase(window.location.hostname);
-	key = keyPrefix + key;
-	if (xU.isInput(val)) {
-		return await idbSet(key, val);
-	} else {
-		return await idbGet(key);
+	const keyPrefix = window.location.hostname;
+	key = xU.camelCase(keyPrefix + key);
+	let res;
+	try {
+		if (xU.isInput(val)) {
+			await idbSet(key, val);
+			res = true;
+		} else {
+			res = await idbGet(key);
+		}
+	} catch (error) {
+		console.error(error);
+	} finally {
+		return res;
 	}
 };

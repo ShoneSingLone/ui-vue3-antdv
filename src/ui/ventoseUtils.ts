@@ -409,12 +409,12 @@ const privateLodash = {
 			return window[globalName];
 		}
 		if (!url) {
-			alert("asyncGlobalJS miss url" + globalName);
+			alert("asyncGlobalJS miss url " + globalName);
 			return {};
 		}
 		/* @ts-ignore */
-		const jsString = await mylodash.asyncLoadText(url);
-		const fn = new Function(jsString);
+		const jsString = await privateLodash.asyncLoadText(url);
+		const fn = new Function(`with(window){${jsString}}`);
 		fn();
 		/* @ts-ignore */
 		return window[globalName];
