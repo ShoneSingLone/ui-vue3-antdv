@@ -32,7 +32,10 @@ export type t_itemConfigs =
 			itemType?: t_xItem | Function;
 			once?: Function;
 			placeholder?: string;
+			/* modelValue 优先级更高 */
 			value: any;
+			/* 默认值 */
+			defaultValue?: any;
 			max?: number;
 			isTextarea?: boolean;
 			prop: string;

@@ -1,26 +1,46 @@
 import { resolveComponent } from "vue";
+import { ReadonlyItem } from "./Readonly";
+import { xU } from "@ventose/ui";
+
 /**
  * @Description
  * @date 2021-11-09
- * @param {any} {property isPassword 密码输入框 isTextarea
+ * @param {any} {properties isPassword 密码输入框 isTextarea
  * @param {any} slots}
  * @returns {any}
  */
-export default ({ property, slots, listeners }) => {
+export default ({
+	properties,
+	slots,
+	listeners,
+	propsWillDeleteFromConfigs
+}) => {
+	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
+	/* 只读模式下的 */
+	if (properties.readonly) {
+		return <ReadonlyItem value={properties.value} />;
+	}
+
 	let component = resolveComponent("aInput");
-	if (property.isPassword) {
+	if (properties.isPassword) {
 		component = resolveComponent("aInputPassword");
-	} else if (property.isNumber) {
+	} else if (properties.isNumber) {
 		component = resolveComponent("aInputNumber");
-	} else if (property.isTextarea) {
+	} else if (properties.isTextarea) {
 		component = resolveComponent("aTextarea");
-		property.autoSize = property.autoSize || {
+		properties.autoSize = properties.autoSize || {
 			minRows: 4,
 			maxRows: 6
 		};
-	} else if (property.isSearch) {
+	} else if (properties.isSearch) {
 		component = resolveComponent("aInputSearch");
 	}
-	// property.disabled=true;
-	return <component {...property} {...listeners} v-slots={slots} />;
+	// properties.disabled=true;
+	return (
+		<component
+			{...xU.omit(properties, propsWillDeleteFromConfigs)}
+			{...listeners}
+			v-slots={slots}
+		/>
+	);
 };

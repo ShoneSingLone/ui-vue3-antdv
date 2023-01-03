@@ -2,30 +2,30 @@
 
 import "./index.less";
 import {
-	Avatar,
 	Alert,
+	Avatar,
 	Breadcrumb,
+	Button,
 	Card,
+	Checkbox,
 	Descriptions,
+	Dropdown,
+	Input,
+	Layout,
+	List,
 	Menu,
 	Modal,
-	Progress,
-	Popover,
-	Dropdown,
-	Button,
-	List,
-	Checkbox,
-	Popconfirm,
 	PageHeader,
-	Input,
+	Popconfirm,
+	Popover,
+	Progress,
 	Result,
-	Tabs,
-	Table,
 	Spin,
-	Layout,
+	Switch,
+	Table,
+	Tabs,
 	Tooltip,
-	Upload,
-	Switch
+	Upload
 } from "ant-design-vue";
 import { DescriptionsItem } from "ant-design-vue/es/descriptions";
 import { MenuItem, SubMenu } from "ant-design-vue/es/menu";
@@ -34,10 +34,10 @@ import { DropdownButton } from "ant-design-vue/es/dropdown";
 import { TabPane } from "ant-design-vue/es/tabs";
 import { InputPassword } from "ant-design-vue/es/input";
 import {
-	LayoutHeader,
-	LayoutSider,
+	LayoutContent,
 	LayoutFooter,
-	LayoutContent
+	LayoutHeader,
+	LayoutSider
 } from "ant-design-vue/es/layout";
 /* 表单提示信息 */
 import "ant-design-vue/es/form/style/index.css";
@@ -58,31 +58,30 @@ import { xPagination } from "./xDataGrid/xPagination";
 import xColFilter from "./xDataGrid/xColFilter.vue";
 import { installUIDialogComponent } from "./xSingle/dialog/dialog";
 import { xU as mylodash } from "./ventoseUtils.js";
-import { State_UI, Cpt_UI_locale } from "./State_UI";
+import { Cpt_UI_locale, State_UI } from "./State_UI";
 import dayjs from "dayjs";
+import {
+	defCol,
+	defColActions,
+	defColActionsBtnlist,
+	defDataGridOption,
+	defPagination,
+	getPaginationPageSize,
+	setDataGridInfo,
+	setPagination
+} from "./xDataGrid/common";
+import { antColKey, defItem, vModel } from "./xForm/common.jsx";
+import { AllWasWell, EVENT_TYPE, validateForm } from "./tools/validate.js";
+import { setCSSVariables, setDocumentTitle } from "./tools/dom.js";
+import { lStorage } from "./tools/storage.js";
+import { pickValueFrom, resetValueOf } from "./tools/form.js";
+import { UI } from "./UI";
 /* @ts-ignore */
 window.dayjs = dayjs;
 /* @ts-ignore */
 window.moment = dayjs;
 /* @ts-ignore */
 window.jquery = $;
-
-import {
-	defPagination,
-	setPagination,
-	getPaginationPageSize,
-	defCol,
-	defColActions,
-	defColActionsBtnlist,
-	defDataGridOption,
-	setDataGridInfo
-} from "./xDataGrid/common";
-import { defItem, vModel, antColKey } from "./xForm/common.jsx";
-import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
-import { setDocumentTitle, setCSSVariables } from "./tools/dom.js";
-import { lStorage } from "./tools/storage.js";
-import { pickValueFrom, resetValueOf } from "./tools/form.js";
-import { UI } from "./UI";
 
 /* my-private-ui-component */
 const componentMyUI = {

@@ -1,13 +1,12 @@
-import { Checkbox, CheckboxGroup } from "ant-design-vue";
-import { h } from "vue";
 import { EVENT_TYPE } from "../../tools/validate";
+import { xU } from "../../ventoseUtils";
 
-export default ({ property }) => {
-	const _property = xU.merge({}, property, {
-		checked: property.value,
+export default ({ properties, slots, listeners }) => {
+	const _property = xU.merge({}, properties, {
+		checked: !!properties.value,
 		onClick() {
-			_property["onUpdate:value"](!_property.value, EVENT_TYPE.update);
+			listeners["onUpdate:value"](!_property.value, EVENT_TYPE.update);
 		}
 	});
-	return h(Checkbox, _property);
+	return <aCheckbox {..._property} />;
 };

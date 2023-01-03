@@ -1,6 +1,5 @@
 <script lang="jsx">
 import { defineComponent } from "vue";
-import { xU } from "../ventoseUtils";
 import { setPagination } from "./common";
 import xColFilter from "./xColFilter.vue";
 
@@ -62,7 +61,7 @@ export default defineComponent({
 		},
 		Cpt_isSetConfigs() {
 			/* configs 默认会设置pagination属性  */
-			/* 
+			/*
 			<!--
 		Cpt_isSetConfigs:{{Cpt_isSetConfigs}}
 		Cpt_isShowQuery:{{Cpt_isShowQuery}}

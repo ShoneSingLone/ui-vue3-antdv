@@ -1,14 +1,7 @@
 <script setup lang="jsx">
-import {
-	onMounted,
-	onUnmounted,
-	ref,
-	reactive,
-	watch,
-	toRefs,
-	nextTick
-} from "vue";
+import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import domUtils from "./utils/dom.js";
+
 let $index = 0,
 	$locknum = 0,
 	$timer = {},

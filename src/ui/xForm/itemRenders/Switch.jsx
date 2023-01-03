@@ -1,18 +1,16 @@
-import { Checkbox, Switch } from "ant-design-vue";
-import { EVENT_TYPE } from "../../tools/validate";
+import { Switch } from "ant-design-vue";
 import { h } from "vue";
 import { xU } from "../../ventoseUtils";
 
-/*
-export default ({property, slots, listeners}) => {
-
-    return <Switch {...property} {...listeners} v-slots={slots}/>;
-};
-*/
-
-export default ({ property, slots, listeners }) => {
-	const _property = xU.merge({}, property, {
-		checked: property.value,
+export default ({
+	properties,
+	slots,
+	listeners,
+	propsWillDeleteFromConfigs
+}) => {
+	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
+	const _property = xU.merge({}, properties, {
+		checked: properties.value,
 		onClick() {
 			listeners["onUpdate:value"](!_property.value);
 		}

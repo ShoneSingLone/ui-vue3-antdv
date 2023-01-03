@@ -524,10 +524,13 @@ const LayerUtils = {
 		return await Promise.all(needClose.map(LayerUtils.close));
 	},
 	setLayerTop($current: JQuery) {
+		const type = $current.attr("type");
 		if ($current.hasClass("set-layer-top")) {
 			return;
 		} else {
-			$(".set-layer-top").removeClass("set-layer-top");
+			const selector = `.set-layer-top[type=${type}]`;
+			/* FIX: 防止不同类型的层重排 */
+			$(selector).removeClass("set-layer-top");
 			$current.addClass("set-layer-top").appendTo($body);
 		}
 	}
@@ -853,7 +856,9 @@ class ClassLayer {
 				}
 				config.follow = config.content[1];
 				const arrow = '<i class="layui-layer-TipsG"></i>';
-				config.content = `<div style="max-width:300px;overflow:auto;">${config.content[0]}<div>${arrow}`;
+				config.content = `<div style="max-width:${
+					config?.custumSettings?.maxWidth || "300px"
+				};overflow:auto;">${config.content[0]}<div>${arrow}`;
 				delete config.title;
 				config.btn = [];
 				config.tips =
@@ -1306,7 +1311,7 @@ $document
 	.on(
 		"mousemove",
 		`.${LAYUI_LAYER_MOVE}`,
-		xU.throttle(function (e) {
+		function (e) {
 			const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
 			/* 拖拽移动 */
 			if (moveOrResizeInstance instanceof ClassLayer) {
@@ -1363,7 +1368,8 @@ $document
 			}
 
 			/* Resize */
-		}, 90)
+		}
+		// xU.throttle(, 90)
 	)
 	.on("mouseup", function (e) {
 		if (READY.moveOrResizeInstance instanceof ClassLayer) {

@@ -11,6 +11,7 @@ import {
 	timer4CloseTips,
 	visibleArea
 } from "./directiveState";
+
 type t_trigger = "click" | "rightClick";
 type t_uiPopoverOptions = {
 	content: string;
@@ -70,6 +71,7 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 		tips: [placement, "#fff"],
 		/*hover 不允许 同时多个 tips出现*/
 		/*tipsMore: false,*/
+		/* maxWidth */
 		during: 1000 * 60 * 10
 	};
 
@@ -102,6 +104,12 @@ function fnShowTips({ $ele, followId, appId, event }: any) {
 				app = null;
 			}
 		};
+	}
+
+	/* @ts-ignore */
+	if (options.maxWidth) {
+		/* @ts-ignore */
+		layerTipsOptions.maxWidth = maxWidth;
 	}
 
 	setTimeout(() => {

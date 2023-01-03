@@ -6,23 +6,24 @@ import { xU } from "../../ventoseUtils";
 /**
  * @Description
  * @date 2021-11-09
- * @param {any} {property isPassword 密码输入框
+ * @param {any} {properties isPassword 密码输入框
  * @param {any} slots}
  * @returns {any}
  */
-export default ({ property, slots, listeners }) => {
+export default ({ properties, slots, listeners }) => {
+	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
 	let value = "";
-	if (property.value) {
-		value = dayjs(property.value);
-		xU.doNothing(value, property.value);
+	if (properties.value) {
+		value = dayjs(properties.value);
+		xU.doNothing(value, properties.value);
 		if (value === "Invalid Date") {
-			xU.doNothing("property.value", property.value);
+			xU.doNothing("properties.value", properties.value);
 			value = "";
 		}
 	}
 	return (
 		<DatePicker
-			{...property}
+			{...properties}
 			{...listeners}
 			v-slots={slots}
 			value={value}

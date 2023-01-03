@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _, { LoDashStatic } from "lodash";
 import dayjs from "dayjs";
 import $ from "jquery";
 import { iStorage } from "./tools/storage";
@@ -7,12 +7,30 @@ import { iStorage } from "./tools/storage";
 const onRE = /^on[^a-z]/;
 
 const VueComponents: any = {};
-
+/* @ts-ignore */
+const isDevMode =
+	/* @ts-ignore */
+	localStorage.___VENTOSE_UI_IS_DEV_MODE === "VENTOSE_UI_IS_DEV_MODE";
 const privateLodash = {
 	..._,
 	WORDS: {
 		INVALID_DATE: "Invalid Date",
 		format_ymd: "YYYY-MM-DD"
+	},
+	launchFullscreen(element: any) {
+		if (element.requestFullscreen) {
+			element.requestFullscreen();
+		} else if (element.mozRequestFullScreen) {
+			element.mozRequestFullScreen();
+		} else if (element.msRequestFullscreen) {
+			element.msRequestFullscreen();
+		} else if (element.webkitRequestFullscreen) {
+			element.webkitRequestFullScreen();
+		}
+	},
+	exitFullscreen() {
+		/* @ts-ignore */
+		document.exitFullscreen();
 	},
 	hashCode(str: string) {
 		var hash = 0,
@@ -354,7 +372,7 @@ const privateLodash = {
 	asyncLoadText: async function (url: string) {
 		/* 在开发模式下App.vue 会设置这个对象 */
 		/* @ts-ignore */
-		if (localStorage.___VENTOSE_UI_IS_DEV_MODE !== "VENTOSE_UI_IS_DEV_MODE") {
+		if (!isDevMode) {
 			const res = await iStorage(url);
 			if (res) {
 				return res;
@@ -370,9 +388,7 @@ const privateLodash = {
 				dataType: "text",
 				success(...args) {
 					/* @ts-ignore */
-					if (
-						localStorage.___VENTOSE_UI_IS_DEV_MODE !== "VENTOSE_UI_IS_DEV_MODE"
-					) {
+					if (!isDevMode) {
 						iStorage(url, args[0]);
 					}
 					/* @ts-ignore */
@@ -542,8 +558,11 @@ const privateLodash = {
 	 * @param val
 	 * @returns
 	 */
-	MutatingProps: (item: any, prop: string, val = null) => {
+	MutatingProps: (item: any, prop: string, val = null, isDelete = false) => {
 		item = item || {};
+		if (/^\./.test(prop)) {
+			prop = String(prop).substring(1);
+		}
 		const propArray = prop.split(".");
 		let key = "";
 		let nextItem = item;
@@ -555,7 +574,11 @@ const privateLodash = {
 				}
 				/* 如果是最后一项，就赋值后退出 */
 				if (propArray.length === 0) {
-					nextItem[key] = val;
+					if (val === "never" && isDelete) {
+						delete nextItem[key];
+					} else {
+						nextItem[key] = val;
+					}
 					return;
 				} else {
 					/* 继续循环，如果中间有undefined，添加中间项 */
@@ -599,4 +622,36 @@ const privateLodash = {
 	}
 };
 
-export { privateLodash as xU };
+type t_all_lodash_and_mine = typeof privateLodash & LoDashStatic;
+
+export const xU: t_all_lodash_and_mine = new Proxy(
+	/* @ts-ignore */
+	function (...args: any[]) {
+		/* @ts-ignore */
+		if (isDevMode) {
+			try {
+				throw new Error("");
+			} catch (error: any) {
+				args.unshift(String(error.stack).split("\n")[2], "\n");
+				console.log.apply(console, args);
+			}
+		}
+	},
+	{
+		get(fn, prop: any) {
+			/* @ts-ignore */
+			if (privateLodash[prop]) {
+				/* @ts-ignore */
+				return privateLodash[prop];
+			}
+			/* @ts-ignore */
+			return fn[prop];
+		},
+		/* @ts-ignore */
+		set(fn, prop, val) {
+			/* @ts-ignore */
+			privateLodash[prop] = val;
+			return true;
+		}
+	}
+);

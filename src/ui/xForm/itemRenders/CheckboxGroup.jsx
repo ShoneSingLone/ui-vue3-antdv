@@ -1,10 +1,11 @@
 /**
  * @Description
  * @date 2021-11-09
- * @param {any} {property isButton是否是Button样式
+ * @param {any} {properties isButton是否是Button样式
  * @param {any} slots}
  * @returns {any}
  */
-export default ({ property, slots, listeners }) => {
-	return <aCheckboxGroup {...property} {...listeners} v-slots={slots} />;
+export default ({ properties, slots, listeners }) => {
+	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
+	return <aCheckboxGroup {...properties} {...listeners} v-slots={slots} />;
 };

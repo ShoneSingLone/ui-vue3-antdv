@@ -6,7 +6,7 @@ import "ant-design-vue/dist/antd.css";
 import Antd from "ant-design-vue";
 import $ from "jquery";
 import xRender from "./xRender/xRender.jsx";
-import xItem from "./xForm/xItem.vue";
+import { xItem } from "./xForm/xItem";
 import xForm from "./xForm/xForm.vue";
 import xButton from "./xButton/xButton";
 import xButtonCountDown from "./xButton/xButtonCountDown.vue";
@@ -25,12 +25,29 @@ import {
 	xVirTable
 } from "./xDataGrid/xVirTable/xVirTable";
 import { xU } from "./ventoseUtils";
-import { State_UI, Cpt_UI_locale } from "./State_UI";
+import { Cpt_UI_locale, State_UI } from "./State_UI";
 import dayjs from "dayjs";
-import { RegexFn, FormRules } from "./xForm/FormRules";
-import { installPopoverDirective } from "./xSingle/directive/popover";
+import { FormRules, RegexFn } from "./xForm/FormRules";
 import { installUIDialogComponent } from "./xSingle/dialog/dialog";
 import { installDirective } from "./directive";
+import {
+	defCol,
+	defColActions,
+	defColActionsBtnlist,
+	defDataGridOption,
+	defPagination,
+	getPaginationPageSize,
+	setDataGridInfo,
+	setPagination
+} from "./xDataGrid/common";
+import { antColKey, defItem, vModel } from "./xForm/common.jsx";
+import { AllWasWell, EVENT_TYPE, validateForm } from "./tools/validate.js";
+import { setCSSVariables, setDocumentTitle } from "./tools/dom.js";
+import { iStorage, lStorage } from "./tools/storage.js";
+import { pickValueFrom, resetValueOf, setValueTo } from "./tools/form.js";
+import { UI } from "./UI";
+import { VNodeCollection } from "./tools/VNodeRender";
+import { compileVNode } from "./tools/framework";
 
 /* @ts-ignore */
 window.dayjs = dayjs;
@@ -38,25 +55,6 @@ window.dayjs = dayjs;
 window.moment = dayjs;
 /* @ts-ignore */
 window.jquery = $;
-
-import {
-	defPagination,
-	setPagination,
-	getPaginationPageSize,
-	defCol,
-	defColActions,
-	defColActionsBtnlist,
-	defDataGridOption,
-	setDataGridInfo
-} from "./xDataGrid/common";
-import { defItem, vModel, antColKey } from "./xForm/common.jsx";
-import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
-import { setDocumentTitle, setCSSVariables } from "./tools/dom.js";
-import { lStorage, iStorage } from "./tools/storage.js";
-import { pickValueFrom, resetValueOf, setValueTo } from "./tools/form.js";
-import { UI } from "./UI";
-import { VNodeCollection } from "./tools/VNodeRender";
-import { compileVNode } from "./tools/framework";
 
 /* my-private-ui-component */
 const componentMyUI = {

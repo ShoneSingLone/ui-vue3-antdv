@@ -1,6 +1,6 @@
 //@ts-nocheck
 
-import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
+import { defineComponent } from "vue";
 import { xU } from "../ventoseUtils";
 import { State_UI } from "../State_UI";
 
@@ -79,6 +79,9 @@ export default defineComponent({
 		};
 	},
 	computed: {
+		isClickHandlerOnAttrs() {
+			return !!this.$attrs?.onClick;
+		},
 		type() {
 			if (["query", "save"].includes(this.configs.preset)) {
 				return "primary";
@@ -86,6 +89,7 @@ export default defineComponent({
 			return this.configs.type;
 		},
 		title() {
+			/*disabled是String则为弹窗提示*/
 			if (xU.isString(this.disabled) && this.disabled.length > 0) {
 				return this.disabled;
 			}
@@ -122,10 +126,7 @@ export default defineComponent({
 	},
 	created() {},
 	methods: {
-		async onClick() {
-			if (xU.isFunction(this.$attrs?.onClick)) {
-				return false;
-			}
+		async handleButtonClick() {
 			if (xU.isFunction(this?.configs?.onClick)) {
 				this.loading = true;
 				try {
@@ -138,20 +139,32 @@ export default defineComponent({
 			}
 		}
 	},
-	render(h) {
-		const configs = xU.omit(this.configs, ["text", "onClick", "disabled"]);
-		if (this.title) {
-			configs.title = this.title;
+	render() {
+		const propsWillDeleteFromProperty = [
+			"text",
+			"loading",
+			"disabled",
+			"title",
+			"onClick"
+		];
+		const _properties = xU.omit(this.configs, propsWillDeleteFromProperty);
+		/* 直接在dom上的onClick优先级更高, */
+		if (!this.isClickHandlerOnAttrs) {
+			_properties.onClick = this.handleButtonClick;
 		}
+
+		if (this.title) {
+			_properties.title = this.title;
+		}
+
 		return (
 			<aButton
 				class="x-button antdv-button"
-				onClick={this.onClick}
 				loading={this.loading}
 				disabled={!!this.disabled}
 				type={this.type}
-				{...configs}>
-				{{
+				{..._properties}
+				v-slots={{
 					default: () => {
 						const vDomDefautl = this.$slots.default && this.$slots.default();
 						return (
@@ -162,7 +175,7 @@ export default defineComponent({
 						);
 					}
 				}}
-			</aButton>
+			/>
 		);
 	}
 });
