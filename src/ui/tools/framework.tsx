@@ -2,21 +2,21 @@ import { h, defineComponent, onMounted, onUnmounted } from "vue";
 import { xU } from "../ventoseUtils";
 
 const DELAY = 60 * 5;
-const CACHE: { [prop: string]: any } = {};
+const CACHE_V_NODE: { [prop: string]: any } = {};
 const WILL_DELETE_PROPS = {
-	cache: {},
+	idCounts: {},
 	add(prop: string) {
 		/* @ts-ignore */
-		const count = this.cache[prop] || 0;
+		const count = this.idCounts[prop] || 0;
 		/* @ts-ignore */
-		this.cache[prop] = count + 1;
+		this.idCounts[prop] = count + 1;
 	},
 	remove(prop: string) {
 		/* @ts-ignore */
-		const count = this.cache[prop] || 0;
+		const count = this.idCounts[prop] || 0;
 		const val = count - 1;
 		/* @ts-ignore */
-		this.cache[prop] = val < 0 ? 0 : val;
+		this.idCounts[prop] = val < 0 ? 0 : val;
 		/* console.log("remove", prop); */
 	}
 };
@@ -30,22 +30,20 @@ const deleteUnmountedInstance = (prop: string) => {
 };
 
 const delayDeleteUnmountedInstance = xU.debounce(function () {
-	xU.each(WILL_DELETE_PROPS.cache, (count, prop) => {
+	xU.each(WILL_DELETE_PROPS.idCounts, (count, prop) => {
 		/* console.log(prop, count); */
 		if (count > 0) {
 			/* @ts-ignore */
-			delete CACHE[prop];
+			delete CACHE_V_NODE[prop];
 			/* @ts-ignore */
-			delete this.cache[prop];
+			delete WILL_DELETE_PROPS.idCounts[prop];
 			/* console.error(`deleted ${prop}`) */
 		}
 
 		/* 如果缓存中已无相关引用，删除索引 */
-		if (!Object.keys(CACHE).includes(prop)) {
+		if (!Object.keys(CACHE_V_NODE).includes(prop)) {
 			/* @ts-ignore */
-			console.log(prop, this.cache[prop]);
-			/* @ts-ignore */
-			delete this.cache[prop];
+			delete WILL_DELETE_PROPS.idCounts[prop];
 		}
 	});
 }, 1000 * DELAY);
@@ -60,14 +58,14 @@ export function compileVNode(
 		alert("miss uniq id" + template);
 	}
 
-	if (CACHE[prop]) {
+	if (CACHE_V_NODE[prop]) {
 		/* 已在复用，不可删除 */
 		WILL_DELETE_PROPS.remove(prop);
 		/* 延迟删除 */
 		delayDeleteUnmountedInstance();
 		/* console.warn(`reuse ${prop}`); */
 		/* console.log(`WILL_DELETE_INSTANCE_PROPS`, WILL_DELETE_PROPS.cache); */
-		return CACHE[prop];
+		return CACHE_V_NODE[prop];
 	} else {
 		return h(
 			defineComponent({
@@ -76,7 +74,7 @@ export function compileVNode(
 					/* 已在复用，不可删除 */
 					WILL_DELETE_PROPS.remove(prop);
 					/* @ts-ignore */
-					CACHE[prop] = this._.vnode;
+					CACHE_V_NODE[prop] = this._.vnode;
 					/* console.log(`compileVNode ${prop} ${template}`); */
 				},
 				unmounted() {

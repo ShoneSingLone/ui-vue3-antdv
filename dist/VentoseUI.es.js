@@ -637,10 +637,6 @@ div[id^="xDialog_"] {
   height: 100%;
 }
 /* diallog move \u7528 */
-[layer-wrapper][type=page],
-[layer-wrapper][type=iframe] {
-  transition: 0.1s linear;
-}
 [layer-wrapper][type=iframe] .layui-layer-content {
   display: flex;
   flex: 1;
@@ -30096,6 +30092,20 @@ const privateLodash = {
     INVALID_DATE: "Invalid Date",
     format_ymd: "YYYY-MM-DD"
   },
+  launchFullscreen(element) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullScreen();
+    }
+  },
+  exitFullscreen() {
+    document.exitFullscreen();
+  },
   hashCode(str) {
     var hash = 0, i, chr;
     if (str.length === 0) {
@@ -30582,12 +30592,20 @@ lStorage.appConfigs = lStorage.appConfigs || {
   }
 };
 const iStorage = async (key, val) => {
-  const keyPrefix = privateLodash.camelCase(window.location.hostname);
-  key = keyPrefix + key;
-  if (privateLodash.isInput(val)) {
-    return await set(key, val);
-  } else {
-    return await get(key);
+  const keyPrefix = window.location.hostname;
+  key = privateLodash.camelCase(keyPrefix + key);
+  let res;
+  try {
+    if (privateLodash.isInput(val)) {
+      await set(key, val);
+      res = true;
+    } else {
+      res = await get(key);
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    return res;
   }
 };
 let _State_UI = {
@@ -30947,12 +30965,14 @@ const _sfc_main$b = defineComponent({
     const listeners = {
       "onUpdate:value": (val, ...args2) => {
         if (configs.value !== void 0) {
-          if (configs.value === val) {
+          if (vm.raw$value === val) {
             return;
           } else {
+            vm.raw$value = val;
             configs.value = val;
           }
         }
+        vm.raw$value = val;
         this.$emit("update:modelValue", val);
         if (privateLodash.isFunction(listeners.onAfterValueEmit)) {
           listeners.onAfterValueEmit.call(vm, val, {
@@ -34412,7 +34432,7 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
 }).on(
   "mousemove",
   `.${LAYUI_LAYER_MOVE}`,
-  privateLodash.throttle(function(e) {
+  function(e) {
     const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
     if (moveOrResizeInstance instanceof ClassLayer) {
       const { $eleLayer, config } = moveOrResizeInstance;
@@ -34456,7 +34476,7 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
     } else if (typeof onMoving == "function") {
       event && onMoving(event);
     }
-  }, 90)
+  }
 ).on("mouseup", function(e) {
   if (READY.moveOrResizeInstance instanceof ClassLayer) {
     const { config } = READY.moveOrResizeInstance;
@@ -35177,17 +35197,17 @@ const VNodeCollection = {
   }
 };
 const DELAY = 60 * 5;
-const CACHE = {};
+const CACHE_V_NODE = {};
 const WILL_DELETE_PROPS = {
-  cache: {},
+  idCounts: {},
   add(prop) {
-    const count = this.cache[prop] || 0;
-    this.cache[prop] = count + 1;
+    const count = this.idCounts[prop] || 0;
+    this.idCounts[prop] = count + 1;
   },
   remove(prop) {
-    const count = this.cache[prop] || 0;
+    const count = this.idCounts[prop] || 0;
     const val = count - 1;
-    this.cache[prop] = val < 0 ? 0 : val;
+    this.idCounts[prop] = val < 0 ? 0 : val;
   }
 };
 const deleteUnmountedInstance = (prop) => {
@@ -35195,14 +35215,13 @@ const deleteUnmountedInstance = (prop) => {
   delayDeleteUnmountedInstance();
 };
 const delayDeleteUnmountedInstance = privateLodash.debounce(function() {
-  privateLodash.each(WILL_DELETE_PROPS.cache, (count, prop) => {
+  privateLodash.each(WILL_DELETE_PROPS.idCounts, (count, prop) => {
     if (count > 0) {
-      delete CACHE[prop];
-      delete this.cache[prop];
+      delete CACHE_V_NODE[prop];
+      delete WILL_DELETE_PROPS.idCounts[prop];
     }
-    if (!Object.keys(CACHE).includes(prop)) {
-      console.log(prop, this.cache[prop]);
-      delete this.cache[prop];
+    if (!Object.keys(CACHE_V_NODE).includes(prop)) {
+      delete WILL_DELETE_PROPS.idCounts[prop];
     }
   });
 }, 1e3 * DELAY);
@@ -35210,16 +35229,16 @@ function compileVNode(template, setupReturn, prop) {
   if (!prop) {
     alert("miss uniq id" + template);
   }
-  if (CACHE[prop]) {
+  if (CACHE_V_NODE[prop]) {
     WILL_DELETE_PROPS.remove(prop);
     delayDeleteUnmountedInstance();
-    return CACHE[prop];
+    return CACHE_V_NODE[prop];
   } else {
     return h(defineComponent({
       template,
       mounted() {
         WILL_DELETE_PROPS.remove(prop);
-        CACHE[prop] = this._.vnode;
+        CACHE_V_NODE[prop] = this._.vnode;
       },
       unmounted() {
         deleteUnmountedInstance(prop);

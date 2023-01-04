@@ -1306,7 +1306,7 @@ $document
 	.on(
 		"mousemove",
 		`.${LAYUI_LAYER_MOVE}`,
-		xU.throttle(function (e) {
+		function (e) {
 			const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
 			/* 拖拽移动 */
 			if (moveOrResizeInstance instanceof ClassLayer) {
@@ -1363,7 +1363,8 @@ $document
 			}
 
 			/* Resize */
-		}, 90)
+		}
+		// xU.throttle(, 90)
 	)
 	.on("mouseup", function (e) {
 		if (READY.moveOrResizeInstance instanceof ClassLayer) {
