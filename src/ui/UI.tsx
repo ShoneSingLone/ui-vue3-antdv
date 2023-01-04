@@ -2,13 +2,7 @@
 import { t_dialogOptions } from "./xSingle/dialog/dialog";
 import { State_UI } from "./State_UI";
 import { LayerUtils } from "./xSingle/layer/LayerUtils";
-import {
-	Modal,
-	/* global */
-	message,
-	notification,
-	ModalFuncProps
-} from "ant-design-vue";
+import { message, Modal, ModalFuncProps, notification } from "ant-design-vue";
 import $ from "jquery";
 import { xU } from "./ventoseUtils";
 

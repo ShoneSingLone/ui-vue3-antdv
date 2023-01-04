@@ -1,30 +1,30 @@
 import { Cpt_UI_locale } from "../../State_UI";
-import { xU } from "../../ventoseUtils";
 import { resolveComponent } from "vue";
 
 /**
  * @Description
  * @date 2021-11-09
- * @param {any} {property isPassword 密码输入框
+ * @param {any} {properties isPassword 密码输入框
  * @param {any} slots}
  * @returns {any}
  */
-export default ({ property, slots, listeners }) => {
+export default ({ properties, slots, listeners }) => {
+	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
 	const RangePicker = resolveComponent("aRangePicker");
 
 	/*let value = "";
-	if (property.value) {
-		if (xU.isArray(property.value)) {
+	if (properties.value) {
+		if (xU.isArray(properties.value)) {
 			value = [
-				xU.safeDate(property.value[0]),
-				xU.safeDate(property.value[1])
+				xU.safeDate(properties.value[0]),
+				xU.safeDate(properties.value[1])
 			];
 		}
 	}*/
-	console.log("property", property.value);
+	console.log("properties", properties.value);
 	return (
 		<RangePicker
-			{...property}
+			{...properties}
 			{...listeners}
 			v-slots={slots}
 			locale={Cpt_UI_locale.value.DatePicker}

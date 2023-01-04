@@ -71,10 +71,10 @@ export function vModel(
 
 /***
  * prop to {
-        dataIndex: prop,
-        prop: prop,
-        key: prop
-    }
+		dataIndex: prop,
+		prop: prop,
+		key: prop
+	}
  * @param prop
  */
 export function antColKey(prop, makeRenderCell) {

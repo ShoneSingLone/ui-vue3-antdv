@@ -52,7 +52,7 @@ const ConfigOptions = {
 		minify: false,
 		outDir: "dist",
 		lib: {
-			formats: ["umd", "es"],
+			formats: ["iife", "es"],
 			entry: path.resolve(__dirname, "src/ui/index.tsx"),
 			name: "VentoseUI",
 			fileName: format => `VentoseUI.${format}.js`

@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
+import { defineComponent } from "vue";
 import { xU } from "../ventoseUtils";
 
 export default defineComponent({

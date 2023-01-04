@@ -1,22 +1,34 @@
-import { h, resolveComponent } from "vue";
-import { EVENT_TYPE } from "../../tools/validate";
+import { resolveComponent } from "vue";
 import { xU } from "../../ventoseUtils";
 
-export default ({ property, listeners }) => {
+export default ({
+	properties,
+	slots,
+	listeners,
+	propsWillDeleteFromConfigs
+}) => {
+	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
 	const Select = resolveComponent("aSelect");
 	const SelectOption = resolveComponent("aSelectOption");
-	const _property = xU.omit(property, ["options"]);
+	const _property = xU.omit(properties, [
+		...propsWillDeleteFromConfigs,
+		"options",
+		"renderOptions"
+	]);
 	const renderOptions = () => {
-		return xU.map(property.options, option => {
-			return <SelectOption value={option.value}>{option.label}</SelectOption>;
-		});
+		if (properties.renderOptions) {
+			return properties.renderOptions();
+		} else {
+			return xU.map(properties.options, option => {
+				return <SelectOption value={option.value}>{option.label}</SelectOption>;
+			});
+		}
 	};
-
 	return (
 		<Select
-			v-slots={{ default: renderOptions }}
 			{...listeners}
 			{..._property}
+			v-slots={{ default: renderOptions }}
 		/>
 	);
 };

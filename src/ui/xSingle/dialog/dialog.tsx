@@ -2,8 +2,8 @@
 
 import { xU } from "../../ventoseUtils";
 import $ from "jquery";
-import { LayerUtils, KEY } from "../layer/LayerUtils";
-import { createApp, defineComponent, reactive, h } from "vue";
+import { KEY, LayerUtils } from "../layer/LayerUtils";
+import { createApp, defineComponent } from "vue";
 import { State_UI } from "../../State_UI";
 
 const EcsPressHandler = xU.debounce(async function (event, dialogOptions) {

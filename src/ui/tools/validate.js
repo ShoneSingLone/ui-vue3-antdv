@@ -1,4 +1,5 @@
 import { xU } from "../ventoseUtils";
+import { markRaw } from "vue";
 
 export const EVENT_TYPE = {
 	validateForm: "validateForm",
@@ -21,38 +22,43 @@ export const TIPS_TYPE = {
  * @param {*} configsForm
  * @returns
  */
-export async function validateForm(configsForm) {
+export async function validateForm(configsForm, valuesCollection) {
+	let propsArray = Object.keys(configsForm);
+	if (valuesCollection) {
+		propsArray = Object.keys(valuesCollection);
+	}
 	return Promise.all(
-		xU.map(
-			configsForm,
-			(configs, prop) =>
-				new Promise(resolve => {
-					/*处理不校验的情况*/
-					if (xU.isInput(configs.isShow)) {
-						/*configs.isShow至少默认是个true，如果是falsy，则明确为不显示*/
-						const isFalse = !configs.isShow;
-						if (isFalse) {
-							return resolve();
-						}
-						const isResFalse =
-							xU.isFunction(configs.isShow) && !configs.isShow();
-						if (isResFalse) {
-							return resolve();
-						}
+		xU.map(propsArray, prop => {
+			const configs = configsForm[prop];
+			const valueNeedVarify = valuesCollection
+				? valuesCollection[prop]
+				: configs.modelValue;
+			return new Promise(resolve => {
+				/*处理不校验的情况*/
+				if (xU.isInput(configs.isShow)) {
+					/*configs.isShow至少默认是个true，如果是falsy，则明确为不显示*/
+					const isFalse = !configs.isShow;
+					if (isFalse) {
+						return resolve();
 					}
-					if (configs.validate) {
-						/*xItem的validate使用了debounce ，采用callback异步处理resolve*/
-						configs.__onAfterValidate = function (result) {
-							delete configs.__onAfterValidate;
-							resolve(result);
-						};
-						/*触发方式是校验表单，将无视其他trigger规则，权重最大*/
-						configs.validate.call(configs, EVENT_TYPE.validateForm);
-					} else {
-						resolve();
+					const isResFalse = xU.isFunction(configs.isShow) && !configs.isShow();
+					if (isResFalse) {
+						return resolve();
 					}
-				})
-		)
+				}
+				if (configs.validate) {
+					/*xItem的validate使用了debounce ，采用callback异步处理resolve*/
+					configs.__onAfterValidate = markRaw(function (result) {
+						delete configs.__onAfterValidate;
+						resolve(result);
+					});
+					/*触发方式是校验表单，将无视其他trigger规则，权重最大*/
+					configs.validate(EVENT_TYPE.validateForm, valueNeedVarify);
+				} else {
+					resolve();
+				}
+			});
+		})
 	)
 		.then(results => {
 			results = results.filter(res => res && res[0] && res[1]);
@@ -72,10 +78,24 @@ export const AllWasWell = res => {
 	return xU.isArray(res) && res.length === 0;
 };
 
-export const checkXItem = async (xItemConfigs, handlerResult) => {
+export const checkXItem = async ({
+	xItemConfigs,
+	fnCheckedCallback,
+	value,
+	FormItemId
+}) => {
+	const valueNeedVarify = (() => {
+		if (xU.isInput(value)) {
+			return value;
+		} else {
+			return xItemConfigs.modelValue;
+		}
+	})();
 	xItemConfigs.checking = true;
-	let result;
+	fnCheckedCallback = fnCheckedCallback || xU.doNothing;
+	FormItemId = FormItemId || xItemConfigs.FormItemId;
 
+	let result;
 	try {
 		const { rules, prop } = xItemConfigs;
 		result = await (async () => {
@@ -126,13 +146,17 @@ export const checkXItem = async (xItemConfigs, handlerResult) => {
 						);
 
 					if (isNeedVerify) {
-						const validateResult = await rule.validator(
-							JSON.parse(JSON.stringify(xItemConfigs.value)),
-							{
-								configs: xItemConfigs,
-								rule
+						const currentValue = (() => {
+							try {
+								return JSON.parse(JSON.stringify(valueNeedVarify));
+							} catch (e) {
+								return "";
 							}
-						);
+						})();
+						const validateResult = await rule.validator(currentValue, {
+							configs: xItemConfigs,
+							rule
+						});
 						if (validateResult) {
 							return validateResult;
 						}
@@ -141,9 +165,10 @@ export const checkXItem = async (xItemConfigs, handlerResult) => {
 					}
 					return false;
 				})();
+
 				/* 任意一个校验不通过，就可以停止循环返回结果了 */
 				if (isFail) {
-					return [prop, rule.msg, xItemConfigs.FormItemId];
+					return [prop, rule.msg, FormItemId];
 				}
 				/*false 继续*/
 			}
@@ -156,7 +181,7 @@ export const checkXItem = async (xItemConfigs, handlerResult) => {
 				return [prop, false];
 			}
 		})();
-		handlerResult(result);
+		fnCheckedCallback(result);
 	} catch (error) {
 		console.error(error);
 	} finally {
@@ -165,5 +190,6 @@ export const checkXItem = async (xItemConfigs, handlerResult) => {
 		}
 		/*校验执行后*/
 		xItemConfigs.validate.triggerEventsObj = {};
+		return result;
 	}
 };

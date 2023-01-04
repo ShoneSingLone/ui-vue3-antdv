@@ -330,6 +330,18 @@ div[id^="svg-icon_"] {
 	}
 }
 
+.cursor-editor {
+	&:hover {
+		cursor: url(../assets/svg/input.svg), auto;
+	}
+}
+
+.cursor-not-allowed {
+	&:hover {
+		cursor: not-allowed;
+	}
+}
+
 /* .pointer-right-click {
 	&:hover {
 		cursor: url(../assets/svg/RightClick.svg), auto;

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { defineComponent } from "vue";
+import { defineComponent, provide } from "vue";
 import { xU } from "../../ventoseUtils";
 import $ from "jquery";
 import { xVirTableTh } from "./xVirTableTh";
@@ -35,17 +35,22 @@ defXVirTableConfigs.type = {
  * 展示列的顺序
  */
 export const xVirTable = defineComponent({
-	props: ["configs"],
+	props: ["configs", "uniqBy"],
 	components: {
 		xVirTableTh,
 		xVirTableBody
+	},
+	setup(props) {
+		provide("uniqBy", props.uniqBy);
+		provide("configs", props.configs);
 	},
 	mounted() {
 		this.initStyle();
 	},
 	data() {
 		return {
-			selectedAll: false
+			selectedAll: false,
+			dataSource: []
 		};
 	},
 	computed: {
@@ -189,18 +194,17 @@ export const xVirTable = defineComponent({
 				this.selectedAll = false;
 			}
 		},
+		"configs.dataSource": {
+			immediate: true,
+			handler() {
+				this.dataSource = this.configs.dataSource;
+			}
+		},
 		styleContent() {
 			this.updateStyle(this.styleContent);
 		}
 	},
 	methods: {
-		dataFilter(dataSourceArray) {
-			if (xU.isFunction(this.configs.dataSourceFilter)) {
-				return this.configs.dataSourceFilter(dataSourceArray);
-			} else {
-				return dataSourceArray;
-			}
-		},
 		initStyle() {
 			const $form = $(`#${this.xVirTableId}`);
 			const $style = $("<style/>", { id: `style_${this.xVirTableId}` }).append(
@@ -244,7 +248,8 @@ export const xVirTable = defineComponent({
 		}
 	},
 	render() {
-		return (
+		console.time("virTable");
+		const vDomTable = (
 			<div id={this.xVirTableId} class="xVirTable-wrapper flex vertical">
 				{/* 滑动条有6px  */}
 				<div
@@ -254,7 +259,6 @@ export const xVirTable = defineComponent({
 					{this.vDomThead}
 				</div>
 				<xVirTableBody
-					dataSource={this.dataFilter(this.configs.dataSource)}
 					columnOrder={this.columnOrder}
 					columns={this.configs?.columns}
 					rowHeight={this.rowHeight}
@@ -264,5 +268,7 @@ export const xVirTable = defineComponent({
 				/>
 			</div>
 		);
+		console.timeEnd("virTable");
+		return vDomTable;
 	}
 });
