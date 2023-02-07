@@ -42,9 +42,11 @@ const ConfigOptions = {
 	plugins,
 	resolve: {
 		alias: {
-			/* 完整运行时，带编译 */
-			vue: "vue/dist/vue.esm-bundler.js",
-			"@ventose": path.resolve(__dirname, "./src")
+			src: path.resolve(__dirname, "./src"),
+			"@": path.resolve(__dirname, "./src"),
+			/* 开发的时候用，不用每次修改之后都发布到npm */
+			"@ventose/ui": path.resolve(__dirname, "./src/devui/ui/index.tsx"),
+			vue: "vue/dist/vue.esm-bundler.js"
 		}
 	},
 	build: {
@@ -53,7 +55,7 @@ const ConfigOptions = {
 		outDir: "dist",
 		lib: {
 			formats: ["iife", "es"],
-			entry: path.resolve(__dirname, "src/ui/index.tsx"),
+			entry: path.resolve(__dirname, "src/devui/ui/index.tsx"),
 			name: "VentoseUI",
 			fileName: format => `VentoseUI.${format}.js`
 		},

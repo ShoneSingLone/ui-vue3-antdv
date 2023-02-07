@@ -2,7 +2,7 @@
 import { defineComponent } from "vue";
 import $ from "jquery";
 import { MkitCsslist } from "./MkitCsslist";
-import { State_UI, xU } from "../ui";
+import { State_UI, xU } from "@ventose/ui";
 
 export const setTheme = async theme => {
 	theme =

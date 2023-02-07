@@ -60,7 +60,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { routes } from "../router";
-import { UI } from "../ui";
+import { UI } from "../devui/ui";
 export default defineComponent({
 	data() {
 		return {

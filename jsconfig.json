@@ -1,0 +1,13 @@
+{
+  "说明": "只是提供给idea识别alias",
+  "@ventose/ui": "是一个基于antv的二封库，目前不稳定，build之后直接来使用，方便不断添加用例",
+  "compilerOptions": {
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@ventose/ui": [
+        "./src/devui/ui/index.tsx"
+      ]
+    }
+  }
+}

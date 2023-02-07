@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 /* https://zhuanlan.zhihu.com/p/364275970 */
 /* https://juejin.cn/post/6876812524338216973 */
 import { compileTemplate } from "vue/compiler-sfc";

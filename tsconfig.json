@@ -4,16 +4,30 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
+    "moduleResolution": "NodeNext",
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types",
+      "./node_modules/vue/dist/vue.d.ts",
+      "./node_modules/idb-keyval/dist/index.d.ts"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@ventose/ui": [
+        "./src/devui/ui/index.tsx"
+      ]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/ui/tools/VNodeRender.tss", "src/ui/compositionAPI/useDomResize.jsx", "src/ui/compositionAPI/useDomResize.jsx"],
-  "references": [{ "path": "./tsconfig.node.json" }]
 }

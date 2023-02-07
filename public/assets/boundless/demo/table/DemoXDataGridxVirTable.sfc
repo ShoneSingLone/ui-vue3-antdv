@@ -125,7 +125,6 @@ async function sfc({
 							prop: "capacity_editor",
 							label: vm.$t("总容量输入框").label,
 							renderCell({ record, cell }) {
-								debugger;
 								return compileVNode(
 									`{{record.capacity}}<aInput v-model:value="record.capacity"/>`,
 									{ record },

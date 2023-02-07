@@ -1,8 +1,14 @@
 <script lang="tsx">
 //@ts-nocheck
 
-import { defineComponent, h, markRaw, reactive } from "vue";
-import { xU, defItem, defCol, defXVirTableConfigs, compileVNode } from "./ui";
+import { defineComponent } from "vue";
+import {
+	xU,
+	defItem,
+	defCol,
+	defXVirTableConfigs,
+	compileVNode
+} from "@ventose/ui";
 
 export default defineComponent({
 	data(vm) {

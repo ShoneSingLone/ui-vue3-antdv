@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Plugin, ViteDevServer } from "vite";
 import { _n } from "@ventose/utils-node";
 import { readFileSync } from "fs";

@@ -1,0 +1,52 @@
+.xIcon {
+	width: 16px;
+	height: 16px;
+
+	&.auto-size {
+		width: unset;
+		height: unset;
+	}
+}
+
+div[id^="lazy-svg_"] {
+	display: flex;
+}
+
+.next-loading {
+	height: 100%;
+	width: 100%;
+
+	&.next-open {
+		pointer-events: none;
+	}
+}
+
+.next-loading .next-loading-component {
+	opacity: 0.7;
+	filter: blur(1px);
+	filter: "progid:DXImageTransform.Microsoft.Blur(PixelRadius=1, MakeShadow=false)";
+	position: relative;
+	pointer-events: none;
+}
+
+.next-loading-masker {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 99;
+	opacity: 0.2;
+	background: #fff;
+}
+
+.next-loading-inline {
+	display: inline-block;
+}
+
+.next-loading-tip {
+	display: block;
+	position: absolute;
+	z-index: 4;
+	text-align: center;
+}

@@ -3,7 +3,7 @@
   "version": "0.0.17",
   "main": "./dist/VentoseUI.es.js",
   "module": "./dist/VentoseUI.es.js",
-  "types": "./src/ui/index.tsx",
+  "types": "./src/devui/ui/index.tsx",
   "unpkg": "./dist/VentoseUI.umd.js",
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "idb-keyval": "^6.2.0",
     "jquery": "^3.6.1",
     "lodash": "^4.17.21",
+    "jsondiffpatch": "^0.4.1",
     "vue": "^3.2.37",
     "vue-router": "4"
   },

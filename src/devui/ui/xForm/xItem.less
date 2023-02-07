@@ -1,0 +1,49 @@
+.x-item {
+	&.ant-form-item {
+		margin: 0;
+	}
+	> .ant-form-item-control {
+		position: relative;
+		flex: 1;
+		width: 1px;
+		&[data-type="Switch"] {
+			min-width: 48px;
+			.x-item_switch {
+				height: 100%;
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+			}
+		}
+
+		> .ant-form-item-explain {
+		}
+
+		.ant-checkbox-wrapper {
+			// outline: 1px solid red;
+			display: flex;
+			align-items: center;
+			.ant-checkbox {
+				top: unset;
+			}
+		}
+
+		.ant-input-number {
+			width: 100%;
+		}
+
+		.ant-radio-group,
+		.ant-checkbox {
+			margin-top: auto;
+			margin-bottom: auto;
+		}
+	}
+
+	.ant-form-item-explain.ant-form-item-explain-error {
+		color: #ff4d4f;
+	}
+}
+
+.xItem_readonly {
+	overflow: auto;
+}
