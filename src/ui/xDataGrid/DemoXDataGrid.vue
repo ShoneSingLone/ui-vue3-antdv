@@ -14,35 +14,21 @@
 		:onPaginationChange="handlePaginationChange" />
 </template>
 
-<script>
-import { ITEM_OPTIONS } from "../../common/options";
-import {
-	defCol,
-	defColActions,
-	xU,
-	UI,
-	defColActionsBtnlist,
-	defDataGridOption,
-	defItem,
-	vModel,
-	setDataGridInfo,
-	State_UI,
-	getPaginationPageSize
-} from "@ventose/ui";
-
-const { $t } = State_UI;
+<script lang="tsx">
+import { defCol, defDataGridOption, xU, $t } from "@ventose/ui";
+import { ITEM_OPTIONS } from '@/common/options';
 
 export default {
 	name: "DemoXDataGrid",
 	methods: {
 		handlePaginationChange(pagination) {
-			console.log("🚀:", "pagination", JSON.stringify(pagination, null, 2));
+			xU("🚀:", "pagination", JSON.stringify(pagination, null, 2));
 		}
 	},
 	data() {
 		return {
 			configs_table: defDataGridOption({
-				async queryTableList(params) {},
+				async queryTableList(params) { },
 				dataSource: [],
 				columns: {
 					...defCol({ prop: "name", label: $t("名称").label }),
@@ -103,6 +89,3 @@ export default {
 	}
 };
 </script>
-
-<style></style>
->

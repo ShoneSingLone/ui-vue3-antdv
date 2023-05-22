@@ -53,6 +53,7 @@ $list: 0 3 4 5 8 9 10 13 14 15 16 20 24 25 30;
 	right: 0;
 	left: 0;
 	background: url(./xSingle/layer/imgs/loading-2.gif) center no-repeat;
+	background: url(./xSingle/layer/imgs/loading.svg) center no-repeat;
 	z-index: 1;
 }
 
@@ -330,6 +331,18 @@ div[id^="svg-icon_"] {
 	}
 }
 
+.cursor-editor {
+	&:hover {
+		cursor: url(../assets/svg/input.svg), auto;
+	}
+}
+
+.cursor-not-allowed {
+	&:hover {
+		cursor: not-allowed;
+	}
+}
+
 /* .pointer-right-click {
 	&:hover {
 		cursor: url(../assets/svg/RightClick.svg), auto;
@@ -389,7 +402,7 @@ div[id^="svg-icon_"] {
 	-webkit-box-shadow: inset006pxrgba(255, 0, 0, 0.3);
 	background: rgba(255, 255, 255, 0.1);
 }
-
+@import "./ui.animate.scss";
 @import "./MdButton.scss";
 @import "./xDataGrid/xVirTable/xVirTable.scss";
 @import "./xSingle/dialog/dialog.scss";

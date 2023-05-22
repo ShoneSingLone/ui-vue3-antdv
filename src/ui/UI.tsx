@@ -2,13 +2,7 @@
 import { t_dialogOptions } from "./xSingle/dialog/dialog";
 import { State_UI } from "./State_UI";
 import { LayerUtils } from "./xSingle/layer/LayerUtils";
-import {
-	Modal,
-	/* global */
-	message,
-	notification,
-	ModalFuncProps
-} from "ant-design-vue";
+import { message, Modal, ModalFuncProps, notification } from "ant-design-vue";
 import $ from "jquery";
 import { xU } from "./ventoseUtils";
 
@@ -79,6 +73,11 @@ LayerUtils.loading = function (indexDelete) {
 };
 
 export const UI = {
+	confirm(options) {
+		options.okText = options.okText || State_UI.$t("确定").label;
+		options.cancelText = options.cancelText || State_UI.$t("取消").label;
+		Modal.confirm(options);
+	},
 	dialog: {
 		/* installUIDialogComponent Vue3 依赖外部plugin，没有全局的 */
 		component: async (options: t_dialogOptions) => null,
@@ -90,12 +89,24 @@ export const UI = {
 			return new Promise(async (resolve, reject) => {
 				options.okText = options.okText || State_UI.$t("确定").label;
 				options.cancelText = options.cancelText || State_UI.$t("取消").label;
-				options.onOk = () => {
-					resolve("ok");
-				};
-				options.onCancel = () => {
-					reject();
-				};
+				if (options.onOk) {
+					const onOk = options.onOk;
+					options.onOk = () => {
+						return onOk(resolve, reject);
+					};
+				} else {
+					options.onOk = () => resolve("ok");
+				}
+
+				if (options.onCancel) {
+					const onCancel = options.onCancel;
+					options.onCancel = () => {
+						onCancel(resolve, reject);
+					};
+				} else {
+					options.onCancel = () => reject();
+				}
+
 				Modal.confirm(options);
 			});
 		},

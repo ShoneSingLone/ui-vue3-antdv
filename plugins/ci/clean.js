@@ -2,9 +2,9 @@ const { _n } = require("@ventose/utils-node");
 const pathD = _n.getPathD(__dirname);
 const fs = require("fs");
 
-const cleanDir = async () => {
-	const dirUrl = pathD("../../dist/assets");
+const cleanDir = async (dirUrl) => {
 	try {
+		dirUrl = pathD(dirUrl, "assets");
 		if (!fs.existsSync(dirUrl)) {
 			console.log("[✓] : no assets");
 			return;
@@ -19,7 +19,7 @@ const cleanDir = async () => {
 		} else {
 			await fs.promises.rmdir(dirUrl, { recursive: true });
 		}
-		console.log("[✓] ", "dist clean done");
+		console.log("[✓] ", `${dirUrl} clean done`);
 	} catch (error) {
 		console.error(error);
 	}
@@ -44,6 +44,11 @@ const copyStats = async () => {
 };
 
 (async () => {
-	await cleanDir();
+	const dirs = await fs.promises.readdir(pathD("../.."));
+	const distPathArray = dirs.filter(i => /^dist/.test(i)).map(i => pathD("../..", i));
+	let distPath;
+	while (distPath = distPathArray.pop()) {
+		await cleanDir(distPath);
+	}
 	await copyStats();
 })();

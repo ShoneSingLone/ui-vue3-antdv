@@ -2,9 +2,14 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 export const routes = [
 	{ path: "/Dev", component: () => import("./Dev.vue") },
+	{ isHide: true, path: "/Dev/a", component: () => import("./Dev.vue") },
+	{ isHide: true, path: "/Dev/b/a", component: () => import("./Dev.vue") },
+	{ isHide: true, path: "/Dev/b/b", component: () => import("./Dev.vue") },
+	{ isHide: true, path: "/Dev/b/c/a", component: () => import("./Dev.vue") },
+	{ isHide: true, path: "/Dev/b/c/b", component: () => import("./Dev.vue") },
 	{
 		path: "/xDirective",
-		component: () => import("./ui/directive/DemoDirective")
+		component: () => import("./ui/directive/DemoDirective.jsx")
 	},
 	{ path: "/xIcon", component: () => import("./ui/xIcon/DemoXIcon.vue") },
 	{ path: "/xButton", component: () => import("./ui/xButton/DemoXButton.vue") },

@@ -1,13 +1,29 @@
-import { Checkbox, CheckboxGroup } from "ant-design-vue";
-import { h } from "vue";
-import { EVENT_TYPE } from "../../tools/validate";
+import { defineComponent } from "vue";
+import { xU } from "../../ventoseUtils";
 
-export default ({ property }) => {
-	const _property = xU.merge({}, property, {
-		checked: property.value,
-		onClick() {
-			_property["onUpdate:value"](!_property.value, EVENT_TYPE.update);
+export const Checkbox = defineComponent({
+	props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+	computed: {
+		checked: {
+			get() {
+				return this.properties?.value || false;
+			},
+			set(val) {
+				this.listeners["onUpdate:value"](val);
+			}
 		}
-	});
-	return h(Checkbox, _property);
-};
+	},
+	render(vm) {
+		const _properties = xU.omit(this.properties, [
+			...this.propsWillDeleteFromConfigs
+		]);
+		return (
+			<aCheckbox
+				v-model:checked={this.checked}
+				v-slots={this.slots}
+				{...this.listeners}
+				{..._properties}
+			/>
+		);
+	}
+});

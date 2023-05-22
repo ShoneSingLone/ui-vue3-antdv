@@ -18,7 +18,8 @@
     "start": "cross-env runPlugin=useDevServer vite --open --port 3011",
     "cleandist": "node ./plugins/ci/clean.js",
     "build": "npm run build:lib && npm run build:app",
-    "build:lib": "vue-tsc --noEmit && vite build && npm run cleandist",
+    "build:lib": "vue-tsc --noEmit && cross-env vite build && npm run cleandist",
+    "build:lib:xMenuTree": "vue-tsc --noEmit && cross-env type=lib libName=xMenuTree vite build && npm run cleandist",
     "build:app": "cross-env NODE_ENV=production cross-env type=app vite build",
     "git:pull": "git pull gitee dev & git pull github dev",
     "git:push": "git push gitee dev & git push github dev",
@@ -27,9 +28,11 @@
   "dependencies": {
     "ant-design-vue": "^3.2.13",
     "axios": "^1.1.2",
+    "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.5",
     "idb-keyval": "^6.2.0",
     "jquery": "^3.6.1",
+    "jsondiffpatch": "^0.4.1",
     "lodash": "^4.17.21",
     "vue": "^3.2.37",
     "vue-router": "4"

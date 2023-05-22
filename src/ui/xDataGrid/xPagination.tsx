@@ -2,11 +2,9 @@
 import { defineComponent } from "vue";
 import { xU } from "../ventoseUtils";
 import { setPagination } from "./common";
-import { lStorage } from "../tools/storage";
 import { State_UI } from "../State_UI";
 
 const PAGE_SIZE_OPTIONS = ["10", "20", "30"];
-const { page, size, total } = lStorage.appConfigs.pagination;
 
 export const xPagination = defineComponent({
 	name: "xPagination",
@@ -27,7 +25,7 @@ export const xPagination = defineComponent({
 	},
 	data() {
 		/* pagination 对象上page,size,total对应的prop字符，可在appConfigs中自定义 */
-		const { page, size, total } = lStorage.appConfigs.pagination;
+		const { page, size, total } = State_UI.pagination;
 		return {
 			pageSizeOptions: PAGE_SIZE_OPTIONS,
 			page,
@@ -53,6 +51,9 @@ export const xPagination = defineComponent({
 		}
 	},
 	render() {
+		const { page, size, total } = State_UI.pagination;
+		console.log(page, size, total);
+
 		return (
 			<aPagination
 				v-model:current={this.pagination[page]}

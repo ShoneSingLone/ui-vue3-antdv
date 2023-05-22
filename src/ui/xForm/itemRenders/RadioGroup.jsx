@@ -4,20 +4,26 @@ import { xU } from "../../ventoseUtils";
 /**
  * @Description
  * @date 2021-11-09
- * @param {any} {property isButton是否是Button样式
+ * @param {any} {properties isButton是否是Button样式
  * @param {any} slots}
  * @returns {any}
  */
-export default ({ property, slots, listeners }) => {
+export default ({
+	properties,
+	slots,
+	listeners,
+	propsWillDeleteFromConfigs
+}) => {
+	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
 	const Radio = resolveComponent("aRadio");
 	const RadioGroup = resolveComponent("aRadioGroup");
 	const RadioButton = resolveComponent("aRadioButton");
 
-	const PROPERTY_OPTIONS = property.options;
-	const componentPropertyOmitOptions = xU.omit(property, ["options"]);
+	const PROPERTY_OPTIONS = properties.options;
+	const componentPropertyOmitOptions = xU.omit(properties, ["options"]);
 
 	const renderOptions = () => {
-		if (property.isButton) {
+		if (properties.isButton) {
 			return xU.map(PROPERTY_OPTIONS, option => {
 				return <RadioButton value={option.value}>{option.label}</RadioButton>;
 			});

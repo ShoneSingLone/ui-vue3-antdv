@@ -12,6 +12,8 @@ import { visualizer } from "rollup-plugin-visualizer";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 const isApp = process.env.type === "app";
+const isLib = process.env.type === "lib";
+const libName = process.env.libName;
 const isUseDevServer = process.env.runPlugin === "useDevServer";
 
 const globals = {
@@ -21,7 +23,9 @@ const globals = {
 	lodash: "_",
 	dayjs: "dayjs",
 	moment: "dayjs",
-	axios: "axios"
+	axios: "axios",
+	jsondiffpatch: "jsondiffpatch",
+	"@ventose/ui": "VentoseUI"
 };
 
 const plugins = [
@@ -44,19 +48,14 @@ const ConfigOptions = {
 		alias: {
 			/* 完整运行时，带编译 */
 			vue: "vue/dist/vue.esm-bundler.js",
-			"@ventose": path.resolve(__dirname, "./src")
+			"@": path.resolve(__dirname, "./src"),
+			"@ventose/ui": path.resolve(__dirname, "./src/ui")
 		}
 	},
 	build: {
 		/* 没有混缩 */
 		minify: false,
 		outDir: "dist",
-		lib: {
-			formats: ["umd", "es"],
-			entry: path.resolve(__dirname, "src/ui/index.tsx"),
-			name: "VentoseUI",
-			fileName: format => `VentoseUI.${format}.js`
-		},
 		rollupOptions: {
 			external: Object.keys(globals),
 			plugins: [],
@@ -66,6 +65,23 @@ const ConfigOptions = {
 		}
 	}
 };
+
+ConfigOptions.build.lib = {
+	formats: ["umd", "es"],
+	entry: path.resolve(__dirname, "src/ui/index.tsx"),
+	name: "VentoseUI",
+	fileName: format => `VentoseUI.${format}.js`
+};
+
+if (isLib) {
+	ConfigOptions.build.lib = {
+		formats: ["umd", "es"],
+		entry: path.resolve(__dirname, `entry/lib/${libName}.vue`),
+		name: `VentoseUI.components.${libName}`,
+		fileName: format => `VentoseUI.${libName}.${format}.js`
+	};
+	ConfigOptions.build.outDir = `dist_${libName}`;
+}
 
 if (isApp) {
 	ConfigOptions.build = {

@@ -1,12 +1,61 @@
 <script lang="tsx">
 //@ts-nocheck
 
-import { defineComponent, h, markRaw, reactive } from "vue";
+import { defineComponent } from "vue";
+import xMenuTree from "../entry/lib/xMenuTree.vue";
 import { xU, defItem, defCol, defXVirTableConfigs, compileVNode } from "./ui";
 
+
 export default defineComponent({
+	components: { xMenuTree },
 	data(vm) {
 		return {
+			treeArray: [
+				{
+					id: "a",
+					label: "a",
+					icon: "vite",
+					path: "/Dev/a"
+				},
+				{
+					id: "b",
+					label: "b",
+					icon: "vite",
+					children: [
+						{
+							id: "ba",
+							label: "a",
+							icon: "vite",
+							path: "/Dev/b/a"
+						},
+						{
+							id: "bb",
+							label: "b",
+							icon: "UserOutlined",
+							path: "/Dev/b/b"
+						},
+						{
+							id: "bc",
+							label: "c",
+							icon: "UserOutlined",
+							children: [
+								{
+									id: "a",
+									label: "a",
+									icon: "vite",
+									path: "/Dev/b/c/a"
+								},
+								{
+									id: "b",
+									label: "b",
+									icon: "vite",
+									path: "/Dev/b/c/b"
+								},
+							]
+						},
+					]
+				},
+			],
 			configs_xVirTable: defXVirTableConfigs({
 				rowHeight: 32,
 				dataSource: [],
@@ -92,7 +141,9 @@ export default defineComponent({
 </script>
 
 <template>
-	<aButton @click="add">add</aButton>
+	<xMenuTree :tree="treeArray" />
+	<!-- <aButton @click="add">add</aButton>
+
 	<div class="flex horizon">
 		<pre
 			class="flex1 overflow-auto elevation-1 padding10"
@@ -103,7 +154,7 @@ export default defineComponent({
 		<div style="width: 100%; height: 300px" class="flex1">
 			<xVirTable :configs="configs_xVirTable" />
 		</div>
-	</div>
+	</div> -->
 </template>
 
 <style scoped>

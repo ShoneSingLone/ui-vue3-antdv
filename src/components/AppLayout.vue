@@ -7,11 +7,11 @@
 				theme="dark"
 				mode="horizontal"
 				:style="{ lineHeight: '64px' }">
-				<a-menu-item key="1"
-					><div @click="openStatsDialog">
+				<a-menu-item key="1">
+					<div @click="openStatsDialog">
 						latest buildのlib分析报告
-					</div></a-menu-item
-				>
+					</div>
+				</a-menu-item>
 				<a-menu-item key="2">nav 2</a-menu-item>
 				<a-menu-item key="3">nav 3</a-menu-item>
 			</a-menu>
@@ -30,11 +30,11 @@
 								<span class="ml4">单组件</span>
 							</span>
 						</template>
-						<a-menu-item :key="menu.path" v-for="menu in routes"
-							><RouterLink :to="menu.path">{{
+						<a-menu-item :key="menu.path" v-for="menu in routes.filter(i => !i.isHide)">
+							<RouterLink :to="menu.path">{{
 								menu.path
-							}}</RouterLink></a-menu-item
-						>
+							}}</RouterLink>
+						</a-menu-item>
 					</a-sub-menu>
 				</a-menu>
 			</a-layout-sider>

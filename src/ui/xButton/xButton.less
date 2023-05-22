@@ -1,12 +1,26 @@
 .x-button {
-  &.flex {
-    display: flex;
-  }
+	&.flex {
+		display: flex;
+	}
 }
 
 .x-button_icon-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 14px;
-  transform: translate(-50%, -50%);
+	position: absolute;
+	top: 50%;
+	left: 14px;
+	transform: translate(-50%, -50%);
+}
+
+.xLinkCopy {
+	position: relative;
+	.xLinkCopy_icon {
+		display: none;
+		position: absolute;
+		right: 0;
+	}
+	&:hover {
+		.xLinkCopy_icon {
+			display: inline-block;
+		}
+	}
 }

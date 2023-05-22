@@ -1,19 +1,36 @@
 {
+  "include": [
+    "./src"
+  ],
   "compilerOptions": {
+    "noEmit": true,
+    "module": "esnext",
     "allowJs": true,
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "strict": true,
+    "moduleResolution": "NodeNext",
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types",
+      "./node_modules/vue/dist/vue.d.ts",
+      "./node_modules/idb-keyval/dist/index.d.ts"
+    ],
     "jsx": "preserve",
     "sourceMap": true,
+    "target": "ES2022",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true
-  },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/ui/tools/VNodeRender.tss", "src/ui/compositionAPI/useDomResize.jsx", "src/ui/compositionAPI/useDomResize.jsx"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@ventose/ui": [
+        "./src/ui/index.tsx"
+      ]
+    }
+  }
 }

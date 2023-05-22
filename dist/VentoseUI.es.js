@@ -1,11 +1,40 @@
-(function(){"use strict";try{if(typeof document!="undefined"){var n=document.createElement("style");n.appendChild(document.createTextNode(`.x-item > .ant-form-item-control {
+(function(){"use strict";try{if(typeof document!="undefined"){var n=document.createElement("style");n.appendChild(document.createTextNode(`.x-item.ant-form-item {
+  margin: 0;
+}
+.x-item > .ant-form-item-control {
   position: relative;
+  flex: 1;
+  width: 1px;
+}
+.x-item > .ant-form-item-control[data-type="Switch"] {
+  min-width: 48px;
+}
+.x-item > .ant-form-item-control[data-type="Switch"] .x-item_switch {
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.x-item > .ant-form-item-control .ant-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+}
+.x-item > .ant-form-item-control .ant-checkbox-wrapper .ant-checkbox {
+  top: unset;
 }
 .x-item > .ant-form-item-control .ant-input-number {
   width: 100%;
 }
+.x-item > .ant-form-item-control .ant-radio-group,
+.x-item > .ant-form-item-control .ant-checkbox {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .x-item .ant-form-item-explain.ant-form-item-explain-error {
   color: #ff4d4f;
+}
+.xItem_readonly {
+  overflow: auto;
 }
 .layui-layer-imgbar,
 .layui-layer-imgtit a,
@@ -36,7 +65,6 @@ html #layuicss-layer {
   margin: 0;
   padding: 0;
   background-color: #fff;
-  border-radius: 2px;
 }
 .layui-layer-close {
   position: absolute;
@@ -637,11 +665,7 @@ div[id^="xDialog_"] {
   height: 100%;
 }
 /* diallog move \u7528 */
-[layer-wrapper][type=page],
-[layer-wrapper][type=iframe] {
-  transition: 0.1s linear;
-}
-[layer-wrapper][type=iframe] .layui-layer-content {
+[layer-wrapper][type="iframe"] .layui-layer-content {
   display: flex;
   flex: 1;
 }
@@ -673,6 +697,17 @@ div[id^="xDialog_"] {
   top: 50%;
   left: 14px;
   transform: translate(-50%, -50%);
+}
+.xLinkCopy {
+  position: relative;
+}
+.xLinkCopy .xLinkCopy_icon {
+  display: none;
+  position: absolute;
+  right: 0;
+}
+.xLinkCopy:hover .xLinkCopy_icon {
+  display: inline-block;
 }
 .margin0 {
   margin: 0px;
@@ -1293,6 +1328,7 @@ div[id^="xDialog_"] {
   right: 0;
   left: 0;
   background: url(data:image/gif;base64,R0lGODlhIAAgALMAAP///7Ozs/v7+9bW1uHh4fLy8rq6uoGBgTQ0NAEBARsbG8TExJeXl/39/VRUVAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFBQAAACwAAAAAIAAgAAAE5xDISSlLrOrNp0pKNRCdFhxVolJLEJQUoSgOpSYT4RowNSsvyW1icA16k8MMMRkCBjskBTFDAZyuAEkqCfxIQ2hgQRFvAQEEIjNxVDW6XNE4YagRjuBCwe60smQUDnd4Rz1ZAQZnFAGDd0hihh12CEE9kjAEVlycXIg7BAsMB6SlnJ87paqbSKiKoqusnbMdmDC2tXQlkUhziYtyWTxIfy6BE8WJt5YEvpJivxNaGmLHT0VnOgGYf0dZXS7APdpB309RnHOG5gDqXGLDaC457D1zZ/V/nmOM82XiHQjYKhKP1oZmADdEAAAh+QQFBQAAACwAAAAAGAAXAAAEchDISasKNeuJFKoHs4mUYlJIkmjIV54Soypsa0wmLSnqoTEtBw52mG0AjhYpBxioEqRNy8V0qFzNw+GGwlJki4lBqx1IBgjMkRIghwjrzcDti2/Gh7D9qN774wQGAYOEfwCChIV/gYmDho+QkZKTR3p7EQAh+QQFBQAAACwBAAAAHQAOAAAEchDISWdANesNHHJZwE2DUSEo5SjKKB2HOKGYFLD1CB/DnEoIlkti2PlyuKGEATMBaAACSyGbEDYD4zN1YIEmh0SCQQgYehNmTNNaKsQJXmBuuEYPi9ECAU/UFnNzeUp9VBQEBoFOLmFxWHNoQw6RWEocEQAh+QQFBQAAACwHAAAAGQARAAAEaRDICdZZNOvNDsvfBhBDdpwZgohBgE3nQaki0AYEjEqOGmqDlkEnAzBUjhrA0CoBYhLVSkm4SaAAWkahCFAWTU0A4RxzFWJnzXFWJJWb9pTihRu5dvghl+/7NQmBggo/fYKHCX8AiAmEEQAh+QQFBQAAACwOAAAAEgAYAAAEZXCwAaq9ODAMDOUAI17McYDhWA3mCYpb1RooXBktmsbt944BU6zCQCBQiwPB4jAihiCK86irTB20qvWp7Xq/FYV4TNWNz4oqWoEIgL0HX/eQSLi69boCikTkE2VVDAp5d1p0CW4RACH5BAUFAAAALA4AAAASAB4AAASAkBgCqr3YBIMXvkEIMsxXhcFFpiZqBaTXisBClibgAnd+ijYGq2I4HAamwXBgNHJ8BEbzgPNNjz7LwpnFDLvgLGJMdnw/5DRCrHaE3xbKm6FQwOt1xDnpwCvcJgcJMgEIeCYOCQlrF4YmBIoJVV2CCXZvCooHbwGRcAiKcmFUJhEAIfkEBQUAAAAsDwABABEAHwAABHsQyAkGoRivELInnOFlBjeM1BCiFBdcbMUtKQdTN0CUJru5NJQrYMh5VIFTTKJcOj2HqJQRhEqvqGuU+uw6AwgEwxkOO55lxIihoDjKY8pBoThPxmpAYi+hKzoeewkTdHkZghMIdCOIhIuHfBMOjxiNLR4KCW1ODAlxSxEAIfkEBQUAAAAsCAAOABgAEgAABGwQyEkrCDgbYvvMoOF5ILaNaIoGKroch9hacD3MFMHUBzMHiBtgwJMBFolDB4GoGGBCACKRcAAUWAmzOWJQExysQsJgWj0KqvKalTiYPhp1LBFTtp10Is6mT5gdVFx1bRN8FTsVCAqDOB9+KhEAIfkEBQUAAAAsAgASAB0ADgAABHgQyEmrBePS4bQdQZBdR5IcHmWEgUFQgWKaKbWwwSIhc4LonsXhBSCsQoOSScGQDJiWwOHQnAxWBIYJNXEoFCiEWDI9jCzESey7GwMM5doEwW4jJoypQQ743u1WcTV0CgFzbhJ5XClfHYd/EwZnHoYVDgiOfHKQNREAIfkEBQUAAAAsAAAPABkAEQAABGeQqUQruDjrW3vaYCZ5X2ie6EkcKaooTAsi7ytnTq046BBsNcTvItz4AotMwKZBIC6H6CVAJaCcT0CUBTgaTg5nTCu9GKiDEMPJg5YBBOpwlnVzLwtqyKnZagZWahoMB2M3GgsHSRsRACH5BAUFAAAALAEACAARABgAAARcMKR0gL34npkUyyCAcAmyhBijkGi2UW02VHFt33iu7yiDIDaD4/erEYGDlu/nuBAOJ9Dvc2EcDgFAYIuaXS3bbOh6MIC5IAP5Eh5fk2exC4tpgwZyiyFgvhEMBBEAIfkEBQUAAAAsAAACAA4AHQAABHMQyAnYoViSlFDGXBJ808Ep5KRwV8qEg+pRCOeoioKMwJK0Ekcu54h9AoghKgXIMZgAApQZcCCu2Ax2O6NUud2pmJcyHA4L0uDM/ljYDCnGfGakJQE5YH0wUBYBAUYfBIFkHwaBgxkDgX5lgXpHAXcpBIsRADs=) center no-repeat;
+  background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzJweCIgaGVpZ2h0PSIzMnB4IiB2aWV3Qm94PSIwIDAgMTQ0IDE0NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBjbGFzcz0iYW50LXNwaW4tZG90LWl0ZW0iPg0KICAgIDxjaXJjbGUgc3R5bGU9IiIgY3g9IjcyIiBjeT0iMjQiIHI9IjI0IiBjbGFzcz0iYW50LXNwaW4tZG90LWl0ZW0iIC8+DQogICAgPGNpcmNsZSBzdHlsZT0iIiBjeD0iMjQiIGN5PSI3MiIgcj0iMjQiIGNsYXNzPSJhbnQtc3Bpbi1kb3QtaXRlbSIgLz4NCiAgICA8Y2lyY2xlIHN0eWxlPSIiIGN4PSIxMjAiIGN5PSI3MiIgcj0iMjQiIGNsYXNzPSJhbnQtc3Bpbi1kb3QtaXRlbSIgLz4NCiAgICA8Y2lyY2xlIHN0eWxlPSIiIGN4PSI3MiIgY3k9IjEyMCIgcj0iMjQiIGNsYXNzPSJhbnQtc3Bpbi1kb3QtaXRlbSIgLz4NCiAgICA8YW5pbWF0ZVRyYW5zZm9ybSBhdHRyaWJ1dGVOYW1lPSJ0cmFuc2Zvcm0iIHR5cGU9InJvdGF0ZSIgZnJvbT0iMCAwIDAiIHRvPSIzNjAgMCAwIiBkdXI9IjEuMnMiDQogICAgICAgIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIiAvPg0KICAgIDxzdHlsZT4NCiAgICAgICAgQGtleWZyYW1lcyBhbnRTcGluTW92ZSB7DQogICAgICAgICAgICB0byB7DQogICAgICAgICAgICAgICAgb3BhY2l0eTogMQ0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQoNCg0KICAgICAgICAuYW50LXNwaW4tZG90LWl0ZW0td3JhcHBlciB7DQogICAgICAgICAgICBtYXgtd2lkdGg6IDMycHg7DQogICAgICAgICAgICBtYXgtaGVpZ2h0OiAzMnB4Ow0KICAgICAgICB9DQoNCg0KICAgICAgICAuYW50LXNwaW4tZG90LWl0ZW0gew0KICAgICAgICAgICAgZmlsbDogIzE4OTBmZjsNCiAgICAgICAgfQ0KDQogICAgICAgIC5hbnQtc3Bpbi1kb3QtaXRlbSB7DQogICAgICAgICAgICBvcGFjaXR5OiAuMzsNCiAgICAgICAgICAgIGFuaW1hdGlvbjogYW50U3Bpbk1vdmUgMXMgaW5maW5pdGUgbGluZWFyIGFsdGVybmF0ZQ0KICAgICAgICB9DQoNCiAgICAgICAgLmFudC1zcGluLWRvdC1pdGVtOm50aC1jaGlsZCgyKSB7DQogICAgICAgICAgICBhbmltYXRpb24tZGVsYXk6IC40cw0KICAgICAgICB9DQoNCiAgICAgICAgLmFudC1zcGluLWRvdC1pdGVtOm50aC1jaGlsZCgzKSB7DQogICAgICAgICAgICBhbmltYXRpb24tZGVsYXk6IC44cw0KICAgICAgICB9DQoNCiAgICAgICAgLmFudC1zcGluLWRvdC1pdGVtOm50aC1jaGlsZCg0KSB7DQogICAgICAgICAgICBhbmltYXRpb24tZGVsYXk6IDEuMnMNCiAgICAgICAgfQ0KICAgIDwvc3R5bGU+DQo8L3N2Zz4=) center no-repeat;
   z-index: 1;
 }
 
@@ -1544,6 +1580,14 @@ div[id^=svg-icon_] {
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
+.cursor-editor:hover {
+  cursor: url(data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgc3R5bGU9IndpZHRoOiAxZW07aGVpZ2h0OiAxZW07dmVydGljYWwtYWxpZ246IG1pZGRsZTtmaWxsOiBjdXJyZW50Q29sb3I7b3ZlcmZsb3c6IGhpZGRlbjsiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwLWlkPSIxOTEyIj48cGF0aCBkPSJNODUuMzMzMzMzIDE3MC42NjY2Njd2NjgyLjY2NjY2Nmg4NTMuMzMzMzM0VjE3MC42NjY2NjdIODUuMzMzMzMzek0wIDg1LjMzMzMzM2gxMDI0djg1My4zMzMzMzRIMFY4NS4zMzMzMzN6IG0yOTguNjY2NjY3IDY0MGg0Mi42NjY2NjZ2NDIuNjY2NjY3SDIxMy4zMzMzMzN2LTQyLjY2NjY2N2g0Mi42NjY2NjdWMjk4LjY2NjY2N0gyMTMuMzMzMzMzVjI1NmgxMjh2NDIuNjY2NjY3SDI5OC42NjY2Njd2NDI2LjY2NjY2NnoiIGZpbGw9IiM1MjVBNjUiIHAtaWQ9IjE5MTMiPjwvcGF0aD48L3N2Zz4=), auto;
+}
+
+.cursor-not-allowed:hover {
+  cursor: not-allowed;
+}
+
 /* .pointer-right-click {
 	&:hover {
 		cursor: url(../assets/svg/RightClick.svg), auto;
@@ -1603,6 +1647,32 @@ div[id^=svg-icon_] {
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset006pxrgba(255, 0, 0, 0.3);
   background: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes flash {
+  0%, 100%, 50% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.animated.infinite {
+  animation-iteration-count: infinite;
+}
+
+.animated.hinge {
+  animation-duration: 2s;
+}
+
+.animated.flash {
+  animation-name: flash;
 }
 
 /*!
@@ -2064,7 +2134,6 @@ div[id^=xVirTable].xVirTable-wrapper .xVirTable-body-wrapper {
 
 div[id^=xVirTable].xVirTable-wrapper .xVirTable-body-wrapper .xVirTable-body-item {
   position: absolute;
-  width: 100%;
 }
 
 div[id^=xVirTable].xVirTable-wrapper [role=thead] [role=tr] [role=th] {
@@ -2077,10 +2146,6 @@ div[id^=xVirTable].xVirTable-wrapper [role=thead] [role=tr] [role=th] {
   border-right: 1px solid #f0f0f0;
   padding: 16px;
   overflow-wrap: break-word;
-}
-
-div[id^=xVirTable].xVirTable-wrapper [role=body] [role=tr] [role=td] {
-  padding: 0 8px;
 }
 
 div[id^=xVirTable].xVirTable-wrapper div.xVirSelected_inner_element.xVirSelected_inner_element_check[data-prop=xVirSelected] {
@@ -2107,6 +2172,7 @@ div.xVirTable-row > div.xVirTable-cell::after {
   width: 100%;
   height: 100%;
   border-right: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .ventose-dialog-content {
@@ -2116,6 +2182,11 @@ div.xVirTable-row > div.xVirTable-cell::after {
   flex-flow: column nowrap;
   width: 100%;
   height: 100%;
+}
+
+.ventose-dialog-content .xDialogBody {
+  height: 100%;
+  flex: 1;
 }/*!
  * 
  * ant-design-vue v3.2.13
@@ -29523,7 +29594,7 @@ div.ant-typography-edit-content.ant-typography-rtl {
   width: unset;
   height: unset;
 }
-div[id^=lazy-svg_] {
+div[id^="lazy-svg_"] {
   display: flex;
 }
 .next-loading {
@@ -29559,18 +29630,19 @@ div[id^=lazy-svg_] {
   z-index: 4;
   text-align: center;
 }
-.table-options {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
+
+.table-options {\r
+	display: flex;\r
+	flex-flow: row nowrap;\r
+	align-items: center;\r
 	padding: 10px 0;
 }
-.table-filter {
+.table-filter {\r
 	margin-left: 4px;
 }
-.table-pagination {
+.table-pagination {\r
 	padding: 10px 0;
-}
+}\r
 .vir-item-component {
   height: 100%;
   overflow: auto;
@@ -29590,6 +29662,30 @@ div[id^=lazy-svg_] {
   box-sizing: border-box;
   font-size: 14px;
   margin: 10px 10px 0;
+}
+.x-infomation-card .InfoCardRow {
+  height: 48px;
+}
+.x-infomation-card .InfoCardRow [class^="ant-descriptions-item-"] {
+  height: 100%;
+  overflow: hidden;
+}
+.xInfoDiffCard-value {
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.xInfoDiffCard-delta {
+  text-decoration: line-through;
+}
+
+.xInfoDiffCard-left-value {
+  background: #ffbbbb;
+}
+
+.xInfoDiffCard-right-value {
+  background: #bbffbb;
 }`)),document.head.appendChild(n)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})();
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
@@ -29597,13 +29693,15 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-import Antd, { DatePicker as DatePicker$3, Checkbox as Checkbox$1, Switch as Switch$1, Table, Modal, message, notification } from "ant-design-vue";
-import $ from "jquery";
+import Antd, { Table, DatePicker as DatePicker$3, Modal, message, notification } from "ant-design-vue";
+import $$1 from "jquery";
 import { default as default2 } from "jquery";
-import { defineComponent, markRaw, h, resolveComponent, createVNode, mergeProps, reactive, watch, computed, createTextVNode, openBlock, createElementBlock, renderSlot, Fragment, createBlock, withDirectives, vShow, createElementVNode, isVNode, withCtx, renderList, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, createApp } from "vue";
+import { defineComponent, markRaw, h, openBlock, createElementBlock, renderSlot, reactive, watch, computed, createVNode, Fragment, resolveComponent, mergeProps, createBlock, withDirectives, vShow, createElementVNode, createStaticVNode, isVNode, withCtx, renderList, createTextVNode, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, isProxy, toRaw, inject, provide, createApp, getCurrentInstance } from "vue";
+import _ from "lodash";
 import dayjs from "dayjs";
 import { default as default3, default as default4 } from "dayjs";
-import _ from "lodash";
+import { diff } from "jsondiffpatch";
+import axios from "axios";
 const index = "";
 const ui = "";
 const antd = "";
@@ -29623,27 +29721,647 @@ const xRender = defineComponent(markRaw({
     });
   }
 }));
-const Input = ({
-  property,
-  slots,
-  listeners
-}) => {
-  let component = resolveComponent("aInput");
-  if (property.isPassword) {
-    component = resolveComponent("aInputPassword");
-  } else if (property.isNumber) {
-    component = resolveComponent("aInputNumber");
-  } else if (property.isTextarea) {
-    component = resolveComponent("aTextarea");
-    property.autoSize = property.autoSize || {
-      minRows: 4,
-      maxRows: 6
-    };
-  } else if (property.isSearch) {
-    component = resolveComponent("aInputSearch");
+function promisifyRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.oncomplete = request.onsuccess = () => resolve(request.result);
+    request.onabort = request.onerror = () => reject(request.error);
+  });
+}
+function createStore(dbName, storeName) {
+  const request = indexedDB.open(dbName);
+  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
+  const dbp = promisifyRequest(request);
+  return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
+}
+let defaultGetStoreFunc;
+function defaultGetStore() {
+  if (!defaultGetStoreFunc) {
+    defaultGetStoreFunc = createStore("keyval-store", "keyval");
   }
-  return createVNode(component, mergeProps(property, listeners), slots);
+  return defaultGetStoreFunc;
+}
+function get(key, customStore = defaultGetStore()) {
+  return customStore("readonly", (store) => promisifyRequest(store.get(key)));
+}
+function set(key, value, customStore = defaultGetStore()) {
+  return customStore("readwrite", (store) => {
+    store.put(value, key);
+    return promisifyRequest(store.transaction);
+  });
+}
+function clear(customStore = defaultGetStore()) {
+  return customStore("readwrite", (store) => {
+    store.clear();
+    return promisifyRequest(store.transaction);
+  });
+}
+const lStorage = new Proxy(localStorage, {
+  set(_localStorage, prop, value) {
+    if (_.isPlainObject(value)) {
+      _localStorage[prop] = JSON.stringify(value);
+    } else {
+      _localStorage[prop] = value;
+    }
+    return true;
+  },
+  get(_localStorage, prop) {
+    const objString = _localStorage[prop];
+    try {
+      return JSON.parse(objString);
+    } catch (error) {
+      if (objString === "undefined") {
+        return false;
+      }
+      return objString || false;
+    }
+  }
+});
+if (String(window.__APP_VERSION) !== String(lStorage.__APP_VERSION)) {
+  clear();
+  lStorage.__APP_VERSION = window.__APP_VERSION || Date.now();
+}
+const iStorage = async function(key, val) {
+  const keyPrefix = window.location.hostname;
+  key = _.camelCase(keyPrefix + key);
+  let res;
+  try {
+    if (isInput(val)) {
+      await set(key, String(val));
+      res = true;
+    } else {
+      res = await get(key);
+      if (!res) {
+        xU("get", key, res);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    return res;
+  }
 };
+iStorage.clear = clear;
+const onRE = /^on[^a-z]/;
+const VueComponents = {};
+const isInput = (val) => {
+  if (val === void 0) {
+    return false;
+  }
+  try {
+    val = JSON.parse(JSON.stringify(val));
+  } catch (error) {
+    xU(val, "JSON.parse failed");
+  }
+  if (val === 0) {
+    return true;
+  }
+  if (val === false) {
+    return true;
+  }
+  if (_.isArray(val)) {
+    return val.length > 0;
+  } else if (val) {
+    return true;
+  }
+  return false;
+};
+const privateLodash = {
+  WORDS: {
+    INVALID_DATE: "Invalid Date",
+    format_ymd: "YYYY-MM-DD"
+  },
+  launchFullscreen(element) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    }
+  },
+  exitFullscreen() {
+    document.exitFullscreen && document.exitFullscreen();
+  },
+  hashCode(str) {
+    var hash = 0, i, chr;
+    if (str.length === 0) {
+      return "0";
+    }
+    for (i = 0; i < str.length; i++) {
+      chr = str.charCodeAt(i);
+      hash = (hash << 5) - hash + chr;
+      hash |= 0;
+    }
+    return String(hash);
+  },
+  getLeftTopFromAbsolute($ele) {
+    const _top = $ele.css("top");
+    const _left = $ele.css("left");
+    const getNum = (x) => {
+      const match = String(x).match(/^(.*)px$/);
+      if (match && match[1]) {
+        return Number(match[1]);
+      } else {
+        return 0;
+      }
+    };
+    const top = getNum(_top);
+    const left = getNum(_left);
+    return { top, left };
+  },
+  getLeftTopFromTranslate($ele) {
+    const transform = $ele.css("transform");
+    const match = String(transform).match(/^matrix\((.*)\)$/);
+    if (!match) {
+      return { top: 0, left: 0 };
+    }
+    if (match && match[1]) {
+      const [a, b, c, d, e, f] = String(match[1]).split(",").map((i) => Number(_.trim(i)));
+      return {
+        left: a + c + e,
+        top: b + d + f
+      };
+    }
+  },
+  async asyncImportSFC(url, __Vue) {
+    if (VueComponents[url]) {
+      return VueComponents[url];
+    }
+    const scfSourceCode = await privateLodash.asyncLoadText(url);
+    const scfObjSourceCode = privateLodash.VueLoader(scfSourceCode);
+    VueComponents[url] = await privateLodash.getVueComponentBySourceCode(
+      url,
+      scfObjSourceCode,
+      __Vue
+    );
+    return VueComponents[url];
+  },
+  async getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
+    __Vue = __Vue || window.Vue || {};
+    const scfObjAsyncFn = new Function(
+      "argVue",
+      "argPayload",
+      `console.log(\`${url}\`)
+
+var fn = ${scfObjSourceCode}
+return fn.call(null,argVue,argPayload);`
+    );
+    const scfObj = await scfObjAsyncFn(__Vue, {
+      url
+    });
+    return scfObj;
+  },
+  parseContent: (returnSentence) => {
+    if (!returnSentence)
+      return;
+    return new Function(`${returnSentence} return module();`);
+  },
+  payloadIdCount: 1,
+  payloadIdCountMax: 4e4,
+  payloadDateNow: Date.now(),
+  genId: (category) => {
+    const { payloadIdCount, payloadIdCountMax, payloadDateNow } = privateLodash;
+    if (payloadIdCount > payloadIdCountMax) {
+      privateLodash.payloadIdCount = 1;
+      privateLodash.payloadDateNow = Date.now();
+    }
+    return `${category}_${payloadDateNow}_${privateLodash.payloadIdCount++}`;
+  },
+  VueLoader: (code) => {
+    function getSource(source, type2) {
+      var regex = new RegExp("<" + type2 + "[^>]*>");
+      var openingTag = source.match(regex);
+      if (!openingTag)
+        return "";
+      else
+        openingTag = openingTag[0];
+      var targetSource = source.slice(
+        source.indexOf(openingTag) + openingTag.length,
+        source.lastIndexOf("</" + type2 + ">")
+      );
+      return type2 === "template" ? targetSource.replace(/`/g, "\\`") : targetSource;
+    }
+    function splitCode() {
+      if (!/TEMPLATE_PLACEHOLDER/.test(code)) {
+        alert("SFC miss TEMPLATE_PLACEHOLDER");
+        console.error(code);
+      }
+      return getSource(code, "script").replace(
+        /TEMPLATE_PLACEHOLDER/,
+        `template: \`${getSource(code, "template")}\``
+      );
+    }
+    return splitCode();
+  },
+  async asyncExecFnString(url) {
+    const data = await privateLodash.asyncLoadText(url);
+    return privateLodash.parseContent(data);
+  },
+  doNothing: (...args) => {
+    var _a;
+    if (localStorage.isShowDevLog) {
+      const e = new Error();
+      console.log("\u{1F680}:", (_a = e == null ? void 0 : e.stack) == null ? void 0 : _a.split("\n")[2].replace("    at ", ""));
+      console.log.apply(console, args);
+    }
+  },
+  sleep: (t) => new Promise((r) => setTimeout(r, t)),
+  isOn: (key) => onRE.test(key),
+  isModelListener: (key) => {
+    key = String(key);
+    if (!key) {
+      return false;
+    }
+    return key.startsWith("onUpdate:");
+  },
+  isListener: (key) => {
+    key = String(key);
+    if (!key) {
+      return false;
+    }
+    return privateLodash.isOn(key) || privateLodash.isModelListener(key);
+  },
+  isArrayFill: (arr) => {
+    if (Array.isArray(arr)) {
+      if (arr.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  },
+  isObjectFill: (obj) => _.isPlainObject(obj) && Object.keys(obj).length > 0,
+  safeFirst: (arr, fnCheck) => {
+    fnCheck = fnCheck || ((value) => privateLodash.isInput(value));
+    const obj = _.first(arr);
+    return fnCheck(obj) ? obj : false;
+  },
+  safeToString: (val, isBeautiful = false) => {
+    try {
+      if (isBeautiful) {
+        return JSON.stringify(val, null, 2);
+      } else {
+        return JSON.stringify(val);
+      }
+    } catch (error) {
+      return "";
+    }
+  },
+  safeParse: (val, defaultObj) => {
+    let obj = defaultObj;
+    try {
+      obj = JSON.parse(val);
+      if (!val) {
+        obj = defaultObj;
+        throw new Error("json parse error");
+      }
+    } catch (error) {
+      privateLodash.doNothing(error);
+    }
+    return obj;
+  },
+  safeSplit: (target, sp = "") => {
+    return (target == null ? void 0 : target.split) ? target.split(sp) : [];
+  },
+  safeDate: (val) => {
+    if (!val) {
+      return "";
+    }
+    let date = dayjs(val);
+    if (date === privateLodash.WORDS.INVALID_DATE) {
+      return "";
+    } else {
+      return date;
+    }
+  },
+  isInput,
+  is$Selected: ($ele) => $ele && $ele.jquery && $ele.length > 0,
+  getObjectFirstKeyValue: (obj, defaultValue) => {
+    if (!obj) {
+      return defaultValue;
+    }
+    const keyArray = Object.keys(obj);
+    if (!privateLodash.isArrayFill(keyArray))
+      return defaultValue;
+    const prop = keyArray[0];
+    return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
+  },
+  loadCss(cssname) {
+    const cssPath = `${cssname}`;
+    let $link = $$1("<link/>", { rel: "stylesheet", type: "text/css" });
+    $link.appendTo($$1("head"));
+    $link[0].href = `${cssPath}?_t=${Date.now()}`;
+    return () => {
+      $link.remove();
+      $link = null;
+    };
+  },
+  async asyncLoadStyle(cssURL, options) {
+    let { isReplace, id } = options || { isReplace: false, id: "" };
+    id = id || _.camelCase(cssURL);
+    let content;
+    let $style = $$1(`#${id}`);
+    if ($style.length == 0) {
+      $style = $$1("<style/>", { id });
+      $$1("body").append($style);
+      content = await privateLodash.asyncLoadText(cssURL);
+      $style.html(content);
+    } else if (isReplace) {
+      content = await privateLodash.asyncLoadText(cssURL);
+      $style.html(content);
+    }
+  },
+  asyncLoadText: async function(url) {
+    if (!State_UI.isDev) {
+      const res = await iStorage(url);
+      if (res) {
+        return res;
+      }
+    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { data } = await axios.get(url, {
+          headers: {
+            "Content-Type": "text/plain"
+          }
+        });
+        if (!State_UI.isDev) {
+          await iStorage(url, data);
+        }
+        resolve(data);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  asyncLoadJS: async (url, globalName) => {
+    if (window[globalName]) {
+      return window[globalName];
+    }
+    const $style = $$1("<style/>").attr("id", `asyncLoadJS_${globalName}`);
+    $style.appendTo($$1("body")).on("load", function() {
+      return window[globalName];
+    });
+    $style.attr("src", url);
+  },
+  asyncGlobalJS: async (globalName, url) => {
+    if (window[globalName]) {
+      return window[globalName];
+    }
+    if (!url) {
+      alert("asyncGlobalJS miss url " + globalName);
+      return {};
+    }
+    const jsString = await privateLodash.asyncLoadText(url);
+    const fn = new Function(`with(window){${jsString}}`);
+    fn();
+    return window[globalName];
+  },
+  ensureValueDone: async (fnGetValue) => {
+    return new Promise(async (resolve) => {
+      let exeFnGetValue = async function() {
+        const value = await fnGetValue();
+        if (value) {
+          exeFnGetValue = null;
+          resolve(value);
+        } else {
+          setTimeout(exeFnGetValue, 100 * exeFnGetValue.count++);
+        }
+      };
+      exeFnGetValue.count = 1;
+      exeFnGetValue();
+    });
+  },
+  genProp: (someString) => {
+    return `k${_.camelCase(someString)}`;
+  },
+  dateFormat: (date, format2 = "YYYY-MM-DD") => {
+    if (typeof date === "number") {
+      date = dayjs.unix(date);
+    }
+    if (format2 === 1) {
+      format2 = "YYYY-MM-DD HH:mm:ss";
+    }
+    const label = dayjs(date).format(format2);
+    const isInvalidDate = label == privateLodash.WORDS.INVALID_DATE;
+    return isInvalidDate ? "--" : label;
+  },
+  keepDecimals: function(val, fractionDigits) {
+    let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
+    if (num === "NaN") {
+      num = "-";
+    }
+    return num;
+  },
+  valueToLabel: function(value, options) {
+    const target = _.find(options, {
+      value
+    });
+    if (target) {
+      return target.label;
+    } else {
+      return "--";
+    }
+  },
+  timego: function(timestamp) {
+    let minutes, hours, days, seconds, mouth, year;
+    const timeNow = parseInt(new Date().getTime() / 1e3);
+    seconds = timeNow - timestamp;
+    if (seconds > 86400 * 30 * 12) {
+      year = parseInt(seconds / (86400 * 30 * 12));
+    } else {
+      year = 0;
+    }
+    if (seconds > 86400 * 30) {
+      mouth = parseInt(seconds / (86400 * 30));
+    } else {
+      mouth = 0;
+    }
+    if (seconds > 86400) {
+      days = parseInt(seconds / 86400);
+    } else {
+      days = 0;
+    }
+    if (seconds > 3600) {
+      hours = parseInt(seconds / 3600);
+    } else {
+      hours = 0;
+    }
+    minutes = parseInt(seconds / 60);
+    if (year > 0) {
+      return year + "\u5E74\u524D";
+    } else if (mouth > 0 && year <= 0) {
+      return mouth + "\u6708\u524D";
+    } else if (days > 0 && mouth <= 0) {
+      return days + "\u5929\u524D";
+    } else if (days <= 0 && hours > 0) {
+      return hours + "\u5C0F\u65F6\u524D";
+    } else if (hours <= 0 && minutes > 0) {
+      return minutes + "\u5206\u949F\u524D";
+    } else if (minutes <= 0 && seconds > 0) {
+      if (seconds < 30) {
+        return "\u521A\u521A";
+      } else {
+        return seconds + "\u79D2\u524D";
+      }
+    } else {
+      return "\u521A\u521A";
+    }
+  },
+  htmlFilter: (html) => {
+    if (!html)
+      return;
+    let reg = /<\/?.+?\/?>/g;
+    return html.replace(reg, "") || "";
+  },
+  MutatingProps: (item, prop, val = null, isDelete = false) => {
+    item = item || {};
+    if (/^\./.test(prop)) {
+      prop = String(prop).substring(1);
+    }
+    const propArray = prop.split(".");
+    let key = "";
+    let nextItem = item;
+    const setVal = () => {
+      while (key = propArray.shift()) {
+        if (!key) {
+          debugger;
+        }
+        if (propArray.length === 0) {
+          if (val === "never" && isDelete) {
+            delete nextItem[key];
+          } else {
+            nextItem[key] = val;
+          }
+          return;
+        } else {
+          const _nextItem = nextItem[key];
+          if (!_nextItem) {
+            nextItem[key] = {};
+          }
+          nextItem = nextItem[key];
+        }
+      }
+    };
+    const getVal = () => {
+      while (key = propArray.shift()) {
+        const _nextItem = nextItem[key];
+        if (!_nextItem) {
+          return nextItem[key];
+        } else {
+          if (propArray.length === 0) {
+            return _nextItem;
+          } else {
+            nextItem = nextItem[key];
+          }
+        }
+      }
+      return nextItem;
+    };
+    if (val || _.isString(val) || _.isBoolean(val) || _.isNumber(val) && !_.isNaN(val)) {
+      setVal();
+    } else {
+      return getVal();
+    }
+    return item;
+  }
+};
+const xU = new Proxy(
+  function(...args) {
+    if (State_UI.isDev) {
+      try {
+        throw new Error("");
+      } catch (error) {
+        args.unshift(String(error.stack).split("\n")[2], "\n");
+        console.log.apply(console, args);
+      }
+    }
+  },
+  {
+    get(fn, prop) {
+      if (privateLodash[prop]) {
+        return privateLodash[prop];
+      }
+      if (_[prop]) {
+        return _[prop];
+      }
+      return fn[prop];
+    },
+    set(fn, prop, val) {
+      privateLodash[prop] = val;
+      return true;
+    }
+  }
+);
+const _sfc_main$8 = defineComponent({
+  name: "xForm",
+  props: {
+    col: {
+      type: Number,
+      default: 1
+    },
+    labelStyle: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    formStyle: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
+  emits: [],
+  data() {
+    return {};
+  },
+  computed: {
+    xFormId() {
+      return `xForm_${this._.uid}`;
+    },
+    formStyleText() {
+      return xU.map(xU.merge({}, this.formStyle), (value, prop) => `${prop}: ${value}`).join(";");
+    },
+    labelStyleText() {
+      return xU.map(xU.merge({
+        width: "120px",
+        "text-align": "right"
+      }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
+    },
+    styleContent() {
+      return [`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`, `#${this.xFormId} { ${this.formStyleText} }`, `#${this.xFormId} div.ant-form-item-label { ${this.labelStyleText} }`].join("\n");
+    }
+  },
+  mounted() {
+    const $form = $$1(`#${this.xFormId}`);
+    const $style = $$1("<style/>", {
+      id: `style_${this.xFormId}`
+    }).append(this.styleContent);
+    $form.prepend($style);
+  },
+  watch: {
+    styleContent() {
+      this.updateStyle(this.styleContent);
+    }
+  },
+  methods: {
+    updateStyle(styleContent) {
+      const $style = $$1(`#style_${this.xFormId}`);
+      $style.html(styleContent);
+    }
+  }
+});
+const _export_sfc = (sfc, props) => {
+  const target = sfc.__vccOpts || sfc;
+  for (const [key, val] of props) {
+    target[key] = val;
+  }
+  return target;
+};
+const _hoisted_1$g = ["id"];
+function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+  return openBlock(), createElementBlock("form", { id: _ctx.xFormId }, [
+    renderSlot(_ctx.$slots, "default")
+  ], 8, _hoisted_1$g);
+}
+const xForm = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7]]);
 const Pagination$1 = {
   items_per_page: "/ page",
   jump_to: "Go to",
@@ -30088,470 +30806,31 @@ var enAu = { exports: {} };
     return t.default.locale(_2, null, true), _2;
   });
 })(enAu);
-const onRE = /^on[^a-z]/;
-const VueComponents = {};
-const privateLodash = {
-  ..._,
-  WORDS: {
-    INVALID_DATE: "Invalid Date",
-    format_ymd: "YYYY-MM-DD"
-  },
-  getLeftTopFromAbsolute($ele) {
-    const _top = $ele.css("top");
-    const _left = $ele.css("left");
-    const getNum = (x) => {
-      const match = String(x).match(/^(.*)px$/);
-      if (match && match[1]) {
-        return Number(match[1]);
-      } else {
-        return 0;
+function $t$1(prop, payload = {}, i18nMessage = false) {
+  const result = {
+    label: prop,
+    prop
+  };
+  xU.templateSettings.interpolate = /{([\s\S]+?)}/g;
+  if (State_UI.i18nMessage) {
+    const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
+    if (temp) {
+      result.label = xU.template(temp)(payload);
+      if (!result.label) {
+        result.label = prop;
+        console.error(`i18n:${prop} "NOT_FOUND"`);
       }
-    };
-    const top = getNum(_top);
-    const left = getNum(_left);
-    console.log(left, top);
-    return { top, left };
-  },
-  getLeftTopFromTranslate($ele) {
-    const transform = $ele.css("transform");
-    const match = String(transform).match(/^matrix\((.*)\)$/);
-    if (!match) {
-      return { top: 0, left: 0 };
-    }
-    if (match && match[1]) {
-      const [a, b, c, d, e, f] = String(match[1]).split(",").map((i) => Number(privateLodash.trim(i)));
-      return {
-        left: a + c + e,
-        top: b + d + f
-      };
-    }
-  },
-  async asyncImportSFC(url, __Vue) {
-    if (VueComponents[url]) {
-      return VueComponents[url];
-    }
-    const scfSourceCode = await privateLodash.asyncLoadText(url);
-    const scfObjSourceCode = privateLodash.VueLoader(scfSourceCode);
-    VueComponents[url] = await privateLodash.getVueComponentBySourceCode(
-      url,
-      scfObjSourceCode,
-      __Vue
-    );
-    return VueComponents[url];
-  },
-  async getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
-    const scfObjAsyncFn = new Function(
-      "argVue",
-      "argPayload",
-      `console.log(\`${url}\`)
-return (${scfObjSourceCode})(argVue,argPayload);`
-    );
-    const scfObj = await scfObjAsyncFn(__Vue, {
-      url
-    });
-    return scfObj;
-  },
-  parseContent: (returnSentence) => {
-    if (!returnSentence)
-      return;
-    return new Function(`${returnSentence} return module();`);
-  },
-  payloadIdCount: 1,
-  payloadIdCountMax: 4e4,
-  payloadDateNow: Date.now(),
-  genId: (category) => {
-    const { payloadIdCount, payloadIdCountMax, payloadDateNow } = privateLodash;
-    if (payloadIdCount > payloadIdCountMax) {
-      privateLodash.payloadIdCount = 1;
-      privateLodash.payloadDateNow = Date.now();
-    }
-    return `${category}_${payloadDateNow}_${privateLodash.payloadIdCount++}`;
-  },
-  VueLoader: (code) => {
-    function getSource(source, type2) {
-      var regex = new RegExp("<" + type2 + "[^>]*>");
-      var openingTag = source.match(regex);
-      if (!openingTag)
-        return "";
-      else
-        openingTag = openingTag[0];
-      var targetSource = source.slice(
-        source.indexOf(openingTag) + openingTag.length,
-        source.lastIndexOf("</" + type2 + ">")
-      );
-      return type2 === "template" ? targetSource.replace(/`/g, "\\`") : targetSource;
-    }
-    function splitCode() {
-      if (!/TEMPLATE_PLACEHOLDER/.test(code)) {
-        alert("SFC miss TEMPLATE_PLACEHOLDER");
-        console.error(code);
-      }
-      return getSource(code, "script").replace(
-        /TEMPLATE_PLACEHOLDER/,
-        `template: \`${getSource(code, "template")}\``
-      );
-    }
-    return splitCode();
-  },
-  async asyncExecFnString(url) {
-    const data = await privateLodash.asyncLoadText(url);
-    return privateLodash.parseContent(data);
-  },
-  doNothing: (...args2) => {
-    var _a;
-    if (localStorage.isShowDevLog) {
-      const e = new Error();
-      console.log("\u{1F680}:", (_a = e == null ? void 0 : e.stack) == null ? void 0 : _a.split("\n")[2].replace("    at ", ""));
-      console.log.apply(console, args2);
-    }
-  },
-  sleep: (t) => new Promise((r) => setTimeout(r, t)),
-  isOn: (key) => onRE.test(key),
-  isModelListener: (key) => {
-    key = String(key);
-    if (!key) {
-      return false;
-    }
-    return key.startsWith("onUpdate:");
-  },
-  isListener: (key) => {
-    key = String(key);
-    if (!key) {
-      return false;
-    }
-    return privateLodash.isOn(key) || privateLodash.isModelListener(key);
-  },
-  isArrayFill: (arr) => {
-    if (Array.isArray(arr)) {
-      if (arr.length > 0) {
-        return true;
-      }
-    }
-    return false;
-  },
-  isObjectFill: (obj) => privateLodash.isPlainObject(obj) && Object.keys(obj).length > 0,
-  safeFirst: (arr, fnCheck) => {
-    fnCheck = fnCheck || ((value) => privateLodash.isInput(value));
-    const obj = privateLodash.first(arr);
-    return fnCheck(obj) ? obj : false;
-  },
-  safeToString: (val, isBeautiful = false) => {
-    try {
-      if (isBeautiful) {
-        return JSON.stringify(val, null, 2);
-      } else {
-        return JSON.stringify(val);
-      }
-    } catch (error) {
-      return "";
-    }
-  },
-  safeParse: (val, defaultObj) => {
-    let obj = defaultObj;
-    try {
-      obj = JSON.parse(val);
-      if (!val) {
-        obj = defaultObj;
-        throw new Error("json parse error");
-      }
-    } catch (error) {
-      privateLodash.doNothing(error);
-    }
-    return obj;
-  },
-  safeSplit: (target, sp = "") => {
-    return (target == null ? void 0 : target.split) ? target.split(sp) : [];
-  },
-  safeDate: (val) => {
-    if (!val) {
-      return "";
-    }
-    let date = dayjs(val);
-    if (date === privateLodash.WORDS.INVALID_DATE) {
-      return "";
-    } else {
-      return date;
-    }
-  },
-  isInput: (val) => {
-    if (val === void 0) {
-      return false;
-    }
-    val = JSON.parse(JSON.stringify(val));
-    if (val === 0) {
-      return true;
-    }
-    if (val === false) {
-      return true;
-    }
-    if (privateLodash.isArray(val)) {
-      return val.length > 0;
-    } else if (val) {
-      return true;
-    }
-    return false;
-  },
-  is$Selected: ($ele) => $ele && $ele.jquery && $ele.length > 0,
-  getObjectFirstKeyValue: (obj, defaultValue) => {
-    if (!obj) {
-      return defaultValue;
-    }
-    const keyArray = Object.keys(obj);
-    if (!privateLodash.isArrayFill(keyArray))
-      return defaultValue;
-    const prop = keyArray[0];
-    return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
-  },
-  asyncLoadJS: async (url, globalName) => {
-    if (window[globalName]) {
-      return window[globalName];
-    }
-    const $style = $("<style/>").attr("id", `asyncLoadJS_${globalName}`);
-    $style.appendTo($("body")).on("load", function() {
-      return window[globalName];
-    });
-    $style.attr("src", url);
-  },
-  ensureValueDone: async (fnGetValue) => {
-    return new Promise(async (resolve) => {
-      let exeFnGetValue = async function() {
-        const value = await fnGetValue();
-        if (value) {
-          exeFnGetValue = null;
-          resolve(value);
-        } else {
-          setTimeout(exeFnGetValue, 1e3 * exeFnGetValue.count++);
-        }
-      };
-      exeFnGetValue.count = 1;
-      exeFnGetValue();
-    });
-  },
-  genProp: (someString) => {
-    return `k${privateLodash.camelCase(someString)}`;
-  },
-  asyncLoadText: async function(url) {
-    if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
-      const res = await iStorage(url);
-      if (res) {
-        return res;
-      }
-    }
-    return new Promise(
-      (resolve, reject) => $.ajax({
-        type: "GET",
-        async: true,
-        url,
-        dataType: "text",
-        success(...args2) {
-          if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
-            iStorage(url, args2[0]);
-          }
-          resolve.apply(null, args2);
-        },
-        error: reject
-      })
-    );
-  },
-  loadCss: function(cssname) {
-    const cssPath = `${cssname}`;
-    let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
-    $link.appendTo($("head"));
-    $link[0].href = `${cssPath}?_t=${Date.now()}`;
-    return () => {
-      $link.remove();
-      $link = null;
-    };
-  },
-  dateFormat: function(date, format = "YYYY-MM-DD") {
-    if (typeof date === "number") {
-      date = dayjs.unix(date);
-    }
-    if (format === 1) {
-      format = "YYYY-MM-DD HH:mm:ss";
-    }
-    const label = dayjs(date).format(format);
-    return label === privateLodash.WORDS.INVALID_DATE ? "--" : label;
-  },
-  keepDecimals: function(val, fractionDigits) {
-    let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
-    if (num === "NaN") {
-      num = "-";
-    }
-    return num;
-  },
-  valueToLabel: function(value, options) {
-    const target = privateLodash.find(options, {
-      value
-    });
-    if (target) {
-      return target.label;
-    } else {
-      return "--";
-    }
-  },
-  timego: function(timestamp) {
-    let minutes, hours, days, seconds, mouth, year;
-    const timeNow = parseInt(new Date().getTime() / 1e3);
-    seconds = timeNow - timestamp;
-    if (seconds > 86400 * 30 * 12) {
-      year = parseInt(seconds / (86400 * 30 * 12));
-    } else {
-      year = 0;
-    }
-    if (seconds > 86400 * 30) {
-      mouth = parseInt(seconds / (86400 * 30));
-    } else {
-      mouth = 0;
-    }
-    if (seconds > 86400) {
-      days = parseInt(seconds / 86400);
-    } else {
-      days = 0;
-    }
-    if (seconds > 3600) {
-      hours = parseInt(seconds / 3600);
-    } else {
-      hours = 0;
-    }
-    minutes = parseInt(seconds / 60);
-    if (year > 0) {
-      return year + "\u5E74\u524D";
-    } else if (mouth > 0 && year <= 0) {
-      return mouth + "\u6708\u524D";
-    } else if (days > 0 && mouth <= 0) {
-      return days + "\u5929\u524D";
-    } else if (days <= 0 && hours > 0) {
-      return hours + "\u5C0F\u65F6\u524D";
-    } else if (hours <= 0 && minutes > 0) {
-      return minutes + "\u5206\u949F\u524D";
-    } else if (minutes <= 0 && seconds > 0) {
-      if (seconds < 30) {
-        return "\u521A\u521A";
-      } else {
-        return seconds + "\u79D2\u524D";
-      }
-    } else {
-      return "\u521A\u521A";
-    }
-  },
-  htmlFilter: (html) => {
-    if (!html)
-      return;
-    let reg = /<\/?.+?\/?>/g;
-    return html.replace(reg, "") || "";
-  },
-  MutatingProps: (item, prop, val = null) => {
-    item = item || {};
-    const propArray = prop.split(".");
-    let key = "";
-    let nextItem = item;
-    const setVal = () => {
-      while (key = propArray.shift()) {
-        if (!key) {
-          debugger;
-        }
-        if (propArray.length === 0) {
-          nextItem[key] = val;
-          return;
-        } else {
-          const _nextItem = nextItem[key];
-          if (!_nextItem) {
-            nextItem[key] = {};
-          }
-          nextItem = nextItem[key];
-        }
-      }
-    };
-    const getVal = () => {
-      while (key = propArray.shift()) {
-        const _nextItem = nextItem[key];
-        if (!_nextItem) {
-          return nextItem[key];
-        } else {
-          if (propArray.length === 0) {
-            return _nextItem;
-          } else {
-            nextItem = nextItem[key];
-          }
-        }
-      }
-      return nextItem;
-    };
-    if (val || privateLodash.isString(val) || privateLodash.isBoolean(val) || privateLodash.isNumber(val) && !privateLodash.isNaN(val)) {
-      setVal();
-    } else {
-      return getVal();
-    }
-    return item;
-  }
-};
-function promisifyRequest(request) {
-  return new Promise((resolve, reject) => {
-    request.oncomplete = request.onsuccess = () => resolve(request.result);
-    request.onabort = request.onerror = () => reject(request.error);
-  });
-}
-function createStore(dbName, storeName) {
-  const request = indexedDB.open(dbName);
-  request.onupgradeneeded = () => request.result.createObjectStore(storeName);
-  const dbp = promisifyRequest(request);
-  return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
-}
-let defaultGetStoreFunc;
-function defaultGetStore() {
-  if (!defaultGetStoreFunc) {
-    defaultGetStoreFunc = createStore("keyval-store", "keyval");
-  }
-  return defaultGetStoreFunc;
-}
-function get(key, customStore = defaultGetStore()) {
-  return customStore("readonly", (store) => promisifyRequest(store.get(key)));
-}
-function set(key, value, customStore = defaultGetStore()) {
-  return customStore("readwrite", (store) => {
-    store.put(value, key);
-    return promisifyRequest(store.transaction);
-  });
-}
-const lStorage = new Proxy(localStorage, {
-  set(_localStorage, prop, value) {
-    if (privateLodash.isPlainObject(value)) {
-      _localStorage[prop] = JSON.stringify(value);
-    } else {
-      _localStorage[prop] = value;
-    }
-    return true;
-  },
-  get(_localStorage, prop) {
-    const objString = _localStorage[prop];
-    try {
-      return JSON.parse(objString);
-    } catch (error) {
-      if (objString === "undefined") {
-        return false;
-      }
-      return objString || false;
     }
   }
-});
-lStorage.appConfigs = lStorage.appConfigs || {
+  return result;
+}
+let _State_UI = {
+  xItemCollection: {},
   pagination: {
     page: "page",
     size: "size",
     total: "total"
-  }
-};
-const iStorage = async (key, val) => {
-  const keyPrefix = privateLodash.camelCase(window.location.hostname);
-  key = keyPrefix + key;
-  if (privateLodash.isInput(val)) {
-    return await set(key, val);
-  } else {
-    return await get(key);
-  }
-};
-let _State_UI = {
+  },
   language: lStorage["language"] || "zh-CN",
   onLanguageChange: false,
   LANGUAGE: {
@@ -30573,23 +30852,14 @@ let _State_UI = {
       this.bashPath = src.substring(0, index2);
     }
   },
-  $t(prop, payload = {}, i18nMessage = false) {
-    const result = {
-      label: prop,
-      prop
-    };
-    privateLodash.templateSettings.interpolate = /{([\s\S]+?)}/g;
-    if (State_UI.i18nMessage) {
-      const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
-      if (temp) {
-        result.label = privateLodash.template(temp)(payload);
-        if (!result.label) {
-          result.label = prop;
-          console.error(`i18n:${prop} "NOT_FOUND"`);
-        }
-      }
+  $t: $t$1,
+  isDev: localStorage.___VENTOSE_UI_IS_DEV_MODE === "VENTOSE_UI_IS_DEV_MODE",
+  dev(isDev) {
+    if (isDev) {
+      localStorage.___VENTOSE_UI_IS_DEV_MODE = "VENTOSE_UI_IS_DEV_MODE";
+    } else {
+      localStorage.removeItem("___VENTOSE_UI_IS_DEV_MODE");
     }
-    return result;
   }
 };
 const State_UI = reactive(_State_UI);
@@ -30603,660 +30873,41 @@ watch(() => State_UI.language, (language) => {
   immediate: true
 });
 const Cpt_UI_locale = computed(() => {
-  const currentLanguage = privateLodash.camelCase(State_UI.language);
+  const currentLanguage = xU.camelCase(State_UI.language);
   const locale2 = State_UI.LANGUAGE[currentLanguage];
   return locale2;
 });
-const DatePicker = ({
-  property,
-  slots,
-  listeners
-}) => {
-  let value = "";
-  if (property.value) {
-    value = dayjs(property.value);
-    privateLodash.doNothing(value, property.value);
-    if (value === "Invalid Date") {
-      privateLodash.doNothing("property.value", property.value);
-      value = "";
-    }
-  }
-  return createVNode(DatePicker$3, mergeProps(property, listeners, {
-    "value": value,
-    "locale": Cpt_UI_locale.value.DatePicker
-  }), slots);
-};
-const RangePicker = ({
-  property,
-  slots,
-  listeners
-}) => {
-  const RangePicker2 = resolveComponent("aRangePicker");
-  console.log("property", property.value);
-  return createVNode(RangePicker2, mergeProps(property, listeners, {
-    "locale": Cpt_UI_locale.value.DatePicker
-  }), slots);
-};
-const EVENT_TYPE = {
-  validateForm: "validateForm",
-  update: "update",
-  change: "change",
-  input: "input",
-  blur: "blur",
-  focus: "focus"
-};
-const TIPS_TYPE = {
-  success: "success",
-  error: "error"
-};
-async function validateForm(configsForm) {
-  return Promise.all(
-    privateLodash.map(
-      configsForm,
-      (configs, prop) => new Promise((resolve) => {
-        if (privateLodash.isInput(configs.isShow)) {
-          const isFalse = !configs.isShow;
-          if (isFalse) {
-            return resolve();
-          }
-          const isResFalse = privateLodash.isFunction(configs.isShow) && !configs.isShow();
-          if (isResFalse) {
-            return resolve();
-          }
-        }
-        if (configs.validate) {
-          configs.__onAfterValidate = function(result) {
-            delete configs.__onAfterValidate;
-            resolve(result);
-          };
-          configs.validate.call(configs, EVENT_TYPE.validateForm);
-        } else {
-          resolve();
-        }
-      })
-    )
-  ).then((results) => {
-    results = results.filter((res) => res && res[0] && res[1]);
-    return results;
-  }).catch((error) => {
-    return error;
-  });
-}
-const AllWasWell = (res) => {
-  return privateLodash.isArray(res) && res.length === 0;
-};
-const checkXItem = async (xItemConfigs, handlerResult) => {
-  xItemConfigs.checking = true;
-  let result;
-  try {
-    const { rules, prop } = xItemConfigs;
-    result = await (async () => {
-      let dontCheck = 0;
-      for (const element of rules) {
-        const rule = element;
-        const trigger = rule.trigger || [];
-        let isFail = await (async () => {
-          let trigBy;
-          const isNeedVerify = (() => {
-            if (xItemConfigs.validate.triggerEventsObj[EVENT_TYPE.validateForm]) {
-              trigBy = "validateForm";
-              return true;
-            }
-            const isInTrigger = (eventName) => xItemConfigs.validate.triggerEventsObj[eventName];
-            if (privateLodash.some(trigger, isInTrigger)) {
-              trigBy = `triggerEvent ${trigger.toString()}`;
-              return true;
-            }
-            if (trigger.includes(EVENT_TYPE.update)) {
-              const updateTrigger = [
-                EVENT_TYPE.change,
-                EVENT_TYPE.input,
-                EVENT_TYPE.blur
-              ];
-              if (privateLodash.some(updateTrigger, isInTrigger)) {
-                trigBy = "update";
-                return true;
-              }
-            }
-            return false;
-          })();
-          trigBy && privateLodash.doNothing(
-            `%cValidate trigger off by [${trigBy}]`,
-            "color:yellow;background:green;"
-          );
-          if (isNeedVerify) {
-            const validateResult = await rule.validator(
-              JSON.parse(JSON.stringify(xItemConfigs.value)),
-              {
-                configs: xItemConfigs,
-                rule
-              }
-            );
-            if (validateResult) {
-              return validateResult;
-            }
-          } else {
-            dontCheck++;
-          }
-          return false;
-        })();
-        if (isFail) {
-          return [prop, rule.msg, xItemConfigs.FormItemId];
-        }
-      }
-      if (dontCheck === rules.length) {
-        return [false, false];
-      } else {
-        return [prop, false];
-      }
-    })();
-    handlerResult(result);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    if (privateLodash.isFunction(xItemConfigs.__onAfterValidate)) {
-      xItemConfigs.__onAfterValidate.call(xItemConfigs, result);
-    }
-    xItemConfigs.validate.triggerEventsObj = {};
-  }
-};
-const Checkbox = ({
-  property
-}) => {
-  const _property = xU.merge({}, property, {
-    checked: property.value,
-    onClick() {
-      _property["onUpdate:value"](!_property.value, EVENT_TYPE.update);
-    }
-  });
-  return h(Checkbox$1, _property);
-};
-const Select = ({
-  property,
-  listeners
-}) => {
-  const Select2 = resolveComponent("aSelect");
-  const SelectOption = resolveComponent("aSelectOption");
-  const _property = privateLodash.omit(property, ["options"]);
-  const renderOptions = () => {
-    return privateLodash.map(property.options, (option) => {
-      return createVNode(SelectOption, {
-        "value": option.value
-      }, {
-        default: () => [option.label]
-      });
-    });
-  };
-  return createVNode(Select2, mergeProps(listeners, _property), {
-    default: renderOptions
-  });
-};
-const RadioGroup = ({
-  property,
-  slots,
-  listeners
-}) => {
-  const Radio = resolveComponent("aRadio");
-  const RadioGroup2 = resolveComponent("aRadioGroup");
-  const RadioButton = resolveComponent("aRadioButton");
-  const PROPERTY_OPTIONS = property.options;
-  const componentPropertyOmitOptions = privateLodash.omit(property, ["options"]);
-  const renderOptions = () => {
-    if (property.isButton) {
-      return privateLodash.map(PROPERTY_OPTIONS, (option) => {
-        return createVNode(RadioButton, {
-          "value": option.value
-        }, {
-          default: () => [option.label]
-        });
-      });
-    }
-    return privateLodash.map(PROPERTY_OPTIONS, (option) => {
-      return createVNode(Radio, {
-        "value": option.value
-      }, {
-        default: () => [option.label]
-      });
-    });
-  };
-  return createVNode(RadioGroup2, mergeProps(componentPropertyOmitOptions, listeners), {
-    default: renderOptions
-  });
-};
-const CheckboxGroup = ({
-  property,
-  slots,
-  listeners
-}) => {
-  return createVNode(resolveComponent("aCheckboxGroup"), mergeProps(property, listeners), slots);
-};
-const Switch = ({
-  property,
-  slots,
-  listeners
-}) => {
-  const _property = privateLodash.merge({}, property, {
-    checked: property.value,
-    onClick() {
-      listeners["onUpdate:value"](!_property.value);
-    }
-  });
-  return createVNode("span", null, [h(Switch$1, privateLodash.omit(_property, ["value"]))]);
-};
-const itemRenders = {
-  Input,
-  Checkbox,
-  Select,
-  Switch,
-  DatePicker,
-  RangePicker,
-  RadioGroup,
-  CheckboxGroup
-};
-const {
-  MutatingProps
-} = privateLodash;
-const domClass = {
-  tipsError: "ant-form-item-explain ant-form-item-explain-error"
-};
-const _sfc_main$b = defineComponent({
-  name: "XItem",
-  props: {
-    modelValue: {
-      type: [Object, String, Number, Boolean]
-    },
-    configs: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
-  },
-  emits: ["update:modelValue"],
-  setup(props, {
-    attrs,
-    slots,
-    emit,
-    expose
-  }) {
-    let Cpt_isShowXItem = true;
-    let Cpt_isDisabled = false;
-    if (privateLodash.isFunction(props.configs.isShow)) {
-      Cpt_isShowXItem = computed(props.configs.isShow);
-    } else if (privateLodash.isBoolean(props.configs.isShow)) {
-      Cpt_isShowXItem = computed(() => props.configs.isShow);
-    } else {
-      props.configs.isShow = true;
-      Cpt_isShowXItem = computed(() => props.configs.isShow);
-    }
-    if (privateLodash.isFunction(props.configs.disabled)) {
-      Cpt_isDisabled = computed(props.configs.disabled);
-    } else if (privateLodash.isBoolean(props.configs.disabled)) {
-      Cpt_isDisabled = computed(() => props.configs.disabled);
-    }
-    return {
-      Cpt_isShowXItem,
-      Cpt_isDisabled
-    };
-  },
-  data() {
-    const vm = this;
-    const configs = vm.configs;
-    const handleConfigsValidate = (eventType) => {
-      configs.validate && configs.validate(eventType);
-    };
-    const listeners = {
-      "onUpdate:value": (val, ...args2) => {
-        if (privateLodash.isInput(configs.value)) {
-          if (configs.value === val) {
-            return;
-          } else {
-            configs.value = val;
-          }
-        }
-        this.$emit("update:modelValue", val);
-        if (privateLodash.isFunction(listeners.onAfterValueEmit)) {
-          listeners.onAfterValueEmit.call(vm, val, {
-            xItemVm: vm
-          });
-        }
-        handleConfigsValidate(EVENT_TYPE.update);
-      },
-      onChange: () => {
-        handleConfigsValidate(EVENT_TYPE.change);
-      },
-      onInput: () => {
-        handleConfigsValidate(EVENT_TYPE.input);
-      },
-      onBlur: () => {
-        handleConfigsValidate(EVENT_TYPE.blur);
-      },
-      onFocus: () => {
-        handleConfigsValidate(EVENT_TYPE.focus);
-      }
-    };
-    function initListenerHandler(prop, value) {
-      listeners[prop] = function(...args2) {
-        privateLodash.each(listeners[prop].queue, (listener) => {
-          listener == null ? void 0 : listener.apply(vm.configs, args2);
-        });
-      };
-      listeners[prop].queue = [value];
-    }
-    function addListenerFromConfigs(currentConfigs) {
-      const propsWillDeleteFromConfigs = [];
-      privateLodash.each(currentConfigs, (value, prop) => {
-        if (privateLodash.isListener(prop)) {
-          if (listeners[prop]) {
-            listeners[prop].queue.push(value);
-            return;
-          } else {
-            initListenerHandler(prop, value);
-            return;
-          }
-        }
-      });
-      privateLodash.each(propsWillDeleteFromConfigs, (prop) => {
-        delete currentConfigs[prop];
-      });
-      return listeners;
-    }
-    privateLodash.each(listeners, (value, prop) => initListenerHandler(prop, value));
-    addListenerFromConfigs(vm.configs);
-    return {
-      listeners,
-      isRequired: false
-    };
-  },
-  computed: {
-    isChecking() {
-      return Boolean(this.configs.checking);
-    },
-    FormItemId() {
-      return `xItem_${this._.uid}`;
-    },
-    itemTips() {
-      var _a, _b;
-      const _itemTips = {
-        type: "",
-        msg: ""
-      };
-      if ((_b = (_a = this.configs) == null ? void 0 : _a.itemTips) == null ? void 0 : _b.type) {
-        return {
-          type: this.configs.itemTips.type,
-          msg: privateLodash.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
-        };
-      } else {
-        this.configs.itemTips = _itemTips;
-        return _itemTips;
-      }
-    },
-    itemWrapperClass() {
-      return [
-        this.configs.itemWrapperClass,
-        "ant-form-item ant-form-item-with-help x-item flex",
-        this.itemTips.type === TIPS_TYPE.error ? "ant-form-item-has-error" : ""
-      ].join(" ");
-    },
-    componentSettings() {
-      const vm = this;
-      const configs = vm.configs;
-      const property = {
-        value: vm.modelValue !== void 0 ? vm.modelValue : configs.value !== void 0 ? configs.value : (cosole.error("either configs.value or modelValue"), "")
-      };
-      let slots = {};
-      const pickAttrs = (properties) => {
-        privateLodash.each(properties, (value, prop) => {
-          if ("slots" === prop) {
-            slots = value;
-            return;
-          }
-          if (["placeholder"].includes(prop) && privateLodash.isFunction(value)) {
-            property[prop] = value(vm);
-            return;
-          }
-          if (["itemTips", "rules", "labelVNodeRender"].includes(prop)) {
-            return;
-          }
-          property[prop] = value;
-          return;
-        });
-      };
-      pickAttrs(this.configs);
-      pickAttrs(this.$attrs);
-      if (this.Cpt_isDisabled) {
-        property.disabled = true;
-      } else {
-        delete property.disabled;
-      }
-      return {
-        property,
-        slots,
-        listeners: this.listeners
-      };
-    },
-    tipsVNode() {
-      if (this.isChecking) {
-        return createVNode("div", null, [createVNode("div", {
-          "data-type": "checking"
-        }, [createTextVNode("checking...")])]);
-      }
-      if (this.configs.tipsVNodeRender) {
-        return this.configs.tipsVNodeRender({
-          xItem: this,
-          configs: this.configs,
-          itemTips: this.itemTips
-        });
-      }
-      if (this.itemTips.msg) {
-        if (this.itemTips.type === TIPS_TYPE.error) {
-          return createVNode("div", {
-            "class": domClass.tipsError
-          }, [createVNode("div", {
-            "data-type": "error"
-          }, [this.itemTips.msg])]);
-        }
-      }
-      return null;
-    },
-    labelVNode() {
-      const classString = this.isRequired ? "ant-form-item-required" : "";
-      if (this.configs.labelVNodeRender) {
-        return this.configs.labelVNodeRender(this.configs, classString);
-      }
-      let label = (() => {
-        const _label = this.configs.label;
-        if (_label) {
-          if (privateLodash.isFunction(_label)) {
-            return _label();
-          }
-          if (privateLodash.isString(_label) || _label.__v_isVNode) {
-            return _label;
-          }
-        }
-        return false;
-      })();
-      if (label === false) {
-        return null;
-      }
-      return createVNode("div", {
-        "class": "ant-form-item-label"
-      }, [createVNode("label", {
-        "for": this.configs.prop,
-        "class": classString
-      }, [label])]);
-    }
-  },
-  watch: {
-    "configs.rules": {
-      immediate: true,
-      deep: true,
-      handler(rules) {
-        this.setValidateInfo(rules);
-      }
-    }
-  },
-  mounted() {
-    var _a;
-    if ((_a = this.configs) == null ? void 0 : _a.once) {
-      this.configs.once.call(this.configs, this);
-    }
-  },
-  created() {
-    MutatingProps(this, "configs.FormItemId", this.FormItemId);
-  },
-  methods: {
-    setTips(type2 = "", msg = "") {
-      MutatingProps(this, "configs.itemTips", {
-        type: type2,
-        msg
-      });
-    },
-    setValidateInfo(rules) {
-      let isRequired = false;
-      if (privateLodash.isArrayFill(rules)) {
-        isRequired = privateLodash.some(rules, {
-          name: "required"
-        });
-        const handleAfterCheck = ([prop, msg]) => {
-          MutatingProps(this, "configs.checking", false);
-          if (prop) {
-            if (msg) {
-              this.setTips(TIPS_TYPE.error, msg);
-              if (privateLodash.isFunction(this.configs.onValidateFail)) {
-                this.configs.onValidateFail(this.configs);
-              }
-            } else {
-              this.setTips();
-            }
-          }
-        };
-        const debounceCheckXItem = privateLodash.debounce(checkXItem, 300);
-        MutatingProps(this, "configs.validate", (eventType) => {
-          const prop = `configs.validate.triggerEventsObj.${eventType}`;
-          MutatingProps(this, prop, true);
-          debounceCheckXItem(this.configs, handleAfterCheck);
-        });
-        MutatingProps(this, "configs.validate.triggerEventsObj", {});
-      } else {
-        if (privateLodash.isFunction(this.configs.validate)) {
-          delete this.configs.validate;
-        }
-      }
-      this.isRequired = isRequired;
-    }
-  },
-  render(h2) {
-    if (!this.Cpt_isShowXItem) {
-      return null;
-    }
-    const CurrentXItem = (() => {
-      if (privateLodash.isFunction(this.configs.itemType)) {
-        return this.configs.itemType;
-      }
-      return itemRenders[this.configs.itemType] || itemRenders.Input;
-    })();
-    return createVNode("div", {
-      "id": this.FormItemId,
-      "class": this.itemWrapperClass
-    }, [this.labelVNode, createVNode("div", {
-      "class": "ant-form-item-control"
-    }, [createVNode(CurrentXItem, this.componentSettings, null), this.tipsVNode]), this.$slots.afterControll && this.$slots.afterControll()]);
-  }
-});
-const _sfc_main$a = defineComponent({
-  name: "xForm",
-  props: {
-    labelStyle: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
-  },
-  emits: [],
-  data() {
-    return {};
-  },
-  computed: {
-    xFormId() {
-      return `xForm_${this._.uid}`;
-    },
-    labelStyleText() {
-      return privateLodash.map(privateLodash.merge({
-        width: "120px",
-        "text-align": "right"
-      }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
-    },
-    styleContent() {
-      return `#${this.xFormId} { width:100%; padding:0 16px; }
- #${this.xFormId} div.ant-form-item-label { ${this.labelStyleText} }`;
-    }
-  },
-  mounted() {
-    const $form = $(`#${this.xFormId}`);
-    const $style = $("<style/>", {
-      id: `style_${this.xFormId}`
-    }).append(this.styleContent);
-    $form.prepend($style);
-  },
-  watch: {
-    styleContent() {
-      this.updateStyle(this.styleContent);
-    }
-  },
-  methods: {
-    updateStyle(styleContent) {
-      const $style = $(`#style_${this.xFormId}`);
-      $style.html(styleContent);
-    }
-  }
-});
-const _export_sfc = (sfc, props) => {
-  const target = sfc.__vccOpts || sfc;
-  for (const [key, val] of props) {
-    target[key] = val;
-  }
-  return target;
-};
-const _hoisted_1$e = ["id"];
-function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("form", { id: _ctx.xFormId }, [
-    renderSlot(_ctx.$slots, "default")
-  ], 8, _hoisted_1$e);
-}
-const xForm = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["render", _sfc_render$7]]);
 const BTN_PRESET_MAP = {
   query: () => ({
     icon: createVNode(resolveComponent("xIcon"), {
       "class": "x-button_icon-wrapper",
       "icon": "InsideSearchOutlined"
     }, null),
-    text: State_UI.$t("\u67E5\u8BE2").label
+    text: $t$1("\u67E5\u8BE2").label
   }),
   refresh: () => ({
     icon: createVNode(resolveComponent("xIcon"), {
       "class": "x-button_icon-wrapper",
       "icon": "InsideSyncOutlined"
     }, null),
-    text: State_UI.$t("\u5237\u65B0").label
+    text: $t$1("\u5237\u65B0").label
   }),
   cancel: () => ({
-    text: State_UI.$t("\u53D6\u6D88").label
+    text: $t$1("\u53D6\u6D88").label
   }),
   save: () => ({
     icon: createVNode(resolveComponent("xIcon"), {
       "class": "x-button_icon-wrapper",
       "icon": "InsideSaveOutlined"
     }, null),
-    text: State_UI.$t("\u4FDD\u5B58").label
+    text: $t$1("\u4FDD\u5B58").label
   }),
   upload: () => ({
     icon: createVNode(resolveComponent("xIcon"), {
       "class": "x-button_icon-wrapper",
       "icon": "InsideUploadOutlined"
     }, null),
-    text: State_UI.$t("\u4E0A\u4F20").label
+    text: $t$1("\u4E0A\u4F20").label
   }),
   delete: (configs) => {
     configs.type = "danger";
@@ -31266,7 +30917,7 @@ const BTN_PRESET_MAP = {
         "class": "x-button_icon-wrapper",
         "icon": "InsideDeleteOutlined"
       }, null),
-      text: State_UI.$t("\u5220\u9664").label
+      text: $t$1("\u5220\u9664").label
     };
   }
 };
@@ -31304,7 +30955,25 @@ const xButton = defineComponent({
       loading: true
     };
   },
+  setup(props) {
+    let Cpt_isShow = true;
+    if (props.configs.isShow !== void 0) {
+      if (xU.isFunction(props.configs.isShow)) {
+        Cpt_isShow = computed(props.configs.isShow);
+      }
+      if (xU.isBoolean(props.configs.isShow)) {
+        Cpt_isShow = props.configs.isShow;
+      }
+    }
+    return {
+      Cpt_isShow
+    };
+  },
   computed: {
+    isClickHandlerOnAttrs() {
+      var _a;
+      return !!((_a = this.$attrs) == null ? void 0 : _a.onClick);
+    },
     type() {
       if (["query", "save"].includes(this.configs.preset)) {
         return "primary";
@@ -31312,25 +30981,25 @@ const xButton = defineComponent({
       return this.configs.type;
     },
     title() {
-      if (privateLodash.isString(this.disabled) && this.disabled.length > 0) {
+      if (xU.isString(this.disabled) && this.disabled.length > 0) {
         return this.disabled;
       }
-      if (privateLodash.isString(this.configs.title) && this.configs.title.length > 0) {
+      if (xU.isString(this.configs.title) && this.configs.title.length > 0) {
         return this.configs.title;
       }
       return false;
     },
     disabled() {
-      if (privateLodash.isBoolean(this.configs.disabled)) {
+      if (xU.isBoolean(this.configs.disabled)) {
         return this.configs.disabled;
       }
-      if (privateLodash.isFunction(this.configs.disabled)) {
+      if (xU.isFunction(this.configs.disabled)) {
         return this.configs.disabled(this);
       }
       return false;
     },
     text() {
-      if (privateLodash.isFunction(this.configs.text)) {
+      if (xU.isFunction(this.configs.text)) {
         return this.configs.text(this) || "";
       }
       return this.configs.text || "";
@@ -31347,15 +31016,12 @@ const xButton = defineComponent({
   created() {
   },
   methods: {
-    async onClick() {
-      var _a, _b, _c;
-      if (privateLodash.isFunction((_a = this.$attrs) == null ? void 0 : _a.onClick)) {
-        return false;
-      }
-      if (privateLodash.isFunction((_b = this == null ? void 0 : this.configs) == null ? void 0 : _b.onClick)) {
+    async handleButtonClick() {
+      var _a, _b;
+      if (xU.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
         this.loading = true;
         try {
-          await ((_c = this == null ? void 0 : this.configs) == null ? void 0 : _c.onClick.call(this.configs, this));
+          await ((_b = this == null ? void 0 : this.configs) == null ? void 0 : _b.onClick.call(this.configs, this));
         } catch (e) {
           console.error(e);
         } finally {
@@ -31364,18 +31030,24 @@ const xButton = defineComponent({
       }
     }
   },
-  render(h2) {
-    const configs = privateLodash.omit(this.configs, ["text", "onClick", "disabled"]);
+  render() {
+    if (!this.Cpt_isShow) {
+      return null;
+    }
+    const propsWillDeleteFromProperty = ["text", "loading", "disabled", "title", "onClick"];
+    const _properties = xU.omit(this.configs, propsWillDeleteFromProperty);
+    if (!this.isClickHandlerOnAttrs) {
+      _properties.onClick = this.handleButtonClick;
+    }
     if (this.title) {
-      configs.title = this.title;
+      _properties.title = this.title;
     }
     return createVNode(resolveComponent("aButton"), mergeProps({
       "class": "x-button antdv-button",
-      "onClick": this.onClick,
       "loading": this.loading,
       "disabled": !!this.disabled,
       "type": this.type
-    }, configs), {
+    }, _properties), {
       default: () => {
         const vDomDefautl = this.$slots.default && this.$slots.default();
         return createVNode(Fragment, null, [this.text, vDomDefautl]);
@@ -31383,7 +31055,7 @@ const xButton = defineComponent({
     });
   }
 });
-const _sfc_main$9 = defineComponent({
+const _sfc_main$7 = defineComponent({
   name: "XButtonCountDown",
   props: {
     configs: {
@@ -31408,7 +31080,7 @@ const _sfc_main$9 = defineComponent({
         class: "center",
         text: vm.configs.text.normal,
         async onClick() {
-          if (privateLodash.isFunction(vm.configs.onClick)) {
+          if (xU.isFunction(vm.configs.onClick)) {
             await vm.configs.onClick({
               countDown: vm.countDown
             });
@@ -31456,55 +31128,12 @@ function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_xButton = resolveComponent("xButton");
   return openBlock(), createBlock(_component_xButton, { configs: _ctx.btnConfigs }, null, 8, ["configs"]);
 }
-const xButtonCountDown = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render$6]]);
-const _sfc_main$8 = defineComponent({
-  name: "xGap",
-  props: ["t", "l", "r", "b", "a", "f"],
-  computed: {
-    gapClass: {
-      get() {
-        let basic = "x-gap";
-        if (this.f) {
-          basic += ` flex${this.f}`;
-        }
-        return basic;
-      }
-    },
-    gapStyle: {
-      get() {
-        const POSITION_MAP = {
-          t: "top",
-          r: "right",
-          b: "bottom",
-          l: "left"
-        };
-        const gapStyle = {};
-        if (this.a) {
-          gapStyle.margin = `${this.a}px`;
-        } else {
-          privateLodash.map(POSITION_MAP, (prop, key) => {
-            const value = this[key];
-            if (value) {
-              gapStyle[`margin-${prop}`] = `${value}px`;
-            }
-          });
-        }
-        return gapStyle;
-      }
-    }
-  },
-  render(h2) {
-    return createVNode("div", {
-      "style": this.gapStyle,
-      "class": this.gapClass
-    }, null);
-  }
-});
+const xButtonCountDown = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6]]);
 const line = {};
 const CONFIGS_MAP = {
   line
 };
-const _sfc_main$7 = defineComponent({
+const _sfc_main$6 = defineComponent({
   name: "xCharts",
   props: {
     payload: {
@@ -31523,14 +31152,14 @@ const _sfc_main$7 = defineComponent({
     }
   },
   data() {
-    const id = privateLodash.genId("xChart");
+    const id = xU.genId("xChart");
     return {
       id
     };
   },
   computed: {
     helper() {
-      if (privateLodash.isPlainObject(this.configs)) {
+      if (xU.isPlainObject(this.configs)) {
         return this.configs;
       }
       return CONFIGS_MAP[this.configs];
@@ -31567,15 +31196,15 @@ const _sfc_main$7 = defineComponent({
     }
   }
 });
-const _hoisted_1$d = ["id"];
+const _hoisted_1$f = ["id"];
 function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("div", {
     id: _ctx.id,
     class: "x-charts flex flex1 center middle"
-  }, null, 8, _hoisted_1$d);
+  }, null, 8, _hoisted_1$f);
 }
-const xCharts = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$5]]);
-const _sfc_main$6 = defineComponent({
+const xCharts = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5]]);
+const _sfc_main$5 = defineComponent({
   name: "xView",
   props: {
     isShow: {
@@ -31592,51 +31221,51 @@ const _sfc_main$6 = defineComponent({
     }
   }
 });
-const _hoisted_1$c = ["id"];
+const _hoisted_1$e = ["id"];
 function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
   return withDirectives((openBlock(), createElementBlock("div", { id: _ctx.id }, [
     renderSlot(_ctx.$slots, "default")
-  ], 8, _hoisted_1$c)), [
+  ], 8, _hoisted_1$e)), [
     [vShow, !!_ctx.isShow]
   ]);
 }
-const xView = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$4]]);
+const xView = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4]]);
+const _hoisted_1$d = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$b = /* @__PURE__ */ createElementVNode("path", { d: "M338.261 137.045h-9.13a9.16 9.16 0 0 0 9.13-9.159v9.16h347.45v-9.16c0 5.035 4.095 9.16 9.101 9.16h-9.102v82.26h82.262v-91.42a73.216 73.216 0 0 0-73.131-73.13H329.102a73.216 73.216 0 0 0-73.159 73.13v91.45h82.29v-82.29zm576 82.29h-804.55c-20.253 0-36.58 16.327-36.58 36.551v36.58c0 5.034 4.096 9.159 9.13 9.159h69.063l28.217 597.703a73.216 73.216 0 0 0 73.046 69.689h518.826a73.045 73.045 0 0 0 73.046-69.689l28.245-597.732h69.006a9.16 9.16 0 0 0 9.16-9.102v-36.636c0-20.196-16.356-36.551-36.58-36.551zm-151.665 667.42h-501.22l-27.648-585.159H790.3l-27.676 585.16z" }, null, -1);
+const _hoisted_3$b = [
+  _hoisted_2$b
+];
+function render$a(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$d, _hoisted_3$b);
+}
+const InsideDeleteOutlined = { name: "DeleteOutlined", render: render$a };
+const _hoisted_1$c = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$a = /* @__PURE__ */ createElementVNode("path", { d: "M512 628c17.6 0 32-14.4 32-32V308c0-17.6-14.4-32-32-32s-32 14.4-32 32v288c0 17.6 14.4 32 32 32zm-44 76a44 44 0 1 0 88 0 44 44 0 1 0-88 0Zm44-640C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm271.5 719.5c-35.3 35.3-76.4 63-122.1 82.3-47.3 20-97.6 30.2-149.5 30.2s-102.2-10.1-149.5-30.2c-45.7-19.3-86.8-47-122.1-82.3s-63-76.4-82.3-122.1c-20-47.3-30.2-97.6-30.2-149.5s10.1-102.2 30.2-149.5c19.3-45.7 47-86.8 82.3-122.1s76.4-63 122.1-82.3c47.3-20 97.6-30.2 149.5-30.2s102.2 10.1 149.5 30.2c45.7 19.3 86.8 47 122.1 82.3s63 76.4 82.3 122.1c20 47.3 30.2 97.6 30.2 149.5s-10.1 102.2-30.2 149.5c-19.3 45.8-47 86.8-82.3 122.1z" }, null, -1);
+const _hoisted_3$a = [
+  _hoisted_2$a
+];
+function render$9(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$c, _hoisted_3$a);
+}
+const InsideExclamationCircleOutlined = { name: "ExclamationCircleOutlined", render: render$9 };
 const _hoisted_1$b = {
   xmlns: "http://www.w3.org/2000/svg",
   class: "icon",
   style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
   viewBox: "0 0 1024 1024"
 };
-const _hoisted_2$8 = /* @__PURE__ */ createElementVNode("path", { d: "M338.261 137.045h-9.13a9.16 9.16 0 0 0 9.13-9.159v9.16h347.45v-9.16c0 5.035 4.095 9.16 9.101 9.16h-9.102v82.26h82.262v-91.42a73.216 73.216 0 0 0-73.131-73.13H329.102a73.216 73.216 0 0 0-73.159 73.13v91.45h82.29v-82.29zm576 82.29h-804.55c-20.253 0-36.58 16.327-36.58 36.551v36.58c0 5.034 4.096 9.159 9.13 9.159h69.063l28.217 597.703a73.216 73.216 0 0 0 73.046 69.689h518.826a73.045 73.045 0 0 0 73.046-69.689l28.245-597.732h69.006a9.16 9.16 0 0 0 9.16-9.102v-36.636c0-20.196-16.356-36.551-36.58-36.551zm-151.665 667.42h-501.22l-27.648-585.159H790.3l-27.676 585.16z" }, null, -1);
-const _hoisted_3$8 = [
-  _hoisted_2$8
-];
-function render$7(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$b, _hoisted_3$8);
-}
-const InsideDeleteOutlined = { name: "DeleteOutlined", render: render$7 };
-const _hoisted_1$a = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$7 = /* @__PURE__ */ createElementVNode("path", { d: "M512 628c17.6 0 32-14.4 32-32V308c0-17.6-14.4-32-32-32s-32 14.4-32 32v288c0 17.6 14.4 32 32 32zm-44 76a44 44 0 1 0 88 0 44 44 0 1 0-88 0Zm44-640C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm271.5 719.5c-35.3 35.3-76.4 63-122.1 82.3-47.3 20-97.6 30.2-149.5 30.2s-102.2-10.1-149.5-30.2c-45.7-19.3-86.8-47-122.1-82.3s-63-76.4-82.3-122.1c-20-47.3-30.2-97.6-30.2-149.5s10.1-102.2 30.2-149.5c19.3-45.7 47-86.8 82.3-122.1s76.4-63 122.1-82.3c47.3-20 97.6-30.2 149.5-30.2s102.2 10.1 149.5 30.2c45.7 19.3 86.8 47 122.1 82.3s63 76.4 82.3 122.1c20 47.3 30.2 97.6 30.2 149.5s-10.1 102.2-30.2 149.5c-19.3 45.8-47 86.8-82.3 122.1z" }, null, -1);
-const _hoisted_3$7 = [
-  _hoisted_2$7
-];
-function render$6(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$a, _hoisted_3$7);
-}
-const InsideExclamationCircleOutlined = { name: "ExclamationCircleOutlined", render: render$6 };
-const _hoisted_1$9 = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$6 = /* @__PURE__ */ createElementVNode("path", { d: "M448 128a64 64 0 1 0 128 0 64 64 0 1 0-128 0ZM257.1 180.5a61.3 61.3 0 1 0 122.6 0 61.3 61.3 0 1 0-122.6 0ZM121.8 318.4a58.7 58.7 0 1 0 117.4 0 58.7 58.7 0 1 0-117.4 0ZM72 512a56 56 0 1 0 112 0 56 56 0 1 0-112 0Zm55.2 193.6a53.3 53.3 0 1 0 106.6 0 53.3 53.3 0 1 0-106.6 0Zm140.5 137.9a50.7 50.7 0 1 0 101.4 0 50.7 50.7 0 1 0-101.4 0ZM464 896a48 48 0 1 0 96 0 48 48 0 1 0-96 0Zm196.3-52.5a45.3 45.3 0 1 0 90.6 0 45.3 45.3 0 1 0-90.6 0Zm140.5-137.9a42.7 42.7 0 1 0 85.4 0 42.7 42.7 0 1 0-85.4 0ZM856 512a40 40 0 1 0 80 0 40 40 0 1 0-80 0ZM837.9 377.7a33.8 33.8 0 1 0 67.6 0 33.8 33.8 0 1 0-67.6 0Zm-61.5-113.5a28.3 28.3 0 1 0 56.6 0 28.3 28.3 0 1 0-56.6 0ZM680 180a24 24 0 1 0 48 0 24 24 0 1 0-48 0Z" }, null, -1);
-const _hoisted_3$6 = /* @__PURE__ */ createElementVNode("animateTransform", {
+const _hoisted_2$9 = /* @__PURE__ */ createElementVNode("path", { d: "M448 128a64 64 0 1 0 128 0 64 64 0 1 0-128 0ZM257.1 180.5a61.3 61.3 0 1 0 122.6 0 61.3 61.3 0 1 0-122.6 0ZM121.8 318.4a58.7 58.7 0 1 0 117.4 0 58.7 58.7 0 1 0-117.4 0ZM72 512a56 56 0 1 0 112 0 56 56 0 1 0-112 0Zm55.2 193.6a53.3 53.3 0 1 0 106.6 0 53.3 53.3 0 1 0-106.6 0Zm140.5 137.9a50.7 50.7 0 1 0 101.4 0 50.7 50.7 0 1 0-101.4 0ZM464 896a48 48 0 1 0 96 0 48 48 0 1 0-96 0Zm196.3-52.5a45.3 45.3 0 1 0 90.6 0 45.3 45.3 0 1 0-90.6 0Zm140.5-137.9a42.7 42.7 0 1 0 85.4 0 42.7 42.7 0 1 0-85.4 0ZM856 512a40 40 0 1 0 80 0 40 40 0 1 0-80 0ZM837.9 377.7a33.8 33.8 0 1 0 67.6 0 33.8 33.8 0 1 0-67.6 0Zm-61.5-113.5a28.3 28.3 0 1 0 56.6 0 28.3 28.3 0 1 0-56.6 0ZM680 180a24 24 0 1 0 48 0 24 24 0 1 0-48 0Z" }, null, -1);
+const _hoisted_3$9 = /* @__PURE__ */ createElementVNode("animateTransform", {
   additive: "sum",
   attributeName: "transform",
   attributeType: "XML",
@@ -31648,83 +31277,128 @@ const _hoisted_3$6 = /* @__PURE__ */ createElementVNode("animateTransform", {
   type: "rotate"
 }, null, -1);
 const _hoisted_4 = [
-  _hoisted_2$6,
-  _hoisted_3$6
+  _hoisted_2$9,
+  _hoisted_3$9
 ];
-function render$5(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$9, _hoisted_4);
+function render$8(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$b, _hoisted_4);
 }
-const InsideLoadingOutlined = { name: "LoadingOutlined", render: render$5 };
+const InsideLoadingOutlined = { name: "LoadingOutlined", render: render$8 };
+const _hoisted_1$a = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$8 = /* @__PURE__ */ createElementVNode("path", { d: "M144 928a48 48 0 0 1-48-48V144a48 48 0 0 1 48-48h592v.448a48 48 0 0 1 27.328 13.6l150.624 150.624A48 48 0 0 1 928 294.624V880a48 48 0 0 1-48 48H144zm144-768H160v704h128V496a48 48 0 0 1 43.392-47.776L336 448h352a48 48 0 0 1 48 48v368h128V301.248l-128-128V272a48 48 0 0 1-48 48H336a48 48 0 0 1-48-48V160zm384 352H352v352h320V512zm0-352H352v96h320v-96z" }, null, -1);
+const _hoisted_3$8 = [
+  _hoisted_2$8
+];
+function render$7(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$a, _hoisted_3$8);
+}
+const InsideSaveOutlined = { name: "SaveOutlined", render: render$7 };
+const _hoisted_1$9 = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$7 = /* @__PURE__ */ createElementVNode("path", { d: "M479.04 128c176.16 0 318.976 142.848 318.976 319.04a317.984 317.984 0 0 1-86.976 218.976l175.616 175.552c11.52 11.52 12.384 29.568 2.656 42.08l-2.656 3.008a31.872 31.872 0 0 1-45.088 0L662.784 707.904a317.504 317.504 0 0 1-183.776 58.24C302.816 766.144 160 623.296 160 447.04S302.816 128 479.04 128zm0 63.808a255.232 255.232 0 0 0-255.232 255.264 255.232 255.232 0 1 0 510.4 0 255.232 255.232 0 0 0-255.2-255.264z" }, null, -1);
+const _hoisted_3$7 = [
+  _hoisted_2$7
+];
+function render$6(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$9, _hoisted_3$7);
+}
+const InsideSearchOutlined = { name: "SearchOutlined", render: render$6 };
 const _hoisted_1$8 = {
   xmlns: "http://www.w3.org/2000/svg",
   class: "icon",
   style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
   viewBox: "0 0 1024 1024"
 };
-const _hoisted_2$5 = /* @__PURE__ */ createElementVNode("path", { d: "M144 928a48 48 0 0 1-48-48V144a48 48 0 0 1 48-48h592v.448a48 48 0 0 1 27.328 13.6l150.624 150.624A48 48 0 0 1 928 294.624V880a48 48 0 0 1-48 48H144zm144-768H160v704h128V496a48 48 0 0 1 43.392-47.776L336 448h352a48 48 0 0 1 48 48v368h128V301.248l-128-128V272a48 48 0 0 1-48 48H336a48 48 0 0 1-48-48V160zm384 352H352v352h320V512zm0-352H352v96h320v-96z" }, null, -1);
-const _hoisted_3$5 = [
-  _hoisted_2$5
+const _hoisted_2$6 = /* @__PURE__ */ createElementVNode("path", { d: "M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8zm756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8.1-4.5-3.5-8.2-8-8.2z" }, null, -1);
+const _hoisted_3$6 = [
+  _hoisted_2$6
 ];
-function render$4(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$8, _hoisted_3$5);
+function render$5(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$8, _hoisted_3$6);
 }
-const InsideSaveOutlined = { name: "SaveOutlined", render: render$4 };
+const InsideSyncOutlined = { name: "SyncOutlined", render: render$5 };
 const _hoisted_1$7 = {
   xmlns: "http://www.w3.org/2000/svg",
   class: "icon",
   style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
   viewBox: "0 0 1024 1024"
 };
-const _hoisted_2$4 = /* @__PURE__ */ createElementVNode("path", { d: "M479.04 128c176.16 0 318.976 142.848 318.976 319.04a317.984 317.984 0 0 1-86.976 218.976l175.616 175.552c11.52 11.52 12.384 29.568 2.656 42.08l-2.656 3.008a31.872 31.872 0 0 1-45.088 0L662.784 707.904a317.504 317.504 0 0 1-183.776 58.24C302.816 766.144 160 623.296 160 447.04S302.816 128 479.04 128zm0 63.808a255.232 255.232 0 0 0-255.232 255.264 255.232 255.232 0 1 0 510.4 0 255.232 255.232 0 0 0-255.2-255.264z" }, null, -1);
-const _hoisted_3$4 = [
-  _hoisted_2$4
+const _hoisted_2$5 = /* @__PURE__ */ createElementVNode("path", { d: "M512 85.333A426.667 426.667 0 1 0 938.667 512 426.667 426.667 0 0 0 512 85.333zm0 768A341.333 341.333 0 1 1 853.333 512 341.333 341.333 0 0 1 512 853.333zm30.72-587.946A32.853 32.853 0 0 0 520.107 256h-16.214a32 32 0 0 0-22.613 9.387L347.733 399.36a21.333 21.333 0 0 0 0 30.293l29.867 30.294a21.333 21.333 0 0 0 30.293 0l61.44-61.867v348.587A21.333 21.333 0 0 0 490.667 768h42.666a21.333 21.333 0 0 0 21.334-21.333V398.08l61.44 61.44a20.907 20.907 0 0 0 29.866 0l30.294-30.293a21.333 21.333 0 0 0 0-30.294z" }, null, -1);
+const _hoisted_3$5 = [
+  _hoisted_2$5
 ];
-function render$3(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$7, _hoisted_3$4);
+function render$4(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$7, _hoisted_3$5);
 }
-const InsideSearchOutlined = { name: "SearchOutlined", render: render$3 };
+const InsideUploadOutlined = { name: "UploadOutlined", render: render$4 };
 const _hoisted_1$6 = {
   xmlns: "http://www.w3.org/2000/svg",
   class: "icon",
   style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
   viewBox: "0 0 1024 1024"
 };
-const _hoisted_2$3 = /* @__PURE__ */ createElementVNode("path", { d: "M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8zm756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8.1-4.5-3.5-8.2-8-8.2z" }, null, -1);
+const _hoisted_2$4 = /* @__PURE__ */ createElementVNode("path", { d: "M512 128c212 0 384 172 384 384S724 896 512 896 128 724 128 512s172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64zm32 704h-64v-64h64v64zm11.2-203.2-5.6 4.8c-3.2 2.4-5.6 8-5.6 12.8v58.4h-64v-58.4c0-24.8 11.2-48 29.6-63.2l5.6-4.8c56-44.8 83.2-68 83.2-108 0-48-38.4-86.4-86.4-86.4-49.6 0-86.4 36.8-86.4 86.4h-64c0-84 66.4-150.4 150.4-150.4 83.2 0 150.4 67.2 150.4 150.4 0 72.8-49.6 112.8-107.2 158.4z" }, null, -1);
+const _hoisted_3$4 = [
+  _hoisted_2$4
+];
+function render$3(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$6, _hoisted_3$4);
+}
+const Insidetips = { name: "tips", render: render$3 };
+const _hoisted_1$5 = {
+  width: "64",
+  height: "41",
+  class: "ant-empty-img-simple"
+};
+const _hoisted_2$3 = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="ant-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="ant-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="ant-empty-img-simple-path"></path></g></g>', 1);
 const _hoisted_3$3 = [
   _hoisted_2$3
 ];
 function render$2(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$6, _hoisted_3$3);
+  return openBlock(), createElementBlock("svg", _hoisted_1$5, _hoisted_3$3);
 }
-const InsideSyncOutlined = { name: "SyncOutlined", render: render$2 };
-const _hoisted_1$5 = {
+const InsideEmpty = { name: "empty", render: render$2 };
+const _hoisted_1$4 = {
   xmlns: "http://www.w3.org/2000/svg",
   class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  style: { "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
   viewBox: "0 0 1024 1024"
 };
-const _hoisted_2$2 = /* @__PURE__ */ createElementVNode("path", { d: "M512 85.333A426.667 426.667 0 1 0 938.667 512 426.667 426.667 0 0 0 512 85.333zm0 768A341.333 341.333 0 1 1 853.333 512 341.333 341.333 0 0 1 512 853.333zm30.72-587.946A32.853 32.853 0 0 0 520.107 256h-16.214a32 32 0 0 0-22.613 9.387L347.733 399.36a21.333 21.333 0 0 0 0 30.293l29.867 30.294a21.333 21.333 0 0 0 30.293 0l61.44-61.867v348.587A21.333 21.333 0 0 0 490.667 768h42.666a21.333 21.333 0 0 0 21.334-21.333V398.08l61.44 61.44a20.907 20.907 0 0 0 29.866 0l30.294-30.293a21.333 21.333 0 0 0 0-30.294z" }, null, -1);
+const _hoisted_2$2 = /* @__PURE__ */ createElementVNode("path", { d: "M629.392 415.033 465.775 251.416c-7.992-7.992-20.947-7.992-28.939 0-7.992 8.002-7.992 20.957 0 28.95l128.68 128.68H389.97V184.083c0-11.298-9.17-20.467-20.466-20.467H21.813c-11.307 0-20.465 9.17-20.465 20.467v818.082c0 11.307 9.158 20.466 20.466 20.466h593.108c11.308 0 20.466-9.159 20.466-20.466V429.512c0-5.433-2.159-10.632-5.996-14.48zm-34.936 566.666H42.28v-777.15h306.756v224.963c0 11.298 9.159 20.466 20.467 20.466h224.953v531.72zm429.523-715.803v572.652c0 11.308-9.16 20.466-20.467 20.466H695.651c-11.298 0-20.466-9.158-20.466-20.466 0-11.297 9.168-20.466 20.466-20.466h287.395v-531.72H758.093c-11.308 0-20.466-9.169-20.466-20.466V40.932H430.87v75.694c0 11.308-9.169 20.466-20.466 20.466-11.307 0-20.466-9.158-20.466-20.466v-96.16C389.938 9.17 399.097 0 410.404 0h347.689c11.297 0 20.466 9.169 20.466 20.466V245.43h175.548l-128.68-128.681c-7.993-7.992-7.993-20.947 0-28.95 7.991-7.991 20.946-7.991 28.939 0l163.616 163.627a20.455 20.455 0 0 1 5.997 14.47z" }, null, -1);
 const _hoisted_3$2 = [
   _hoisted_2$2
 ];
 function render$1(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5, _hoisted_3$2);
+  return openBlock(), createElementBlock("svg", _hoisted_1$4, _hoisted_3$2);
 }
-const InsideUploadOutlined = { name: "UploadOutlined", render: render$1 };
-const _hoisted_1$4 = {
+const InsideCopy = { name: "copy", render: render$1 };
+const _hoisted_1$3 = {
   xmlns: "http://www.w3.org/2000/svg",
   class: "icon",
   style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
   viewBox: "0 0 1024 1024"
 };
-const _hoisted_2$1 = /* @__PURE__ */ createElementVNode("path", { d: "M512 128c212 0 384 172 384 384S724 896 512 896 128 724 128 512s172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64zm32 704h-64v-64h64v64zm11.2-203.2-5.6 4.8c-3.2 2.4-5.6 8-5.6 12.8v58.4h-64v-58.4c0-24.8 11.2-48 29.6-63.2l5.6-4.8c56-44.8 83.2-68 83.2-108 0-48-38.4-86.4-86.4-86.4-49.6 0-86.4 36.8-86.4 86.4h-64c0-84 66.4-150.4 150.4-150.4 83.2 0 150.4 67.2 150.4 150.4 0 72.8-49.6 112.8-107.2 158.4z" }, null, -1);
+const _hoisted_2$1 = /* @__PURE__ */ createElementVNode("path", {
+  fill: "#5A626A",
+  d: "M439.264 208a16 16 0 0 0-16 16v67.968a239.744 239.744 0 0 0-46.496 26.896l-58.912-34A16 16 0 0 0 296 290.72l-80 138.56a16 16 0 0 0 5.856 21.856l58.896 34a242.624 242.624 0 0 0 0 53.728l-58.88 34a16 16 0 0 0-6.72 20.176l.848 1.68 80 138.56a16 16 0 0 0 21.856 5.856l58.912-34a239.744 239.744 0 0 0 46.496 26.88V800a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-67.968a239.744 239.744 0 0 0 46.512-26.896l58.912 34a16 16 0 0 0 21.856-5.856l80-138.56a16 16 0 0 0-4.288-20.832l-1.568-1.024-58.896-34a242.624 242.624 0 0 0 0-53.728l58.88-34a16 16 0 0 0 6.72-20.176l-.848-1.68-80-138.56a16 16 0 0 0-21.856-5.856l-58.912 34a239.744 239.744 0 0 0-46.496-26.88V224a16 16 0 0 0-16-16h-160zm32 48h96v67.376l28.8 12.576a192.21 192.21 0 0 1 37.184 21.52l25.28 18.688 58.448-33.728 48 83.136-58.368 33.68 3.472 31.2a194.624 194.624 0 0 1 0 43.104l-3.472 31.2 58.368 33.68-48 83.136-58.432-33.728-25.296 18.688a192.21 192.21 0 0 1-37.184 21.52l-28.8 12.576V768h-96v-67.376l-28.784-12.576a192.21 192.21 0 0 1-37.184-21.52l-25.28-18.688-58.448 33.728-48-83.136 58.368-33.68-3.472-31.2a194.624 194.624 0 0 1 0-43.104l3.472-31.2-58.368-33.68 48-83.136L380 376.16l25.296-18.688a191.744 191.744 0 0 1 37.184-21.52l28.8-12.576V256zm47.28 144a112 112 0 1 0 0 224 112 112 0 0 0 0-224zm0 48a64 64 0 1 1 0 128 64 64 0 0 1 0-128z"
+}, null, -1);
 const _hoisted_3$1 = [
   _hoisted_2$1
 ];
 function render(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4, _hoisted_3$1);
+  return openBlock(), createElementBlock("svg", _hoisted_1$3, _hoisted_3$1);
 }
-const Insidetips = { name: "tips", render };
+const insideSettingOutlined = { name: "SettingOutlined", render };
+const xIcon$1 = "";
 const insideIcons = {
   InsideDeleteOutlined,
   InsideExclamationCircleOutlined,
@@ -31733,9 +31407,12 @@ const insideIcons = {
   InsideSearchOutlined,
   InsideSyncOutlined,
   InsideUploadOutlined,
-  Insidetips
+  Insidetips,
+  InsideEmpty,
+  InsideCopy,
+  insideSettingOutlined
 };
-const _sfc_main$5 = defineComponent(markRaw({
+const xIcon = defineComponent(markRaw({
   name: "xIcon",
   props: ["icon"],
   data() {
@@ -31755,13 +31432,17 @@ const _sfc_main$5 = defineComponent(markRaw({
       };
     },
     iconKey() {
-      const _iconKey = privateLodash.camelCase(this.getIconPath()).replace(/\s/, "");
+      const _iconKey = xU.camelCase(this.getIconPath()).replace(/\s/, "");
       return _iconKey;
     }
   },
   methods: {
     getIconPath() {
-      return `${State_UI.assetsSvgPath}/${this.icon}.svg`;
+      if (!State_UI.assetsSvgPath) {
+        debugger;
+      }
+      const iconPath = `${State_UI.assetsSvgPath}/${this.icon}.svg`;
+      return iconPath;
     },
     async setIcon() {
       if (!this.icon)
@@ -31770,19 +31451,23 @@ const _sfc_main$5 = defineComponent(markRaw({
         let SvgIconAny = await (async () => {
           let _SvgIconAny = insideIcons[this.icon];
           if (_SvgIconAny) {
+            xU(this.icon);
             return _SvgIconAny;
           }
-          _SvgIconAny = await iStorage(this.iconKey);
-          if (_SvgIconAny) {
-            return _SvgIconAny;
+          if (!State_UI.isDev) {
+            _SvgIconAny = await iStorage(this.iconKey);
+            if (_SvgIconAny) {
+              return _SvgIconAny;
+            }
           }
           try {
-            _SvgIconAny = await privateLodash.asyncLoadText(this.getIconPath());
+            _SvgIconAny = await xU.asyncLoadText(this.getIconPath());
           } catch (error) {
+            console.error(error);
           }
           return _SvgIconAny;
         })();
-        if (privateLodash.isString(SvgIconAny) && SvgIconAny.length > 0) {
+        if (xU.isString(SvgIconAny) && SvgIconAny.length > 0) {
           const SvgComponentByString = {
             name: this.icon,
             template: SvgIconAny
@@ -31815,21 +31500,21 @@ const _sfc_main$5 = defineComponent(markRaw({
     }
   }
 }));
-const xIcon_vue_vue_type_style_index_0_lang = "";
 function _isSlot$1(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
-const static_word = {
-  operation: "operation"
+const STATIC_WORD = {
+  OPERATION: "OPERATION",
+  NEXT_TICK_TIME: 64
 };
 function defDataGridOption(options) {
   options.pagination = options.pagination || defPagination();
   options.isLoading = Boolean(options.isLoading);
   if (options.queryTableList) {
     options._queryTableList_origin = options.queryTableList;
-    options.queryTableList = async function(...args2) {
+    options.queryTableList = async function(...args) {
       this.isLoading = true;
-      await this._queryTableList_origin.apply(this, args2);
+      await this._queryTableList_origin.apply(this, args);
       this.isLoading = false;
     };
   }
@@ -31842,32 +31527,36 @@ function defDataGridOption(options) {
 }
 function defPagination(num_page = 1, num_size = 10, num_total = 0) {
   const {
-    page: page2,
-    size: size2,
-    total: total2
-  } = lStorage.appConfigs.pagination;
+    page,
+    size,
+    total
+  } = State_UI.pagination;
   return {
-    [page2]: num_page || 1,
-    [size2]: num_size || 10,
-    [total2]: num_total || 0
+    [page]: num_page || 1,
+    [size]: num_size || 10,
+    [total]: num_total || 0
   };
 }
 function setPagination(StateTable, pagination) {
-  const PAGINATION_MAP = lStorage.appConfigs.pagination;
-  privateLodash.each(pagination, (value, prop) => {
-    StateTable.pagination[PAGINATION_MAP[prop]] = value;
+  const PAGINATION_MAP = State_UI.pagination;
+  xU.each(pagination, (value, prop) => {
+    let realProp = PAGINATION_MAP[prop];
+    if (!realProp) {
+      realProp = prop;
+    }
+    (StateTable == null ? void 0 : StateTable.pagination) && (StateTable.pagination[realProp] = value);
   });
 }
 function getPaginationPageSize(StateTable) {
-  const PAGINATION_MAP = lStorage.appConfigs.pagination;
+  const PAGINATION_MAP = State_UI.pagination;
   const pagination = StateTable.pagination;
   const {
-    page: page2,
-    size: size2
+    page,
+    size
   } = PAGINATION_MAP;
   return {
-    [page2]: pagination[page2],
-    [size2]: pagination[size2]
+    [page]: pagination[page],
+    [size]: pagination[size]
   };
 }
 function defCol(options) {
@@ -31881,15 +31570,12 @@ function defCol(options) {
   };
 }
 function defColActions(options) {
-  return {
-    [static_word.operation]: privateLodash.merge({
-      title: State_UI.$t("\u64CD\u4F5C").label,
-      key: static_word.operation,
-      prop: static_word.operation,
-      fixed: "right",
-      minWidth: 100
-    }, options)
-  };
+  return defCol(xU.merge({
+    label: State_UI.$t("\u64CD\u4F5C").label,
+    prop: STATIC_WORD.OPERATION,
+    fixed: "right",
+    width: "100px"
+  }, options));
 }
 function defColActionsBtnlist(options) {
   const {
@@ -31907,8 +31593,8 @@ function defColActionsBtnlist(options) {
     "class": "flex middle"
   }, [createVNode(resolveComponent("xGap"), {
     "l": "4"
-  }, null), privateLodash.map(always, (btn) => {
-    const configs = privateLodash.merge({
+  }, null), xU.map(always, (btn) => {
+    const configs = xU.merge({
       type: "link",
       size: "small"
     }, btn);
@@ -31931,8 +31617,8 @@ function defColActionsBtnlist(options) {
       },
       overlay: () => {
         let _slot;
-        return createVNode(Fragment, null, [createVNode(resolveComponent("aMenu"), null, _isSlot$1(_slot = privateLodash.map(more, (btn) => {
-          const configs = privateLodash.merge({
+        return createVNode(Fragment, null, [createVNode(resolveComponent("aMenu"), null, _isSlot$1(_slot = xU.map(more, (btn) => {
+          const configs = xU.merge({
             type: "link",
             size: "small"
           }, btn);
@@ -31953,32 +31639,29 @@ function defColActionsBtnlist(options) {
   })()]);
 }
 function filterColIsShow(isShow, prop) {
-  if (privateLodash.isBoolean(isShow)) {
+  if (xU.isBoolean(isShow)) {
     return isShow;
   } else {
     return true;
   }
 }
-function setDataGridInfo(StateBind, result = {
-  data: []
-}) {
+function setDataGridInfo(StateBind, result = {}) {
   const {
     data = [],
-    total: total2 = false
+    total = false,
+    selected = false
   } = result;
   StateBind.dataSource = data;
-  if (total2 || total2 === 0) {
+  if (selected) {
+    StateBind.selected = selected;
+  }
+  if (total || total === 0) {
     setPagination(StateBind, {
-      total: total2
+      total
     });
   }
 }
 const PAGE_SIZE_OPTIONS = ["10", "20", "30"];
-const {
-  page,
-  size,
-  total
-} = lStorage.appConfigs.pagination;
 const xPagination = defineComponent({
   name: "xPagination",
   setup() {
@@ -32000,22 +31683,22 @@ const xPagination = defineComponent({
   },
   data() {
     const {
-      page: page2,
-      size: size2,
-      total: total2
-    } = lStorage.appConfigs.pagination;
+      page,
+      size,
+      total
+    } = State_UI.pagination;
     return {
       pageSizeOptions: PAGE_SIZE_OPTIONS,
-      page: page2,
-      size: size2,
-      total: total2
+      page,
+      size,
+      total
     };
   },
   methods: {
-    onShowSizeChange: privateLodash.debounce(function(page2, size2) {
+    onShowSizeChange: xU.debounce(function(page, size) {
       setPagination(this, {
-        page: page2,
-        size: size2
+        page,
+        size
       });
       if (this.onPaginationChange) {
         this.onPaginationChange(this.pagination);
@@ -32032,6 +31715,12 @@ const xPagination = defineComponent({
     }
   },
   render() {
+    const {
+      page,
+      size,
+      total
+    } = State_UI.pagination;
+    console.log(page, size, total);
     return createVNode(resolveComponent("aPagination"), {
       "current": this.pagination[page],
       "onUpdate:current": ($event) => this.pagination[page] = $event,
@@ -32074,7 +31763,7 @@ const _sfc_main$4 = defineComponent({
   data() {
     return {
       State: {
-        id: privateLodash.genId("xDataGrid")
+        id: xU.genId("xDataGrid")
       }
     };
   },
@@ -32084,10 +31773,10 @@ const _sfc_main$4 = defineComponent({
         return this.configs.columns;
       }
       let columns = null;
-      columns = privateLodash.map(this.Cpt_ColumnsOrder, (prop) => privateLodash.find(this.configs.columns, {
+      columns = xU.map(this.Cpt_ColumnsOrder, (prop) => xU.find(this.configs.columns, {
         prop
       }));
-      columns = privateLodash.filter(columns, (i) => filterColIsShow(i == null ? void 0 : i.isShow, i == null ? void 0 : i.prop));
+      columns = xU.filter(columns, (i) => filterColIsShow(i == null ? void 0 : i.isShow, i == null ? void 0 : i.prop));
       return columns;
     },
     Cpt_ColumnsOrder() {
@@ -32095,10 +31784,10 @@ const _sfc_main$4 = defineComponent({
         if (this.configs.columns_order) {
           return this.configs.columns_order;
         } else {
-          return privateLodash.map(this.configs.columns, (i) => i.prop);
+          return xU.map(this.configs.columns, (i) => i.prop);
         }
       })();
-      return privateLodash.filter(order, (i) => !!i);
+      return xU.filter(order, (i) => !!i);
     },
     Cpt_AntTableProperty() {
       if (this.configs.antTableProperty) {
@@ -32118,42 +31807,19 @@ const _sfc_main$4 = defineComponent({
             "class": "ant-empty ant-empty-normal"
           }, [createVNode("div", {
             "class": "ant-empty-image"
-          }, [createVNode("svg", {
-            "class": "ant-empty-img-simple",
-            "width": "64",
-            "height": "41",
-            "viewBox": "0 0 64 41"
-          }, [createVNode("g", {
-            "transform": "translate(0 1)",
-            "fill": "none",
-            "fill-rule": "evenodd"
-          }, [createVNode("ellipse", {
-            "class": "ant-empty-img-simple-ellipse",
-            "fill": "#F5F5F5",
-            "cx": "32",
-            "cy": "33",
-            "rx": "32",
-            "ry": "7"
-          }, null), createVNode("g", {
-            "class": "ant-empty-img-simple-g",
-            "fill-rule": "nonzero",
-            "stroke": "#D9D9D9"
-          }, [createVNode("path", {
-            "d": "M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"
-          }, null), createVNode("path", {
-            "d": "M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z",
-            "fill": "#FAFAFA",
-            "class": "ant-empty-img-simple-path"
-          }, null)])])])]), createVNode("p", {
+          }, [createVNode(resolveComponent("xIcon"), {
+            "icon": "InsideEmpty",
+            "style": "width:64px"
+          }, null)]), createVNode("p", {
             "class": "ant-empty-description"
           }, [this.Cpt_UI_locale.Empty.description])]),
-          bodyCell: (args2) => {
+          bodyCell: (args) => {
             const {
               column
-            } = args2;
+            } = args;
             if (column && column.renderCell) {
-              const vNode = column.renderCell(args2);
-              if (privateLodash.isNull(vNode) || privateLodash.isUndefined(vNode)) {
+              const vNode = column.renderCell(args);
+              if (xU.isNull(vNode) || xU.isUndefined(vNode)) {
                 return "";
               }
               return vNode;
@@ -32196,6 +31862,14 @@ const _sfc_main$4 = defineComponent({
       });
     }
   },
+  watch: {
+    "configs.pagination": {
+      deep: true,
+      handler(pagination) {
+        xU(JSON.stringify(pagination));
+      }
+    }
+  },
   methods: {
     async handlePaginationChange(pagination) {
       var _a;
@@ -32225,10 +31899,10 @@ const _sfc_main$3 = defineComponent({
   },
   methods: {
     handleChecked(col) {
-      const target = privateLodash.find(this.configs.columns, {
+      const target = xU.find(this.configs.columns, {
         key: col.key
       });
-      target.isShow = privateLodash.isBoolean(target.isShow) ? !target.isShow : false;
+      target.isShow = xU.isBoolean(target.isShow) ? !target.isShow : false;
     }
   },
   computed: {
@@ -32237,18 +31911,18 @@ const _sfc_main$3 = defineComponent({
         if (this.configs.columns_order) {
           return this.configs.columns_order;
         } else {
-          return privateLodash.map(this.configs.columns, (i) => i.prop);
+          return xU.map(this.configs.columns, (i) => i.prop);
         }
       })();
-      return privateLodash.filter(order, (i) => !!i);
+      return xU.filter(order, (i) => !!i);
     },
     Cpt_Columns() {
-      return privateLodash.map(this.Cpt_ColumnsOrder, (prop) => privateLodash.find(this.configs.columns, {
+      return xU.map(this.Cpt_ColumnsOrder, (prop) => xU.find(this.configs.columns, {
         prop
       }));
     },
     checkedList() {
-      return privateLodash.filter(this.Cpt_ColumnsOrder, (prop) => {
+      return xU.filter(this.Cpt_ColumnsOrder, (prop) => {
         const {
           isShow
         } = this.configs.columns[prop];
@@ -32257,13 +31931,9 @@ const _sfc_main$3 = defineComponent({
     }
   }
 });
-const _hoisted_1$3 = /* @__PURE__ */ createElementVNode("link", {
-  rel: "icon",
-  type: "image/svg+xml",
-  href: "/SettingOutlined.svg"
-}, null, -1);
 function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_aCheckbox = resolveComponent("aCheckbox");
+  const _component_xIcon = resolveComponent("xIcon");
   const _component_aButton = resolveComponent("aButton");
   const _component_aPopover = resolveComponent("aPopover");
   return openBlock(), createBlock(_component_aPopover, {
@@ -32290,7 +31960,10 @@ function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     default: withCtx(() => [
       createVNode(_component_aButton, null, {
         icon: withCtx(() => [
-          _hoisted_1$3
+          createVNode(_component_xIcon, {
+            icon: "insideSettingOutlined",
+            style: { "height": "100%", "width": "100%" }
+          })
         ]),
         _: 1
       })
@@ -32317,7 +31990,8 @@ const _sfc_main$2 = defineComponent({
       return {
         preset: "query",
         onClick: async () => {
-          if (this.configs.queryTableList) {
+          var _a;
+          if ((_a = this.configs) == null ? void 0 : _a.queryTableList) {
             setPagination(this.configs, {
               page: 1
             });
@@ -32362,7 +32036,7 @@ const _sfc_main$2 = defineComponent({
       return true;
     },
     Cpt_isSetConfigs() {
-      return this.configs && this.configs.pagination;
+      return this.configs;
     }
   }
 });
@@ -32436,9 +32110,9 @@ const _sfc_main$1 = defineComponent({
     }
   },
   updated() {
-    const $dom = $(`#${this.id}`);
+    const $dom = $$1(`#${this.id}`);
     const domWidth = $dom.width();
-    const $span = $(`#${this.id} > span`);
+    const $span = $$1(`#${this.id} > span`);
     const spanWidth = $span.width();
     if (domWidth < spanWidth) {
       const text = $dom.text();
@@ -32588,7 +32262,7 @@ const _sfc_main = defineComponent({
     this.$wrapperEle.off("scroll");
   },
   methods: {
-    setTop: privateLodash.debounce(function() {
+    setTop: xU.debounce(function() {
       if (this.$refs.refWrapper) {
         this.$refs.refWrapper.scrollTo({
           top: this.top,
@@ -32597,7 +32271,7 @@ const _sfc_main = defineComponent({
       }
     }, 1e3),
     init() {
-      this.$wrapperEle = $(this.$refs.refWrapper);
+      this.$wrapperEle = $$1(this.$refs.refWrapper);
       this.$wrapperEle.on("scroll", () => this.updateTop());
     },
     updateTop(event2) {
@@ -32666,6 +32340,976 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   ], 512);
 }
 const xVirScroll = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
+const ReadonlyItem = defineComponent({
+  props: ["value"],
+  render() {
+    return withDirectives(createVNode("div", {
+      "class": "ant-input cursor-not-allowed xItem_readonly ellipsis"
+    }, [this.value, createVNode("span", {
+      "style": "opacity:0"
+    }, [createTextVNode(".")])]), [[resolveDirective("uiPopover"), {
+      onlyEllipsis: true
+    }]]);
+  }
+});
+const Input = defineComponent({
+  props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+  mounted() {
+    xU("xItem Input");
+  },
+  data(vm) {
+    return {
+      oldComponent: "",
+      ComponentInstance: "",
+      _modelValue: ""
+    };
+  },
+  methods: {
+    diffComponent(type2) {
+      if (type2 === this.oldComponent) {
+        return this.ComponentInstance;
+      }
+      this.oldComponent = type2;
+      const ComponentInstance = resolveComponent(type2);
+      ComponentInstance.__v_skip = true;
+      this.ComponentInstance = ComponentInstance;
+      if (type2 === "aTextarea") {
+        this.properties.autoSize = this.properties.autoSize || {
+          minRows: 4,
+          maxRows: 6
+        };
+      }
+    }
+  },
+  watch: {
+    "properties.value"(value) {
+      if (value !== void 0) {
+        if (value !== this._modelValue) {
+          this._modelValue = value;
+        }
+      }
+    },
+    _modelValue(modelValue) {
+      this.listeners["onUpdate:value"](modelValue);
+    }
+  },
+  computed: {
+    component({
+      properties
+    }) {
+      if (!this.ComponentInstance) {
+        this.diffComponent("aInput");
+      }
+      if (properties.isPassword) {
+        this.diffComponent("aInputPassword");
+      } else if (properties.isNumber) {
+        this.diffComponent("aInputNumber");
+      } else if (properties.isTextarea) {
+        this.diffComponent("aTextarea");
+      } else if (properties.isSearch) {
+        this.diffComponent("aInputSearch");
+      }
+      return this.ComponentInstance;
+    }
+  },
+  render(vm) {
+    const {
+      properties,
+      slots,
+      listeners,
+      propsWillDeleteFromConfigs,
+      component
+    } = vm;
+    if (properties.isReadonly) {
+      return createVNode(ReadonlyItem, {
+        "value": properties.value
+      }, null);
+    }
+    return createVNode(component, mergeProps({
+      "value": this._modelValue,
+      "onUpdate:value": ($event) => this._modelValue = $event
+    }, xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), xU.omit(listeners, ["onUpdate:value"])), slots);
+  }
+});
+const DatePicker = ({
+  properties,
+  slots,
+  listeners
+}) => {
+  let value = "";
+  if (properties.value) {
+    value = dayjs(properties.value);
+    xU.doNothing(value, properties.value);
+    if (value === "Invalid Date") {
+      xU.doNothing("properties.value", properties.value);
+      value = "";
+    }
+  }
+  return createVNode(DatePicker$3, mergeProps(properties, listeners, {
+    "value": value,
+    "locale": Cpt_UI_locale.value.DatePicker
+  }), slots);
+};
+const RangePicker = ({
+  properties,
+  slots,
+  listeners
+}) => {
+  const RangePicker2 = resolveComponent("aRangePicker");
+  console.log("properties", properties.value);
+  return createVNode(RangePicker2, mergeProps(properties, listeners, {
+    "locale": Cpt_UI_locale.value.DatePicker
+  }), slots);
+};
+const Checkbox = defineComponent({
+  props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+  computed: {
+    checked: {
+      get() {
+        var _a;
+        return ((_a = this.properties) == null ? void 0 : _a.value) || false;
+      },
+      set(val) {
+        this.listeners["onUpdate:value"](val);
+      }
+    }
+  },
+  render(vm) {
+    const _properties = xU.omit(this.properties, [...this.propsWillDeleteFromConfigs]);
+    return createVNode(resolveComponent("aCheckbox"), mergeProps({
+      "checked": this.checked,
+      "onUpdate:checked": ($event) => this.checked = $event
+    }, this.listeners, _properties), this.slots);
+  }
+});
+const Select = defineComponent({
+  props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+  mounted() {
+    xU("xItem Select");
+  },
+  data(vm) {
+    return {
+      _modelValue: ""
+    };
+  },
+  methods: {},
+  watch: {
+    "properties.value"(value) {
+      if (value !== void 0) {
+        if (value !== this._modelValue) {
+          this._modelValue = value;
+        }
+      }
+    },
+    _modelValue(modelValue) {
+      this.listeners["onUpdate:value"](modelValue);
+    }
+  },
+  computed: {},
+  render(vm) {
+    const {
+      properties,
+      listeners,
+      propsWillDeleteFromConfigs
+    } = vm;
+    if (properties.isReadonly) {
+      return createVNode(ReadonlyItem, {
+        "value": properties.value
+      }, null);
+    }
+    const _property = xU.omit(properties, [...propsWillDeleteFromConfigs, "options", "renderOptions"]);
+    const renderOptions = () => {
+      if (properties.renderOptions) {
+        return properties.renderOptions();
+      } else {
+        return xU.map(properties.options, (option) => {
+          return createVNode(resolveComponent("aSelectOption"), {
+            "value": option.value
+          }, {
+            default: () => [option.label]
+          });
+        });
+      }
+    };
+    return createVNode(resolveComponent("aSelect"), mergeProps(listeners, _property), {
+      default: renderOptions
+    });
+  }
+});
+const RadioGroup = ({
+  properties,
+  slots,
+  listeners,
+  propsWillDeleteFromConfigs
+}) => {
+  const Radio = resolveComponent("aRadio");
+  const RadioGroup2 = resolveComponent("aRadioGroup");
+  const RadioButton = resolveComponent("aRadioButton");
+  const PROPERTY_OPTIONS = properties.options;
+  const componentPropertyOmitOptions = xU.omit(properties, ["options"]);
+  const renderOptions = () => {
+    if (properties.isButton) {
+      return xU.map(PROPERTY_OPTIONS, (option) => {
+        return createVNode(RadioButton, {
+          "value": option.value
+        }, {
+          default: () => [option.label]
+        });
+      });
+    }
+    return xU.map(PROPERTY_OPTIONS, (option) => {
+      return createVNode(Radio, {
+        "value": option.value
+      }, {
+        default: () => [option.label]
+      });
+    });
+  };
+  return createVNode(RadioGroup2, mergeProps(componentPropertyOmitOptions, listeners), {
+    default: renderOptions
+  });
+};
+const CheckboxGroup = ({
+  properties,
+  slots,
+  listeners
+}) => {
+  return createVNode(resolveComponent("aCheckboxGroup"), mergeProps(properties, listeners), slots);
+};
+const xSwitch = defineComponent({
+  props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+  mounted() {
+    xU("xItem ComponentSample");
+  },
+  data(vm) {
+    return {
+      _modelValue: ""
+    };
+  },
+  methods: {},
+  watch: {
+    "properties.value"(value) {
+      if (value !== void 0) {
+        if (value !== this._modelValue) {
+          this._modelValue = value;
+        }
+      }
+    },
+    _modelValue(modelValue) {
+      this.listeners["onUpdate:value"](modelValue);
+    }
+  },
+  computed: {},
+  render(vm) {
+    const {
+      properties,
+      listeners,
+      propsWillDeleteFromConfigs
+    } = vm;
+    return createVNode("div", {
+      "class": "x-item_switch"
+    }, [createVNode(resolveComponent("aSwitch"), mergeProps(xU.omit(listeners, ["onUpdate:value"]), xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), {
+      "checked": properties.value,
+      "onClick": () => {
+        listeners["onUpdate:value"](!properties.value);
+      }
+    }), null)]);
+  }
+});
+const itemRenders = {
+  Input,
+  Checkbox,
+  Select,
+  Switch: xSwitch,
+  DatePicker,
+  RangePicker,
+  RadioGroup,
+  CheckboxGroup
+};
+const getValueNeedVarify = ({
+  value,
+  xItemConfigs
+}) => {
+  if (value !== void 0) {
+    return value;
+  } else if (xItemConfigs.value !== void 0) {
+    return xItemConfigs.value;
+  } else {
+    console.error(new Error("miss value"));
+    return xItemConfigs.defaultValue;
+  }
+};
+const EVENT_TYPE = {
+  validateForm: "validateForm",
+  update: "update",
+  change: "change",
+  input: "input",
+  blur: "blur",
+  focus: "focus"
+};
+const TIPS_TYPE = {
+  success: "success",
+  error: "error"
+};
+async function validateItem(idSelector) {
+  const allItems = $$1(`${idSelector} [id^=xItem_]`);
+  xU.map(allItems, (domEle, index2, $ele) => {
+    console.log(State_UI.xItemCollection[domEle.id]);
+  });
+}
+async function validateForm(configsForm, valuesCollection) {
+  let propsArray = Object.keys(configsForm);
+  if (valuesCollection) {
+    propsArray = Object.keys(valuesCollection);
+  }
+  return Promise.all(xU.map(propsArray, (prop) => {
+    const configs = configsForm[prop];
+    const valueNeedVarify = getValueNeedVarify({
+      value: valuesCollection && valuesCollection[prop] || configs.value,
+      xItemConfigs: configs
+    });
+    return new Promise((resolve) => {
+      try {
+        (() => {
+          const isFalse = !configs.isShow;
+          if (isFalse) {
+            return resolve("");
+          }
+          const isResFalse = xU.isFunction(configs.isShow) && !configs.isShow();
+          if (isResFalse) {
+            return resolve("");
+          }
+        })();
+        if (configs.validate) {
+          configs.validate({
+            eventType: EVENT_TYPE.validateForm,
+            value: valueNeedVarify,
+            resolve
+          });
+        } else {
+          resolve("");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  })).then((results) => {
+    results = results.filter((res) => res && res[0] && res[1]);
+    return results;
+  }).catch((error) => {
+    return error;
+  });
+}
+const AllWasWell = (res) => {
+  return xU.isArray(res) && res.length === 0;
+};
+const checkXItem = async ({
+  xItemConfigs,
+  fnCheckedCallback,
+  value,
+  FormItemId,
+  resolve
+}) => {
+  const valueNeedVarify = getValueNeedVarify({
+    value,
+    xItemConfigs
+  });
+  xItemConfigs.checking = true;
+  fnCheckedCallback = fnCheckedCallback || xU.doNothing;
+  FormItemId = FormItemId || xItemConfigs.FormItemId;
+  let result;
+  try {
+    const {
+      rules,
+      prop
+    } = xItemConfigs;
+    result = await (async () => {
+      let dontCheck = 0;
+      for (const element of rules) {
+        const rule = element;
+        const trigger = rule.trigger || [];
+        let isFail = await (async () => {
+          let trigBy;
+          const isNeedVerify = (() => {
+            if (xItemConfigs.validate.triggerEventsObj[EVENT_TYPE.validateForm]) {
+              trigBy = "validateForm";
+              return true;
+            }
+            const isInTrigger = (eventName) => xItemConfigs.validate.triggerEventsObj[eventName];
+            if (xU.some(trigger, isInTrigger)) {
+              trigBy = `triggerEvent ${trigger.toString()}`;
+              return true;
+            }
+            if (trigger.includes(EVENT_TYPE.update)) {
+              const updateTrigger = [EVENT_TYPE.change, EVENT_TYPE.input, EVENT_TYPE.blur];
+              if (xU.some(updateTrigger, isInTrigger)) {
+                trigBy = "update";
+                return true;
+              }
+            }
+            return false;
+          })();
+          trigBy && xU.doNothing(`%cValidate trigger off by [${trigBy}]`, "color:yellow;background:green;");
+          if (isNeedVerify) {
+            const currentValue = (() => {
+              try {
+                return JSON.parse(JSON.stringify(valueNeedVarify));
+              } catch (e) {
+                return "";
+              }
+            })();
+            const validateResult = await rule.validator(currentValue, {
+              configs: xItemConfigs,
+              rule
+            });
+            if (validateResult) {
+              return validateResult;
+            }
+          } else {
+            dontCheck++;
+          }
+          return false;
+        })();
+        if (isFail) {
+          return [prop, rule.msg, FormItemId];
+        }
+      }
+      if (dontCheck === rules.length) {
+        return [false, false];
+      } else {
+        return [prop, false];
+      }
+    })();
+    fnCheckedCallback(result);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    if (xU.isFunction(resolve)) {
+      resolve(result);
+    }
+    xItemConfigs.validate.triggerEventsObj = {};
+    return result;
+  }
+};
+const {
+  MutatingProps: MutatingProps$1
+} = xU;
+const domClass = {
+  tipsError: "ant-form-item-explain ant-form-item-explain-error"
+};
+const devHelper = {};
+const WILL_DELETE = [
+  "onValidateForm",
+  "_$updateUI",
+  "once",
+  "itemTips",
+  "rules",
+  "labelVNodeRender",
+  "slots",
+  "validate",
+  "value"
+];
+const xItem = defineComponent({
+  name: "XItem",
+  props: {
+    modelValue: {
+      type: [Object, String, Number, Boolean],
+      default: void 0
+    },
+    configs: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
+  emits: ["update:modelValue"],
+  setup(props, {
+    attrs,
+    slots,
+    emit,
+    expose
+  }) {
+    let Cpt_isShowXItem = true;
+    let Cpt_isDisabled = false;
+    if (xU.isFunction(props.configs.isShow)) {
+      Cpt_isShowXItem = computed(props.configs.isShow);
+    } else if (xU.isBoolean(props.configs.isShow)) {
+      Cpt_isShowXItem = computed(() => !!props.configs.isShow);
+    } else {
+      Cpt_isShowXItem = computed(() => {
+        if (xU.isUndefined(props.configs.isShow)) {
+          props.configs.isShow = true;
+        }
+        return !!props.configs.isShow;
+      });
+    }
+    if (xU.isFunction(props.configs.disabled)) {
+      Cpt_isDisabled = computed(props.configs.disabled);
+    } else if (xU.isBoolean(props.configs.disabled)) {
+      Cpt_isDisabled = computed(() => !!props.configs.disabled);
+    }
+    return {
+      Cpt_isShowXItem,
+      Cpt_isDisabled
+    };
+  },
+  data(vm) {
+    const {
+      $props,
+      $attrs
+    } = vm;
+    const triggerValidate = xU.debounce(function(eventType) {
+      const {
+        configs
+      } = vm.$props;
+      if (configs.validate) {
+        configs.validate({
+          eventType,
+          value: vm.properties.value
+        });
+      }
+    }, 500);
+    const {
+      listeners,
+      propsWillDeleteFromConfigs
+    } = (() => {
+      const {
+        configs
+      } = $props;
+      const propsSet = /* @__PURE__ */ new Set();
+      const listeners2 = {
+        "onUpdate:value": (val) => {
+          if (configs.value !== void 0) {
+            if (configs.value === val) {
+              return;
+            } else {
+              configs.value = val;
+            }
+          }
+          vm.$emit("update:modelValue", val);
+          if (xU.isFunction(listeners2.onAfterValueEmit)) {
+            listeners2.onAfterValueEmit(val);
+          }
+          triggerValidate(EVENT_TYPE.update);
+        },
+        onValidateForm: () => {
+          triggerValidate(EVENT_TYPE.validateForm);
+        },
+        onChange: () => {
+          triggerValidate(EVENT_TYPE.change);
+        },
+        onInput: () => {
+          triggerValidate(EVENT_TYPE.input);
+        },
+        onBlur: () => {
+          triggerValidate(EVENT_TYPE.blur);
+        },
+        onFocus: () => {
+          triggerValidate(EVENT_TYPE.focus);
+        }
+      };
+      function makeEventHandlerSupportMultiple(prop, xItemInnerEventHandler) {
+        propsSet.add(prop);
+        if (typeof listeners2[prop] === "object" && xU.isArray(listeners2[prop].handlerArray)) {
+          listeners2[prop].handlerArray.push(xItemInnerEventHandler);
+        } else {
+          listeners2[prop] = (...args) => {
+            xU.each(listeners2[prop].handlerArray, (listener) => {
+              listener == null ? void 0 : listener.apply(configs, args);
+            });
+          };
+          listeners2[prop].handlerArray = [xItemInnerEventHandler];
+        }
+      }
+      xU.each(listeners2, (value, prop) => makeEventHandlerSupportMultiple(prop, value));
+      xU.each(configs, (value, prop) => {
+        if (xU.isListener(prop)) {
+          makeEventHandlerSupportMultiple(prop, value);
+        }
+      });
+      xU.each($attrs, (value, prop) => {
+        if (xU.isListener(prop)) {
+          makeEventHandlerSupportMultiple(prop, value);
+        }
+      });
+      return {
+        listeners: listeners2,
+        propsWillDeleteFromConfigs: [...propsSet]
+      };
+    })();
+    return {
+      rerenderCount: 0,
+      isRequired: false,
+      properties: null,
+      itemSlots: {},
+      listeners,
+      propsWillDeleteFromConfigs
+    };
+  },
+  computed: {
+    CurrentXItem() {
+      if (xU.isObject(this.configs.itemType)) {
+        if (isProxy(this.configs.itemType)) {
+          return toRaw(this.configs.itemType);
+        }
+        return this.configs.itemType;
+      }
+      return itemRenders[this.configs.itemType] || itemRenders.Input;
+    },
+    itemTypeName() {
+      if (xU.isString(this.configs.itemType)) {
+        return String(this.configs.itemType);
+      }
+      return "";
+    },
+    isChecking() {
+      return Boolean(this.configs.checking);
+    },
+    FormItemId() {
+      return `xItem_${this._.uid}`;
+    },
+    itemTips() {
+      var _a, _b;
+      const _itemTips = {
+        type: "",
+        msg: ""
+      };
+      if ((_b = (_a = this.configs) == null ? void 0 : _a.itemTips) == null ? void 0 : _b.type) {
+        return {
+          type: this.configs.itemTips.type,
+          msg: xU.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
+        };
+      } else {
+        this.configs.itemTips = _itemTips;
+        return _itemTips;
+      }
+    },
+    itemWrapperClass() {
+      return [
+        this.configs.itemWrapperClass,
+        "ant-form-item ant-form-item-with-help x-item flex",
+        this.itemTips.type === TIPS_TYPE.error ? "ant-form-item-has-error" : ""
+      ].join(" ");
+    },
+    tipsVNode() {
+      if (this.isChecking) {
+        return createVNode("div", null, [createVNode("div", {
+          "data-type": "checking"
+        }, [createTextVNode("checking...")])]);
+      }
+      if (this.configs.tipsVNodeRender) {
+        return this.configs.tipsVNodeRender({
+          xItem: this,
+          configs: this.configs,
+          itemTips: this.itemTips
+        });
+      }
+      if (this.itemTips.msg) {
+        if (this.itemTips.type === TIPS_TYPE.error) {
+          return createVNode("div", {
+            "class": domClass.tipsError
+          }, [createVNode("div", {
+            "data-type": "error"
+          }, [this.itemTips.msg])]);
+        }
+      }
+      return null;
+    },
+    labelVNode() {
+      const classString = this.isRequired ? "ant-form-item-required" : "";
+      if (this.configs.labelVNodeRender) {
+        return this.configs.labelVNodeRender(this.configs, classString);
+      }
+      let label = (() => {
+        const _label = this.configs.label;
+        if (_label) {
+          if (xU.isFunction(_label)) {
+            return _label();
+          }
+          if (xU.isString(_label) || _label.__v_isVNode) {
+            return _label;
+          }
+        }
+        return false;
+      })();
+      if (label === false) {
+        return null;
+      }
+      return createVNode("div", {
+        "class": "ant-form-item-label"
+      }, [createVNode("label", {
+        "for": this.configs.prop,
+        "class": classString
+      }, [label])]);
+    }
+  },
+  watch: {
+    $attrs: {
+      handler() {
+        this.setProperties();
+      }
+    },
+    "properties.value": {
+      handler(value) {
+        xU(value);
+      }
+    },
+    "configs.value": {
+      handler() {
+        this.updateValue();
+      }
+    },
+    modelValue: {
+      handler() {
+        this.updateValue();
+      }
+    },
+    configs: {
+      handler() {
+        this.setProperties();
+      }
+    },
+    rerenderCount: {
+      handler() {
+        this.setProperties();
+      }
+    },
+    "configs.rules": {
+      immediate: true,
+      handler(rules) {
+        if (rules) {
+          this.setValidateInfo(rules);
+        }
+      }
+    },
+    "configs.slots": {
+      immediate: true,
+      handler(slots) {
+        if (slots) {
+          this.setItemSlots();
+        }
+      }
+    }
+  },
+  created() {
+    const vm = this;
+    vm.configs.FormItemId = vm.FormItemId;
+    (() => {
+      vm.forceUpdateUI = xU.debounce(() => vm.rerenderCount++, 64);
+    })();
+    (() => {
+      vm.configs._$updateUI = (newConfigs) => {
+        xU.each(newConfigs, (value, prop) => {
+          vm.configs[prop] = value;
+        });
+        vm.forceUpdateUI();
+      };
+    })();
+    (() => {
+      vm.updateValue = xU.debounce(vm.updateValueSync, 94);
+      vm.updateValue();
+    })();
+    (() => {
+      vm.setProperties = xU.debounce(function setProperties() {
+        xU(vm._.uid);
+        const __properties = {};
+        const pickProps = (originConfigs) => {
+          xU.each(originConfigs, (item, prop) => {
+            if (WILL_DELETE.includes(prop)) {
+              return;
+            }
+            if (["placeholder"].includes(prop) && xU.isFunction(item)) {
+              __properties[prop] = item(this);
+              return;
+            }
+            __properties[prop] = item;
+          });
+        };
+        xU.each([this.configs, this.$attrs], pickProps);
+        this.properties = __properties;
+        this.updateValue();
+      }, 32);
+      vm.setProperties();
+    })();
+  },
+  mounted() {
+    var _a;
+    devHelper[this._.uid] = 0;
+    if ((_a = this.configs) == null ? void 0 : _a.once) {
+      this.configs.once.call(this.configs, this);
+    }
+    State_UI.xItemCollection[this.FormItemId] = this;
+  },
+  beforeUnmount() {
+    delete devHelper[this._.uid];
+    delete State_UI.xItemCollection[this.FormItemId];
+  },
+  methods: {
+    async updateValueSync() {
+      await xU.ensureValueDone(() => this.properties);
+      const vm = this;
+      const value = (() => {
+        if (vm.modelValue !== void 0) {
+          return vm.modelValue;
+        }
+        if (vm.configs.value == void 0) {
+          if (vm.configs.defaultValue !== void 0) {
+            return vm.configs.defaultValue;
+          } else {
+            xU("either configs.value or modelValue");
+          }
+        }
+        return vm.configs.value;
+      })();
+      const diffRes = diff(vm.properties.value, value);
+      if (diffRes) {
+        xU("diff xItem value", diffRes);
+        vm.properties.value = value;
+        vm.listeners["onUpdate:value"](value);
+      }
+    },
+    setTips(type2 = "", msg = "") {
+      MutatingProps$1(this, "configs.itemTips", {
+        type: type2,
+        msg
+      });
+    },
+    setItemSlots() {
+      this.itemSlots = this.configs.slots || {};
+    },
+    setValidateInfo(rules) {
+      let isRequired = false;
+      if (xU.isArrayFill(rules)) {
+        isRequired = xU.some(rules, {
+          name: "required"
+        });
+        const fnCheckedCallback = ([prop, msg]) => {
+          MutatingProps$1(this, "configs.checking", false);
+          if (prop) {
+            if (msg) {
+              this.setTips(TIPS_TYPE.error, msg);
+              if (xU.isFunction(this.configs.onValidateFail)) {
+                this.configs.onValidateFail(this.configs);
+              }
+            } else {
+              this.setTips();
+            }
+          }
+        };
+        const debounceCheckXItem = xU.debounce(checkXItem, 300);
+        const fnConfigsValidate = ({
+          eventType,
+          value,
+          resolve
+        }) => {
+          const prop = `configs.validate.triggerEventsObj.${eventType}`;
+          MutatingProps$1(this, prop, true);
+          debounceCheckXItem({
+            FormItemId: this.FormItemId,
+            xItemConfigs: this.configs,
+            value,
+            fnCheckedCallback,
+            resolve
+          });
+        };
+        MutatingProps$1(this, "configs.validate", fnConfigsValidate);
+        MutatingProps$1(this, "configs.validate.triggerEventsObj", {});
+      } else {
+        if (xU.isFunction(this.configs.validate)) {
+          delete this.configs.validate;
+        }
+      }
+      this.isRequired = isRequired;
+    }
+  },
+  render() {
+    if (!this.properties) {
+      return null;
+    }
+    if (xU.isUndefined(this.Cpt_isShowXItem)) {
+      debugger;
+    }
+    if (!this.Cpt_isShowXItem) {
+      return null;
+    }
+    const {
+      CurrentXItem,
+      properties,
+      Cpt_isDisabled,
+      propsWillDeleteFromConfigs,
+      itemTypeName,
+      FormItemId
+    } = this;
+    xU(`xItem ${this._.uid} render ${++devHelper[this._.uid]} times`);
+    return createVNode("div", {
+      "id": FormItemId,
+      "class": this.itemWrapperClass
+    }, [this.labelVNode, createVNode("div", {
+      "class": "ant-form-item-control",
+      "data-type": itemTypeName
+    }, [createVNode(CurrentXItem, {
+      "id": `CurrentXItem_${FormItemId}`,
+      "data-current-item-label": properties.label,
+      "data-current-item-prop": properties.prop,
+      "data-current-item-type": itemTypeName,
+      "propsWillDeleteFromConfigs": propsWillDeleteFromConfigs,
+      "properties": {
+        ...properties,
+        disabled: Cpt_isDisabled
+      },
+      "listeners": this.listeners,
+      "slots": this.itemSlots
+    }, null), this.tipsVNode]), this.$slots.afterControll && this.$slots.afterControll()]);
+  }
+});
+const xGap = defineComponent({
+  name: "xGap",
+  props: ["t", "l", "r", "b", "a", "f"],
+  computed: {
+    gapClass: {
+      set() {
+      },
+      get() {
+        let basic = "x-gap";
+        if (this.f) {
+          basic += ` flex${this.f}`;
+        }
+        return basic;
+      }
+    },
+    gapStyle: {
+      set() {
+      },
+      get() {
+        const POSITION_MAP = {
+          t: "top",
+          r: "right",
+          b: "bottom",
+          l: "left"
+        };
+        const gapStyle = {};
+        if (this.a) {
+          gapStyle.margin = `${this.a}px`;
+        } else {
+          xU.map(POSITION_MAP, (prop, key) => {
+            const value = this[key];
+            if (value) {
+              gapStyle[`margin-${prop}`] = `${value}px`;
+            }
+          });
+        }
+        return gapStyle;
+      }
+    }
+  },
+  render(h2) {
+    return createVNode("div", {
+      "style": this.gapStyle,
+      "class": this.gapClass
+    }, null);
+  }
+});
 const xVirTableTh = defineComponent({
   props: ["column", "index"],
   computed: {
@@ -32714,9 +33358,48 @@ const usefnObserveDomResize = () => {
     fnUnobserveDomResize
   };
 };
+$$1(window).on("click.virTableTdId", function(e) {
+  const virTableTdId = (() => {
+    let $ele = $$1(e.target);
+    let _virTableTdId = $ele.attr("id");
+    if (/^virTableTdId_/.test(_virTableTdId)) {
+      return _virTableTdId;
+    } else {
+      $ele = $ele.parents("[id^=virTableTdId_]");
+      _virTableTdId = $ele.attr("id");
+      return _virTableTdId;
+    }
+  })();
+  $$1(window).trigger({
+    type: "onAllCell",
+    virTableTdId
+  });
+});
 const xVirTableTd = defineComponent({
-  props: ["column", "data", "rowIndex"],
+  props: ["column", "data"],
+  emits: ["update:data"],
+  setup() {
+    return {
+      configs: inject("configs")
+    };
+  },
   computed: {
+    record() {
+      const vm = this;
+      return new Proxy(vm.data, {
+        get(obj, prop) {
+          return vm.data[prop];
+        },
+        set(obj, prop, val) {
+          vm.data[prop] = val;
+          vm.configs.dataSource[vm.data.__virRowIndex][prop] = val;
+          return true;
+        }
+      });
+    },
+    id() {
+      return `virTableTdId_${this._.uid}`;
+    },
     prop() {
       var _a;
       return (_a = this.column) == null ? void 0 : _a.prop;
@@ -32724,32 +33407,107 @@ const xVirTableTd = defineComponent({
     cell() {
       return this.data[this.prop];
     },
-    renderCell() {
-      var _a;
-      return ((_a = this.column) == null ? void 0 : _a.renderCell) || false;
-    },
-    vDomCellContent() {
-      if (this.renderCell) {
-        return this.renderCell({
-          record: this.data,
-          cell: this.cell,
-          index: this.rowIndex
-        });
+    renderEditor() {
+      var _a, _b;
+      if ((_a = this.column) == null ? void 0 : _a.renderEditor) {
+        return (_b = this.column) == null ? void 0 : _b.renderEditor;
       }
-      return this.data[this.prop];
+      return false;
+    },
+    renderCell() {
+      var _a, _b;
+      if ((_a = this.column) == null ? void 0 : _a.renderCell) {
+        return (_b = this.column) == null ? void 0 : _b.renderCell;
+      }
+      return false;
     }
+  },
+  data(vm) {
+    return {
+      isFocus: false,
+      count: 0
+    };
+  },
+  methods: {
+    handleAllCell(e) {
+      if (e.virTableTdId === this.id) {
+        if (!this.isFocus) {
+          this.isFocus = true;
+          setTimeout(() => {
+            $$1(this.$refs.cell).find("input").trigger("focus");
+          }, 64);
+        }
+      } else {
+        if (this.isFocus) {
+          this.isFocus = false;
+        }
+      }
+    }
+  },
+  mounted() {
+    $$1(window).on("onAllCell", this.handleAllCell);
+    if (this.renderEditor) {
+      $$1(this.$refs.cell).addClass("cursor-editor");
+    }
+  },
+  beforeUnmount() {
+    $$1(window).off("onAllCell", this.handleAllCell);
   },
   render() {
     return createVNode("div", {
+      "id": this.id,
+      "ref": "cell",
       "role": "td",
       "class": "xVirTable-cell",
-      "data-prop": this.prop
-    }, [this.vDomCellContent]);
+      "data-count": this.count,
+      "data-prop": this.prop,
+      "data-row-index": this.data.__virRowIndex
+    }, [(() => {
+      if (this.renderEditor && this.renderCell) {
+        if (this.isFocus) {
+          return this.renderEditor({
+            configs: this.configs,
+            record: this.record,
+            cell: this.cell,
+            index: this.data.__virRowIndex
+          });
+        } else {
+          return this.renderCell({
+            configs: this.configs,
+            record: this.record,
+            cell: this.cell,
+            index: this.data.__virRowIndex
+          });
+        }
+      }
+      if (!this.renderEditor && this.renderCell) {
+        return this.renderCell({
+          configs: this.configs,
+          record: this.record,
+          cell: this.cell,
+          index: this.data.__virRowIndex
+        });
+      }
+      if (this.renderEditor && !this.renderCell) {
+        if (this.isFocus) {
+          return this.renderEditor({
+            configs: this.configs,
+            record: this.record,
+            cell: this.cell,
+            index: this.data.__virRowIndex
+          });
+        } else {
+          return this.cell;
+        }
+      }
+      return this.cell;
+    })()]);
   }
 });
 const xVirTableBody = defineComponent({
-  props: ["dataSource", "columnOrder", "columns", "rowHeight", "selectedConfigs", "selected"],
-  emits: ["selectedChange", "update:scrollHeight"],
+  props: ["columnOrder", "columns", "rowHeight", "selectedConfigs", "selected"],
+  emits: ["selectedChange", "update:scrollHeight", "scroll"],
+  inject: ["xVirTable"],
   components: {
     xVirTableTd
   },
@@ -32759,25 +33517,43 @@ const xVirTableBody = defineComponent({
       fnUnobserveDomResize
     } = usefnObserveDomResize();
     return {
+      uniqBy: inject("uniqBy"),
+      configs: inject("configs"),
+      rowCache: {},
       fnObserveDomResize,
       fnUnobserveDomResize
     };
   },
   data(vm) {
+    this.debounceSetPerBlockHeight = xU.debounce(function(viewportHeight) {
+      this.viewportHeight = viewportHeight;
+      this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
+      this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
+      this.setHeight();
+    }, 64);
     return {
       isLoading: false,
-      perBlockHeight: 0,
+      perBlockHeight: 1,
       perBlockRowCount: 0,
       blockInViewCount: 0,
       styleWrapperAll: {
         height: 0,
         position: "relative"
-      }
+      },
+      virs1: [],
+      virs2: [],
+      virs3: []
     };
   },
   mounted() {
     this.fnObserveDomResize(this.$refs.wrapper, () => {
-      this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
+      this.xVirTable.layoutDebounce();
+      this.debounceSetPerBlockHeight(this.$refs.wrapper.offsetHeight);
+    });
+    this.$watch(() => {
+      return `${this.configs.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper1}_${this.styleWrapper2}_${this.styleWrapper3}`;
+    }, () => {
+      this.updateCell();
     });
   },
   beforeUnmount() {
@@ -32789,9 +33565,12 @@ const xVirTableBody = defineComponent({
         isSelect,
         prop
       } = this.selectedConfigs || {};
-      if (privateLodash.isFunction(isSelect)) {
-        return (args2) => {
-          return isSelect.call(this, args2);
+      if (xU.isFunction(isSelect)) {
+        return (rowInfo) => {
+          return isSelect.call(this, {
+            ...rowInfo,
+            selected: this.selected
+          });
         };
       } else {
         return ({
@@ -32806,9 +33585,9 @@ const xVirTableBody = defineComponent({
       const {
         isDisabled
       } = this.selectedConfigs || {};
-      if (privateLodash.isFunction(isDisabled)) {
-        return () => {
-          return isDisabled.call(this, args);
+      if (xU.isFunction(isDisabled)) {
+        return (...args) => {
+          return isDisabled.apply(this, args);
         };
       } else {
         return () => {
@@ -32818,33 +33597,6 @@ const xVirTableBody = defineComponent({
     },
     positionBlock() {
       return this.blockInViewCount % 3;
-    },
-    virs1() {
-      const position = Number(this.styleWrapper1.match(/(\d)/g).join("")) / this.perBlockHeight;
-      const start = position * this.perBlockRowCount;
-      const end = start + this.perBlockRowCount;
-      return this.dataSource.slice(start, end).map((i, index2) => ({
-        ...i,
-        index: start + 1 + index2
-      }));
-    },
-    virs2() {
-      const position = Number(this.styleWrapper2.match(/(\d)/g).join("")) / this.perBlockHeight;
-      const start = position * this.perBlockRowCount;
-      const end = start + this.perBlockRowCount;
-      return this.dataSource.slice(start, end).map((i, index2) => ({
-        ...i,
-        index: start + 1 + index2
-      }));
-    },
-    virs3() {
-      const position = Number(this.styleWrapper3.match(/(\d)/g).join("")) / this.perBlockHeight;
-      const start = position * this.perBlockRowCount;
-      const end = start + this.perBlockRowCount;
-      return this.dataSource.slice(start, end).map((i, index2) => ({
-        ...i,
-        index: start + 1 + index2
-      }));
     },
     styleWrapper1() {
       if (this.positionBlock === 0) {
@@ -32874,64 +33626,117 @@ const xVirTableBody = defineComponent({
       return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
     },
     vDomBodyTr1() {
-      return privateLodash.map(this.virs1, (data, rowIndex) => {
-        return createVNode("div", {
-          "role": "tr",
-          "class": "xVirTable-row flex horizon",
-          "data-row-key": rowIndex
-        }, [this.genSelectedVDom({
-          rowIndex,
-          rowData: data
-        }), privateLodash.map(this.columnOrder, (prop, index2) => {
-          return createVNode(xVirTableTd, {
-            "column": this.columns[prop],
-            "data-index": index2,
-            "rowIndex": rowIndex,
-            "data": data
-          }, null);
-        })]);
-      });
+      return this.genTr(this.virs1);
     },
     vDomBodyTr2() {
-      return privateLodash.map(this.virs2, (data, rowIndex) => {
-        return createVNode("div", {
-          "role": "tr",
-          "class": "xVirTable-row flex horizon",
-          "data-row-key": rowIndex
-        }, [this.genSelectedVDom({
-          rowIndex,
-          rowData: data
-        }), privateLodash.map(this.columnOrder, (prop, index2) => {
-          return createVNode(xVirTableTd, {
-            "column": this.columns[prop],
-            "data-index": index2,
-            "rowIndex": rowIndex,
-            "data": data
-          }, null);
-        })]);
-      });
+      return this.genTr(this.virs2);
     },
     vDomBodyTr3() {
-      return privateLodash.map(this.virs3, (data, rowIndex) => {
-        return createVNode("div", {
-          "role": "tr",
-          "class": "xVirTable-row flex horizon",
-          "data-row-key": rowIndex
-        }, [this.genSelectedVDom({
-          rowIndex,
-          rowData: data
-        }), privateLodash.map(this.columnOrder, (prop, index2) => {
-          return createVNode(xVirTableTd, {
-            "column": this.columns[prop],
-            "data-index": index2,
-            "rowIndex": rowIndex,
-            "data": data
-          }, null);
-        })]);
-      });
+      return this.genTr(this.virs3);
     }
   },
   methods: {
+    clearCacheRow() {
+      const props = xU.filter(this.rowCache, (value, prop) => /^blockId/.test(prop));
+      xU.each(props, (prop) => delete this.rowCache[prop]);
+    },
+    onClickRow(payload) {
+      var _a;
+      if ((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClickRow) {
+        this.configs.onClickRow(payload);
+      }
+    },
+    genTr(rows) {
+      const vDomBlock = (() => {
+        if (!this.uniqBy) {
+          return xU.map(rows, (data, rowIndex) => {
+            const {
+              __virRowIndex
+            } = data;
+            const payload = {
+              rowIndex: __virRowIndex,
+              rowData: data
+            };
+            return createVNode("div", {
+              "role": "tr",
+              "class": "xVirTable-row flex horizon",
+              "data-row-key": __virRowIndex,
+              "onClick": () => this.onClickRow(payload)
+            }, [this.genSelectedVDom(payload), xU.map(this.columnOrder, (prop, index2) => {
+              return createVNode(xVirTableTd, {
+                "column": this.columns[prop],
+                "data-index": index2,
+                "data": data,
+                "onUpdate:data": ($event) => data = $event
+              }, null);
+            })]);
+          });
+        } else {
+          const blockId = xU.reduce(rows, (id, row) => {
+            id += row[this.uniqBy];
+            return id;
+          }, "blockId");
+          if (!this.rowCache[blockId]) {
+            this.rowCache[blockId] = xU.map(rows, (data, rowIndex) => {
+              if (!this.rowCache[data[this.uniqBy]]) {
+                const {
+                  __virRowIndex
+                } = data;
+                this.rowCache[data[this.uniqBy]] = createVNode("div", {
+                  "role": "tr",
+                  "class": "xVirTable-row flex horizon",
+                  "data-row-key": __virRowIndex
+                }, [this.genSelectedVDom({
+                  rowIndex: __virRowIndex,
+                  rowData: data
+                }), xU.map(this.columnOrder, (prop, index2) => {
+                  return createVNode(xVirTableTd, {
+                    "column": this.columns[prop],
+                    "data-col-index": index2,
+                    "data": data,
+                    "onUpdate:data": ($event) => data = $event
+                  }, null);
+                })]);
+              }
+              return this.rowCache[data._id];
+            });
+          }
+          return this.rowCache[blockId];
+        }
+      })();
+      return vDomBlock;
+    },
+    updateCell() {
+      xU("updateCell");
+      this.setVirs1();
+      this.setVirs2();
+      this.setVirs3();
+    },
+    setVirs1() {
+      const position = Number(this.styleWrapper1.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      this.virs1 = this.fragment(start, end);
+    },
+    setVirs2() {
+      const position = Number(this.styleWrapper2.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      this.virs2 = this.fragment(start, end);
+    },
+    setVirs3() {
+      const position = Number(this.styleWrapper3.match(/(\d)/g).join("")) / this.perBlockHeight;
+      const start = position * this.perBlockRowCount;
+      const end = start + this.perBlockRowCount;
+      this.virs3 = this.fragment(start, end);
+    },
+    fragment(start, end) {
+      const targetRecords = this.configs.dataSource.slice(start, end).map((i, index2) => {
+        i.__virRowIndex = start + index2;
+        return i;
+      });
+      return targetRecords;
+    },
     genSelectedVDom(rowInfo) {
       if (!this.selectedConfigs) {
         return null;
@@ -32945,7 +33750,7 @@ const xVirTableBody = defineComponent({
         this.emitSelectedChange(e.target.checked, rowInfo.rowData[prop]);
       };
       let vDomChecked;
-      if (privateLodash.isString(isDisabled)) {
+      if (xU.isString(isDisabled)) {
         isDisabled = true;
         const uiPopoverConfigs = {
           content: isDisabled
@@ -32974,13 +33779,7 @@ const xVirTableBody = defineComponent({
         id
       });
     },
-    setPerBlockHeight: privateLodash.debounce(function(viewportHeight) {
-      this.viewportHeight = viewportHeight;
-      this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
-      this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
-      this.setHeight();
-    }, 64),
-    setTop: privateLodash.debounce(function() {
+    setTop: xU.debounce(function() {
       if (this.$refs.refWrapper) {
         this.$refs.refWrapper.scrollTo({
           top: this.top,
@@ -32991,38 +33790,61 @@ const xVirTableBody = defineComponent({
     updateTop(event2) {
       if (event2) {
         const top = event2.target.scrollTop;
+        const left = event2.target.scrollLeft;
+        this.$emit("scroll", left);
         this.blockInViewCount = Math.floor(top / this.perBlockHeight);
       }
     },
     setHeight() {
-      const height = this.dataSource.length * this.rowHeight;
-      if (this.viewportHeight && height < this.viewportHeight) {
+      const height = this.configs.dataSource.length * this.rowHeight;
+      if (!height) {
+        delete this.styleWrapperAll.width;
+      } else if (this.viewportHeight && height < this.viewportHeight) {
         this.styleWrapperAll.width = `calc(100% - 6px)`;
       } else {
         delete this.styleWrapperAll.width;
       }
       this.styleWrapperAll.height = `${height}px`;
+      if (this.$refs.wrapper) {
+        this.$nextTick(() => {
+          if (this.$refs.wrapper.scrollTop > 1) {
+            this.$refs.wrapper.scrollTop--;
+          } else {
+            this.$refs.wrapper.scrollTop++;
+          }
+        });
+      }
     }
   },
   watch: {
-    rowHeight() {
-      this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
+    rowHeight: {
+      immediate: true,
+      async handler() {
+        await xU.ensureValueDone(() => {
+          var _a, _b;
+          return (_b = (_a = this.$refs) == null ? void 0 : _a.wrapper) == null ? void 0 : _b.offsetHeight;
+        });
+        this.debounceSetPerBlockHeight(this.$refs.wrapper.offsetHeight);
+      }
     },
     top() {
       this.setTop();
     },
-    "dataSource.length": {
+    "configs.dataSource": {
       immediate: true,
-      handler() {
+      async handler() {
+        await xU.ensureValueDone(() => this.perBlockHeight);
+        this.updateCell();
+        this.clearCacheRow();
         this.updateTop(false);
         this.setHeight();
       }
     }
   },
   render() {
-    return createVNode("div", {
+    const vDomTableBody = createVNode("div", {
       "role": "body",
-      "class": "xVirTable-body-wrapper flex1",
+      "class": "xVirTable-body-wrapper flex1 width100",
       "ref": "wrapper",
       "onScroll": this.updateTop
     }, [createVNode("div", {
@@ -33037,11 +33859,16 @@ const xVirTableBody = defineComponent({
       "class": "xVirTable-body-item item3",
       "style": this.styleWrapper3
     }, [this.vDomBodyTr3])])]);
+    return vDomTableBody;
   }
 });
+const {
+  MutatingProps
+} = xU;
+const mmWidth = (_width) => `width:${_width}; min-width:${_width}; max-width:${_width};`;
 function defXVirTableConfigs(options) {
   const required = ["rowHeight", "columns"];
-  if (privateLodash.some(required, (prop) => {
+  if (xU.some(required, (prop) => {
     if (!options[prop]) {
       alert("defXVirTableConfigs miss required " + prop);
       return true;
@@ -33052,6 +33879,12 @@ function defXVirTableConfigs(options) {
   }
   if (options.selectedConfigs) {
     options.selected = options.selected || [];
+    options.getSelectedRow = markRaw(function() {
+      return xU.filter(options.dataSource, (i) => {
+        const idValue = i[options.selectedConfigs.prop];
+        return xU.isArrayFill(options == null ? void 0 : options.selected) && options.selected.includes(idValue);
+      });
+    });
   }
   return options;
 }
@@ -33060,27 +33893,36 @@ defXVirTableConfigs.type = {
   one: "one"
 };
 const xVirTable = defineComponent({
-  props: ["configs"],
+  props: ["configs", "uniqBy"],
   components: {
     xVirTableTh,
     xVirTableBody
   },
+  setup(props) {
+    provide("uniqBy", props.uniqBy);
+    provide("configs", props.configs);
+  },
   mounted() {
     this.initStyle();
+    this.layoutDebounce();
+  },
+  provide() {
+    const vm = this;
+    return {
+      xVirTable: vm
+    };
   },
   data() {
+    this.resetOperationWidthDebounce = xU.debounce(this.resetOperationWidth, STATIC_WORD.NEXT_TICK_TIME);
+    this.layoutDebounce = xU.debounce(this.layout, STATIC_WORD.NEXT_TICK_TIME);
+    this.resetColumnWidthDebounce = xU.debounce(this.resetColumnWidth, STATIC_WORD.NEXT_TICK_TIME);
     return {
+      styleWidthXVirTable: 0,
+      styleWidthOperation: "120px",
       selectedAll: false
     };
   },
   computed: {
-    dataFilter() {
-      if (privateLodash.isFunction(this.configs.dataSourceFilter)) {
-        return this.configs.dataSourceFilter;
-      } else {
-        return (i) => i;
-      }
-    },
     selectedIndeterminate() {
       var _a, _b;
       const dataLength = ((_b = (_a = this.configs) == null ? void 0 : _a.dataSource) == null ? void 0 : _b.length) || 0;
@@ -33116,7 +33958,7 @@ const xVirTable = defineComponent({
       if (!this.selectedType) {
         return false;
       }
-      if (privateLodash.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
+      if (xU.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
         return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.fn;
       } else {
         return false;
@@ -33124,7 +33966,7 @@ const xVirTable = defineComponent({
     },
     customClass() {
       var _a, _b;
-      if (privateLodash.isFunction((_a = this.configs) == null ? void 0 : _a.customClass)) {
+      if (xU.isFunction((_a = this.configs) == null ? void 0 : _a.customClass)) {
         return (_b = this.configs) == null ? void 0 : _b.customClass(this.xVirTableId);
       } else {
         return "";
@@ -33144,19 +33986,28 @@ const xVirTable = defineComponent({
       }
       return Object.keys(((_c = this.configs) == null ? void 0 : _c.columns) || {});
     },
-    columnWidthArray() {
-      const _columnWidthArray = privateLodash.reduce(this.columnOrder, (columnStyle, prop) => {
-        const configsColumn = this.configs.columns[prop] || {};
-        const {
-          width
-        } = configsColumn;
-        if (width) {
-          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=th][data-prop=${prop}]{ width:${width}; min-width:${width}; max-width:${width}; }`);
-          columnStyle.push(`#${this.xVirTableId} div[role=tr] div[role=td][data-prop=${prop}]{ width:${width}; min-width:${width}; max-width:${width}; }`);
-        }
-        return columnStyle;
-      }, []);
-      return _columnWidthArray;
+    columnWidthStyleArray() {
+      const _columnWidthStyleArray = xU.reduce(
+        this.columnOrder,
+        (styleEachColumn, prop) => {
+          if (prop === STATIC_WORD.OPERATION) {
+            return styleEachColumn;
+          } else {
+            const configsColumn = this.configs.columns[prop] || {};
+            const {
+              width,
+              __calcWidth
+            } = configsColumn;
+            const _width = __calcWidth || width;
+            if (_width) {
+              styleEachColumn.push(`#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=${prop}],#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${prop}]{ ${mmWidth(_width)} }`);
+            }
+            return styleEachColumn;
+          }
+        },
+        [`#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=${STATIC_WORD.OPERATION}]{  ${mmWidth(this.styleWidthOperation)} }`, `#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${STATIC_WORD.OPERATION}]{  ${mmWidth(this.styleWidthOperation)} }`]
+      );
+      return _columnWidthStyleArray;
     },
     vDomTheadSelect() {
       if (!this.selectedType) {
@@ -33183,7 +34034,7 @@ const xVirTable = defineComponent({
       }, [createVNode("div", {
         "role": "tr",
         "class": "flex horizon"
-      }, [this.vDomTheadSelect, privateLodash.map(this.columnOrder, (prop, index2) => {
+      }, [this.vDomTheadSelect, xU.map(this.columnOrder, (prop, index2) => {
         var _a;
         const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
         return createVNode(xVirTableTh, {
@@ -33195,10 +34046,18 @@ const xVirTable = defineComponent({
     },
     styleContent() {
       const allStyleArray = [
+        `#${this.xVirTableId} div[role=table]{overflow:hidden;}`,
         `#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
-        `#${this.xVirTableId} div[role=tr] div[role=th]{ width:300px;overflow:hidden;text-align:center; }`,
-        `#${this.xVirTableId} div[role=tr] div[role=td]{ width:300px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
-      ].concat(this.columnWidthArray, this.customClass);
+        `#${this.xVirTableId} div[role=tr] >div[role=th]{ width:200px;min-width:200px;max-width:200px;text-align:center;white-space: nowrap; }`,
+        `#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=xVirSelected],#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=xVirSelected]{ width:32px;max-width:32px;min-width:32px;overflow:hidden;text-align:center; }`,
+        `#${this.xVirTableId} div[role=tr] >div[role=td]{ width:200px;min-width:200px;max-width:200px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
+      ].concat(this.columnWidthStyleArray, this.customClass);
+      if (this.styleWidthXVirTable) {
+        allStyleArray.unshift(`#${this.xVirTableId} div[role=table] div[role=thead] {width:${this.styleWidthXVirTable}; }`);
+        if (this.configs.dataSource.length === 0) {
+          allStyleArray.unshift(`#${this.xVirTableId} .xVirTable-body-wrapper.flex1.width100 >div {width:${this.styleWidthXVirTable}; }`);
+        }
+      }
       return allStyleArray.join("\n");
     }
   },
@@ -33208,20 +34067,114 @@ const xVirTable = defineComponent({
         this.selectedAll = false;
       }
     },
+    "configs.dataSource": {
+      handler() {
+        this.resetOperationWidthDebounce();
+      }
+    },
     styleContent() {
       this.updateStyle(this.styleContent);
     }
   },
   methods: {
+    resetColumnWidth(contentWrapperWidth) {
+      const selectorTable = `#${this.xVirTableId}`;
+      const $tableWrapper = $$1(selectorTable);
+      const tableWrapperWidth = $tableWrapper.outerWidth();
+      const superfluous = tableWrapperWidth - contentWrapperWidth - 6;
+      const isGrow = superfluous > 1;
+      const isShrink = superfluous < -2;
+      console.log("superfluous", superfluous, "isGrow", isGrow, "isShrink", isShrink);
+      const selectorThead = `${selectorTable} >div[role=table] >div[role=thead] >div[role=tr] >div[role=th]`;
+      const $tHead = $$1(selectorThead);
+      const mayCalculateWidth = xU.filter(this.configs.columns, (i) => {
+        if (i.prop === STATIC_WORD.OPERATION) {
+          return false;
+        }
+        if (i.width) {
+          return false;
+        }
+        return true;
+      });
+      if (isGrow) {
+        const width = Math.floor(superfluous / mayCalculateWidth.length) - 0.5;
+        xU.each($tHead, (dom) => {
+          const prop = dom.dataset.prop;
+          const inMayCalculateWidth = xU.some(mayCalculateWidth, (i) => i.prop === prop);
+          if (inMayCalculateWidth) {
+            const columnWidth = dom.offsetWidth + width;
+            this.configs.columns[prop].__calcWidth = `${columnWidth}px`;
+          }
+        });
+      }
+      if (isShrink) {
+        if (mayCalculateWidth.length > 0) {
+          let originContentWrapperWidth = 10;
+          xU.each($tHead, (dom) => {
+            const prop = dom.dataset.prop;
+            const inMayCalculateWidth = xU.some(mayCalculateWidth, (i) => i.prop === prop);
+            if (inMayCalculateWidth) {
+              originContentWrapperWidth += 200;
+            } else {
+              originContentWrapperWidth += dom.offsetWidth;
+            }
+          });
+          if (originContentWrapperWidth < tableWrapperWidth) {
+            const width = Math.floor((tableWrapperWidth - originContentWrapperWidth) / mayCalculateWidth.length) - 0.5;
+            xU.each(mayCalculateWidth, (configs) => {
+              const columnWidth = 200 + width;
+              configs.__calcWidth = `${columnWidth}px`;
+            });
+          }
+        }
+      }
+    },
+    onBodyScroll(left) {
+      this.$refs.thead.scrollLeft = left;
+    },
+    resetOperationWidth() {
+      if (this.configs.dataSource.length === 0) {
+        return;
+      }
+      try {
+        const $wrapper = $$1(`#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${STATIC_WORD.OPERATION}]`);
+        const $child = $wrapper.find(">div");
+        const wrapperWidth = $wrapper.outerWidth();
+        const childWidth = $child.outerWidth();
+        if (!wrapperWidth && !childWidth) {
+          throw new Error("uninit");
+        }
+        if (wrapperWidth < childWidth) {
+          this.styleWidthOperation = `${childWidth}px`;
+        }
+        this.layoutDebounce();
+      } catch (error) {
+        this.resetOperationWidthDebounce();
+      }
+    },
+    layout() {
+      const selectorHead = `#${this.xVirTableId} >div[role=table] >div[role=thead] >div[role=tr] >div[role=th]`;
+      const selectorBody = `#${this.xVirTableId} .xVirTable-body-item`;
+      const bodyWidth = xU.map($$1(selectorBody), (dom) => dom.offsetWidth);
+      bodyWidth.push(xU.reduce($$1(selectorHead), (_width, dom) => {
+        _width += dom.offsetWidth;
+        return _width;
+      }, 0));
+      const width = xU.max(bodyWidth);
+      if (width) {
+        this.styleWidthXVirTable = `${width}px`;
+        this.resetColumnWidthDebounce(width);
+      }
+    },
     initStyle() {
-      const $form = $(`#${this.xVirTableId}`);
-      const $style = $("<style/>", {
+      const $form = $$1(`#${this.xVirTableId}`);
+      const $style = $$1("<style/>", {
         id: `style_${this.xVirTableId}`
       }).append(this.styleContent);
       $form.prepend($style);
     },
     updateStyle(styleContent) {
-      const $style = $(`#style_${this.xVirTableId}`);
+      const $style = $$1(`#style_${this.xVirTableId}`);
       $style.html(styleContent);
     },
     handleSelectedChange() {
@@ -33232,7 +34185,7 @@ const xVirTable = defineComponent({
       } = e.target;
       if (checked) {
         this.selectedAll = true;
-        this.configs.selected = privateLodash.map(this.configs.dataSource, (i) => i[this.selectedProp]);
+        this.configs.selected = xU.map(this.configs.dataSource, (i) => MutatingProps(i, this.selectedProp));
       } else {
         this.configs.selected = [];
       }
@@ -33242,7 +34195,7 @@ const xVirTable = defineComponent({
     }) {
       var _a;
       const isOnlyOne = this.selectedType === "one";
-      const index2 = privateLodash.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i) => i === id);
+      const index2 = xU.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i) => i === id);
       if (index2 > -1) {
         if (isOnlyOne) {
           this.configs.selected = [];
@@ -33260,15 +34213,16 @@ const xVirTable = defineComponent({
   },
   render() {
     var _a, _b, _c;
-    return createVNode("div", {
+    const vDomTable = createVNode("div", {
       "id": this.xVirTableId,
       "class": "xVirTable-wrapper flex vertical"
     }, [createVNode("div", {
+      "ref": "thead",
       "role": "table",
       "class": "xVirTable-header-wrapper",
-      "style": "padding-right: 6px;"
+      "style": "padding-right: 6px;width:100%"
     }, [this.vDomThead]), createVNode(xVirTableBody, {
-      "dataSource": this.dataFilter(this.configs.dataSource),
+      "onScroll": this.onBodyScroll,
       "columnOrder": this.columnOrder,
       "columns": (_a = this.configs) == null ? void 0 : _a.columns,
       "rowHeight": this.rowHeight,
@@ -33276,6 +34230,7 @@ const xVirTable = defineComponent({
       "selectedConfigs": (_b = this.configs) == null ? void 0 : _b.selectedConfigs,
       "selected": (_c = this.configs) == null ? void 0 : _c.selected
     }, null)]);
+    return vDomTable;
   }
 });
 const {
@@ -33301,7 +34256,7 @@ const FormRules = {
       msg: msg || $t("\u5FC5\u586B\u9879").label,
       async validator(value) {
         if (value) {
-          if (privateLodash.isArray(value)) {
+          if (xU.isArray(value)) {
             if (value.length > 0) {
               return SUCCESS;
             } else {
@@ -33310,9 +34265,9 @@ const FormRules = {
           }
           return SUCCESS;
         }
-        if (privateLodash.isBoolean(value))
+        if (xU.isBoolean(value))
           return SUCCESS;
-        if (privateLodash.isNumber(value) && !privateLodash.isNaN(value))
+        if (xU.isNumber(value) && !xU.isNaN(value))
           return SUCCESS;
         return FAIL;
       },
@@ -33324,7 +34279,7 @@ const FormRules = {
       name: "Demo",
       msg: "Demo",
       async validator(value) {
-        await privateLodash.sleep(1e3);
+        await xU.sleep(1e3);
         return FAIL;
       },
       trigger: [EVENT_TYPE.update, EVENT_TYPE.input, EVENT_TYPE.change, EVENT_TYPE.blur]
@@ -33362,10 +34317,10 @@ const KEY = {
   left: 37,
   esc: 27
 };
-const $win = $(window);
-const $html = $("html");
-const $document = $(document);
-const $body = $("body");
+const $win = $$1(window);
+const $html = $$1("html");
+const $document = $$1(document);
+const $body = $$1("body");
 const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
 const DATA_V_UI_MOVE = "data-directive-ui-move";
 const TYPE_IFRAME = "iframe";
@@ -33387,7 +34342,7 @@ const DOMS_ANIM = [
   "layer-anim-05",
   "layer-anim-06"
 ];
-const $MoveMask = $(
+const $MoveMask = $$1(
   `<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
 );
 setTimeout(() => {
@@ -33423,19 +34378,22 @@ const READY = {
     );
   },
   reselect() {
-    $.each($("select"), function(index2, value) {
-      var sthis = $(this);
+    $$1.each($$1("select"), function(index2, value) {
+      var sthis = $$1(this);
       if (!sthis.parents("." + LAYUI_LAYER)[0]) {
-        sthis.attr("layer") == 1 && $("." + LAYUI_LAYER).length < 1 && sthis.removeAttr("layer").show();
+        sthis.attr("layer") == 1 && $$1("." + LAYUI_LAYER).length < 1 && sthis.removeAttr("layer").show();
       }
       sthis = null;
     });
   },
   record($eleLayer) {
+    const [windowHeight, windowWidth] = [$win.height(), $win.width()];
+    const isLimit = $eleLayer.height() > windowHeight;
+    const isLimitWidth = $eleLayer.width() > windowWidth;
     var area = [
-      $eleLayer.width(),
-      $eleLayer.height(),
-      $eleLayer.position().top,
+      isLimitWidth ? windowWidth - 64 : $eleLayer.width(),
+      isLimit ? windowHeight - 64 : $eleLayer.height(),
+      isLimit ? 32 : $eleLayer.position().top,
       $eleLayer.position().left + parseFloat($eleLayer.css("margin-left"))
     ];
     $eleLayer.find(".layui-layer-max").addClass("layui-layer-maxmin");
@@ -33483,15 +34441,17 @@ const LayerUtils = {
   path: READY.basePath,
   config: function(options, fn) {
     options = options || {};
-    LayerUtils.cache = READY.config = $.extend({}, READY.config, options);
+    LayerUtils.cache = READY.config = $$1.extend({}, READY.config, options);
     LayerUtils.path = READY.config.path || LayerUtils.path;
     typeof options.extend === "string" && (options.extend = [options.extend]);
-    if (!options.extend)
+    if (!options.extend) {
       return this;
+    }
     return this;
   },
   open(options) {
-    const { _layerKey } = new ClassLayer(options);
+    const layerInstance = new ClassLayer(options);
+    const { _layerKey } = layerInstance;
     return _layerKey;
   },
   alert(content, options, yes) {
@@ -33499,7 +34459,7 @@ const LayerUtils = {
     if (type2)
       yes = options;
     return LayerUtils.open(
-      $.extend(
+      $$1.extend(
         {
           content,
           yes
@@ -33509,12 +34469,12 @@ const LayerUtils = {
     );
   },
   confirm(content, options, yes, cancel) {
-    if (privateLodash.isFunction(options)) {
+    if (xU.isFunction(options)) {
       cancel = yes;
       yes = options;
     }
     return LayerUtils.open(
-      $.extend(
+      $$1.extend(
         {
           content,
           btn: READY.btn,
@@ -33526,13 +34486,13 @@ const LayerUtils = {
     );
   },
   msg(content, options, end = () => null) {
-    var isOptionsIsFunction = privateLodash.isFunction(options), rskin = READY.config.skin;
+    var isOptionsIsFunction = xU.isFunction(options), rskin = READY.config.skin;
     var skin = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
     var anim = DOMS_ANIM.length - 1;
     if (isOptionsIsFunction)
       end = options;
     return LayerUtils.open(
-      $.extend(
+      $$1.extend(
         {
           content,
           time: 3e3,
@@ -33559,7 +34519,7 @@ const LayerUtils = {
   },
   load(icon, options) {
     return LayerUtils.open(
-      $.extend(
+      $$1.extend(
         {
           type: 3,
           icon: icon || 0,
@@ -33572,7 +34532,7 @@ const LayerUtils = {
   },
   tips(content, followSelector, options) {
     return LayerUtils.open(
-      $.extend(
+      $$1.extend(
         {
           type: LayerUtils.TIPS,
           content: [content, followSelector],
@@ -33599,7 +34559,7 @@ const LayerUtils = {
           } else {
             if (type2 === TYPE_IFRAME) {
               try {
-                var iframe = $(`#${LAYUI_LAYER_CONTENT}${layerKey}`)[0];
+                var iframe = $$1(`#${LAYUI_LAYER_CONTENT}${layerKey}`)[0];
                 iframe.contentWindow.document.write("");
                 iframe.contentWindow.close();
                 $eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
@@ -33615,7 +34575,7 @@ const LayerUtils = {
           } catch (e) {
           }
         };
-        var $eleLayer = $(`#${LAYUI_LAYER}${layerKey}`);
+        var $eleLayer = $$1(`#${LAYUI_LAYER}${layerKey}`);
         var type2 = $eleLayer.attr("type");
         var closeAnim = "layer-anim-close";
         if ($eleLayer.length === 0) {
@@ -33624,7 +34584,7 @@ const LayerUtils = {
         if ($eleLayer.data("isOutAnim")) {
           $eleLayer.addClass("layer-anim " + closeAnim);
         }
-        $(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerKey}`).remove();
+        $$1(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerKey}`).remove();
         LayerUtils.ie == 6 && READY.reselect();
         READY.rescollbar(layerKey);
         if ($eleLayer.attr("minLeft")) {
@@ -33642,17 +34602,17 @@ const LayerUtils = {
     });
   },
   getChildFrame(selector, index2) {
-    index2 = index2 || $(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
-    return $("#" + LAYUI_LAYER + index2).find("iframe").contents().find(selector);
+    index2 = index2 || $$1(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
+    return $$1("#" + LAYUI_LAYER + index2).find("iframe").contents().find(selector);
   },
   getFrameIndex(name) {
-    return $("#" + name).parents(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
+    return $$1("#" + name).parents(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
   },
   iframeAuto(index2) {
     if (!index2)
       return;
     var heg = LayerUtils.getChildFrame("html", index2).outerHeight();
-    var $eleLayer = $("#" + LAYUI_LAYER + index2);
+    var $eleLayer = $$1("#" + LAYUI_LAYER + index2);
     var titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0;
     var btnHeight = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0;
     $eleLayer.css({
@@ -33663,11 +34623,16 @@ const LayerUtils = {
     });
   },
   iframeSrc(index2, url) {
-    $("#" + LAYUI_LAYER + index2).find("iframe").attr("src", url);
+    $$1("#" + LAYUI_LAYER + index2).find("iframe").attr("src", url);
   },
   style(index2, options, limit) {
-    var $$eleLayer = $("#" + LAYUI_LAYER + index2), contElem = $$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`), type2 = $$eleLayer.attr("type"), titHeight = $$eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0, btnHeight = $$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0;
-    $$eleLayer.attr("minLeft");
+    var $eleLayer = $$1("#" + LAYUI_LAYER + index2);
+    const $contentEle = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`);
+    const type2 = $eleLayer.attr("type");
+    const titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0;
+    let contentHeight = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0;
+    const [windowHeight, windowWidth] = [$win.height(), $win.width()];
+    $eleLayer.attr("minLeft");
     if (type2 === TYPE_LOADING || type2 === TYPE_TIPS) {
       return;
     }
@@ -33675,23 +34640,26 @@ const LayerUtils = {
       if (parseFloat(options.width) <= 260) {
         options.width = 260;
       }
-      if (parseFloat(options.height) - titHeight - btnHeight <= 64) {
-        options.height = 64 + titHeight + btnHeight;
+      if (parseFloat(options.height) - titHeight - contentHeight <= 64) {
+        options.height = 64 + titHeight + contentHeight;
       }
     }
-    $$eleLayer.css(options);
-    btnHeight = $$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight();
+    if (options.height > windowHeight) {
+      options.height = parseFloat(windowHeight);
+    }
+    $eleLayer.css(options);
+    contentHeight = $contentEle.outerHeight();
     if (type2 === TYPE_IFRAME) {
-      $$eleLayer.find("iframe").addClass("flex1");
+      $eleLayer.find("iframe").addClass("flex1");
     } else {
-      contElem.css({
-        height: parseFloat(options.height) - titHeight - btnHeight - parseFloat(contElem.css("padding-top")) - parseFloat(contElem.css("padding-bottom"))
+      $contentEle.css({
+        height: parseFloat(options.height) - titHeight - contentHeight - parseFloat($contentEle.css("padding-top")) - parseFloat($contentEle.css("padding-bottom"))
       });
     }
   },
   min(index2, options) {
     options = options || {};
-    var $eleLayer = $("#" + LAYUI_LAYER + index2), shadeo = $("#" + LAYUI_LAYER_SHADE + index2), titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0, left = $eleLayer.attr("minLeft") || 181 * READY.minIndex + "px", position = $eleLayer.css("position"), settings = {
+    var $eleLayer = $$1("#" + LAYUI_LAYER + index2), shadeo = $$1("#" + LAYUI_LAYER_SHADE + index2), titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0, left = $eleLayer.attr("minLeft") || 181 * READY.minIndex + "px", position = $eleLayer.css("position"), settings = {
       width: 180,
       height: titHeight,
       position: "fixed",
@@ -33716,7 +34684,7 @@ const LayerUtils = {
     shadeo.hide();
   },
   restore(index2) {
-    var $eleLayer = $("#" + LAYUI_LAYER + index2), shadeo = $("#" + LAYUI_LAYER_SHADE + index2), area = $eleLayer.attr("area").split(",");
+    var $eleLayer = $$1("#" + LAYUI_LAYER + index2), shadeo = $$1("#" + LAYUI_LAYER_SHADE + index2), area = $eleLayer.attr("area").split(",");
     $eleLayer.attr("type");
     LayerUtils.style(
       index2,
@@ -33737,7 +34705,7 @@ const LayerUtils = {
     shadeo.show();
   },
   full(index2) {
-    var $eleLayer = $("#" + LAYUI_LAYER + index2), timer;
+    var $eleLayer = $$1("#" + LAYUI_LAYER + index2), timer;
     READY.record($eleLayer);
     if (!$html.attr("layer-full")) {
       $html.css("overflow", "hidden").attr("layer-full", index2);
@@ -33759,12 +34727,12 @@ const LayerUtils = {
     }, 100);
   },
   title(name, layerKey) {
-    $(`#${LAYUI_LAYER}${layerKey}`).find(`.${LAYUI_LAYER_TITLE}`).html(name);
+    $$1(`#${LAYUI_LAYER}${layerKey}`).find(`.${LAYUI_LAYER_TITLE}`).html(name);
   },
   async closeAll(type2) {
     const needClose = [];
-    $(`.${LAYUI_LAYER}`).each(function() {
-      const $ele = $(this);
+    $$1(`.${LAYUI_LAYER}`).each(function() {
+      const $ele = $$1(this);
       if (type2) {
         if ($ele.attr("type") === type2) {
           needClose.push($ele.attr("data-layer-key"));
@@ -33776,10 +34744,12 @@ const LayerUtils = {
     return await Promise.all(needClose.map(LayerUtils.close));
   },
   setLayerTop($current) {
+    const type2 = $current.attr("type");
     if ($current.hasClass("set-layer-top")) {
       return;
     } else {
-      $(".set-layer-top").removeClass("set-layer-top");
+      const selector = `.set-layer-top[type=${type2}]`;
+      $$1(selector).removeClass("set-layer-top");
       $current.addClass("set-layer-top").appendTo($body);
     }
   }
@@ -33883,10 +34853,10 @@ class ClassLayer {
       if (typeof config.btn === "string") {
         config.btn = [config.btn, ""];
       }
-      if (privateLodash.every(config.btn, (i) => !i)) {
+      if (xU.every(config.btn, (i) => !i)) {
         return "";
       }
-      const domButtons = privateLodash.reduce(
+      const domButtons = xU.reduce(
         config.btn,
         (domButtonString, label) => {
           if (label) {
@@ -33915,8 +34885,7 @@ class ClassLayer {
     } = this;
     const fnValid = (i) => !!i;
     const layerWrapperClassname = [
-      "flex vertical",
-      "elevation-4",
+      "flex vertical elevation-2",
       `layui-layer-${typeName}`,
       LAYUI_LAYER,
       config.skin,
@@ -33933,7 +34902,7 @@ class ClassLayer {
       config.type == LayerUtils.MSG && config.icon !== -1 ? "layui-layer-padding" : "",
       config.type == LayerUtils.LOADING ? `layui-layer-loading${config.icon}` : ""
     ].filter(fnValid).join(" ");
-    config.area;
+    const [width, height] = config.area || [];
     return `
 <div id="${_IDLayer}" layer-wrapper="${_IDLayer}" type="${typeName}"
 		class="${layerWrapperClassname}" 
@@ -33943,8 +34912,8 @@ class ClassLayer {
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
 		style="position:fixed;
 			z-index:${zIndex};
-			width:${config.area[0]}; 
-			height:${config.area[1]};"
+			width:${width}; 
+			height:${height};"
 		>
 			${this.cptDomTitle}
 			<div class="${classContent}" id="${_IDContent}">
@@ -33963,7 +34932,7 @@ class ClassLayer {
     layerInstance.config.maxWidth = $win.width() - 15 * 2;
     layerInstance.config.custumSettings = custumSettings;
     const { config } = layerInstance;
-    layerInstance._layerKey = privateLodash.genId("");
+    layerInstance._layerKey = xU.genId("");
     layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
     layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerKey}`;
     layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerKey}`;
@@ -33975,7 +34944,7 @@ class ClassLayer {
     layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
     layerInstance.isContentTypeObject = typeof config.content === "object";
     layerInstance.config.onClickClose = async (params) => {
-      const isFalse = (val) => privateLodash.isBoolean(val) && !val;
+      const isFalse = (val) => xU.isBoolean(val) && !val;
       if (custumSettings.onClickClose) {
         if (isFalse(await custumSettings.onClickClose(params))) {
           return false;
@@ -34027,12 +34996,13 @@ class ClassLayer {
         LayerUtils.closeAll("loading");
       },
       [LayerUtils.TIPS]() {
+        var _a;
         if (!isContentTypeObject) {
           config.content = [config.content, "body"];
         }
         config.follow = config.content[1];
         const arrow = '<i class="layui-layer-TipsG"></i>';
-        config.content = `<div style="max-width:300px;overflow:auto;">${config.content[0]}<div>${arrow}`;
+        config.content = `<div style="max-width:${((_a = config == null ? void 0 : config.custumSettings) == null ? void 0 : _a.maxWidth) || "300px"};overflow:auto;">${config.content[0]}<div>${arrow}`;
         delete config.title;
         config.btn = [];
         config.tips = typeof config.tips === "object" ? config.tips : [config.tips, true];
@@ -34044,7 +35014,7 @@ class ClassLayer {
     return layerInstance;
   }
   async setLayerPosition() {
-    await privateLodash.sleep(34);
+    await xU.sleep(34);
     const layerInstance = this;
     const { config, _layerKey } = layerInstance;
     layerInstance.offset();
@@ -34084,7 +35054,7 @@ class ClassLayer {
       layerInstance.$eleLayer.addClass(animClass).one(
         "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",
         function() {
-          $(this).removeClass(animClass);
+          $$1(this).removeClass(animClass);
         }
       );
     }
@@ -34096,9 +35066,9 @@ class ClassLayer {
   insertLayer() {
     const layerInstance = this;
     const { config, _layerKey, _IDShade } = layerInstance;
-    layerInstance.$eleLayer = $(layerInstance.cptDomContainer);
-    if (privateLodash.isObject(config.content) && (privateLodash.isString(config.content) || privateLodash.isString(config.content.jquery))) {
-      const $content = $(config.content);
+    layerInstance.$eleLayer = $$1(layerInstance.cptDomContainer);
+    if (xU.isObject(config.content) && (xU.isString(config.content) || xU.isString(config.content.jquery))) {
+      const $content = $$1(config.content);
       layerInstance.$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
     }
     layerInstance.$eleLayer.css({
@@ -34109,7 +35079,7 @@ class ClassLayer {
     $body.append(layerInstance.$eleLayer);
     if (layerInstance.cptDomShade) {
       $body.append(layerInstance.cptDomShade);
-      layerInstance.$eleShade = $(`#${_IDShade}`);
+      layerInstance.$eleShade = $$1(`#${_IDShade}`);
       layerInstance.$eleShade.css({
         "background-color": config.shade[1] || "#000",
         opacity: config.shade[0] || config.shade
@@ -34179,7 +35149,7 @@ class ClassLayer {
       $eleLayer.outerWidth(),
       $eleLayer.outerHeight()
     ];
-    let $eleFollow = $(config.follow);
+    let $eleFollow = $$1(config.follow);
     if ($eleFollow.length == 0) {
       $eleFollow = $body;
     }
@@ -34284,16 +35254,17 @@ class ClassLayer {
     const layerInstance = this;
     const { $eleLayer, config } = layerInstance;
     if (config.success) {
+      const args = [$eleLayer, layerInstance._layerKey, layerInstance];
       if (config.type == LayerUtils.IFRAME) {
         $eleLayer.find("iframe").on("load", function() {
-          config.success.call(this, $eleLayer, layerInstance._layerKey);
+          config.success.apply(config, args);
         });
       } else {
-        config.success($eleLayer, layerInstance._layerKey);
+        config.success.apply(config, args);
       }
     }
     $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).children("a").on("click", function() {
-      var index2 = $(this).index();
+      var index2 = $$1(this).index();
       if (index2 === 0) {
         if (config.yes) {
           config.yes(layerInstance._layerKey, $eleLayer);
@@ -34319,7 +35290,7 @@ class ClassLayer {
           isClosed = await LayerUtils.close(layerInstance._layerKey);
         }
         if (!isClosed) {
-          await LayerUtils.close($(this).attr("data-layer-id"));
+          await LayerUtils.close($$1(this).attr("data-layer-id"));
         }
       }
     });
@@ -34333,7 +35304,7 @@ class ClassLayer {
       min === false || LayerUtils.min(layerInstance._layerKey, config);
     });
     $eleLayer.find(".layui-layer-max").on("click", function() {
-      if ($(this).hasClass("layui-layer-maxmin")) {
+      if ($$1(this).hasClass("layui-layer-maxmin")) {
         LayerUtils.restore(layerInstance._layerKey);
         config.restore && config.restore($eleLayer, layerInstance._layerKey);
       } else {
@@ -34357,12 +35328,12 @@ class ClassLayer {
 LayerUtils.cache || {};
 $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
   const { currentTarget } = event2;
-  const $currentTarget = $(currentTarget);
+  const $currentTarget = $$1(currentTarget);
   LayerUtils.setLayerTop($currentTarget);
 }).on(
   "mousemove",
   `.${LAYUI_LAYER_MOVE}`,
-  privateLodash.throttle(function(e) {
+  function(e) {
     const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
     if (moveOrResizeInstance instanceof ClassLayer) {
       const { $eleLayer, config } = moveOrResizeInstance;
@@ -34406,7 +35377,7 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
     } else if (typeof onMoving == "function") {
       event && onMoving(event);
     }
-  }, 90)
+  }
 ).on("mouseup", function(e) {
   if (READY.moveOrResizeInstance instanceof ClassLayer) {
     const { config } = READY.moveOrResizeInstance;
@@ -34417,12 +35388,11 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
   }
   $MoveMask.hide();
 });
-const EcsPressHandler = privateLodash.debounce(async function(event2, dialogOptions) {
-  const $antModal = $(".ant-modal-root");
+const EcsPressHandler = xU.debounce(async function(event2, dialogOptions) {
+  const $antModal = $$1(".ant-modal-root");
   if ($antModal.length > 0) {
     return;
   }
-  console.log(event2);
   if (event2.keyCode === KEY.esc) {
     await dialogOptions.closeDialog();
   }
@@ -34442,9 +35412,9 @@ const xDialogFooter = defineComponent({
         return null;
       }
       const configs = {
-        text: privateLodash.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label,
-        disabled: privateLodash.isInput(this.configs.disabledOk) ? this.configs.disabledOk : false,
-        onClick: this.onOk || privateLodash.doNothing
+        text: xU.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label,
+        disabled: xU.isInput(this.configs.disabledOk) ? this.configs.disabledOk : false,
+        onClick: this.onOk || xU.doNothing
       };
       return createVNode(resolveComponent("xButton"), {
         "type": "primary",
@@ -34458,9 +35428,9 @@ const xDialogFooter = defineComponent({
         return null;
       }
       const configs = {
-        text: privateLodash.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label,
-        disabled: privateLodash.isInput(this.configs.disabledCancel) ? this.configs.disabledCancel : false,
-        onClick: this.onCancel || privateLodash.doNothing
+        text: xU.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label,
+        disabled: xU.isInput(this.configs.disabledCancel) ? this.configs.disabledCancel : false,
+        onClick: this.onCancel || xU.doNothing
       };
       return createVNode(resolveComponent("xButton"), {
         "class": "ml10",
@@ -34493,7 +35463,7 @@ const installUIDialogComponent = (UI2, {
       area
     } = dialogOptions;
     const id = `xDialog_${Date.now()}`;
-    let $container = $("<div/>", {
+    let $container = $$1("<div/>", {
       id
     });
     const _dialogId = `#${id}`;
@@ -34509,7 +35479,7 @@ const installUIDialogComponent = (UI2, {
           _layerKey: "",
           $eleLayer: ""
         });
-        if (privateLodash.isBoolean(res) && !res) {
+        if (xU.isBoolean(res) && !res) {
           isCloseDialog = false;
         }
       }
@@ -34523,23 +35493,30 @@ const installUIDialogComponent = (UI2, {
       handler: (event2) => EcsPressHandler(event2, dialogOptions),
       on(_layerKey) {
         handleEcsPress._layerKey = _layerKey;
-        $(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
+        if (!dialogOptions.isEcsCloseDialog) {
+          return;
+        }
+        $$1(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
       },
       off() {
-        $(document).off(`keyup.${_dialogId}`, handleEcsPress.handler);
+        $$1(document).off(`keyup.${_dialogId}`, handleEcsPress.handler);
         handleEcsPress = null;
       }
     };
-    const layerOptions = privateLodash.merge(dialogOptions, {
+    const layerOptions = xU.merge(dialogOptions, {
       contentClass: "flex1",
+      offset: ["160px", null],
+      btn: []
+    }, dialogOptions, {
       type: LayerUtils.DIALOG,
       title: [title || ""],
       area: area || [],
       content: $container,
       offset: ["160px", null],
       btn: [],
-      success($eleLayer, _layerKey) {
+      success($eleLayer, _layerKey, layerInstance) {
         handleEcsPress.on(_layerKey);
+        dialogOptions._layerInstance = layerInstance;
         dialogOptions._dialog$ele = $eleLayer;
         dialogOptions._layerKey = _layerKey;
         try {
@@ -34549,6 +35526,11 @@ const installUIDialogComponent = (UI2, {
             },
             created() {
               this.dialogOptions._contentInstance = this;
+              if (this.dialogOptions.keepTop) {
+                setTimeout(() => {
+                  $$1(`#layui-layer-shade${_layerKey}`).css("z-index", 1);
+                }, 6);
+              }
               resolve(this.dialogOptions);
             },
             data() {
@@ -34590,7 +35572,7 @@ const installUIDialogComponent = (UI2, {
         dialogOptions._contentInstance = null;
         dialogOptions = null;
       }
-    }, privateLodash.omit(dialogOptions, ["end", "cancel", "success", "content"]));
+    }, xU.omit(dialogOptions, ["end", "cancel", "success", "content"]));
     LayerUtils.open(layerOptions);
   });
 };
@@ -34616,8 +35598,8 @@ function fnShowTips({
     if (options.onlyEllipsis) {
       const eleWidth = $ele.width() || 0;
       const text = $ele.text();
-      const $div = $(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
-      $div.appendTo($("body"));
+      const $div = $$1(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
+      $div.appendTo($$1("body"));
       const innerWidth = $div.width() || 0;
       $div.remove();
       if (innerWidth > eleWidth) {
@@ -34652,7 +35634,7 @@ function fnShowTips({
       top: $ele.clientY
     };
   }
-  if (privateLodash.isPlainObject(options.content)) {
+  if (xU.isPlainObject(options.content)) {
     const id = `${followId}_content`;
     tipsContent = `<div id="${id}"></div>`;
     layerTipsOptions.success = function success(indexPanel, layerIndex) {
@@ -34670,6 +35652,9 @@ function fnShowTips({
       }
     };
   }
+  if (options.maxWidth) {
+    layerTipsOptions.maxWidth = maxWidth;
+  }
   setTimeout(() => {
     if (visibleArea[followId]) {
       tipsKeys[followId] = LayerUtils.tips(tipsContent, `#${followId}`, layerTipsOptions);
@@ -34677,7 +35662,7 @@ function fnShowTips({
   }, options.delay || 32);
 }
 function installPopoverDirective(app, appSettings) {
-  const appId = privateLodash.genId("appId");
+  const appId = xU.genId("appId");
   appAddPlugin[appId] = appSettings.appPlugins;
   appDependState[appId] = appSettings.dependState;
   app.directive("uiPopover", {
@@ -34685,8 +35670,8 @@ function installPopoverDirective(app, appSettings) {
       init();
       updateMounted(el, binding);
       function init() {
-        const followId = privateLodash.genId("xPopoverTarget");
-        const $ele = $(el);
+        const followId = xU.genId("xPopoverTarget");
+        const $ele = $$1(el);
         $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
       }
     },
@@ -34694,7 +35679,7 @@ function installPopoverDirective(app, appSettings) {
       updateMounted(el, binding);
     },
     unmounted(el) {
-      const followId = $(el).attr(DATA_FOLLOW_ID);
+      const followId = $$1(el).attr(DATA_FOLLOW_ID);
       if (typeof tipsKeys[followId] == "string" && tipsKeys[followId]) {
         LayerUtils.close(tipsKeys[followId]);
       }
@@ -34704,7 +35689,7 @@ function installPopoverDirective(app, appSettings) {
   });
   function updateMounted(el, binding) {
     var _a, _b, _c, _d;
-    const $ele = $(el);
+    const $ele = $$1(el);
     const followId = $ele.attr(DATA_FOLLOW_ID);
     if (binding.value) {
       tipsOptionsCollection[followId] = binding.value;
@@ -34745,7 +35730,7 @@ function closeTips(followId, options = {}) {
 }
 function handleClick(event2) {
   event2.preventDefault();
-  const $ele = $(this);
+  const $ele = $$1(this);
   const followId = $ele.attr(DATA_FOLLOW_ID);
   const appId = $ele.attr(DATA_APP_ID);
   visibleArea[followId] = true;
@@ -34760,10 +35745,10 @@ function handleClick(event2) {
     });
   }
 }
-$(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, handleClick);
-$(document).on("contextmenu.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=rightClick]`, handleClick);
-$(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
-  const $ele = $(this);
+$$1(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, handleClick);
+$$1(document).on("contextmenu.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=rightClick]`, handleClick);
+$$1(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
+  const $ele = $$1(this);
   const followId = $ele.attr(DATA_FOLLOW_ID);
   if (visibleArea[followId]) {
     return;
@@ -34787,25 +35772,25 @@ $(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
     });
   }
 });
-$(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
-  const followId = $(this).attr(DATA_FOLLOW_ID);
+$$1(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
+  const followId = $$1(this).attr(DATA_FOLLOW_ID);
   closeTips(followId);
 });
-$(document).on("mouseenter.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
-  const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
+$$1(document).on("mouseenter.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
+  const followId = $$1(this).attr(DATA_TIPS_FOLLOW_ID);
   inVisibleArea(followId);
 });
-$(document).on("mouseleave.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
-  const followId = $(this).attr(DATA_TIPS_FOLLOW_ID);
+$$1(document).on("mouseleave.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
+  const followId = $$1(this).attr(DATA_TIPS_FOLLOW_ID);
   closeTips(followId);
 });
 function installLoading(app, options = {}) {
   app.directive("loading", {
     updated(el, binding) {
       if (binding.value) {
-        $(el).addClass("x-loading");
+        $$1(el).addClass("x-loading");
       } else {
-        $(el).removeClass("x-loading");
+        $$1(el).removeClass("x-loading");
       }
     }
   });
@@ -34815,18 +35800,18 @@ function installMoveDirective(app) {
     mounted(el, binding) {
       if (binding.value) {
         if (binding.value.onMoving) {
-          const $ele = $(el);
-          const id = privateLodash.genId("xResize");
+          const $ele = $$1(el);
+          const id = xU.genId("xResize");
           $ele.attr(DATA_V_UI_MOVE, id);
           $ele.on("mousedown", function(event2) {
             $MoveMask.css("cursor", "move").show();
-            const clickInfo = privateLodash.getLeftTopFromAbsolute($ele);
+            const clickInfo = xU.getLeftTopFromAbsolute($ele);
             clickInfo.w = $ele.width();
             clickInfo.h = $ele.height();
             const {
               top,
               left
-            } = privateLodash.getLeftTopFromTranslate($ele);
+            } = xU.getLeftTopFromTranslate($ele);
             clickInfo.translateX = left;
             clickInfo.translateY = top;
             READY.onMoving = (movingEvent) => {
@@ -34842,7 +35827,7 @@ function installMoveDirective(app) {
       }
     },
     unmounted(el) {
-      const $ele = $(el);
+      const $ele = $$1(el);
       $ele.attr(DATA_V_UI_MOVE);
     }
   });
@@ -34855,6 +35840,14 @@ function _isSlot(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
 let xItemNoPropCount = 0;
+function defFormConfigs(configs) {
+  const targetConfigs = {};
+  configs.forEach((configs2) => {
+    configs2 = defItem.item(configs2);
+    targetConfigs[configs2.prop] = configs2;
+  });
+  return targetConfigs;
+}
 function defItem(options) {
   const configs = defItem.item(options);
   return {
@@ -34862,16 +35855,23 @@ function defItem(options) {
   };
 }
 defItem.item = (options) => {
-  if (!options.prop) {
-    options.prop = `xItem${xItemNoPropCount++}`;
+  options.itemType = options.itemType || "Input";
+  if (xU.isObject(options.itemType)) {
+    options.itemType.__v_isReactive = false;
   }
-  const configs = reactive(privateLodash.merge({
-    itemTips: {},
-    itemType: options.itemType || "Input"
-  }, {
-    ...options
-  }));
-  return configs;
+  const _options = xU.merge({
+    prop: `xItem${xItemNoPropCount++}`,
+    itemTips: {
+      type: "",
+      msg: ""
+    }
+  }, options);
+  _options._$updateUI = (newConfigs) => {
+    xU.each(newConfigs, (value, prop) => {
+      _options[prop] = value;
+    });
+  };
+  return _options;
 };
 defItem.labelWithTips = ({
   label,
@@ -34913,73 +35913,6 @@ function antColKey(prop, makeRenderCell) {
   }
   return target;
 }
-const get$head = () => {
-  let $head = $("html head");
-  if (!privateLodash.is$Selected($head)) {
-    $head = $("<head/>");
-    $head.prependTo($("html"));
-  }
-  return $head;
-};
-const get$title = () => {
-  let $head = get$head();
-  let $title = $head.find("title");
-  if (!privateLodash.is$Selected($title)) {
-    $title = $("<title/>");
-    $title.prependTo($head);
-  }
-  return $title;
-};
-const get$cssVariables = () => {
-  let $head = get$head();
-  let $cssVariables = $head.find("#cssVariables");
-  if (!privateLodash.is$Selected($cssVariables)) {
-    $cssVariables = $("<style/>", { id: "cssVariables" });
-    $cssVariables.appendTo($head);
-  }
-  return $cssVariables;
-};
-const setDocumentTitle = (title) => {
-  get$title().text(title);
-};
-const setCSSVariables = (colors) => {
-  let $cssVariables = get$cssVariables();
-  const cssContent = privateLodash.map(colors, (value, prop) => `--${prop}:${value}`).join(";");
-  $cssVariables.text(`:root{${cssContent}}`);
-};
-const pickValueFrom = (configs) => {
-  return privateLodash.reduce(
-    configs,
-    (target, config, prop) => {
-      try {
-        target[prop] = JSON.parse(JSON.stringify(config.value));
-      } catch (error) {
-      }
-      return target;
-    },
-    {}
-  );
-};
-const setValueTo = (configs, values) => {
-  return privateLodash.map(
-    values,
-    (value, prop) => {
-      if (configs[prop]) {
-        configs[prop].value = value;
-        if (privateLodash.isFunction(configs[prop].onChange)) {
-          configs[prop].onChange(value);
-        }
-      }
-    },
-    {}
-  );
-};
-const resetValueOf = (state, initState) => {
-  privateLodash.each(initState, (value, prop) => {
-    state[prop] = JSON.parse(JSON.stringify(value));
-  });
-  return state;
-};
 const useModel = (type2) => {
   return ({
     title = "",
@@ -35022,7 +35955,7 @@ const useModel = (type2) => {
 LayerUtils.loading = function(indexDelete) {
   this.loading.count = this.loading.count || 1;
   this.loading.deep = this.loading.deep || /* @__PURE__ */ new Set();
-  $("body").trigger("click");
+  $$1("body").trigger("click");
   if (indexDelete >= 0) {
     if (this.loading.deep.has(indexDelete)) {
       this.loading.deep.delete(indexDelete);
@@ -35042,6 +35975,11 @@ LayerUtils.loading = function(indexDelete) {
   }
 };
 const UI = {
+  confirm(options) {
+    options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
+    options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
+    Modal.confirm(options);
+  },
   dialog: {
     component: async (options) => null,
     success: useModel("success"),
@@ -35052,12 +35990,22 @@ const UI = {
       return new Promise(async (resolve, reject) => {
         options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
         options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
-        options.onOk = () => {
-          resolve("ok");
-        };
-        options.onCancel = () => {
-          reject();
-        };
+        if (options.onOk) {
+          const onOk = options.onOk;
+          options.onOk = () => {
+            return onOk(resolve, reject);
+          };
+        } else {
+          options.onOk = () => resolve("ok");
+        }
+        if (options.onCancel) {
+          const onCancel = options.onCancel;
+          options.onCancel = () => {
+            onCancel(resolve, reject);
+          };
+        } else {
+          options.onCancel = () => reject();
+        }
         Modal.confirm(options);
       });
     },
@@ -35094,7 +36042,7 @@ const UI = {
       return new Proxy(m, {
         apply(target2, thisArg, argArray) {
           if (typeof argArray[0] === "string") {
-            argArray[0] = privateLodash.merge({
+            argArray[0] = xU.merge({
               message: argArray[0]
             }, argArray[1] || {});
           }
@@ -35104,6 +36052,70 @@ const UI = {
     }
   }),
   layer: LayerUtils
+};
+const get$head = () => {
+  let $head = $$1("html head");
+  if (!xU.is$Selected($head)) {
+    $head = $$1("<head/>");
+    $head.prependTo($$1("html"));
+  }
+  return $head;
+};
+const get$title = () => {
+  let $head = get$head();
+  let $title = $head.find("title");
+  if (!xU.is$Selected($title)) {
+    $title = $$1("<title/>");
+    $title.prependTo($head);
+  }
+  return $title;
+};
+const get$cssVariables = () => {
+  let $head = get$head();
+  let $cssVariables = $head.find("#cssVariables");
+  if (!xU.is$Selected($cssVariables)) {
+    $cssVariables = $$1("<style/>", {
+      id: "cssVariables"
+    });
+    $cssVariables.appendTo($head);
+  }
+  return $cssVariables;
+};
+const setDocumentTitle = (title) => {
+  get$title().text(title);
+};
+const setCSSVariables = (colors) => {
+  let $cssVariables = get$cssVariables();
+  const cssContent = xU.map(colors, (value, prop) => `--${prop}:${value}`).join(";");
+  $cssVariables.text(`:root{${cssContent}}`);
+};
+const pickValueFrom = (configs) => {
+  return xU.reduce(configs, (target, config, prop) => {
+    try {
+      target[prop] = JSON.parse(JSON.stringify(config.value));
+    } catch (error) {
+    }
+    return target;
+  }, {});
+};
+const setValueTo = (configs, values) => {
+  xU.each(values, (target, value, prop) => {
+    if (value === void 0) {
+      return;
+    }
+    if (configs[prop]) {
+      configs[prop].value = value;
+      if (xU.isFunction(configs[prop].onChange)) {
+        configs[prop].onChange(value);
+      }
+    }
+  });
+};
+const resetValueOf = (state, initState) => {
+  xU.each(initState, (value, prop) => {
+    state[prop] = JSON.parse(JSON.stringify(value));
+  });
+  return state;
 };
 const VNodeCollection = {
   labelTips: (popContent) => (configs, className) => {
@@ -35117,44 +36129,543 @@ const VNodeCollection = {
       "for": prop,
       "class": className
     }, [label, createVNode(resolveComponent("aPopover"), {
-      "trigger": "hover"
+      "trigger": "hover",
+      "placement": "top"
     }, {
       content: () => popContent,
       default: () => createVNode(resolveComponent("xIcon"), {
         "icon": "Insidetips",
-        "class": "pointer"
+        "class": "pointer ml4"
       }, null)
     })])]);
   }
 };
-function compileVNode(template, setupReturn) {
-  return h(defineComponent({
-    template,
-    setup() {
-      return setupReturn;
+function newReactiveState(stateAndMethods) {
+  const __defaultValues = {};
+  function isFunctionInState({
+    value,
+    prop
+  }) {
+    if (value) {
+      const valueType = typeof value;
+      let isFunction = valueType == "function";
+      if (isFunction) {
+        isFunction = /^_\$/.test(prop);
+        if (isFunction) {
+          return true;
+        }
+      }
+    } else {
+      return false;
     }
-  }));
+  }
+  _.each(stateAndMethods, (value, prop) => {
+    if (isFunctionInState({
+      value,
+      prop
+    })) {
+      stateAndMethods[prop] = markRaw(value);
+      return;
+    }
+    try {
+      __defaultValues[prop] = _.cloneDeep(value);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  const innerVariablesAndMethods = {
+    __defaultValues: markRaw(__defaultValues),
+    _$resetSelf: markRaw(function() {
+      _.each(stateAndMethods.__defaultValues, (value, prop) => {
+        stateAndMethods[prop] = value;
+      });
+    }),
+    _$null: markRaw(function() {
+      _.each(stateAndMethods, (value, prop) => {
+        if (isFunctionInState({
+          value,
+          prop
+        })) {
+          return;
+        }
+        if (!Object.keys(innerVariablesAndMethods).includes(prop)) {
+          delete stateAndMethods[prop];
+        }
+      });
+    })
+  };
+  _.each(innerVariablesAndMethods, (value, prop) => stateAndMethods[prop] = value);
+  return reactive(stateAndMethods);
 }
+const DELAY = 60 * 5;
+const CACHE_V_NODE = {};
+const WILL_DELETE_PROPS = {
+  idCounts: {},
+  add(prop) {
+    const count = this.idCounts[prop] || 0;
+    this.idCounts[prop] = count + 1;
+  },
+  remove(prop) {
+    const count = this.idCounts[prop] || 0;
+    const val = count - 1;
+    this.idCounts[prop] = val < 0 ? 0 : val;
+  }
+};
+const deleteUnmountedInstance = (prop) => {
+  WILL_DELETE_PROPS.add(prop);
+  delayDeleteUnmountedInstance();
+};
+const delayDeleteUnmountedInstance = xU.debounce(function() {
+  xU.each(WILL_DELETE_PROPS.idCounts, (count, prop) => {
+    if (count > 0) {
+      delete CACHE_V_NODE[prop];
+      delete WILL_DELETE_PROPS.idCounts[prop];
+    }
+    if (!Object.keys(CACHE_V_NODE).includes(prop)) {
+      delete WILL_DELETE_PROPS.idCounts[prop];
+    }
+  });
+}, 1e3 * DELAY);
+function compileVNode(template, setupReturn, prop) {
+  const no_cache = !prop;
+  if (!no_cache && CACHE_V_NODE[prop]) {
+    WILL_DELETE_PROPS.remove(prop);
+    delayDeleteUnmountedInstance();
+    return CACHE_V_NODE[prop];
+  } else {
+    return h(defineComponent({
+      template,
+      mounted() {
+        if (no_cache) {
+          return;
+        }
+        WILL_DELETE_PROPS.remove(prop);
+        CACHE_V_NODE[prop] = this._.vnode;
+      },
+      unmounted() {
+        if (no_cache) {
+          return;
+        }
+        deleteUnmountedInstance(prop);
+      },
+      setup() {
+        if (xU.isFunction(setupReturn)) {
+          return setupReturn();
+        } else {
+          return setupReturn;
+        }
+      }
+    }));
+  }
+}
+const xLogObject = defineComponent({
+  name: "xLogObject",
+  props: ["obj"],
+  computed: {
+    objString: {
+      get() {
+        if (xU.isObject(this.obj)) {
+          return JSON.stringify(this.obj, null, 2);
+        } else {
+          return "";
+        }
+      }
+    }
+  },
+  render() {
+    if (!State_UI.isDev || this.$attrs.hide) {
+      return null;
+    } else {
+      return createVNode("pre", {
+        "style": "width:500px;height:400px;"
+      }, [createVNode("code", null, [createTextVNode(" "), this.objString, createTextVNode(" ")])]);
+    }
+  }
+});
+const useScopeStyle = () => {
+  const scopeStyle = reactive({});
+  function styleObject2String(styleObject) {
+    return xU.map(xU.merge({
+      width: "120px",
+      "text-align": "right"
+    }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
+  }
+  function updateStyle(vm, styleContent) {
+    if (!vm.$styleEle) {
+      vm.$styleEle = $(vm.ele);
+    }
+    vm.$styleEle.html(styleContent);
+  }
+  function setStyle(styleObject) {
+    const instance = getCurrentInstance();
+    xU.each(styleObject, (value, prop) => {
+      scopeStyle[prop] = value;
+    });
+    updateStyle(
+      instance.ctx,
+      styleObject2String(scopeStyle)
+    );
+  }
+  return {
+    setStyle
+  };
+};
+const xInfoCard$1 = "";
+const InfoCardCol = defineComponent({
+  props: ["col"],
+  computed: {
+    isHide() {
+      return this.col.isHide || false;
+    },
+    styleLabel() {
+      return {};
+    },
+    vDomLabel() {
+      return this.col.label;
+    },
+    vDomContent() {
+      return this.col.value;
+    }
+  },
+  render() {
+    if (this.isHide) {
+      return null;
+    }
+    return createVNode(Fragment, null, [createVNode("div", {
+      "class": "ant-descriptions-item-label",
+      "style": this.styleLabel
+    }, [this.vDomLabel]), createVNode("div", {
+      "class": "ant-descriptions-item-content flex1"
+    }, [this.vDomContent])]);
+  }
+});
+const InfoCardRow = defineComponent({
+  props: ["row"],
+  computed: {
+    colArray() {
+      var _a;
+      return ((_a = this == null ? void 0 : this.row) == null ? void 0 : _a.colArray) || false;
+    },
+    vDomCol() {
+      if (this.row) {
+        return xU.map(this.colArray, (col) => {
+          return createVNode(InfoCardCol, {
+            "col": col
+          }, null);
+        });
+      }
+      return null;
+    },
+    styleRow() {
+      var _a;
+      if ((_a = this == null ? void 0 : this.row) == null ? void 0 : _a.style) {
+        return this.row.style;
+      }
+      return "";
+    }
+  },
+  render() {
+    return createVNode("div", {
+      "class": "InfoCardRow ant-descriptions-row flex middle",
+      "style": this.styleRow
+    }, [this.vDomCol]);
+  }
+});
+const xInfoCard = defineComponent({
+  props: ["info", "title"],
+  methods: {
+    updateLableStyle(styleObject) {
+      const styleString = xU.map(xU.merge({
+        "min-width": "120px",
+        "text-align": "right"
+      }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
+      const styleContent = `#${this.id} .ant-descriptions-item-label {${styleString}}`;
+      if (!this.$styleEle) {
+        const $form = $$1(`#${this.id}`);
+        const $style = $$1("<style/>", {
+          id: `style_${this.id}`
+        });
+        $form.prepend($style);
+        this.$styleEle = $style;
+      }
+      this.$styleEle.html(styleContent);
+    }
+  },
+  mounted() {
+    this.$watch("info.colLabelWidth", (width) => {
+      if (width) {
+        xU("width", width);
+        this.updateLableStyle({
+          width
+        });
+      }
+    }, {
+      immediate: true,
+      deep: true
+    });
+  },
+  computed: {
+    id() {
+      return `InfoCard_${this._.uid}`;
+    },
+    colLabelWidth() {
+      var _a;
+      return ((_a = this == null ? void 0 : this.info) == null ? void 0 : _a.colLabelWidth) || "120px";
+    },
+    rowArray() {
+      var _a;
+      return ((_a = this == null ? void 0 : this.info) == null ? void 0 : _a.rowArray) || false;
+    },
+    vDomTitle() {
+      if (!this.title) {
+        return null;
+      }
+      return createVNode("div", {
+        "class": "ant-descriptions-header"
+      }, [createVNode("div", {
+        "class": "ant-descriptions-title"
+      }, [this.title])]);
+    },
+    vDomDescriptions() {
+      if (this.rowArray) {
+        return createVNode("div", {
+          "class": "ant-descriptions-view"
+        }, [xU.map(this.rowArray, (row) => {
+          return createVNode(InfoCardRow, {
+            "row": row
+          }, null);
+        })]);
+      }
+      if (this.$slots.default) {
+        return this.$slots.default();
+      }
+      return null;
+    }
+  },
+  render() {
+    return createVNode("div", {
+      "class": "ant-descriptions ant-descriptions-middle ant-descriptions-bordered x-infomation-card",
+      "id": this.id
+    }, [this.vDomTitle, this.vDomDescriptions]);
+  }
+});
+var toggleSelection = function() {
+  var selection = document.getSelection();
+  if (!selection.rangeCount) {
+    return function() {
+    };
+  }
+  var active = document.activeElement;
+  var ranges = [];
+  for (var i = 0; i < selection.rangeCount; i++) {
+    ranges.push(selection.getRangeAt(i));
+  }
+  switch (active.tagName.toUpperCase()) {
+    case "INPUT":
+    case "TEXTAREA":
+      active.blur();
+      break;
+    default:
+      active = null;
+      break;
+  }
+  selection.removeAllRanges();
+  return function() {
+    selection.type === "Caret" && selection.removeAllRanges();
+    if (!selection.rangeCount) {
+      ranges.forEach(function(range) {
+        selection.addRange(range);
+      });
+    }
+    active && active.focus();
+  };
+};
+var deselectCurrent = toggleSelection;
+var clipboardToIE11Formatting = {
+  "text/plain": "Text",
+  "text/html": "Url",
+  "default": "Text"
+};
+var defaultMessage = "Copy to clipboard: #{key}, Enter";
+function format(message2) {
+  var copyKey = (/mac os x/i.test(navigator.userAgent) ? "\u2318" : "Ctrl") + "+C";
+  return message2.replace(/#{\s*key\s*}/g, copyKey);
+}
+function copy(text, options) {
+  var debug, message2, reselectPrevious, range, selection, mark, success = false;
+  if (!options) {
+    options = {};
+  }
+  debug = options.debug || false;
+  try {
+    reselectPrevious = deselectCurrent();
+    range = document.createRange();
+    selection = document.getSelection();
+    mark = document.createElement("span");
+    mark.textContent = text;
+    mark.ariaHidden = "true";
+    mark.style.all = "unset";
+    mark.style.position = "fixed";
+    mark.style.top = 0;
+    mark.style.clip = "rect(0, 0, 0, 0)";
+    mark.style.whiteSpace = "pre";
+    mark.style.webkitUserSelect = "text";
+    mark.style.MozUserSelect = "text";
+    mark.style.msUserSelect = "text";
+    mark.style.userSelect = "text";
+    mark.addEventListener("copy", function(e) {
+      e.stopPropagation();
+      if (options.format) {
+        e.preventDefault();
+        if (typeof e.clipboardData === "undefined") {
+          debug && console.warn("unable to use e.clipboardData");
+          debug && console.warn("trying IE specific stuff");
+          window.clipboardData.clearData();
+          var format2 = clipboardToIE11Formatting[options.format] || clipboardToIE11Formatting["default"];
+          window.clipboardData.setData(format2, text);
+        } else {
+          e.clipboardData.clearData();
+          e.clipboardData.setData(options.format, text);
+        }
+      }
+      if (options.onCopy) {
+        e.preventDefault();
+        options.onCopy(e.clipboardData);
+      }
+    });
+    document.body.appendChild(mark);
+    range.selectNodeContents(mark);
+    selection.addRange(range);
+    var successful = document.execCommand("copy");
+    if (!successful) {
+      throw new Error("copy command was unsuccessful");
+    }
+    success = true;
+  } catch (err) {
+    debug && console.error("unable to copy using execCommand: ", err);
+    debug && console.warn("trying IE specific stuff");
+    try {
+      window.clipboardData.setData(options.format || "text", text);
+      options.onCopy && options.onCopy(window.clipboardData);
+      success = true;
+    } catch (err2) {
+      debug && console.error("unable to copy using clipboardData: ", err2);
+      debug && console.error("falling back to prompt");
+      message2 = format("message" in options ? options.message : defaultMessage);
+      window.prompt(message2, text);
+    }
+  } finally {
+    if (selection) {
+      if (typeof selection.removeRange == "function") {
+        selection.removeRange(range);
+      } else {
+        selection.removeAllRanges();
+      }
+    }
+    if (mark) {
+      document.body.removeChild(mark);
+    }
+    reselectPrevious();
+  }
+  return success;
+}
+var copyToClipboard = copy;
+const xLinkCopy = defineComponent({
+  name: "xLinkCopy",
+  props: ["to"],
+  data() {
+    return {};
+  },
+  setup(props) {
+  },
+  computed: {
+    xDomText() {
+      var _a;
+      if ((_a = this.$slots) == null ? void 0 : _a.default) {
+        return this.$slots.default();
+      }
+      return "";
+    }
+  },
+  watch: {},
+  created() {
+  },
+  methods: {
+    handleClickText(...args) {
+      if (this.to) {
+        this.to.apply(this, args);
+      }
+    },
+    copyText() {
+      if (copyToClipboard($$1(this.$refs.contents).text())) {
+        UI.message.success(this.$t("\u5DF2\u7ECF\u6210\u529F\u590D\u5236\u5230\u526A\u5207\u677F").label);
+      } else {
+        UI.message.error(this.$t("\u590D\u5236\u5230\u526A\u5207\u677F\u5931\u8D25").label);
+      }
+    }
+  },
+  render({
+    xDomText,
+    handleClickText,
+    copyText
+  }) {
+    return createVNode("div", {
+      "class": "xLinkCopy ant-btn ant-btn-link flex"
+    }, [withDirectives(createVNode("div", {
+      "class": "flex1 ellipsis mr4",
+      "onClick": handleClickText,
+      "ref": "contents"
+    }, [xDomText]), [[resolveDirective("uiPopover"), {
+      onlyEllipsis: true
+    }]]), createVNode(resolveComponent("xIcon"), {
+      "icon": "InsideCopy",
+      "class": "xLinkCopy_icon",
+      "onClick": copyText
+    }, null)]);
+  }
+});
+const xInfoDiffCard$1 = "";
+const xInfoDiffCard = defineComponent({
+  name: "xInfoDiffCard",
+  props: ["old", "new", "title"],
+  render() {
+    return createVNode("div", null, [createVNode("div", null, [this.title, createTextVNode(":")]), createVNode("div", {
+      "class": "flex vertical"
+    }, [createVNode("div", {
+      "class": "xInfoDiffCard-value xInfoDiffCard-delta xInfoDiffCard-left-value"
+    }, [createVNode("pre", null, [this.old])]), createVNode("div", {
+      "class": "xInfoDiffCard-value xInfoDiffCard-right-value"
+    }, [createVNode("pre", null, [this.new])])])]);
+  }
+});
 window.dayjs = dayjs;
 window.moment = dayjs;
-window.jquery = $;
+window.jquery = $$1;
+const compositionAPI = {
+  usefnObserveDomResize,
+  useScopeStyle
+};
 const componentMyUI = {
   xButton,
   xRender,
-  xItem: _sfc_main$b,
+  xItem,
   xForm,
   xButtonCountDown,
-  xGap: _sfc_main$8,
+  xGap,
   xCharts,
   xView,
-  xIcon: _sfc_main$5,
+  xIcon,
   xDataGrid: _sfc_main$4,
   xDataGridToolbar,
   xColFilter,
   xPagination,
   xCellLabel,
   xVirScroll,
-  xVirTable
+  xVirTable,
+  xLogObject,
+  xInfoCard,
+  xLinkCopy,
+  xInfoDiffCard
 };
 const components = {
   ...componentMyUI
@@ -35163,11 +36674,11 @@ const VentoseUIWithInstall = {
   install: (app, options) => {
     installDirective(app, options);
     installUIDialogComponent(UI, options, app);
-    privateLodash.each(components, (component, name) => {
+    xU.each(components, (component, name) => {
       if (component.name) {
         name = component.name;
       } else {
-        privateLodash.doNothing(name, `miss name`);
+        xU.doNothing(name, `miss name`);
       }
       app.component(component.name || name, component);
     });
@@ -35176,6 +36687,7 @@ const VentoseUIWithInstall = {
 };
 export {
   default2 as $,
+  $t$1 as $t,
   AllWasWell,
   Cpt_UI_locale,
   EVENT_TYPE,
@@ -35185,20 +36697,25 @@ export {
   UI,
   VNodeCollection,
   VentoseUIWithInstall,
+  xU as _,
   antColKey,
   compileVNode,
   components,
+  compositionAPI,
   default3 as dayjs,
   defCol,
   defColActions,
   defColActionsBtnlist,
   defDataGridOption,
+  defFormConfigs,
   defItem,
   defPagination,
   defXVirTableConfigs,
   getPaginationPageSize,
+  iStorage,
   lStorage,
   default4 as moment,
+  newReactiveState,
   pickValueFrom,
   resetValueOf,
   setCSSVariables,
@@ -35208,5 +36725,6 @@ export {
   setValueTo,
   vModel,
   validateForm,
-  privateLodash as xU
+  validateItem,
+  xU
 };

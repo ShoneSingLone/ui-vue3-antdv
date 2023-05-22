@@ -2,42 +2,47 @@
 import { t_buttonOptions } from "../xButton/xButton";
 import { xU } from "../ventoseUtils";
 import { ColumnProps } from "ant-design-vue/es/table";
-import { lStorage } from "../tools/storage.js";
 import { State_UI } from "../State_UI";
 
 /*ui 内部使用*/
-export const static_word = {
-	operation: "operation"
+export const STATIC_WORD = {
+	OPERATION: "OPERATION",
+	NEXT_TICK_TIME: 64
 };
 export type t_col = {
 	prop: string;
-	label: string;
+	label: any;
+	width?: string;
+	minWidth?: string;
+	isShow?: boolean;
 	children?: t_col[];
+	renderHeader?: Function;
+	renderCell?: Function;
 };
 
 export type t_dataGridOptions = {
-	isLoading: boolean;
+	isLoading?: boolean;
 	/*查询、刷新、onPaginationChange=》isLoading可以内置*/
 	queryTableList: Function;
 	/*ant的table属性*/
-	antTableProperty: object;
+	antTableProperty?: object;
 	/*查询按钮*/
-	isHideQuery: boolean;
+	isHideQuery?: boolean;
 	/*刷新按钮*/
-	isHideRefresh: boolean;
+	isHideRefresh?: boolean;
 	/*是否隐藏列过滤器*/
-	isHideFilter: boolean;
+	isHideFilter?: boolean;
 	/*是否隐藏分页*/
-	isHidePagination: boolean;
-	pagination: {
+	isHidePagination?: boolean;
+	pagination?: {
 		page: number;
 		size: number;
 		total: number;
 	};
 	/*分页page size 改变之后的回调，参数是pagination*/
-	onPaginationChange: Function;
+	onPaginationChange?: Function;
 	/*里面查询区域的配置信息，可以在renderOptions作为参数传入*/
-	optionsConfigs: {
+	optionsConfigs?: {
 		/*xItem value 集合*/
 		data: object;
 		/*xItem form 配置项*/
@@ -49,19 +54,26 @@ export type t_dataGridOptions = {
 	/*如果是分组，filter无效
 	 * columns作为数组，与antdv官方文档参数保持一致
 	 * */
-	isGroupingColumns: boolean;
+	isGroupingColumns?: boolean;
 	/*列信息*/
 	columns: { [p: string]: t_col };
 };
 
 /* 默认 pagination onPaginationChange isLoading */
 
-/*  */
+/**
+ * 如果没有queryTableList 则不会显示 query 和 refresh 按钮
+ *
+ *
+ * @export
+ * @param {t_dataGridOptions} options
+ * @returns
+ */
 export function defDataGridOption(options: t_dataGridOptions) {
 	/* @ts-ignore */
 	options.pagination = options.pagination || defPagination();
 	options.isLoading = Boolean(options.isLoading);
-	/* 如果没有queryTableList 则不会显示 query 和 refresh 按钮 */
+
 	if (options.queryTableList) {
 		/* @ts-ignore */
 		options._queryTableList_origin = options.queryTableList;
@@ -83,7 +95,7 @@ export function defDataGridOption(options: t_dataGridOptions) {
 
 export function defPagination(num_page = 1, num_size = 10, num_total = 0) {
 	/*APP可以自定义prop*/
-	const { page, size, total } = lStorage.appConfigs.pagination;
+	const { page, size, total } = State_UI.pagination;
 	return {
 		[page]: num_page || 1,
 		[size]: num_size || 10,
@@ -97,14 +109,18 @@ export function defPagination(num_page = 1, num_size = 10, num_total = 0) {
  * @param pagination 属性是page size total 根据appConfigs的pagination_map给pagination赋值
  */
 export function setPagination(StateTable, pagination: t_pagination) {
-	const PAGINATION_MAP = lStorage.appConfigs.pagination;
+	const PAGINATION_MAP = State_UI.pagination;
 	xU.each(pagination, (value, prop) => {
-		StateTable.pagination[PAGINATION_MAP[prop]] = value;
+		let realProp = PAGINATION_MAP[prop];
+		if (!realProp) {
+			realProp = prop;
+		}
+		StateTable?.pagination && (StateTable.pagination[realProp] = value);
 	});
 }
 
 export function getPaginationPageSize(StateTable) {
-	const PAGINATION_MAP = lStorage.appConfigs.pagination;
+	const PAGINATION_MAP = State_UI.pagination;
 	const pagination: t_pagination = StateTable.pagination;
 	const { page, size } = PAGINATION_MAP;
 	return {
@@ -142,18 +158,17 @@ export function defColActions(options: {
 		value: any;
 	}) => JSX.Element;
 }) {
-	return {
-		[static_word.operation]: xU.merge(
+	return defCol(
+		xU.merge(
 			{
-				title: State_UI.$t("操作").label,
-				key: static_word.operation,
-				prop: static_word.operation,
+				label: State_UI.$t("操作").label,
+				prop: STATIC_WORD.OPERATION,
 				fixed: "right",
-				minWidth: 100
+				width: "100px"
 			},
 			options
 		)
-	};
+	);
 }
 
 export function defColActionsBtnlist(options: {
@@ -232,18 +247,25 @@ export function filterColIsShow(isShow, prop) {
 
 type t_result = {
 	total?: false | number;
+	selected?: string[] | false;
 	data: any[];
 };
 
 /***
  * 设置xDataGrid的列表数据和总数
  * @param StateBind
- * @param data
- * @param total
+ * @param result:{
+	total?: false | number;
+	selected?: string[] | false;
+	data: any[];
+}
  */
-export function setDataGridInfo(StateBind, result: t_result = { data: [] }) {
-	const { data = [], total = false } = result;
+export function setDataGridInfo(StateBind, result: t_result = {}) {
+	const { data = [], total = false, selected = false } = result;
 	StateBind.dataSource = data;
+	if (selected) {
+		StateBind.selected = selected;
+	}
 	if (total || total === 0) {
 		setPagination(StateBind, { total });
 	}

@@ -1,38 +1,51 @@
 //@ts-nocheck
-
 import { xU } from "../ventoseUtils";
-import { reactive } from "vue";
-import { t_itemConfigs } from "./itemRenders/index";
+import { t_itemConfigs } from "./itemRenders";
 
 let xItemNoPropCount = 0;
+
+export function defFormConfigs(configs: t_itemConfigs[]) {
+	const targetConfigs: Record<string, any> = {};
+	configs.forEach((configs: t_itemConfigs) => {
+		configs = defItem.item(configs);
+		targetConfigs[configs.prop] = configs;
+	});
+	return targetConfigs;
+}
 
 /*make item configs */
 export function defItem(options: t_itemConfigs) {
 	const configs = defItem.item(options);
+
 	return {
 		[configs.prop]: configs
 	};
 }
 
 defItem.item = (options: t_itemConfigs) => {
-	if (!options.prop) {
-		options.prop = `xItem${xItemNoPropCount++}`;
-		/* console.warn(`no xItem prop replace by ${options.prop}`); */
+	options.itemType = options.itemType || "Input";
+
+	if (xU.isObject(options.itemType)) {
+		// options.itemType = markRaw(options.itemType);
+		options.itemType.__v_isReactive = false;
 	}
 
-	const configs = reactive(
-		xU.merge(
-			{
-				/* 提示信息，可以用于提示或者定位 */
-				itemTips: {},
-				/*item 的类型 case by case 跟ui库关联*/
-				itemType: options.itemType || "Input"
-				/*默认绑定的是value*/
-			},
-			{ ...options }
-		)
+	const _options = xU.merge(
+		{
+			/* 默认prop */
+			prop: `xItem${xItemNoPropCount++}`,
+			/* 提示信息，可以用于提示或者定位 */
+			itemTips: { type: "", msg: "" }
+		},
+		options
 	);
-	return configs;
+
+	_options._$updateUI = newConfigs => {
+		xU.each(newConfigs, (value, prop) => {
+			_options[prop] = value;
+		});
+	};
+	return _options;
 };
 
 defItem.labelWithTips = ({ label, tips, icon }) => {
@@ -71,10 +84,10 @@ export function vModel(
 
 /***
  * prop to {
-        dataIndex: prop,
-        prop: prop,
-        key: prop
-    }
+		dataIndex: prop,
+		prop: prop,
+		key: prop
+	}
  * @param prop
  */
 export function antColKey(prop, makeRenderCell) {

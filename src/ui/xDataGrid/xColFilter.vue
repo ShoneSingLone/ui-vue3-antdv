@@ -62,7 +62,7 @@ export default defineComponent({
 		</template>
 		<aButton>
 			<template #icon>
-				<link rel="icon" type="image/svg+xml" href="/SettingOutlined.svg" />
+				<xIcon icon="insideSettingOutlined" style="height: 100%; width: 100%" />
 			</template>
 		</aButton>
 	</aPopover>

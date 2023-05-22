@@ -39,20 +39,19 @@
 <script>
 import { h, markRaw } from "vue";
 import {
-	UI,
-	defItem,
-	State_UI,
-	validateForm,
+	$t,
 	AllWasWell,
-	pickValueFrom,
+	components,
+	defItem,
 	FormRules,
-	VNodeCollection,
-	components
+	pickValueFrom,
+	UI,
+	validateForm,
+	VNodeCollection
 } from "@ventose/ui";
 import { DemoXFormWithForm } from "./DemoXFormWithForm.tsx";
-const { xItem } = components;
 
-const { $t } = State_UI;
+const { xItem } = components;
 
 export default {
 	components: {
@@ -182,7 +181,7 @@ export default {
 				inputValue: "v-model"
 			},
 			xForm,
-			tips1: `### 
+			tips1: `###
 \`\`\`js
 <xItem :configs="xForm.search" class="flex1" v-model="formData.inputValue" />
 formData: {

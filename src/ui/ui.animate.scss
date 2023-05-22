@@ -1,0 +1,29 @@
+@keyframes flash {
+	0%,
+	100%,
+	50% {
+		opacity: 1;
+	}
+
+	25%,
+	75% {
+		opacity: 0;
+	}
+}
+
+.animated {
+	animation-duration: 1s;
+	animation-fill-mode: both;
+
+	&.infinite {
+		animation-iteration-count: infinite;
+	}
+
+	&.hinge {
+		animation-duration: 2s;
+	}
+
+	&.flash {
+		animation-name: flash;
+	}
+}

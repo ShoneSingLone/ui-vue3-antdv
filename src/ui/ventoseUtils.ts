@@ -1,18 +1,69 @@
+import { LoDashStatic } from "lodash";
 import _ from "lodash";
+/* @ts-ignore */
 import dayjs from "dayjs";
 import $ from "jquery";
 import { iStorage } from "./tools/storage";
+import { State_UI } from ".";
+//@ts-ignore
+import axios from "axios";
 
 /* 组件属性是否是on开头，组件的事件监听*/
 const onRE = /^on[^a-z]/;
 
 const VueComponents: any = {};
 
+export const isInput = (val: any) => {
+	if (val === undefined) {
+		return false;
+	}
+	try {
+		val = JSON.parse(JSON.stringify(val));
+	} catch (error) {
+		xU(val, "JSON.parse failed");
+	}
+	if (val === 0) {
+		return true;
+	}
+	if (val === false) {
+		return true;
+	}
+	if (_.isArray(val)) {
+		return val.length > 0;
+	} else if (val) {
+		return true;
+	}
+	return false;
+};
+
 const privateLodash = {
-	..._,
 	WORDS: {
 		INVALID_DATE: "Invalid Date",
 		format_ymd: "YYYY-MM-DD"
+	},
+	launchFullscreen(element: any) {
+		if (element.requestFullscreen) {
+			element.requestFullscreen();
+		}
+	},
+	exitFullscreen() {
+		/* @ts-ignore */
+		document.exitFullscreen && document.exitFullscreen();
+	},
+	hashCode(str: string) {
+		var hash = 0,
+			i,
+			chr;
+		if (str.length === 0) {
+			return "0";
+		}
+		for (i = 0; i < str.length; i++) {
+			chr = str.charCodeAt(i);
+			hash = (hash << 5) - hash + chr;
+			/* Convert to 32bit integer */
+			hash |= 0;
+		}
+		return String(hash);
 	},
 	/* 从jQuery对象中，获取leftTop的数值 */
 	getLeftTopFromAbsolute($ele: JQuery) {
@@ -30,7 +81,6 @@ const privateLodash = {
 		};
 		const top = getNum(_top);
 		const left = getNum(_left);
-		console.log(left, top);
 		return { top, left };
 	},
 	getLeftTopFromTranslate($ele: JQuery) {
@@ -44,7 +94,7 @@ const privateLodash = {
 			/* @ts-ignore */
 			const [a, b, c, d, e, f] = String(match[1])
 				.split(",")
-				.map(i => Number(privateLodash.trim(i)));
+				.map(i => Number(_.trim(i)));
 
 			return {
 				left: a + c + e,
@@ -79,10 +129,14 @@ const privateLodash = {
 		scfObjSourceCode: string,
 		__Vue: object
 	): Promise<object> {
+		/* @ts-ignore */
+		__Vue = __Vue || window.Vue || {};
 		const scfObjAsyncFn = new Function(
 			"argVue",
 			"argPayload",
-			`console.log(\`${url}\`)\nreturn (${scfObjSourceCode})(argVue,argPayload);`
+			`console.log(\`${url}\`)\n
+var fn = ${scfObjSourceCode}
+return fn.call(null,argVue,argPayload);`
 		);
 		const scfObj = await scfObjAsyncFn(__Vue, {
 			url
@@ -122,7 +176,9 @@ const privateLodash = {
 
 		function splitCode() {
 			if (!/TEMPLATE_PLACEHOLDER/.test(code)) {
+				/* @ts-ignore */
 				alert("SFC miss TEMPLATE_PLACEHOLDER");
+				/* @ts-ignore */
 				console.error(code);
 			}
 			return getSource(code, "script").replace(
@@ -143,13 +199,18 @@ const privateLodash = {
 	},
 	/*lodash IDE 能识别*/
 	doNothing: (...args: any[]) => {
+		/* @ts-ignore */
 		if (localStorage.isShowDevLog) {
 			const e = new Error();
+			/* @ts-ignore */
 			console.log("🚀:", e?.stack?.split("\n")[2].replace("    at ", ""));
+			/* @ts-ignore */
+			/* @ts-ignore */
 			console.log.apply(console, args);
 		}
 	},
 	/* 睡眠 t:setTimeout during time*/
+	/* @ts-ignore */
 	sleep: (t: number) => new Promise(r => setTimeout(r, t)),
 	isOn: (key: string) => onRE.test(key),
 	isModelListener: (key: string) => {
@@ -177,7 +238,7 @@ const privateLodash = {
 	},
 	/*对象至少有一个属性*/
 	isObjectFill: (obj: any) =>
-		privateLodash.isPlainObject(obj) && Object.keys(obj).length > 0,
+		_.isPlainObject(obj) && Object.keys(obj).length > 0,
 	/***
 	 * 返回数组的第一个value，
 	 * 通过check,
@@ -190,7 +251,7 @@ const privateLodash = {
 	 */
 	safeFirst: (arr: any[], fnCheck: Function) => {
 		fnCheck = fnCheck || ((value: any) => privateLodash.isInput(value));
-		const obj = privateLodash.first(arr);
+		const obj = _.first(arr);
 		return fnCheck(obj) ? obj : false;
 	},
 	/***
@@ -251,24 +312,7 @@ const privateLodash = {
 	 * @param val {any}
 	 * @returns {boolean}
 	 */
-	isInput: (val: any) => {
-		if (val === undefined) {
-			return false;
-		}
-		val = JSON.parse(JSON.stringify(val));
-		if (val === 0) {
-			return true;
-		}
-		if (val === false) {
-			return true;
-		}
-		if (privateLodash.isArray(val)) {
-			return val.length > 0;
-		} else if (val) {
-			return true;
-		}
-		return false;
-	},
+	isInput,
 	/*jquery到底有没有选中目标DOM？*/
 	is$Selected: ($ele: JQuery) => $ele && $ele.jquery && $ele.length > 0,
 	/**
@@ -294,7 +338,78 @@ const privateLodash = {
 		/* @ts-ignore */
 		return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
 	},
-
+	/**
+	 *
+	 * @param {*} cssname
+	 * @returns
+	 */
+	loadCss(cssname: string) {
+		const cssPath = `${cssname}`;
+		let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
+		$link.appendTo($("head"));
+		/* @ts-ignore */
+		$link[0].href = `${cssPath}?_t=${Date.now()}`;
+		/* destroy 的时候移除已加载的模块css，酌情使用 */
+		return () => {
+			$link.remove();
+			/* @ts-ignore */
+			$link = null;
+		};
+	},
+	async asyncLoadStyle(cssURL: string, options?: object) {
+		/* @ts-ignore */
+		let { isReplace, id } = options || { isReplace: false, id: "" };
+		/* 提供ID 用于替换同一个style 元素的内容 */
+		id = id || _.camelCase(cssURL);
+		let content;
+		let $style = $(`#${id}`);
+		if ($style.length == 0) {
+			/* 如果不存在，加载内容 */
+			$style = $("<style/>", { id });
+			$("body").append($style);
+			content = await privateLodash.asyncLoadText(cssURL);
+			$style.html(content);
+		} else if (isReplace) {
+			/* 如果存在，且明确表示要替换同一个 */
+			content = await privateLodash.asyncLoadText(cssURL);
+			$style.html(content);
+		}
+		/* 如果已存在，不处理 */
+	},
+	/**
+	 *
+	 * @param {*} url
+	 * @returns
+	 */
+	asyncLoadText: async function (url: string) {
+		/* 在开发模式下App.vue 会设置这个对象 */
+		/* @ts-ignore */
+		if (!State_UI.isDev) {
+			const res = await iStorage(url);
+			if (res) {
+				return res;
+			}
+		}
+		/* https://learn.jquery.com/ */
+		/* https://api.jquery.com/jQuery.ajax/  */
+		return new Promise(async (resolve, reject) => {
+			try {
+				const { data }: any = await axios.get(url, {
+					headers: {
+						"Content-Type": "text/plain"
+					}
+				});
+				/* @ts-ignore */
+				if (!State_UI.isDev) {
+					await iStorage(url, data);
+				}
+				/* @ts-ignore */
+				resolve(data);
+			} catch (error) {
+				reject(error);
+			}
+		});
+	},
 	/**
 	 * 异步加载js 在window中名为globalName的全局变量
 	 * @param {string} url
@@ -315,6 +430,24 @@ const privateLodash = {
 		});
 		$style.attr("src", url);
 	},
+	asyncGlobalJS: async (globalName: string, url: string) => {
+		/* @ts-ignore */
+		if (window[globalName]) {
+			/* @ts-ignore */
+			return window[globalName];
+		}
+		if (!url) {
+			/* @ts-ignore */
+			alert("asyncGlobalJS miss url " + globalName);
+			return {};
+		}
+		/* @ts-ignore */
+		const jsString = await privateLodash.asyncLoadText(url);
+		const fn = new Function(`with(window){${jsString}}`);
+		fn();
+		/* @ts-ignore */
+		return window[globalName];
+	},
 	ensureValueDone: async (fnGetValue: Function) => {
 		return new Promise(async resolve => {
 			let exeFnGetValue = async function () {
@@ -325,7 +458,7 @@ const privateLodash = {
 					resolve(value);
 				} else {
 					/* @ts-ignore */
-					setTimeout(exeFnGetValue, 1000 * exeFnGetValue.count++);
+					setTimeout(exeFnGetValue, 100 * exeFnGetValue.count++);
 				}
 			};
 			(exeFnGetValue as any).count = 1;
@@ -334,68 +467,15 @@ const privateLodash = {
 	},
 	/* 生成合法的键名 */
 	genProp: (someString: string) => {
-		return `k${privateLodash.camelCase(someString)}`;
+		return `k${_.camelCase(someString)}`;
 	},
-	/**
-	 *
-	 * @param {*} url
-	 * @returns
-	 */
-	asyncLoadText: async function (url: string) {
-		/* 在开发模式下App.vue 会设置这个对象 */
-		/* @ts-ignore */
-		if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
-			const res = await iStorage(url);
-			if (res) {
-				return res;
-			}
-		}
-		/* https://learn.jquery.com/ */
-		/* https://api.jquery.com/jQuery.ajax/  */
-		return new Promise((resolve, reject) =>
-			$.ajax({
-				type: "GET",
-				async: true,
-				url,
-				dataType: "text",
-				success(...args) {
-					/* @ts-ignore */
-					if (!localStorage.___VENTOSE_UI_IS_DEV_MODE) {
-						iStorage(url, args[0]);
-					}
-					/* @ts-ignore */
-					resolve.apply(null, args);
-				},
-				error: reject
-			})
-		);
-	},
-	/**
-	 *
-	 * @param {*} cssname
-	 * @returns
-	 */
-	loadCss: function (cssname: string) {
-		const cssPath = `${cssname}`;
-		let $link = $("<link/>", { rel: "stylesheet", type: "text/css" });
-		$link.appendTo($("head"));
-		/* @ts-ignore */
-		$link[0].href = `${cssPath}?_t=${Date.now()}`;
-		/* destroy 的时候移除已加载的模块css，酌情使用 */
-		return () => {
-			$link.remove();
-			/* @ts-ignore */
-			$link = null;
-		};
-	},
-
 	/**
 	 *
 	 * @param date type dayjs.ConfigType = string | number | Date | dayjs.Dayjs | null | undefined
 	 * @param format 默认 "YYYY-MM-DD" 1："YYYY-MM-DD HH:mm:ss"
 	 * @returns
 	 */
-	dateFormat: function (date: dayjs.ConfigType, format = "YYYY-MM-DD") {
+	dateFormat: (date: dayjs.ConfigType, format: string | 1 = "YYYY-MM-DD") => {
 		if (typeof date === "number") {
 			date = dayjs.unix(date);
 		}
@@ -404,7 +484,8 @@ const privateLodash = {
 			format = "YYYY-MM-DD HH:mm:ss";
 		}
 		const label = dayjs(date).format(format);
-		return label === privateLodash.WORDS.INVALID_DATE ? "--" : label;
+		const isInvalidDate = label == privateLodash.WORDS.INVALID_DATE;
+		return isInvalidDate ? "--" : label;
 	},
 
 	keepDecimals: function (val: number, fractionDigits: 2) {
@@ -416,7 +497,7 @@ const privateLodash = {
 	},
 
 	valueToLabel: function (value: string, options: any[]) {
-		const target = privateLodash.find(options, {
+		const target = _.find(options, {
 			value
 		});
 		if (target) {
@@ -425,6 +506,7 @@ const privateLodash = {
 			return "--";
 		}
 	},
+
 	timego: function (timestamp: any) {
 		let minutes, hours, days, seconds, mouth, year;
 		/* @ts-ignore */
@@ -491,8 +573,11 @@ const privateLodash = {
 	 * @param val
 	 * @returns
 	 */
-	MutatingProps: (item: any, prop: string, val = null) => {
+	MutatingProps: (item: any, prop: string, val = null, isDelete = false) => {
 		item = item || {};
+		if (/^\./.test(prop)) {
+			prop = String(prop).substring(1);
+		}
 		const propArray = prop.split(".");
 		let key = "";
 		let nextItem = item;
@@ -504,7 +589,11 @@ const privateLodash = {
 				}
 				/* 如果是最后一项，就赋值后退出 */
 				if (propArray.length === 0) {
-					nextItem[key] = val;
+					if (val === "never" && isDelete) {
+						delete nextItem[key];
+					} else {
+						nextItem[key] = val;
+					}
 					return;
 				} else {
 					/* 继续循环，如果中间有undefined，添加中间项 */
@@ -536,9 +625,9 @@ const privateLodash = {
 		/* 如果有输入 类似jQuery val() */
 		if (
 			val ||
-			privateLodash.isString(val) ||
-			privateLodash.isBoolean(val) ||
-			(privateLodash.isNumber(val) && !privateLodash.isNaN(val))
+			_.isString(val) ||
+			_.isBoolean(val) ||
+			(_.isNumber(val) && !_.isNaN(val))
 		) {
 			setVal();
 		} else {
@@ -548,4 +637,42 @@ const privateLodash = {
 	}
 };
 
-export { privateLodash as xU };
+type xUFunction = (...args: any[]) => void;
+type t_all_lodash_and_mine = xUFunction & LoDashStatic & typeof privateLodash;
+
+export const xU: t_all_lodash_and_mine = new Proxy(
+	/* @ts-ignore */
+	function (...args: any[]) {
+		/* @ts-ignore */
+		if (State_UI.isDev) {
+			try {
+				throw new Error("");
+			} catch (error: any) {
+				args.unshift(String(error.stack).split("\n")[2], "\n");
+				/* @ts-ignore */
+				console.log.apply(console, args);
+			}
+		}
+	},
+	{
+		get(fn, prop: any) {
+			/* @ts-ignore */
+			if (privateLodash[prop]) {
+				/* @ts-ignore */
+				return privateLodash[prop];
+			}
+			if (_[prop]) {
+				/* @ts-ignore */
+				return _[prop];
+			}
+			/* @ts-ignore */
+			return fn[prop];
+		},
+		/* @ts-ignore */
+		set(fn, prop, val) {
+			/* @ts-ignore */
+			privateLodash[prop] = val;
+			return true;
+		}
+	}
+);

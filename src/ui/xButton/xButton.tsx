@@ -1,42 +1,42 @@
 //@ts-nocheck
 
-import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
+import { defineComponent, computed } from "vue";
 import { xU } from "../ventoseUtils";
-import { State_UI } from "../State_UI";
+import { $t } from "../State_UI";
 
 /*$t 可能会变，所以每次render用新的数据*/
 const BTN_PRESET_MAP = {
 	query: () => ({
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideSearchOutlined" />,
-		text: State_UI.$t("查询").label
+		text: $t("查询").label
 	}),
 	refresh: () => ({
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideSyncOutlined" />,
-		text: State_UI.$t("刷新").label
+		text: $t("刷新").label
 	}),
 	cancel: () => ({
-		text: State_UI.$t("取消").label
+		text: $t("取消").label
 	}),
 	save: () => ({
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideSaveOutlined" />,
-		text: State_UI.$t("保存").label
+		text: $t("保存").label
 	}),
 	upload: () => ({
 		icon: <xIcon class="x-button_icon-wrapper" icon="InsideUploadOutlined" />,
-		text: State_UI.$t("上传").label
+		text: $t("上传").label
 	}),
 	delete: configs => {
 		configs.type = "danger";
 		configs.ghost = true;
 		return {
 			icon: <xIcon class="x-button_icon-wrapper" icon="InsideDeleteOutlined" />,
-			text: State_UI.$t("删除").label
+			text: $t("删除").label
 		};
 	}
 };
 
 export type t_buttonOptions = {
-	text?: string;
+	text?: any;
 	onClick?: () => Promise<any>;
 };
 
@@ -78,7 +78,23 @@ export default defineComponent({
 			loading: true
 		};
 	},
+	setup(props) {
+		let Cpt_isShow = true;
+		if (props.configs.isShow !== undefined) {
+			if (xU.isFunction(props.configs.isShow)) {
+				Cpt_isShow = computed(props.configs.isShow);
+			}
+			if (xU.isBoolean(props.configs.isShow)) {
+				Cpt_isShow = props.configs.isShow;
+			}
+		}
+
+		return { Cpt_isShow };
+	},
 	computed: {
+		isClickHandlerOnAttrs() {
+			return !!this.$attrs?.onClick;
+		},
 		type() {
 			if (["query", "save"].includes(this.configs.preset)) {
 				return "primary";
@@ -86,6 +102,7 @@ export default defineComponent({
 			return this.configs.type;
 		},
 		title() {
+			/*disabled是String则为弹窗提示*/
 			if (xU.isString(this.disabled) && this.disabled.length > 0) {
 				return this.disabled;
 			}
@@ -122,10 +139,7 @@ export default defineComponent({
 	},
 	created() {},
 	methods: {
-		async onClick() {
-			if (xU.isFunction(this.$attrs?.onClick)) {
-				return false;
-			}
+		async handleButtonClick() {
 			if (xU.isFunction(this?.configs?.onClick)) {
 				this.loading = true;
 				try {
@@ -138,20 +152,35 @@ export default defineComponent({
 			}
 		}
 	},
-	render(h) {
-		const configs = xU.omit(this.configs, ["text", "onClick", "disabled"]);
-		if (this.title) {
-			configs.title = this.title;
+	render() {
+		if (!this.Cpt_isShow) {
+			return null;
 		}
+		const propsWillDeleteFromProperty = [
+			"text",
+			"loading",
+			"disabled",
+			"title",
+			"onClick"
+		];
+		const _properties = xU.omit(this.configs, propsWillDeleteFromProperty);
+		/* 直接在dom上的onClick优先级更高, */
+		if (!this.isClickHandlerOnAttrs) {
+			_properties.onClick = this.handleButtonClick;
+		}
+
+		if (this.title) {
+			_properties.title = this.title;
+		}
+
 		return (
 			<aButton
 				class="x-button antdv-button"
-				onClick={this.onClick}
 				loading={this.loading}
 				disabled={!!this.disabled}
 				type={this.type}
-				{...configs}>
-				{{
+				{..._properties}
+				v-slots={{
 					default: () => {
 						const vDomDefautl = this.$slots.default && this.$slots.default();
 						return (
@@ -162,7 +191,7 @@ export default defineComponent({
 						);
 					}
 				}}
-			</aButton>
+			/>
 		);
 	}
 });

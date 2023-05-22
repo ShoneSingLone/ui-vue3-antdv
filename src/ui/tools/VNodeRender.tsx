@@ -7,10 +7,10 @@ export const VNodeCollection = {
 			<div class="ant-form-item-label">
 				<label for={prop} class={className}>
 					{label}
-					<aPopover trigger="hover">
+					<aPopover trigger="hover" placement="top">
 						{{
 							content: () => popContent,
-							default: () => <xIcon icon="Insidetips" class="pointer" />
+							default: () => <xIcon icon="Insidetips" class="pointer ml4" />
 						}}
 					</aPopover>
 				</label>

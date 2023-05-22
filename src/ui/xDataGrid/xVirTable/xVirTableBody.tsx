@@ -1,19 +1,18 @@
 //@ts-nocheck
-import { defineComponent } from "vue";
+import { defineComponent, inject } from "vue";
 import { xU } from "../../ventoseUtils";
 import { usefnObserveDomResize } from "../../compositionAPI/useDomResize";
 import { xVirTableTd } from "./xVirTableTd";
 
+export type t_rowPayload = {
+	rowIndex: number;
+	rowData: object;
+};
+
 export const xVirTableBody = defineComponent({
-	props: [
-		"dataSource",
-		"columnOrder",
-		"columns",
-		"rowHeight",
-		"selectedConfigs",
-		"selected"
-	],
-	emits: ["selectedChange", "update:scrollHeight"],
+	props: ["columnOrder", "columns", "rowHeight", "selectedConfigs", "selected"],
+	emits: ["selectedChange", "update:scrollHeight", "scroll"],
+	inject: ["xVirTable"],
 	components: {
 		xVirTableTd
 	},
@@ -21,27 +20,52 @@ export const xVirTableBody = defineComponent({
 		const { fnObserveDomResize, fnUnobserveDomResize } =
 			usefnObserveDomResize();
 		return {
+			uniqBy: inject("uniqBy"),
+			configs: inject("configs"),
+			rowCache: {},
 			fnObserveDomResize,
 			fnUnobserveDomResize
 		};
 	},
 	data(vm) {
+		this.debounceSetPerBlockHeight = xU.debounce(function (
+			viewportHeight: number
+		) {
+			this.viewportHeight = viewportHeight;
+			this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
+			this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
+			this.setHeight();
+		},
+		64);
+
 		return {
 			isLoading: false,
-			perBlockHeight: 0,
+			perBlockHeight: 1,
 			perBlockRowCount: 0,
 			blockInViewCount: 0,
 			styleWrapperAll: {
 				height: 0,
 				position: "relative"
-			}
+			},
+			virs1: [],
+			virs2: [],
+			virs3: []
 		};
 	},
 	mounted() {
 		/* 监听body高度变化 */
 		this.fnObserveDomResize(this.$refs.wrapper, () => {
-			this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
+			this.xVirTable.layoutDebounce();
+			this.debounceSetPerBlockHeight(this.$refs.wrapper.offsetHeight);
 		});
+		this.$watch(
+			() => {
+				return `${this.configs.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper1}_${this.styleWrapper2}_${this.styleWrapper3}`;
+			},
+			() => {
+				this.updateCell();
+			}
+		);
 	},
 	beforeUnmount() {
 		this.fnUnobserveDomResize(this.$refs.wrapper);
@@ -50,10 +74,11 @@ export const xVirTableBody = defineComponent({
 		fnIsSelected() {
 			const { isSelect, prop } = this.selectedConfigs || {};
 			if (xU.isFunction(isSelect)) {
-				return args => {
-					return isSelect.call(this, args);
+				return rowInfo => {
+					return isSelect.call(this, { ...rowInfo, selected: this.selected });
 				};
 			} else {
+				/* 默认处理方式 */
 				return ({ rowData }) => {
 					const id = rowData[prop];
 					return this.selected.includes(id);
@@ -63,8 +88,8 @@ export const xVirTableBody = defineComponent({
 		fnIsDisabled() {
 			const { isDisabled } = this.selectedConfigs || {};
 			if (xU.isFunction(isDisabled)) {
-				return () => {
-					return isDisabled.call(this, args);
+				return (...args) => {
+					return isDisabled.apply(this, args);
 				};
 			} else {
 				return () => {
@@ -74,39 +99,6 @@ export const xVirTableBody = defineComponent({
 		},
 		positionBlock() {
 			return this.blockInViewCount % 3;
-		},
-		virs1() {
-			const position =
-				Number(this.styleWrapper1.match(/(\d)/g).join("")) /
-				this.perBlockHeight;
-			const start = position * this.perBlockRowCount;
-			const end = start + this.perBlockRowCount;
-			return this.dataSource.slice(start, end).map((i, index) => ({
-				...i,
-				index: start + 1 + index
-			}));
-		},
-		virs2() {
-			const position =
-				Number(this.styleWrapper2.match(/(\d)/g).join("")) /
-				this.perBlockHeight;
-			const start = position * this.perBlockRowCount;
-			const end = start + this.perBlockRowCount;
-			return this.dataSource.slice(start, end).map((i, index) => ({
-				...i,
-				index: start + 1 + index
-			}));
-		},
-		virs3() {
-			const position =
-				Number(this.styleWrapper3.match(/(\d)/g).join("")) /
-				this.perBlockHeight;
-			const start = position * this.perBlockRowCount;
-			const end = start + this.perBlockRowCount;
-			return this.dataSource.slice(start, end).map((i, index) => ({
-				...i,
-				index: start + 1 + index
-			}));
 		},
 		/* style */
 		styleWrapper1() {
@@ -155,73 +147,144 @@ export const xVirTableBody = defineComponent({
 			}px)`;
 		},
 		vDomBodyTr1() {
-			return xU.map(this.virs1, (data: object, rowIndex: number) => {
-				return (
-					<div
-						role="tr"
-						class="xVirTable-row flex horizon"
-						data-row-key={rowIndex}>
-						{this.genSelectedVDom({ rowIndex, rowData: data })}
-						{xU.map(this.columnOrder, (prop: string, index: number) => {
-							return (
-								<xVirTableTd
-									column={this.columns[prop]}
-									data-index={index}
-									rowIndex={rowIndex}
-									data={data}
-								/>
-							);
-						})}
-					</div>
-				);
-			});
+			return this.genTr(this.virs1);
 		},
 		vDomBodyTr2() {
-			return xU.map(this.virs2, (data: object, rowIndex: number) => {
-				return (
-					<div
-						role="tr"
-						class="xVirTable-row flex horizon"
-						data-row-key={rowIndex}>
-						{this.genSelectedVDom({ rowIndex, rowData: data })}
-						{xU.map(this.columnOrder, (prop: string, index: number) => {
-							return (
-								<xVirTableTd
-									column={this.columns[prop]}
-									data-index={index}
-									rowIndex={rowIndex}
-									data={data}
-								/>
-							);
-						})}
-					</div>
-				);
-			});
+			return this.genTr(this.virs2);
 		},
 		vDomBodyTr3() {
-			return xU.map(this.virs3, (data: object, rowIndex: number) => {
-				return (
-					<div
-						role="tr"
-						class="xVirTable-row flex horizon"
-						data-row-key={rowIndex}>
-						{this.genSelectedVDom({ rowIndex, rowData: data })}
-						{xU.map(this.columnOrder, (prop: string, index: number) => {
-							return (
-								<xVirTableTd
-									column={this.columns[prop]}
-									data-index={index}
-									rowIndex={rowIndex}
-									data={data}
-								/>
-							);
-						})}
-					</div>
-				);
-			});
+			return this.genTr(this.virs3);
 		}
 	},
 	methods: {
+		clearCacheRow() {
+			const props = xU.filter(this.rowCache, (value, prop) =>
+				/^blockId/.test(prop)
+			);
+			xU.each(props, prop => delete this.rowCache[prop]);
+		},
+		onClickRow(payload: t_rowPayload) {
+			if (this?.configs?.onClickRow) {
+				this.configs.onClickRow(payload);
+			}
+		},
+		genTr(rows) {
+			const vDomBlock = (() => {
+				if (!this.uniqBy) {
+					return xU.map(rows, (data: object, rowIndex: number) => {
+						const { __virRowIndex } = data;
+
+						const payload = {
+							rowIndex: __virRowIndex,
+							rowData: data
+						};
+						return (
+							<div
+								role="tr"
+								class="xVirTable-row flex horizon"
+								data-row-key={__virRowIndex}
+								onClick={() => this.onClickRow(payload)}>
+								{this.genSelectedVDom(payload)}
+								{xU.map(this.columnOrder, (prop: string, index: number) => {
+									return (
+										<xVirTableTd
+											column={this.columns[prop]}
+											data-index={index}
+											v-model:data={data}
+										/>
+									);
+								})}
+							</div>
+						);
+					});
+				} else {
+					const blockId = xU.reduce(
+						rows,
+						(id, row) => {
+							id += row[this.uniqBy];
+							return id;
+						},
+						"blockId"
+					);
+					if (!this.rowCache[blockId]) {
+						this.rowCache[blockId] = xU.map(
+							rows,
+							(data: object, rowIndex: number) => {
+								if (!this.rowCache[data[this.uniqBy]]) {
+									const { __virRowIndex } = data;
+									this.rowCache[data[this.uniqBy]] = (
+										<div
+											role="tr"
+											class="xVirTable-row flex horizon"
+											data-row-key={__virRowIndex}>
+											{this.genSelectedVDom({
+												rowIndex: __virRowIndex,
+												rowData: data
+											})}
+											{xU.map(
+												this.columnOrder,
+												(prop: string, index: number) => {
+													return (
+														<xVirTableTd
+															column={this.columns[prop]}
+															data-col-index={index}
+															v-model:data={data}
+														/>
+													);
+												}
+											)}
+										</div>
+									);
+								}
+								return this.rowCache[data._id];
+							}
+						);
+					}
+					return this.rowCache[blockId];
+				}
+			})();
+			return vDomBlock;
+		},
+		updateCell() {
+			xU("updateCell");
+			this.setVirs1();
+			this.setVirs2();
+			this.setVirs3();
+		},
+		setVirs1() {
+			const position =
+				Number(this.styleWrapper1.match(/(\d)/g).join("")) /
+				this.perBlockHeight;
+			const start = position * this.perBlockRowCount;
+			const end = start + this.perBlockRowCount;
+			this.virs1 = this.fragment(start, end);
+		},
+		setVirs2() {
+			const position =
+				Number(this.styleWrapper2.match(/(\d)/g).join("")) /
+				this.perBlockHeight;
+			const start = position * this.perBlockRowCount;
+			const end = start + this.perBlockRowCount;
+			this.virs2 = this.fragment(start, end);
+		},
+		setVirs3() {
+			const position =
+				Number(this.styleWrapper3.match(/(\d)/g).join("")) /
+				this.perBlockHeight;
+			const start = position * this.perBlockRowCount;
+			const end = start + this.perBlockRowCount;
+			this.virs3 = this.fragment(start, end);
+		},
+		fragment(start: number, end: number): any {
+			const targetRecords = this.configs.dataSource
+				.slice(start, end)
+				.map((i, index) => {
+					/* 改行数据在DataSource中的实际下标 */
+					i.__virRowIndex = start + index;
+					return i;
+				});
+			return targetRecords;
+		},
 		genSelectedVDom(rowInfo) {
 			if (!this.selectedConfigs) {
 				return null;
@@ -266,12 +329,6 @@ export const xVirTableBody = defineComponent({
 		emitSelectedChange(checked, id) {
 			this.$emit("selectedChange", { checked, id });
 		},
-		setPerBlockHeight: xU.debounce(function (viewportHeight: number) {
-			this.viewportHeight = viewportHeight;
-			this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
-			this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
-			this.setHeight();
-		}, 64),
 		setTop: xU.debounce(function () {
 			if (this.$refs.refWrapper) {
 				this.$refs.refWrapper.scrollTo({
@@ -284,12 +341,17 @@ export const xVirTableBody = defineComponent({
 			if (event) {
 				/* @ts-ignore */
 				const top: number = event.target.scrollTop;
+				const left: number = event.target.scrollLeft;
+				/* 与header同步srollLeft */
+				this.$emit("scroll", left);
 				this.blockInViewCount = Math.floor(top / this.perBlockHeight);
 			}
 		},
 		setHeight() {
-			const height = this.dataSource.length * this.rowHeight;
-			if (this.viewportHeight && height < this.viewportHeight) {
+			const height = this.configs.dataSource.length * this.rowHeight;
+			if (!height) {
+				delete this.styleWrapperAll.width;
+			} else if (this.viewportHeight && height < this.viewportHeight) {
 				/* @ts-ignore */
 				this.styleWrapperAll.width = `calc(100% - 6px)`;
 			} else {
@@ -297,28 +359,45 @@ export const xVirTableBody = defineComponent({
 			}
 			/* @ts-ignore */
 			this.styleWrapperAll.height = `${height}px`;
+
+			if (this.$refs.wrapper) {
+				this.$nextTick(() => {
+					if (this.$refs.wrapper.scrollTop > 1) {
+						this.$refs.wrapper.scrollTop--;
+					} else {
+						this.$refs.wrapper.scrollTop++;
+					}
+				});
+			}
 		}
 	},
 	watch: {
-		rowHeight() {
-			this.setPerBlockHeight(this.$refs.wrapper.offsetHeight);
+		rowHeight: {
+			immediate: true,
+			async handler() {
+				await xU.ensureValueDone(() => this.$refs?.wrapper?.offsetHeight);
+				this.debounceSetPerBlockHeight(this.$refs.wrapper.offsetHeight);
+			}
 		},
 		top() {
 			this.setTop();
 		},
-		"dataSource.length": {
+		"configs.dataSource": {
 			immediate: true,
-			handler() {
+			async handler() {
+				await xU.ensureValueDone(() => this.perBlockHeight);
+				this.updateCell();
+				this.clearCacheRow();
 				this.updateTop(false);
 				this.setHeight();
 			}
 		}
 	},
 	render() {
-		return (
+		const vDomTableBody = (
 			<div
 				role="body"
-				class="xVirTable-body-wrapper flex1"
+				class="xVirTable-body-wrapper flex1 width100"
 				ref="wrapper"
 				onScroll={this.updateTop}>
 				<div style={this.styleWrapperAll}>
@@ -336,5 +415,6 @@ export const xVirTableBody = defineComponent({
 				</div>
 			</div>
 		);
+		return vDomTableBody;
 	}
 });

@@ -1,36 +1,68 @@
 //@ts-nocheck
-
 import "./index.less";
 import "./ui.scss";
 import "ant-design-vue/dist/antd.css";
 import Antd from "ant-design-vue";
 import $ from "jquery";
 import xRender from "./xRender/xRender.jsx";
-import xItem from "./xForm/xItem.vue";
 import xForm from "./xForm/xForm.vue";
 import xButton from "./xButton/xButton";
 import xButtonCountDown from "./xButton/xButtonCountDown.vue";
-import xGap from "./xLayout/xGap.vue";
 import xCharts from "./xCharts/xCharts.vue";
 import xView from "./xView/xView.vue";
-import xIcon from "./xIcon/xIcon.vue";
+import xIcon from "./xIcon/xIcon.tsx";
 import xDataGrid from "./xDataGrid/xDataGrid.vue";
 import xDataGridToolbar from "./xDataGrid/xDataGridToolbar.vue";
 import xCellLabel from "./xDataGrid/xCellLabel.vue";
-import { xPagination } from "./xDataGrid/xPagination";
 import xColFilter from "./xDataGrid/xColFilter.vue";
 import xVirScroll from "./xSingle/xScroll/xVirScroll.vue";
+import dayjs from "dayjs";
+import { xPagination } from "./xDataGrid/xPagination";
+import { xItem } from "./xForm/xItem";
+import { xGap } from "./xLayout/xGap";
 import {
 	defXVirTableConfigs as defXVirTableConfigs,
 	xVirTable
 } from "./xDataGrid/xVirTable/xVirTable";
 import { xU } from "./ventoseUtils";
-import { State_UI, Cpt_UI_locale } from "./State_UI";
-import dayjs from "dayjs";
-import { RegexFn, FormRules } from "./xForm/FormRules";
-import { installPopoverDirective } from "./xSingle/directive/popover";
+import { Cpt_UI_locale, State_UI, $t } from "./State_UI";
+import { FormRules, RegexFn } from "./xForm/FormRules";
 import { installUIDialogComponent } from "./xSingle/dialog/dialog";
 import { installDirective } from "./directive";
+import {
+	defCol,
+	defColActions,
+	defColActionsBtnlist,
+	defDataGridOption,
+	defPagination,
+	getPaginationPageSize,
+	setDataGridInfo,
+	setPagination
+} from "./xDataGrid/common";
+import { antColKey, defItem, defFormConfigs, vModel } from "./xForm/common";
+import { UI } from "./UI";
+import {
+	AllWasWell,
+	EVENT_TYPE,
+	validateForm,
+	validateItem,
+	setCSSVariables,
+	setDocumentTitle,
+	lStorage,
+	iStorage,
+	pickValueFrom,
+	resetValueOf,
+	setValueTo,
+	VNodeCollection,
+	newReactiveState,
+	compileVNode
+} from "./tools";
+import { xLogObject } from "./xSingle/xLogObject";
+import { usefnObserveDomResize } from "./compositionAPI/useDomResize";
+import { useScopeStyle } from "./compositionAPI/useScopeStyle";
+import { xInfoCard } from "./xView/xInfoCard";
+import { xLinkCopy } from "./xButton/xLinkCopy";
+import { xInfoDiffCard } from "./xInfoDiffCard/xInfoDiffCard";
 
 /* @ts-ignore */
 window.dayjs = dayjs;
@@ -39,24 +71,10 @@ window.moment = dayjs;
 /* @ts-ignore */
 window.jquery = $;
 
-import {
-	defPagination,
-	setPagination,
-	getPaginationPageSize,
-	defCol,
-	defColActions,
-	defColActionsBtnlist,
-	defDataGridOption,
-	setDataGridInfo
-} from "./xDataGrid/common";
-import { defItem, vModel, antColKey } from "./xForm/common.jsx";
-import { EVENT_TYPE, validateForm, AllWasWell } from "./tools/validate.js";
-import { setDocumentTitle, setCSSVariables } from "./tools/dom.js";
-import { lStorage } from "./tools/storage.js";
-import { pickValueFrom, resetValueOf, setValueTo } from "./tools/form.js";
-import { UI } from "./UI";
-import { VNodeCollection } from "./tools/VNodeRender";
-import { compileVNode } from "./tools/framework";
+export const compositionAPI = {
+	usefnObserveDomResize,
+	useScopeStyle
+};
 
 /* my-private-ui-component */
 const componentMyUI = {
@@ -75,7 +93,11 @@ const componentMyUI = {
 	xPagination,
 	xCellLabel,
 	xVirScroll,
-	xVirTable
+	xVirTable,
+	xLogObject,
+	xInfoCard,
+	xLinkCopy,
+	xInfoDiffCard
 };
 
 export const components = {
@@ -83,10 +105,12 @@ export const components = {
 };
 
 export { VNodeCollection as VNodeCollection };
+export { newReactiveState as newReactiveState };
 export { UI as UI };
 export { dayjs as moment };
 export { dayjs as dayjs };
 export { xU as xU };
+export { xU as _ };
 export { $ as $ };
 export { defPagination as defPagination };
 export { defCol as defCol };
@@ -97,18 +121,21 @@ export { defXVirTableConfigs as defXVirTableConfigs };
 export { setDataGridInfo as setDataGridInfo };
 /* State_UI作为句柄，与外部通信，$t language 等属性 */
 export { State_UI as State_UI };
+export { $t as $t };
 export { Cpt_UI_locale as Cpt_UI_locale };
 export { lStorage as lStorage };
+export { iStorage as iStorage };
 export { EVENT_TYPE as EVENT_TYPE };
 
 export { setPagination as setPagination };
 export { getPaginationPageSize as getPaginationPageSize };
-
+export { validateItem as validateItem };
 export { validateForm as validateForm };
 export { AllWasWell as AllWasWell };
 export { setDocumentTitle as setDocumentTitle };
 export { setCSSVariables as setCSSVariables };
 export { defItem as defItem };
+export { defFormConfigs as defFormConfigs };
 export { vModel as vModel };
 export { antColKey as antColKey };
 export { pickValueFrom as pickValueFrom };

@@ -7,9 +7,34 @@ import "dayjs/locale/en-au";
 import { lStorage } from "./tools/storage";
 import { xU } from "./ventoseUtils";
 
+/*i18n  使用 {变量名} 赋值 */
+export function $t(prop: string | number, payload = {}, i18nMessage = false) {
+	/* this指向 */
+	const result = { label: prop, prop: prop };
+	xU.templateSettings.interpolate = /{([\s\S]+?)}/g;
+	if (State_UI.i18nMessage) {
+		//@ts-ignore
+		const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
+		if (temp) {
+			result.label = xU.template(temp)(payload);
+			if (!result.label) {
+				result.label = prop;
+				console.error(`i18n:${prop} "NOT_FOUND"`);
+			}
+		}
+	}
+	return result;
+}
+
 /* 可以与外部通信，可以增改 */
 
 let _State_UI = {
+	xItemCollection: {},
+	pagination: {
+		page: "page",
+		size: "size",
+		total: "total"
+	},
 	language: lStorage["language"] || "zh-CN",
 	onLanguageChange: false,
 	LANGUAGE: {
@@ -21,9 +46,10 @@ let _State_UI = {
 	assetsSvgPath: "",
 	assetsPath: "",
 	bashPath: "",
-	setAssetsBaseById(eleId) {
+	setAssetsBaseById(eleId: string) {
 		const img = document.getElementById(eleId);
 		if (img) {
+			//@ts-ignore
 			const src = String(img.href);
 			const index = src.match(/assets(.*)/)?.index || 0;
 			this.assetsSvgPath = src.substring(0, index) + "assets/svg";
@@ -31,26 +57,20 @@ let _State_UI = {
 			this.bashPath = src.substring(0, index);
 		}
 	},
-	/*i18n  使用 {变量名} 赋值 */
-	$t(prop, payload = {}, i18nMessage = false) {
-		/* this指向 */
-		const result = { label: prop, prop: prop };
-		xU.templateSettings.interpolate = /{([\s\S]+?)}/g;
-		if (State_UI.i18nMessage) {
-			const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
-			if (temp) {
-				result.label = xU.template(temp)(payload);
-				if (!result.label) {
-					result.label = prop;
-					console.error(`i18n:${prop} "NOT_FOUND"`);
-				}
-			}
+	$t,
+	isDev: localStorage.___VENTOSE_UI_IS_DEV_MODE === "VENTOSE_UI_IS_DEV_MODE",
+	dev(isDev: any) {
+		if (isDev) {
+			localStorage.___VENTOSE_UI_IS_DEV_MODE = "VENTOSE_UI_IS_DEV_MODE";
+		} else {
+			localStorage.removeItem("___VENTOSE_UI_IS_DEV_MODE");
 		}
-		return result;
 	}
 };
 
-export const State_UI = reactive(_State_UI);
+type t_State_UI = typeof _State_UI;
+
+export const State_UI: t_State_UI = reactive(_State_UI);
 
 watch(
 	() => State_UI.language,
@@ -58,6 +78,7 @@ watch(
 		lStorage["language"] = language;
 		dayjs.locale(language === "zh-CN" ? "zh-cn" : "en");
 		if (State_UI.onLanguageChange) {
+			//@ts-ignore
 			State_UI.onLanguageChange(language, State_UI);
 		}
 	},
@@ -68,6 +89,7 @@ watch(
 
 export const Cpt_UI_locale = computed(() => {
 	const currentLanguage = xU.camelCase(State_UI.language);
+	//@ts-ignore
 	const locale = State_UI.LANGUAGE[currentLanguage];
 	return locale;
 });

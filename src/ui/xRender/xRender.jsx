@@ -1,4 +1,4 @@
-import { defineComponent, markRaw, h } from "vue";
+import { defineComponent, h, markRaw } from "vue";
 
 export default defineComponent(
 	markRaw({

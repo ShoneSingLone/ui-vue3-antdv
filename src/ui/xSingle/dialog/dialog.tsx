@@ -2,8 +2,8 @@
 
 import { xU } from "../../ventoseUtils";
 import $ from "jquery";
-import { LayerUtils, KEY } from "../layer/LayerUtils";
-import { createApp, defineComponent, reactive, h } from "vue";
+import { KEY, LayerUtils } from "../layer/LayerUtils";
+import { createApp, defineComponent } from "vue";
 import { State_UI } from "../../State_UI";
 
 const EcsPressHandler = xU.debounce(async function (event, dialogOptions) {
@@ -12,19 +12,22 @@ const EcsPressHandler = xU.debounce(async function (event, dialogOptions) {
 	if ($antModal.length > 0) {
 		return;
 	}
-	console.log(event);
 	if (event.keyCode === KEY.esc) {
 		await dialogOptions.closeDialog();
 	}
 }, 100);
 
 export type t_dialogOptions = {
+	/* 弹窗里面的弹窗点击之后不关闭（点不到其他位置） */
+	keepTop?: boolean;
+	payload?: any;
+	isEcsCloseDialog?: boolean;
 	/* 传入的组件的实例 */
 	_contentInstance?: object;
 	/* dialog jQuery 实例 */
 	_dialog$ele?: JQuery;
 	/* 在component里面propDialogOptions作为参数传入*/
-	title: string;
+	title?: any;
 	component: object;
 	area?: string[];
 	/* layer 索引，用于layer close */
@@ -139,6 +142,9 @@ export const installUIDialogComponent = (
 				handler: event => EcsPressHandler(event, dialogOptions),
 				on(_layerKey) {
 					handleEcsPress._layerKey = _layerKey;
+					if (!dialogOptions.isEcsCloseDialog) {
+						return;
+					}
 					$(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
 				},
 				off() {
@@ -152,6 +158,13 @@ export const installUIDialogComponent = (
 				{
 					/* 传入自定义样式 */
 					contentClass: "flex1",
+					offset: ["160px", null],
+					btn: [
+						/*'确定', '取消'*/
+					]
+				},
+				dialogOptions,
+				{
 					type: LayerUtils.DIALOG,
 					title: [title || ""],
 					area: area || [],
@@ -161,9 +174,10 @@ export const installUIDialogComponent = (
 					btn: [
 						/*'确定', '取消'*/
 					],
-					success($eleLayer, _layerKey) {
+					success($eleLayer, _layerKey, layerInstance) {
 						handleEcsPress.on(_layerKey);
 						/* dialog jQuery 实例 */
+						dialogOptions._layerInstance = layerInstance;
 						dialogOptions._dialog$ele = $eleLayer;
 						dialogOptions._layerKey = _layerKey;
 						try {
@@ -172,6 +186,12 @@ export const installUIDialogComponent = (
 									components: { BussinessComponent },
 									created() {
 										this.dialogOptions._contentInstance = this;
+
+										if (this.dialogOptions.keepTop) {
+											setTimeout(() => {
+												$(`#layui-layer-shade${_layerKey}`).css("z-index", 1);
+											}, 6);
+										}
 										resolve(this.dialogOptions);
 									},
 									data() {

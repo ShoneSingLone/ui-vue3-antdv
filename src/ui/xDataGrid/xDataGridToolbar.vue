@@ -1,6 +1,5 @@
 <script lang="jsx">
 import { defineComponent } from "vue";
-import { xU } from "../ventoseUtils";
 import { setPagination } from "./common";
 import xColFilter from "./xColFilter.vue";
 
@@ -20,7 +19,7 @@ export default defineComponent({
 			return {
 				preset: "query",
 				onClick: async () => {
-					if (this.configs.queryTableList) {
+					if (this.configs?.queryTableList) {
 						/* reset 当前页为1 */
 						setPagination(this.configs, { page: 1 });
 						await this.configs.queryTableList({ pagination: { page: 1 } });
@@ -62,14 +61,14 @@ export default defineComponent({
 		},
 		Cpt_isSetConfigs() {
 			/* configs 默认会设置pagination属性  */
-			/* 
+			/*
 			<!--
 		Cpt_isSetConfigs:{{Cpt_isSetConfigs}}
 		Cpt_isShowQuery:{{Cpt_isShowQuery}}
 		Cpt_isShowRefresh:{{Cpt_isShowRefresh}}
 		Cpt_isShowFilter:{{Cpt_isShowFilter}}
 		--> */
-			return this.configs && this.configs.pagination;
+			return this.configs;
 		}
 	}
 });

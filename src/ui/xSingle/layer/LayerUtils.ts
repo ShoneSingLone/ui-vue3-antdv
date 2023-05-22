@@ -116,10 +116,14 @@ export const READY: {
 	},
 	/* 记录宽高坐标，用于还原 */
 	record($eleLayer) {
+		const [windowHeight, windowWidth] = [$win.height(), $win.width()];
+
+		const isLimit = $eleLayer.height() > windowHeight;
+		const isLimitWidth = $eleLayer.width() > windowWidth;
 		var area = [
-			$eleLayer.width(),
-			$eleLayer.height(),
-			$eleLayer.position().top,
+			isLimitWidth ? windowWidth - 64 : $eleLayer.width(),
+			isLimit ? windowHeight - 64 : $eleLayer.height(),
+			isLimit ? 32 : $eleLayer.position().top,
 			$eleLayer.position().left + parseFloat($eleLayer.css("margin-left"))
 		];
 		$eleLayer.find(".layui-layer-max").addClass("layui-layer-maxmin");
@@ -174,11 +178,14 @@ const LayerUtils = {
 		LayerUtils.cache = READY.config = $.extend({}, READY.config, options);
 		LayerUtils.path = READY.config.path || LayerUtils.path;
 		typeof options.extend === "string" && (options.extend = [options.extend]);
-		if (!options.extend) return this;
+		if (!options.extend) {
+			return this;
+		}
 		return this;
 	},
 	open(options: i_layerOptions) {
-		const { _layerKey } = new ClassLayer(options);
+		const layerInstance = new ClassLayer(options);
+		const { _layerKey } = layerInstance;
 		return _layerKey;
 	},
 	/* 各种快捷引用 */
@@ -379,12 +386,15 @@ const LayerUtils = {
 	},
 	style(index, options, limit) {
 		/* 设定层的样式 */
-		var $$eleLayer = $("#" + LAYUI_LAYER + index),
-			contElem = $$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`),
-			type = $$eleLayer.attr("type"),
-			titHeight = $$eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0,
-			btnHeight = $$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0,
-			minLeft = $$eleLayer.attr("minLeft");
+		var $eleLayer = $("#" + LAYUI_LAYER + index);
+		const $contentEle = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`);
+		const type = $eleLayer.attr("type");
+		const titHeight =
+			$eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0;
+		let contentHeight =
+			$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0;
+		const [windowHeight, windowWidth] = [$win.height(), $win.width()];
+		var minLeft = $eleLayer.attr("minLeft");
 		if (type === TYPE_LOADING || type === TYPE_TIPS) {
 			return;
 		}
@@ -394,23 +404,26 @@ const LayerUtils = {
 				options.width = 260;
 			}
 
-			if (parseFloat(options.height) - titHeight - btnHeight <= 64) {
-				options.height = 64 + titHeight + btnHeight;
+			if (parseFloat(options.height) - titHeight - contentHeight <= 64) {
+				options.height = 64 + titHeight + contentHeight;
 			}
 		}
 
-		$$eleLayer.css(options);
-		btnHeight = $$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight();
+		if (options.height > windowHeight) {
+			options.height = parseFloat(windowHeight);
+		}
+		$eleLayer.css(options);
+		contentHeight = $contentEle.outerHeight();
 		if (type === TYPE_IFRAME) {
-			$$eleLayer.find("iframe").addClass("flex1");
+			$eleLayer.find("iframe").addClass("flex1");
 		} else {
-			contElem.css({
+			$contentEle.css({
 				height:
 					parseFloat(options.height) -
 					titHeight -
-					btnHeight -
-					parseFloat(contElem.css("padding-top")) -
-					parseFloat(contElem.css("padding-bottom"))
+					contentHeight -
+					parseFloat($contentEle.css("padding-top")) -
+					parseFloat($contentEle.css("padding-bottom"))
 			});
 		}
 	},
@@ -524,10 +537,13 @@ const LayerUtils = {
 		return await Promise.all(needClose.map(LayerUtils.close));
 	},
 	setLayerTop($current: JQuery) {
+		const type = $current.attr("type");
 		if ($current.hasClass("set-layer-top")) {
 			return;
 		} else {
-			$(".set-layer-top").removeClass("set-layer-top");
+			const selector = `.set-layer-top[type=${type}]`;
+			/* FIX: 防止不同类型的层重排 */
+			$(selector).removeClass("set-layer-top");
 			$current.addClass("set-layer-top").appendTo($body);
 		}
 	}
@@ -702,8 +718,7 @@ class ClassLayer {
 		const fnValid = i => !!i;
 
 		const layerWrapperClassname = [
-			"flex vertical",
-			"elevation-4",
+			"flex vertical elevation-2",
 			`layui-layer-${typeName}`,
 			LAYUI_LAYER,
 			config.skin,
@@ -733,7 +748,7 @@ class ClassLayer {
 			.filter(fnValid)
 			.join(" ");
 
-		const [width, height] = config.area;
+		const [width, height] = config.area || [];
 
 		return `
 <div id="${_IDLayer}" layer-wrapper="${_IDLayer}" type="${typeName}"
@@ -744,8 +759,8 @@ class ClassLayer {
 		data-content-type="${isContentTypeObject ? "object" : "string"}"
 		style="position:fixed;
 			z-index:${zIndex};
-			width:${config.area[0]}; 
-			height:${config.area[1]};"
+			width:${width}; 
+			height:${height};"
 		>
 			${this.cptDomTitle}
 			<div class="${classContent}" id="${_IDContent}">
@@ -853,7 +868,9 @@ class ClassLayer {
 				}
 				config.follow = config.content[1];
 				const arrow = '<i class="layui-layer-TipsG"></i>';
-				config.content = `<div style="max-width:300px;overflow:auto;">${config.content[0]}<div>${arrow}`;
+				config.content = `<div style="max-width:${
+					config?.custumSettings?.maxWidth || "300px"
+				};overflow:auto;">${config.content[0]}<div>${arrow}`;
 				delete config.title;
 				config.btn = [];
 				config.tips =
@@ -970,8 +987,14 @@ class ClassLayer {
 		return layerInstance;
 	}
 
+	/**
+	 * 计算坐标
+	 *
+	 * @returns
+	 *
+	 * @memberOf ClassLayer
+	 */
 	offset() {
-		/* 计算坐标 */
 		var layerInstance = this,
 			config = layerInstance.config,
 			$eleLayer = layerInstance.$eleLayer;
@@ -1204,12 +1227,13 @@ class ClassLayer {
 		const { $eleLayer, config } = layerInstance;
 
 		if (config.success) {
+			const args = [$eleLayer, layerInstance._layerKey, layerInstance];
 			if (config.type == LayerUtils.IFRAME) {
 				$eleLayer.find("iframe").on("load", function () {
-					config.success.call(this, $eleLayer, layerInstance._layerKey);
+					config.success.apply(config, args);
 				});
 			} else {
-				config.success($eleLayer, layerInstance._layerKey);
+				config.success.apply(config, args);
 			}
 		}
 
@@ -1306,7 +1330,7 @@ $document
 	.on(
 		"mousemove",
 		`.${LAYUI_LAYER_MOVE}`,
-		xU.throttle(function (e) {
+		function (e) {
 			const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
 			/* 拖拽移动 */
 			if (moveOrResizeInstance instanceof ClassLayer) {
@@ -1363,7 +1387,8 @@ $document
 			}
 
 			/* Resize */
-		}, 90)
+		}
+		// xU.throttle(, 90)
 	)
 	.on("mouseup", function (e) {
 		if (READY.moveOrResizeInstance instanceof ClassLayer) {

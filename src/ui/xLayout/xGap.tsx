@@ -1,13 +1,14 @@
-<script lang="jsx">
-import { defineComponent, useAttrs, h, mergeProps, computed } from "vue";
+//@ts-ignore
+import { defineComponent } from "vue";
 import { xU } from "../ventoseUtils";
 
-export default defineComponent({
+export const xGap = defineComponent({
 	name: "xGap",
 	/* a:all,top left right bottom;class flex1,2,3,4 */
 	props: ["t", "l", "r", "b", "a", "f"],
 	computed: {
 		gapClass: {
+			set() {},
 			get() {
 				let basic = "x-gap";
 				if (this.f) {
@@ -17,6 +18,7 @@ export default defineComponent({
 			}
 		},
 		gapStyle: {
+			set() {},
 			get() {
 				const POSITION_MAP = {
 					t: "top",
@@ -28,11 +30,14 @@ export default defineComponent({
 				const gapStyle = {};
 
 				if (this.a) {
+					//@ts-ignore
 					gapStyle.margin = `${this.a}px`;
 				} else {
 					xU.map(POSITION_MAP, (prop, key) => {
+						//@ts-ignore
 						const value = this[key];
 						if (value) {
+							//@ts-ignore
 							gapStyle[`margin-${prop}`] = `${value}px`;
 						}
 					});
@@ -46,4 +51,3 @@ export default defineComponent({
 		return <div style={this.gapStyle} class={this.gapClass} />;
 	}
 });
-</script>
