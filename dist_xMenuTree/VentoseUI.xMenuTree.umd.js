@@ -132,7 +132,7 @@
       }
     },
     render() {
-      return vue.createVNode(vue.Fragment, null, [this.currentPath, this.openKeys, vue.createTextVNode("arr_selectedMenuId:"), this.arr_selectedMenuId, vue.createTextVNode("pathAndIdCollection: "), JSON.stringify(this.pathAndIdCollection), vue.createVNode(vue.resolveComponent("aMenu"), {
+      return vue.createVNode(vue.Fragment, null, [vue.createVNode(vue.resolveComponent("aMenu"), {
         "openKeys": this.openKeys,
         "onOpenChange": this.onOpenChange,
         "selectedKeys": this.arr_selectedMenuId,

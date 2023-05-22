@@ -1,5 +1,5 @@
 (function(){"use strict";try{if(typeof document!="undefined"){var e=document.createElement("style");e.appendChild(document.createTextNode("")),document.head.appendChild(e)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})();
-import { defineComponent, createVNode, Fragment, createTextVNode, resolveComponent, mergeProps } from "vue";
+import { defineComponent, createVNode, Fragment, resolveComponent, mergeProps } from "vue";
 import { xU } from "@ventose/ui";
 const getIcon = (icon) => {
   return createVNode(resolveComponent("xIcon"), {
@@ -130,7 +130,7 @@ const _sfc_main = defineComponent({
     }
   },
   render() {
-    return createVNode(Fragment, null, [this.currentPath, this.openKeys, createTextVNode("arr_selectedMenuId:"), this.arr_selectedMenuId, createTextVNode("pathAndIdCollection: "), JSON.stringify(this.pathAndIdCollection), createVNode(resolveComponent("aMenu"), {
+    return createVNode(Fragment, null, [createVNode(resolveComponent("aMenu"), {
       "openKeys": this.openKeys,
       "onOpenChange": this.onOpenChange,
       "selectedKeys": this.arr_selectedMenuId,
