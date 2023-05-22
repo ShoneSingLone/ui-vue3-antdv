@@ -1,0 +1,1 @@
+import{d as o,c as e,r as t,F as n}from"./index.cb26f74c.js";const d=o({render(){return e(n,null,[e(t("DemoAndCode"),{title:"\u4F7F\u7528v-uiMove\u5B8C\u6210\u79FB\u52A8\u76D1\u542C",path:"/boundless/demo/directive/uiMove.sfc"},null)])}});export{d as default};
