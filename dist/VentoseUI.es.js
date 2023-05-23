@@ -29631,18 +29631,18 @@ div[id^="lazy-svg_"] {
   text-align: center;
 }
 
-.table-options {\r
-	display: flex;\r
-	flex-flow: row nowrap;\r
-	align-items: center;\r
+.table-options {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
 	padding: 10px 0;
 }
-.table-filter {\r
+.table-filter {
 	margin-left: 4px;
 }
-.table-pagination {\r
+.table-pagination {
 	padding: 10px 0;
-}\r
+}
 .vir-item-component {
   height: 100%;
   overflow: auto;
@@ -29700,6 +29700,7 @@ import { defineComponent, markRaw, h, openBlock, createElementBlock, renderSlot,
 import _ from "lodash";
 import dayjs from "dayjs";
 import { default as default3, default as default4 } from "dayjs";
+import { xU as xU$1, $ as $$2 } from "@ventose/ui";
 import { diff } from "jsondiffpatch";
 import axios from "axios";
 const index = "";
@@ -32262,7 +32263,7 @@ const _sfc_main = defineComponent({
     this.$wrapperEle.off("scroll");
   },
   methods: {
-    setTop: xU.debounce(function() {
+    setTop: xU$1.debounce(function() {
       if (this.$refs.refWrapper) {
         this.$refs.refWrapper.scrollTo({
           top: this.top,
@@ -32271,7 +32272,7 @@ const _sfc_main = defineComponent({
       }
     }, 1e3),
     init() {
-      this.$wrapperEle = $$1(this.$refs.refWrapper);
+      this.$wrapperEle = $$2(this.$refs.refWrapper);
       this.$wrapperEle.on("scroll", () => this.updateTop());
     },
     updateTop(event2) {
@@ -32355,7 +32356,7 @@ const ReadonlyItem = defineComponent({
 const Input = defineComponent({
   props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
   mounted() {
-    xU("xItem Input");
+    xU$1("xItem Input");
   },
   data(vm) {
     return {
@@ -32428,7 +32429,7 @@ const Input = defineComponent({
     return createVNode(component, mergeProps({
       "value": this._modelValue,
       "onUpdate:value": ($event) => this._modelValue = $event
-    }, xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), xU.omit(listeners, ["onUpdate:value"])), slots);
+    }, xU$1.omit(properties, ["value", ...propsWillDeleteFromConfigs]), xU$1.omit(listeners, ["onUpdate:value"])), slots);
   }
 });
 const DatePicker = ({
@@ -36348,7 +36349,7 @@ const InfoCardRow = defineComponent({
     },
     vDomCol() {
       if (this.row) {
-        return xU.map(this.colArray, (col) => {
+        return xU$1.map(this.colArray, (col) => {
           return createVNode(InfoCardCol, {
             "col": col
           }, null);
@@ -36375,14 +36376,14 @@ const xInfoCard = defineComponent({
   props: ["info", "title"],
   methods: {
     updateLableStyle(styleObject) {
-      const styleString = xU.map(xU.merge({
+      const styleString = xU$1.map(xU$1.merge({
         "min-width": "120px",
         "text-align": "right"
       }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
       const styleContent = `#${this.id} .ant-descriptions-item-label {${styleString}}`;
       if (!this.$styleEle) {
-        const $form = $$1(`#${this.id}`);
-        const $style = $$1("<style/>", {
+        const $form = $$2(`#${this.id}`);
+        const $style = $$2("<style/>", {
           id: `style_${this.id}`
         });
         $form.prepend($style);
@@ -36394,7 +36395,7 @@ const xInfoCard = defineComponent({
   mounted() {
     this.$watch("info.colLabelWidth", (width) => {
       if (width) {
-        xU("width", width);
+        xU$1("width", width);
         this.updateLableStyle({
           width
         });
@@ -36430,7 +36431,7 @@ const xInfoCard = defineComponent({
       if (this.rowArray) {
         return createVNode("div", {
           "class": "ant-descriptions-view"
-        }, [xU.map(this.rowArray, (row) => {
+        }, [xU$1.map(this.rowArray, (row) => {
           return createVNode(InfoCardRow, {
             "row": row
           }, null);

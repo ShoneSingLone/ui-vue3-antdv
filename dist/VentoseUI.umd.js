@@ -29631,18 +29631,18 @@ div[id^="lazy-svg_"] {
   text-align: center;
 }
 
-.table-options {\r
-	display: flex;\r
-	flex-flow: row nowrap;\r
-	align-items: center;\r
+.table-options {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
 	padding: 10px 0;
 }
-.table-filter {\r
+.table-filter {
 	margin-left: 4px;
 }
-.table-pagination {\r
+.table-pagination {
 	padding: 10px 0;
-}\r
+}
 .vir-item-component {
   height: 100%;
   overflow: auto;
@@ -29694,8 +29694,8 @@ var __publicField = (obj, key, value) => {
   return value;
 };
 (function(global2, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? factory(exports, require("ant-design-vue"), require("jquery"), require("vue"), require("lodash"), require("dayjs"), require("jsondiffpatch"), require("axios")) : typeof define === "function" && define.amd ? define(["exports", "ant-design-vue", "jquery", "vue", "lodash", "dayjs", "jsondiffpatch", "axios"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.VentoseUI = {}, global2.antd, global2.$, global2.Vue, global2._, global2.dayjs, global2.jsondiffpatch, global2.axios));
-})(this, function(exports2, Antd, $$1, vue, _, dayjs, jsondiffpatch, axios) {
+  typeof exports === "object" && typeof module !== "undefined" ? factory(exports, require("ant-design-vue"), require("jquery"), require("vue"), require("lodash"), require("dayjs"), require("@ventose/ui"), require("jsondiffpatch"), require("axios")) : typeof define === "function" && define.amd ? define(["exports", "ant-design-vue", "jquery", "vue", "lodash", "dayjs", "@ventose/ui", "jsondiffpatch", "axios"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.VentoseUI = {}, global2.antd, global2.$, global2.Vue, global2._, global2.dayjs, global2.VentoseUI, global2.jsondiffpatch, global2.axios));
+})(this, function(exports2, Antd, $$1, vue, _, dayjs, ui$1, jsondiffpatch, axios) {
   "use strict";
   const _interopDefaultLegacy = (e) => e && typeof e === "object" && "default" in e ? e : { default: e };
   const Antd__default = /* @__PURE__ */ _interopDefaultLegacy(Antd);
@@ -32263,7 +32263,7 @@ return fn.call(null,argVue,argPayload);`
       this.$wrapperEle.off("scroll");
     },
     methods: {
-      setTop: xU.debounce(function() {
+      setTop: ui$1.xU.debounce(function() {
         if (this.$refs.refWrapper) {
           this.$refs.refWrapper.scrollTo({
             top: this.top,
@@ -32272,7 +32272,7 @@ return fn.call(null,argVue,argPayload);`
         }
       }, 1e3),
       init() {
-        this.$wrapperEle = $__default.default(this.$refs.refWrapper);
+        this.$wrapperEle = ui$1.$(this.$refs.refWrapper);
         this.$wrapperEle.on("scroll", () => this.updateTop());
       },
       updateTop(event2) {
@@ -32356,7 +32356,7 @@ return fn.call(null,argVue,argPayload);`
   const Input = vue.defineComponent({
     props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
     mounted() {
-      xU("xItem Input");
+      ui$1.xU("xItem Input");
     },
     data(vm) {
       return {
@@ -32429,7 +32429,7 @@ return fn.call(null,argVue,argPayload);`
       return vue.createVNode(component, vue.mergeProps({
         "value": this._modelValue,
         "onUpdate:value": ($event) => this._modelValue = $event
-      }, xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), xU.omit(listeners, ["onUpdate:value"])), slots);
+      }, ui$1.xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), ui$1.xU.omit(listeners, ["onUpdate:value"])), slots);
     }
   });
   const DatePicker = ({
@@ -36349,7 +36349,7 @@ return fn.call(null,argVue,argPayload);`
       },
       vDomCol() {
         if (this.row) {
-          return xU.map(this.colArray, (col) => {
+          return ui$1.xU.map(this.colArray, (col) => {
             return vue.createVNode(InfoCardCol, {
               "col": col
             }, null);
@@ -36376,14 +36376,14 @@ return fn.call(null,argVue,argPayload);`
     props: ["info", "title"],
     methods: {
       updateLableStyle(styleObject) {
-        const styleString = xU.map(xU.merge({
+        const styleString = ui$1.xU.map(ui$1.xU.merge({
           "min-width": "120px",
           "text-align": "right"
         }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
         const styleContent = `#${this.id} .ant-descriptions-item-label {${styleString}}`;
         if (!this.$styleEle) {
-          const $form = $__default.default(`#${this.id}`);
-          const $style = $__default.default("<style/>", {
+          const $form = ui$1.$(`#${this.id}`);
+          const $style = ui$1.$("<style/>", {
             id: `style_${this.id}`
           });
           $form.prepend($style);
@@ -36395,7 +36395,7 @@ return fn.call(null,argVue,argPayload);`
     mounted() {
       this.$watch("info.colLabelWidth", (width) => {
         if (width) {
-          xU("width", width);
+          ui$1.xU("width", width);
           this.updateLableStyle({
             width
           });
@@ -36431,7 +36431,7 @@ return fn.call(null,argVue,argPayload);`
         if (this.rowArray) {
           return vue.createVNode("div", {
             "class": "ant-descriptions-view"
-          }, [xU.map(this.rowArray, (row) => {
+          }, [ui$1.xU.map(this.rowArray, (row) => {
             return vue.createVNode(InfoCardRow, {
               "row": row
             }, null);

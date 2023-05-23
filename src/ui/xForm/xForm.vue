@@ -21,7 +21,7 @@ export default defineComponent({
 			default() {
 				return {};
 			}
-		},
+		}
 	},
 	emits: [],
 	data() {
@@ -34,10 +34,7 @@ export default defineComponent({
 		},
 		formStyleText() {
 			return xU
-				.map(
-					xU.merge({}, this.formStyle),
-					(value, prop) => `${prop}: ${value}`
-				)
+				.map(xU.merge({}, this.formStyle), (value, prop) => `${prop}: ${value}`)
 				.join(";");
 		},
 		labelStyleText() {

@@ -16,7 +16,7 @@
 
 <script lang="tsx">
 import { defCol, defDataGridOption, xU, $t } from "@ventose/ui";
-import { ITEM_OPTIONS } from '@/common/options';
+import { ITEM_OPTIONS } from "@/common/options";
 
 export default {
 	name: "DemoXDataGrid",
@@ -28,7 +28,7 @@ export default {
 	data() {
 		return {
 			configs_table: defDataGridOption({
-				async queryTableList(params) { },
+				async queryTableList(params) {},
 				dataSource: [],
 				columns: {
 					...defCol({ prop: "name", label: $t("名称").label }),

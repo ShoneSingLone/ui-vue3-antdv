@@ -5,7 +5,6 @@ import { defineComponent } from "vue";
 import xMenuTree from "../entry/lib/xMenuTree.vue";
 import { xU, defItem, defCol, defXVirTableConfigs, compileVNode } from "./ui";
 
-
 export default defineComponent({
 	components: { xMenuTree },
 	data(vm) {
@@ -50,11 +49,11 @@ export default defineComponent({
 									label: "b",
 									icon: "vite",
 									path: "/Dev/b/c/b"
-								},
+								}
 							]
-						},
+						}
 					]
-				},
+				}
 			],
 			configs_xVirTable: defXVirTableConfigs({
 				rowHeight: 32,
