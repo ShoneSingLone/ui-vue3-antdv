@@ -12,7 +12,7 @@
   "homepage_github": "https://shonesinglone.github.io/ui-vue3-antdv/",
   "homepage": "https://shonesinglone.gitee.io/ui-vue3-antdv/",
   "scripts": {
-    "bs": "pnpm i --legacy-peer-deps",
+    "bs": "npm i --legacy-peer-deps",
     "npmpatch": "npm version patch",
     "up": "npm publish --access public",
     "start": "cross-env runPlugin=useDevServer vite --open --port 3011",
