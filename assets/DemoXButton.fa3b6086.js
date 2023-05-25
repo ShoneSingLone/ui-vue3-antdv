@@ -1,0 +1,1 @@
+import{e as o}from"./index.8e4b0906.js";const t={};function n(s,c,r,u,p,a){const e=Vue.resolveComponent("DemoAndCode");return Vue.openBlock(),Vue.createBlock(e,{title:"xButton\u7684\u57FA\u672C\u914D\u7F6E",path:"/boundless/demo/xButton/xButtonBase.sfc"})}const _=o(t,[["render",n]]);export{_ as default};

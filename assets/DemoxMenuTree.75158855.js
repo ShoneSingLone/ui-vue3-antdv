@@ -1,1 +1,0 @@
-import{f as o,r as n,o as s,k as t}from"./index.d482bc0a.js";const r={};function c(a,p,d,_,m,u){const e=n("DemoAndCode");return s(),t(e,{title:"xMenuTree",path:"/boundless/demo/xMenuTree/xMenuTreeBase.sfc"})}const x=o(r,[["render",c]]);export{x as default};

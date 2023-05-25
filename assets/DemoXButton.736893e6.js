@@ -1,1 +1,0 @@
-import{f as t,r as e,o as n,k as s}from"./index.d482bc0a.js";const c={};function r(a,p,d,_,m,u){const o=e("DemoAndCode");return n(),s(o,{title:"xButton\u7684\u57FA\u672C\u914D\u7F6E",path:"/boundless/demo/xButton/xButtonBase.sfc"})}const B=t(c,[["render",r]]);export{B as default};
