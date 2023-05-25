@@ -1,6 +1,7 @@
-import { $, compositionAPI, xU } from "@ventose/ui";
+import $ from "jquery";
 import { defineComponent } from "vue";
 import "./xInfoCard.less";
+import { xU } from "../ventoseUtils";
 
 export const InfoCardCol = defineComponent({
 	props: ["col"],

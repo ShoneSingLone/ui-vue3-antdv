@@ -9,52 +9,6 @@ export default defineComponent({
 	components: { xMenuTree },
 	data(vm) {
 		return {
-			treeArray: [
-				{
-					id: "a",
-					label: "a",
-					icon: "vite",
-					path: "/Dev/a"
-				},
-				{
-					id: "b",
-					label: "b",
-					icon: "vite",
-					children: [
-						{
-							id: "ba",
-							label: "a",
-							icon: "vite",
-							path: "/Dev/b/a"
-						},
-						{
-							id: "bb",
-							label: "b",
-							icon: "UserOutlined",
-							path: "/Dev/b/b"
-						},
-						{
-							id: "bc",
-							label: "c",
-							icon: "UserOutlined",
-							children: [
-								{
-									id: "a",
-									label: "a",
-									icon: "vite",
-									path: "/Dev/b/c/a"
-								},
-								{
-									id: "b",
-									label: "b",
-									icon: "vite",
-									path: "/Dev/b/c/b"
-								}
-							]
-						}
-					]
-				}
-			],
 			configs_xVirTable: defXVirTableConfigs({
 				rowHeight: 32,
 				dataSource: [],
@@ -140,8 +94,9 @@ export default defineComponent({
 </script>
 
 <template>
-	<xMenuTree :tree="treeArray" />
 	<!-- <aButton @click="add">add</aButton>
+		
+
 
 	<div class="flex horizon">
 		<pre

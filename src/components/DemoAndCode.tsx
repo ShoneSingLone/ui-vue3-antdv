@@ -36,7 +36,7 @@ export const DemoAndCode = defineComponent({
 				this.getBussinessComponent();
 			}
 		},
-		async reurn(scfObjSourceCode) {
+		async rerun(scfObjSourceCode) {
 			/* TODO: 弹窗修改加载的代码 */
 			/* 重新运行 */
 			const _BussinessComponent = await xU.getVueComponentBySourceCode(
@@ -65,7 +65,7 @@ export const DemoAndCode = defineComponent({
 		async getBussinessComponent() {
 			this.BussinessComponentSourceCode = await xU.asyncLoadText(this.sfcURL);
 			const scfObjSourceCode = xU.VueLoader(this.BussinessComponentSourceCode);
-			this.reurn(scfObjSourceCode);
+			this.rerun(scfObjSourceCode);
 		},
 		showSourceCodeDialog() {
 			UI.dialog.component({

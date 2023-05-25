@@ -10,7 +10,8 @@ export default defineComponent({
 	props: {
 		/*任一附带信息*/
 		payload: {
-			type: Object,
+			required: false,
+			type: [Object, String],
 			default: ""
 		},
 		/**
@@ -31,25 +32,7 @@ export default defineComponent({
 	},
 	data() {
 		const id = xU.genId("xChart");
-		return { id };
-	},
-	computed: {
-		helper() {
-			if (xU.isPlainObject(this.configs)) {
-				return this.configs;
-			}
-			return CONFIGS_MAP[this.configs];
-		}
-	},
-	mounted() {
-		this.init();
-	},
-	methods: {
-		init() {
-			this.updateOptions();
-			this.observe();
-		},
-		updateOptions() {
+		this.updateOptions = xU.debounce(function () {
 			if (this.myChart) {
 				this.myChart.dispose();
 			}
@@ -60,6 +43,30 @@ export default defineComponent({
 			this.myChart.showLoading();
 			this.myChart.setOption(this.options);
 			this.myChart.hideLoading();
+		}, 300);
+		return { id };
+	},
+	computed: {
+		helper() {
+			if (xU.isPlainObject(this.configs)) {
+				return this.configs;
+			}
+			return CONFIGS_MAP[this.configs];
+		}
+	},
+	watch: {
+		dataset() {
+			this.updateOptions();
+		}
+	},
+	mounted() {
+		this.init();
+	},
+	methods: {
+		async init() {
+			await xU.ensureValueDone(() => this.myChart);
+			this.updateOptions();
+			this.observe();
 		},
 		observe() {
 			//初始化这个观察类 如果有变化了 那么就调用二chart的resize方法改变大小

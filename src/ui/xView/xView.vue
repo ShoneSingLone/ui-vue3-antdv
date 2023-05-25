@@ -21,7 +21,24 @@ export default defineComponent({
 </script>
 
 <template>
-	<div v-show="!!isShow" :id="id">
-		<slot />
+	<div v-show="!!isShow" :id="id" class="flex flex1">
+		<div class="xView-body flex vertical flex1">
+			<slot />
+		</div>
 	</div>
 </template>
+
+<style lang="scss">
+[id^="xView"] {
+	height: 100%;
+	width: 100%;
+	background: white;
+
+	.xView-body {
+		height: 100%;
+		width: 100%;
+		overflow: auto;
+		padding: 0 10px;
+	}
+}
+</style>

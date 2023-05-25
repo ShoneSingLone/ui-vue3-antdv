@@ -131,12 +131,11 @@ const privateLodash = {
 	): Promise<object> {
 		/* @ts-ignore */
 		__Vue = __Vue || window.Vue || {};
+		scfObjSourceCode = scfObjSourceCode.replace("export default", "");
 		const scfObjAsyncFn = new Function(
 			"argVue",
 			"argPayload",
-			`console.log(\`${url}\`)\n
-var fn = ${scfObjSourceCode}
-return fn.call(null,argVue,argPayload);`
+			`const THIS_FILE_URL = (\`${url}\`); var fn = ${scfObjSourceCode} return fn.call(null,argVue,argPayload);`
 		);
 		const scfObj = await scfObjAsyncFn(__Vue, {
 			url
@@ -146,7 +145,12 @@ return fn.call(null,argVue,argPayload);`
 	/* * @parseContent：满足`return {}`形式的字符串 */
 	parseContent: (returnSentence: string) => {
 		if (!returnSentence) return;
-		return new Function(`${returnSentence} return module();`);
+		try {
+			const fn = new Function(`${returnSentence} return module();`);
+			return fn();
+		} catch (error) {
+			xU(error);
+		}
 	},
 	payloadIdCount: 1,
 	payloadIdCountMax: 40000,
@@ -417,18 +421,20 @@ return fn.call(null,argVue,argPayload);`
 	 * @returns 在window中名为globalName的全局变量
 	 */
 	asyncLoadJS: async (url: string, globalName: string) => {
-		/* UMD 会暴露出一个全局对象，正是此globalName */
-		/* @ts-ignore */
-		if (window[globalName]) {
+		return new Promise(r => {
+			/* UMD 会暴露出一个全局对象，正是此globalName */
 			/* @ts-ignore */
-			return window[globalName];
-		}
-		const $style = $("<style/>").attr("id", `asyncLoadJS_${globalName}`);
-		$style.appendTo($("body")).on("load", function () {
-			/* @ts-ignore */
-			return window[globalName];
+			if (window[globalName]) {
+				/* @ts-ignore */
+				r(window[globalName]);
+			}
+			const $style = $("<script/>").attr("id", `asyncLoadJS_${globalName}`);
+			$style.appendTo($("body")).on("load", function () {
+				/* @ts-ignore */
+				r(window[globalName]);
+			});
+			$style.attr("src", url);
 		});
-		$style.attr("src", url);
 	},
 	asyncGlobalJS: async (globalName: string, url: string) => {
 		/* @ts-ignore */

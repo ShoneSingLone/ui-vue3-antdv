@@ -1,7 +1,7 @@
-(function(){"use strict";try{if(typeof document!="undefined"){var e=document.createElement("style");e.appendChild(document.createTextNode("")),document.head.appendChild(e)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})();
-(function(global, factory) {
+(function () { "use strict"; try { if (typeof document != "undefined") { var e = document.createElement("style"); e.appendChild(document.createTextNode("")), document.head.appendChild(e); } } catch (t) { console.error("vite-plugin-css-injected-by-js", t); } })();
+(function (global, factory) {
   typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(require("vue"), require("@ventose/ui")) : typeof define === "function" && define.amd ? define(["vue", "@ventose/ui"], factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.VentoseUI = global.VentoseUI || {}, global.VentoseUI.components = global.VentoseUI.components || {}, global.VentoseUI.components.xMenuTree = factory(global.Vue, global.VentoseUI));
-})(this, function(vue, ui) {
+})(this, function (vue, ui) {
   "use strict";
   const getIcon = (icon) => {
     return vue.createVNode(vue.resolveComponent("xIcon"), {
@@ -17,7 +17,7 @@
       return {};
     },
     data(vm) {
-      vm.setActiveMenuHighlight = ui.xU.debounce(function() {
+      vm.setActiveMenuHighlight = ui.xU.debounce(function () {
         const openKey = vm.pathAndIdCollection[vm.currentPath];
         if (!openKey) {
           return;
@@ -132,7 +132,7 @@
       }
     },
     render() {
-      return vue.createVNode(vue.resolveComponent("aMenu"), {
+      return vue.createVNode(vue.Fragment, null, [vue.createVNode(vue.resolveComponent("aMenu"), {
         "openKeys": this.openKeys,
         "onOpenChange": this.onOpenChange,
         "selectedKeys": this.arr_selectedMenuId,
@@ -140,7 +140,7 @@
         "mode": "inline"
       }, {
         default: () => [this.subTree]
-      });
+      })]);
     }
   });
   return _sfc_main;

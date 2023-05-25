@@ -1,6 +1,6 @@
 import { defineComponent, resolveComponent } from "vue";
 import { ReadonlyItem } from "./Readonly";
-import { xU } from "@ventose/ui";
+import { xU } from "../../ventoseUtils";
 
 /**
  * @Description

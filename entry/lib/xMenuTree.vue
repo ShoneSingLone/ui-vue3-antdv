@@ -152,14 +152,9 @@ export default defineComponent({
 		}
 	},
 	render() {
-		return <>
-			{/* {this.currentPath}
-			{this.openKeys}
-			arr_selectedMenuId:{this.arr_selectedMenuId}
-			pathAndIdCollection: {JSON.stringify(this.pathAndIdCollection)} */}
-			<aMenu openKeys={this.openKeys} onOpenChange={this.onOpenChange} v-model:selectedKeys={this.arr_selectedMenuId} mode="inline">
-				{this.subTree}
-			</aMenu></>;
+		return <aMenu openKeys={this.openKeys} onOpenChange={this.onOpenChange} v-model:selectedKeys={this.arr_selectedMenuId} mode="inline">
+			{this.subTree}
+		</aMenu>
 	}
 });
 

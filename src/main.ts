@@ -6,6 +6,7 @@ import { router } from "./router";
 import App from "./App.vue";
 import Mkit from "./components/MarkdownIt.vue";
 import { DemoAndCode } from "./components/DemoAndCode";
+import xMenuTreeVue from "../entry/lib/xMenuTree.vue";
 
 const appPlugins = {
 	install: (app, options /*{dependState, appPlugins}*/) => {
@@ -17,6 +18,7 @@ const appPlugins = {
 
 		app.use({
 			install: (app, { watch } = {}) => {
+				app.component(xMenuTreeVue.name, xMenuTreeVue);
 				app.component("Mkit", Mkit);
 				app.component("DemoAndCode", DemoAndCode);
 				//注册i8n实例并引入语言文件

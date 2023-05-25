@@ -2,11 +2,11 @@ const { _n } = require("@ventose/utils-node");
 const pathD = _n.getPathD(__dirname);
 const fs = require("fs");
 
-const cleanDir = async (dirUrl) => {
+const cleanDir = async (dirUrl, subDir = "assets") => {
 	try {
-		dirUrl = pathD(dirUrl, "assets");
+		dirUrl = pathD(dirUrl, subDir);
 		if (!fs.existsSync(dirUrl)) {
-			console.log("[✓] : no assets");
+			console.log(`[x] : no ${subDir}`);
 			return;
 		}
 		const [dirs, files] = await _n.asyncAllDirAndFile([dirUrl]);
@@ -28,7 +28,7 @@ const copyStats = async () => {
 	try {
 		const statsHtmlPath = pathD("../../stats.html");
 		if (!fs.existsSync(statsHtmlPath)) {
-			console.log("[✓] : no stats.html");
+			console.log("[x] : no stats.html");
 			return;
 		}
 		const content = await fs.promises.readFile(statsHtmlPath);
@@ -49,6 +49,7 @@ const copyStats = async () => {
 	let distPath;
 	while (distPath = distPathArray.pop()) {
 		await cleanDir(distPath);
+		await cleanDir(distPath, "libs");
 	}
 	await copyStats();
 })();

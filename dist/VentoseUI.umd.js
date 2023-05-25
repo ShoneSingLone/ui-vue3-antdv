@@ -29586,7 +29586,17 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
-/*# sourceMappingURL=antd.css.map */.xIcon {
+/*# sourceMappingURL=antd.css.map */[id^=xView] {
+  height: 100%;
+  width: 100%;
+  background: white;
+}
+[id^=xView] .xView-body {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  padding: 0 10px;
+}.xIcon {
   width: 16px;
   height: 16px;
 }
@@ -29694,8 +29704,8 @@ var __publicField = (obj, key, value) => {
   return value;
 };
 (function(global2, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? factory(exports, require("ant-design-vue"), require("jquery"), require("vue"), require("lodash"), require("dayjs"), require("@ventose/ui"), require("jsondiffpatch"), require("axios")) : typeof define === "function" && define.amd ? define(["exports", "ant-design-vue", "jquery", "vue", "lodash", "dayjs", "@ventose/ui", "jsondiffpatch", "axios"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.VentoseUI = {}, global2.antd, global2.$, global2.Vue, global2._, global2.dayjs, global2.VentoseUI, global2.jsondiffpatch, global2.axios));
-})(this, function(exports2, Antd, $$1, vue, _, dayjs, ui$1, jsondiffpatch, axios) {
+  typeof exports === "object" && typeof module !== "undefined" ? factory(exports, require("ant-design-vue"), require("jquery"), require("vue"), require("lodash"), require("dayjs"), require("jsondiffpatch"), require("axios")) : typeof define === "function" && define.amd ? define(["exports", "ant-design-vue", "jquery", "vue", "lodash", "dayjs", "jsondiffpatch", "axios"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.VentoseUI = {}, global2.antd, global2.$, global2.Vue, global2._, global2.dayjs, global2.jsondiffpatch, global2.axios));
+})(this, function(exports2, Antd, $$1, vue, _, dayjs, jsondiffpatch, axios) {
   "use strict";
   const _interopDefaultLegacy = (e) => e && typeof e === "object" && "default" in e ? e : { default: e };
   const Antd__default = /* @__PURE__ */ _interopDefaultLegacy(Antd);
@@ -29895,13 +29905,11 @@ var __publicField = (obj, key, value) => {
     },
     async getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
       __Vue = __Vue || window.Vue || {};
+      scfObjSourceCode = scfObjSourceCode.replace("export default", "");
       const scfObjAsyncFn = new Function(
         "argVue",
         "argPayload",
-        `console.log(\`${url}\`)
-
-var fn = ${scfObjSourceCode}
-return fn.call(null,argVue,argPayload);`
+        `const THIS_FILE_URL = (\`${url}\`); var fn = ${scfObjSourceCode} return fn.call(null,argVue,argPayload);`
       );
       const scfObj = await scfObjAsyncFn(__Vue, {
         url
@@ -29911,7 +29919,12 @@ return fn.call(null,argVue,argPayload);`
     parseContent: (returnSentence) => {
       if (!returnSentence)
         return;
-      return new Function(`${returnSentence} return module();`);
+      try {
+        const fn = new Function(`${returnSentence} return module();`);
+        return fn();
+      } catch (error) {
+        xU(error);
+      }
     },
     payloadIdCount: 1,
     payloadIdCountMax: 4e4,
@@ -30091,14 +30104,16 @@ return fn.call(null,argVue,argPayload);`
       });
     },
     asyncLoadJS: async (url, globalName) => {
-      if (window[globalName]) {
-        return window[globalName];
-      }
-      const $style = $__default.default("<style/>").attr("id", `asyncLoadJS_${globalName}`);
-      $style.appendTo($__default.default("body")).on("load", function() {
-        return window[globalName];
+      return new Promise((r) => {
+        if (window[globalName]) {
+          r(window[globalName]);
+        }
+        const $style = $__default.default("<script/>").attr("id", `asyncLoadJS_${globalName}`);
+        $style.appendTo($__default.default("body")).on("load", function() {
+          r(window[globalName]);
+        });
+        $style.attr("src", url);
       });
-      $style.attr("src", url);
     },
     asyncGlobalJS: async (globalName, url) => {
       if (window[globalName]) {
@@ -31138,7 +31153,8 @@ return fn.call(null,argVue,argPayload);`
     name: "xCharts",
     props: {
       payload: {
-        type: Object,
+        required: false,
+        type: [Object, String],
         default: ""
       },
       configs: {
@@ -31154,6 +31170,18 @@ return fn.call(null,argVue,argPayload);`
     },
     data() {
       const id = xU.genId("xChart");
+      this.updateOptions = xU.debounce(function() {
+        if (this.myChart) {
+          this.myChart.dispose();
+        }
+        const options = this.helper.initOptions(this.$props);
+        this.options = this.helper.updateOptions(options, this.dataset);
+        const dom = document.querySelector(`#${this.id}`);
+        this.myChart = this.$echarts.init(dom);
+        this.myChart.showLoading();
+        this.myChart.setOption(this.options);
+        this.myChart.hideLoading();
+      }, 300);
       return {
         id
       };
@@ -31166,25 +31194,19 @@ return fn.call(null,argVue,argPayload);`
         return CONFIGS_MAP[this.configs];
       }
     },
+    watch: {
+      dataset() {
+        this.updateOptions();
+      }
+    },
     mounted() {
       this.init();
     },
     methods: {
-      init() {
+      async init() {
+        await xU.ensureValueDone(() => this.myChart);
         this.updateOptions();
         this.observe();
-      },
-      updateOptions() {
-        if (this.myChart) {
-          this.myChart.dispose();
-        }
-        const options = this.helper.initOptions(this.$props);
-        this.options = this.helper.updateOptions(options, this.dataset);
-        const dom = document.querySelector(`#${this.id}`);
-        this.myChart = this.$echarts.init(dom);
-        this.myChart.showLoading();
-        this.myChart.setOption(this.options);
-        this.myChart.hideLoading();
       },
       observe() {
         this.resizeObserver = new ResizeObserver(() => {
@@ -31222,10 +31244,17 @@ return fn.call(null,argVue,argPayload);`
       }
     }
   });
+  const xView_vue_vue_type_style_index_0_lang = "";
   const _hoisted_1$e = ["id"];
+  const _hoisted_2$c = { class: "xView-body flex vertical flex1" };
   function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", { id: _ctx.id }, [
-      vue.renderSlot(_ctx.$slots, "default")
+    return vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", {
+      id: _ctx.id,
+      class: "flex flex1"
+    }, [
+      vue.createElementVNode("div", _hoisted_2$c, [
+        vue.renderSlot(_ctx.$slots, "default")
+      ])
     ], 8, _hoisted_1$e)), [
       [vue.vShow, !!_ctx.isShow]
     ]);
@@ -32263,7 +32292,7 @@ return fn.call(null,argVue,argPayload);`
       this.$wrapperEle.off("scroll");
     },
     methods: {
-      setTop: ui$1.xU.debounce(function() {
+      setTop: xU.debounce(function() {
         if (this.$refs.refWrapper) {
           this.$refs.refWrapper.scrollTo({
             top: this.top,
@@ -32272,7 +32301,7 @@ return fn.call(null,argVue,argPayload);`
         }
       }, 1e3),
       init() {
-        this.$wrapperEle = ui$1.$(this.$refs.refWrapper);
+        this.$wrapperEle = $__default.default(this.$refs.refWrapper);
         this.$wrapperEle.on("scroll", () => this.updateTop());
       },
       updateTop(event2) {
@@ -32356,7 +32385,7 @@ return fn.call(null,argVue,argPayload);`
   const Input = vue.defineComponent({
     props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
     mounted() {
-      ui$1.xU("xItem Input");
+      xU("xItem Input");
     },
     data(vm) {
       return {
@@ -32429,7 +32458,7 @@ return fn.call(null,argVue,argPayload);`
       return vue.createVNode(component, vue.mergeProps({
         "value": this._modelValue,
         "onUpdate:value": ($event) => this._modelValue = $event
-      }, ui$1.xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), ui$1.xU.omit(listeners, ["onUpdate:value"])), slots);
+      }, xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), xU.omit(listeners, ["onUpdate:value"])), slots);
     }
   });
   const DatePicker = ({
@@ -33066,13 +33095,18 @@ return fn.call(null,argVue,argPayload);`
           this.updateValue();
         }
       },
+      rerenderCount: {
+        handler() {
+          this.setProperties();
+        }
+      },
       configs: {
         handler() {
           this.setProperties();
         }
       },
-      rerenderCount: {
-        handler() {
+      "configs.options": {
+        handler(value) {
           this.setProperties();
         }
       },
@@ -36349,7 +36383,7 @@ return fn.call(null,argVue,argPayload);`
       },
       vDomCol() {
         if (this.row) {
-          return ui$1.xU.map(this.colArray, (col) => {
+          return xU.map(this.colArray, (col) => {
             return vue.createVNode(InfoCardCol, {
               "col": col
             }, null);
@@ -36376,14 +36410,14 @@ return fn.call(null,argVue,argPayload);`
     props: ["info", "title"],
     methods: {
       updateLableStyle(styleObject) {
-        const styleString = ui$1.xU.map(ui$1.xU.merge({
+        const styleString = xU.map(xU.merge({
           "min-width": "120px",
           "text-align": "right"
         }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
         const styleContent = `#${this.id} .ant-descriptions-item-label {${styleString}}`;
         if (!this.$styleEle) {
-          const $form = ui$1.$(`#${this.id}`);
-          const $style = ui$1.$("<style/>", {
+          const $form = $__default.default(`#${this.id}`);
+          const $style = $__default.default("<style/>", {
             id: `style_${this.id}`
           });
           $form.prepend($style);
@@ -36395,7 +36429,7 @@ return fn.call(null,argVue,argPayload);`
     mounted() {
       this.$watch("info.colLabelWidth", (width) => {
         if (width) {
-          ui$1.xU("width", width);
+          xU("width", width);
           this.updateLableStyle({
             width
           });
@@ -36431,7 +36465,7 @@ return fn.call(null,argVue,argPayload);`
         if (this.rowArray) {
           return vue.createVNode("div", {
             "class": "ant-descriptions-view"
-          }, [ui$1.xU.map(this.rowArray, (row) => {
+          }, [xU.map(this.rowArray, (row) => {
             return vue.createVNode(InfoCardRow, {
               "row": row
             }, null);

@@ -313,13 +313,18 @@ export const xItem = defineComponent({
 				this.updateValue();
 			}
 		},
+		rerenderCount: {
+			handler() {
+				this.setProperties();
+			}
+		},
 		configs: {
 			handler() {
 				this.setProperties();
 			}
 		},
-		rerenderCount: {
-			handler() {
+		"configs.options": {
+			handler(value) {
 				this.setProperties();
 			}
 		},

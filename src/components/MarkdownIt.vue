@@ -7,7 +7,6 @@
 	</div>
 </template>
 <script>
-import { xU, $ } from "@ventose/ui";
 import { marked } from "../assets/libs/marked";
 import { hljs } from "../assets/libs/highlight";
 import { MkitTheme, setTheme } from "./MkitTheme";
@@ -45,7 +44,10 @@ export default {
 	},
 	methods: {
 		init() {
+			console.log(this.$slots.default()[0]);
+			debugger;
 			this.originHTML = this.md || this.$slots.default()[0].children;
+			debugger;
 			const { Renderer } = marked;
 			marked.options = { langClass: "hljs" };
 			const renderer = new Renderer();
