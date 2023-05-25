@@ -6,6 +6,8 @@ import { useDevServer } from "./plugins/vite/devServer";
 import { injectHtml } from "vite-plugin-html";
 import path from "path";
 import svgHelper from "./plugins/vite/svg";
+import importToCdn from "./plugins/vite/importTo";
+
 /* css in js =>lib 用 */
 /* 包分析 */
 import { visualizer } from "rollup-plugin-visualizer";
@@ -84,10 +86,26 @@ if (isLib) {
 }
 
 if (isApp) {
+	ConfigOptions.plugins = [
+		importToCdn({
+			modules: [
+				{ name: "vue", var: "Vue", path: "./assets/libs/vue/3.2.31/vue.global.js" },
+				{ name: "vue-router", var: "VueRouter", path: "./assets/libs/vue/router/4.0.12/vue-router.global.min.js" },
+				{ name: "axios", var: "axios", path: "./assets/libs/axios/0.26.0/axios.min.js" },
+				{name:"ant-design-vue",var:"antd",path:"./assets/libs/vue/atdv/3.1.0-rc.4/antd.min.js"},
+				{name:"jquery",var:"$",path:"./assets/libs/jquery.js"},
+				{name:"lodash",var:"_",path:"./assets/libs/lodash.js"},
+				{name:"dayjs",var:"dayjs",path:"./assets/libs/dayjs"},
+				{name:"jsondiffpatch",var:"jsondiffpatch",path:"./assets/libs/jsondiffpatch.umd.js"}
+			]
+		}),
+		useVue(),
+		useVueJsx(),
+		svgHelper()
+	];
 	ConfigOptions.build = {
 		outDir: "appdist"
 	};
-	ConfigOptions.plugins = [useVue(), useVueJsx(), svgHelper()];
 }
 
 // https://vitejs.dev/config/
