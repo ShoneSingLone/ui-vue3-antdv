@@ -15,7 +15,7 @@ type t_selectedConfigs = {
 	isSelect?: Function;
 };
 type t_defXVirTableConfigs = {
-	queryTableList?: Fuction;
+	queryTableList?: Function;
 	selectedConfigs?: t_selectedConfigs;
 	selected?: [];
 	rowHeight: number;

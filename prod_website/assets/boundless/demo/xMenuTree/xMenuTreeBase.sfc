@@ -1,0 +1,86 @@
+<template>
+    <mkit>
+        <pre>
+## xMenuTree
+- 依赖vue-router $route.path
+- :tree 带有children的数组，树形结构
+- :inline-collapsed 控制折叠的布尔值
+    </pre>
+    </mkit>
+    <aButton @click="collapsed = !collapsed">collapsed</aButton>
+    <div style="width:500px">
+        <xMenuTree :tree="treeArray" :inline-collapsed="collapsed" />
+    </div>
+</template>
+
+<script>
+export default async function sfc({
+    defineComponent,
+    markRaw,
+    State_UI,
+    xU,
+    $t,
+    UI,
+    defItem,
+    compileVNode,
+    resolveComponent
+}) {
+    /* 查看DemoAndCode组件传入的变量 */
+    return defineComponent({
+        TEMPLATE_PLACEHOLDER,
+        setup() { },
+        data() {
+            return {
+                collapsed: false,
+                treeArray: [
+                    {
+                        id: "a",
+                        label: "a",
+                        icon: "vite",
+                        path: "/Dev/a"
+                    },
+                    {
+                        id: "b",
+                        label: "b",
+                        icon: "vite",
+                        children: [
+                            {
+                                id: "ba",
+                                label: "a",
+                                icon: "vite",
+                                path: "/Dev/b/a"
+                            },
+                            {
+                                id: "bb",
+                                label: "b",
+                                icon: "UserOutlined",
+                                path: "/Dev/b/b"
+                            },
+                            {
+                                id: "bc",
+                                label: "c",
+                                icon: "UserOutlined",
+                                children: [
+                                    {
+                                        id: "a",
+                                        label: "a",
+                                        icon: "vite",
+                                        path: "/Dev/b/c/a"
+                                    },
+                                    {
+                                        id: "b",
+                                        label: "b",
+                                        icon: "vite",
+                                        path: "/Dev/b/c/b"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+        },
+        methods: {}
+    });
+}
+</script>

@@ -1,7 +1,7 @@
 
 <script lang="tsx">
+import { xU } from "@ventose/ui";
 import { defineComponent } from "vue";
-import { xU } from '@ventose/ui';
 
 
 const getIcon = icon => {

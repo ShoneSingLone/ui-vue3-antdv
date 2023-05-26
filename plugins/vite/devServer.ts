@@ -12,6 +12,10 @@ const contentCollection = {};
 export function useDevServer(): Plugin {
 	return {
 		name: "dev-server",
+		closeBundle(...args) {
+			const { type, libName } = process.env;
+			console.log("closeBundle", __dirname, args, type, libName);
+		},
 		configureServer(server: ViteDevServer) {
 			server.middlewares.use(
 				async (req: any, res: any, next: any): Promise<any> => {

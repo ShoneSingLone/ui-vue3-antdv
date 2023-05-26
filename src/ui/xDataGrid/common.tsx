@@ -141,7 +141,7 @@ export function defCol(options: t_col) {
 }
 
 /*antd 的配置项*/
-export function defColAnt(options: ColumnProps) {
+export function defColAnt(options: any | ColumnProps) {
 	return {
 		...options,
 		prop: options.key,

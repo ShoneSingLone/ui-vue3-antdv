@@ -1,0 +1,131 @@
+<template>
+    <mkit md="## 单独使用v-model绑定数据" />
+    <div class="flex mt10 middle">
+        <div>xForm.select.options.length:{{xForm.select.options.length}}</div>
+        <xItem :configs="xForm.select" v-model="formData.select" />
+        <div style="width:200px;">{{ formData.select }}</div>
+    </div>
+    <mkit md="## 主动设置disabled" />
+    <div class="flex mt10 middle">
+        <xItem :configs="xForm.selectWithLabel" v-model="formData.selectWithLabel" />
+        <div style="width:200px;">{{ formData.selectWithLabel }}</div>
+    </div>
+    <mkit md="## computed disabled" />
+    <div class="flex mt10 middle">
+        <xItem :configs="xForm.input" v-model="formData.input" />
+    </div>
+    <mkit md="## 也可以不用v-model，直接用configs.value绑定数据" />
+    <div class="flex mt10 middle">
+        <xItem :configs="xForm.configSwitch" />
+    </div>
+
+    <div class="flex mt10">
+        <xItem :configs="xForm.textarea" />
+        <div style="width:400px;">
+            <mkit :md="xForm.textarea.value" />
+        </div>
+    </div>
+</template>
+
+<script>
+async function sfc({ defineComponent, markRaw, State_UI, xU, UI, defItem }) {
+    /* 查看DemoAndCode组件传入的变量 */
+    const { $t } = State_UI;
+
+    return defineComponent({
+        TEMPLATE_PLACEHOLDER,
+        setup() { },
+        data() {
+            const vm = this;
+            const item = defItem({
+                prop: "select",
+                itemType: "Select",
+                options: [],
+                async once() {
+                    await xU.sleep(1000);
+                    vm.xForm.select.options = [
+                        {
+                            label: $t("类型A").label,
+                            value: "AAA"
+                        },
+                        {
+                            label: $t("类型B").label,
+                            value: "BBB"
+                        }
+                    ];
+                },
+                style: { width: "80px" }
+            });
+
+            const select = item.select;
+            const selectWithLabel = { ...select, label: "添加Label属性就有Label", disabled: false ,options:[
+                        {
+                            label: $t("类型A").label,
+                            value: "AAA"
+                        },
+                        {
+                            label: $t("类型B").label,
+                            value: "BBB"
+                        }
+                    ]};
+
+            const input = defItem.item({
+                prop: "input",
+                label: "input",
+                disabled: () => {
+                    return vm.xForm.configSwitch.value;
+                },
+                style: { width: "800px" }
+            });
+
+            const configSwitch = defItem.item({
+                prop: "switch",
+                label: "disabled",
+                itemType: "Switch",
+                value: false,
+                style: [
+                    {
+                        label: $t("类型A").label,
+                        value: "AAA"
+                    },
+                    {
+                        label: $t("类型B").label,
+                        value: "BBB"
+                    }
+                ],
+                onAfterValueEmit(val) {
+                    vm.xForm.selectWithLabel.disabled = val;
+                }
+            });
+
+            const textarea = defItem.item({
+                value: `### 显示在右侧的markdown
+- 如果\`config\`提供\`value\`属性，可以不使用\`v-model\`
+- get的使用用.value
+- value 是一个约定的属性`,
+                prop: "input",
+                isTextarea: true,
+                style: { width: "400px" }
+            });
+
+            return {
+                formData: {
+                    input: "itemType为假值时，默认是input",
+                    select: ["AAA"],
+                    selectWithLabel: ["BBB"],
+                },
+                xForm: {
+                    configSwitch,
+                    select,
+                    selectWithLabel,
+                    input,
+                    textarea
+                }
+            };
+        },
+        methods: {
+
+        }
+    });
+}
+</script>

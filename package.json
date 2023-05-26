@@ -17,10 +17,10 @@
     "up": "npm publish --access public",
     "start": "cross-env runPlugin=useDevServer vite --open --port 3011",
     "clean": "node ./plugins/ci/clean.js",
-    "build": "npm run build:lib && npm run build:app && npm run build:lib:xMenuTree && npm run clean && npm run lint",
+    "build": "npm run build:lib && npm run build:lib:xMenuTree && npm run clean && npm run build:app && npm run lint",
     "build:app": "cross-env NODE_ENV=production cross-env type=app vite build",
-    "build:lib": "vue-tsc --noEmit && cross-env vite build",
-    "build:lib:xMenuTree": "vue-tsc --noEmit && cross-env type=lib libName=xMenuTree vite build",
+    "build:lib": "cross-env type=lib vite build",
+    "build:lib:xMenuTree": "cross-env type=lib.xxx libName=xMenuTree vite build",
     "git:pull": "git pull gitee dev & git pull github dev",
     "git:push": "git push gitee dev & git push github dev",
     "lint": "prettier --write ./src"
@@ -50,9 +50,11 @@
     "rollup-plugin-visualizer": "^5.8.3",
     "sass": "^1.55.0",
     "svgo": "^3.0.0",
+    "terser": "^5.17.6",
     "typescript": "^4.6.4",
     "vite": "^3.1.0",
     "vite-plugin-css-injected-by-js": "^2.1.1",
+    "vite-plugin-dts": "^2.3.0",
     "vue-tsc": "^0.40.4"
   }
 }
