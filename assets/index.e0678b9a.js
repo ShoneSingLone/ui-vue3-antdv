@@ -92,12 +92,12 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
   })).then(() => baseModule());
 };
 const routes = [
-  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","../Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","../Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","../Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","../Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","../Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","../Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
   {
     category: "inset",
     path: "/xDirective",
