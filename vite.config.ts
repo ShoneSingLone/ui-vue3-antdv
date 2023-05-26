@@ -132,6 +132,11 @@ function handleApp() {
 						path: "./assets/libs/vue/router/4.0.12/vue-router.global.min.js"
 					},
 					{
+						name: "dayjs",
+						var: "dayjs",
+						path: "./assets/libs/dayjs.js"
+					},
+					{
 						name: "axios",
 						var: "axios",
 						path: "./assets/libs/axios/0.26.0/axios.min.js"
