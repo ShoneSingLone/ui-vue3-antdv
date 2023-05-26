@@ -1,1 +1,0 @@
-import{e as o}from"./index.8e4b0906.js";const n={};function t(r,s,c,u,p,a){const e=Vue.resolveComponent("DemoAndCode");return Vue.openBlock(),Vue.createBlock(e,{title:"xMenuTree",path:"/boundless/demo/xMenuTree/xMenuTreeBase.sfc"})}const _=o(n,[["render",t]]);export{_ as default};
