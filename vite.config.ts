@@ -67,11 +67,12 @@ const ConfigOptions = {
 			external: Object.keys(externalLibs),
 			plugins: [],
 			output: {
-				assetFileNames: ({ name }) => {
+				assetFileNames: ({ name, type: assetType }) => {
+					console.log("assetFileNames", assetType);
 					if (name === "style.css" && isLib) {
 						return "VentoseUI.css";
 					} else {
-						return "[name].[ext]";
+						return "assets/[ext]/[name].[ext]";
 					}
 				},
 				globals: externalLibs

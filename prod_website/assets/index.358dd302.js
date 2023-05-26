@@ -83,12 +83,12 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
   })).then(() => baseModule());
 };
 const routes = [
-  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","..\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","..\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","..\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","..\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","..\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","..\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.6d1e8ecd.js"), true ? ["Dev.6d1e8ecd.js","css\\Dev.css"] : void 0, import.meta.url) },
   {
     category: "inset",
     path: "/xDirective",
