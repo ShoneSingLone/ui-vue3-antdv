@@ -18,7 +18,7 @@
     "start": "cross-env runPlugin=useDevServer vite --open --port 3011",
     "clean": "node ./plugins/ci/clean.js",
     "build": "npm run build:lib && npm run build:lib:xMenuTree && npm run clean && npm run build:app && npm run lint",
-    "build:app": "cross-env NODE_ENV=production cross-env type=app vite build",
+    "build:app": "cross-env NODE_ENV=production cross-env type=app vite build && tsc",
     "build:lib": "cross-env type=lib vite build",
     "build:lib:xMenuTree": "cross-env type=lib.xxx libName=xMenuTree vite build",
     "git:pull": "git pull gitee dev & git pull github dev",
