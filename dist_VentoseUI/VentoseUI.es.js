@@ -6562,35 +6562,42 @@ const delayDeleteUnmountedInstance = xU.debounce(function() {
   });
 }, 1e3 * DELAY);
 function compileVNode(template, setupReturn, prop) {
+  if (xU.isPlainObject(prop) && prop.vNode) {
+    return prop.vNode;
+  }
   const no_cache = !prop;
-  if (!no_cache && CACHE_V_NODE[prop]) {
+  if (xU.isString(no_cache) && CACHE_V_NODE[prop]) {
     WILL_DELETE_PROPS.remove(prop);
     delayDeleteUnmountedInstance();
     return CACHE_V_NODE[prop];
-  } else {
-    return h(defineComponent({
-      template,
-      mounted() {
-        if (no_cache) {
-          return;
-        }
-        WILL_DELETE_PROPS.remove(prop);
-        CACHE_V_NODE[prop] = this._.vnode;
-      },
-      unmounted() {
-        if (no_cache) {
-          return;
-        }
-        deleteUnmountedInstance(prop);
-      },
-      setup() {
-        if (xU.isFunction(setupReturn)) {
-          return setupReturn();
-        } else {
-          return setupReturn;
-        }
+  }
+  const vNode = h(defineComponent({
+    template,
+    mounted() {
+      if (no_cache) {
+        return;
       }
-    }));
+      WILL_DELETE_PROPS.remove(prop);
+      CACHE_V_NODE[prop] = this._.vnode;
+    },
+    unmounted() {
+      if (no_cache) {
+        return;
+      }
+      deleteUnmountedInstance(prop);
+    },
+    setup() {
+      if (xU.isFunction(setupReturn)) {
+        return setupReturn();
+      } else {
+        return setupReturn;
+      }
+    }
+  }));
+  if (xU.isPlainObject(prop)) {
+    prop.vNode = vNode;
+  } else {
+    return vNode;
   }
 }
 const xLogObject = defineComponent({

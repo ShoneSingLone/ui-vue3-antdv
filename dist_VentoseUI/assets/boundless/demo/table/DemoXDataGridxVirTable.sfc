@@ -1,0 +1,246 @@
+<template>
+	<mkit md="### xVirTable" />
+	<div class="mt10 mb10">
+		<div class="flex middle">
+			<aRadioGroup v-model:value="configs_xVirTable.selectedConfigs.type">
+				<aRadioButton value="many">多选</aRadioButton>
+				<aRadioButton value="one">单选</aRadioButton>
+			</aRadioGroup>
+			<span class="ml10 flex1" style="overflow: auto">
+				已选择：
+				{{ JSON.stringify(this.configs_xVirTable.selected) }}
+			</span>
+		</div>
+		<div>
+			<div class="flex mt10 middle">
+				<span>总记录数：</span>
+				<aInputNumber id="inputNumber" v-model:value="total" :min="0" />
+			</div>
+			10000 以内，性能问题不大
+			<div>增加行高，可以减少viewport内的行数，起到减少计算总量的作用</div>
+			<div class="flex middle mt10">
+				<span>行高：</span>
+				<aInputNumber
+					id="inputNumber"
+					v-model:value="configs_xVirTable.rowHeight"
+					:min="32"
+					:max="100" />
+			</div>
+		</div>
+	</div>
+	<div>
+		{{ filter.status }}
+	</div>
+	<div style="width: 100%; height: 300px">
+		<xVirTable :configs="configs_xVirTable" />
+	</div>
+</template>
+
+<script>
+async function sfc({
+	reactive,
+	defineComponent,
+	markRaw,
+	State_UI,
+	xU,
+	UI,
+	compileVNode,
+	defXVirTableConfigs,
+	defCol
+}) {
+	const { $t } = State_UI;
+
+	const OPTIONS = [
+		{
+			label: $t("ACTIVATION").label,
+			value: "ACTIVATION"
+		},
+		{
+			label: $t("DOWN").label,
+			value: "DOWN"
+		}
+	];
+
+	return defineComponent({
+		TEMPLATE_PLACEHOLDER,
+		setup() {},
+		data(vm) {
+			return {
+				dataSource: [],
+				total: 9999,
+				filter: {
+					status: []
+				},
+				configs_xVirTable: defXVirTableConfigs({
+					rowHeight: 32,
+					selected: [],
+					/* 自定义virTable 范围内的样式，通过 id 权重*/
+					customClass(tableId){
+						return `#${tableId} [role="body"] [data-prop=name]{color:blue;}`
+					},
+					selectedConfigs: {
+						type: defXVirTableConfigs.type.many,
+						prop: "id",
+						disabled({ rowData, rowIndex }) {
+							if (rowIndex % 10 == 0) {
+								return "test";
+							} else {
+								return false;
+							}
+						}
+					},
+					dataSource: [],
+					columns: {
+						...defCol({
+							prop: "name",
+							label: vm.$t("名称").label
+						}),
+						...defCol({
+							prop: "status",
+							label: vm.$t("状态").label,
+							renderHeader({ label, index }) {
+								return compileVNode(
+									`<aSelect v-model:value="filter.status" mode="multiple" style="width: 100%" placeholder="类型" max-tag-count="1" :options="OPTIONS" allowClear />`,
+									{
+										OPTIONS,
+										filter: new Proxy(
+											{},
+											{
+												get: () => vm.filter.status,
+												set(obj, prop, val) {
+													vm.filter.status = val;
+													return true;
+												}
+											}
+										)
+									}
+								);
+							}
+						}),
+						...defCol({
+							prop: "capacity",
+							label: vm.$t("总容量").label
+						}),
+						...defCol({
+							prop: "capacity_editor",
+							label: vm.$t("总容量输入框").label,
+							renderCell({ record, cell }) {
+								return compileVNode(
+									`{{key}}<aInput v-model:value="record.capacity" :key="key"/>`,
+									{
+										key: record._index,
+										record: new Proxy(record, {
+											get: obj => obj.capacity,
+											set(obj, prop, val) {
+												const currentItemIndex = xU.findIndex(
+													vm.configs_xVirTable.dataSource,
+													{ _index: obj._index }
+												);
+												/* TODO: 主要是Boundless模式下 `compileVNode` 没有做成响应式，目前这个写法有点尴尬，暂时没想好怎么处理 */
+												vm.configs_xVirTable.dataSource[
+													currentItemIndex
+												].capacity = val;
+												return true;
+											}
+										})
+									}
+								);
+							}
+						}),
+						...defCol({
+							prop: "category",
+							label: vm.$t("类别").label,
+							width: "100px",
+							renderCell({ record }) {
+								if (record.tenant) {
+									return vm.$t("租户").label;
+								}
+								if (record.level) {
+									return vm.$t("上级", { level: record.level || "1" }).label;
+								}
+								return "--";
+							}
+						}),
+						...defCol({
+							prop: "upperName",
+							isShow: false,
+							label: vm.$t("提示").label,
+							width: "200px",
+							renderCell({ record }) {
+								return compileVNode(
+									`<div class="ellipsis" v-uiPopover="{ onlyEllipsis: true }"> {{upperName}} </div>`,
+									{
+										upperName: record.upperName
+									}
+								);
+							}
+						}),
+						...defCol({
+							prop: "startDate",
+							label: vm.$t("开始时间").label,
+							renderCell({ record }) {
+								return xU.dateFormat(record.startDate, 1);
+							}
+						}),
+						...defCol({
+							prop: "endDate",
+							label: vm.$t("到期时间").label
+						})
+					}
+				})
+			};
+		},
+		watch: {
+			filter: {
+				deep: true,
+				immediate: true,
+				handler() {
+					this.updateData();
+				}
+			},
+			total: {
+				immediate: true,
+				handler(total) {
+					this.genNewData(total);
+				}
+			}
+		},
+		methods: {
+			updateData: xU.debounce(function () {
+				if (xU.isArrayFill(this.filter.status)) {
+					this.configs_xVirTable.dataSource = xU.filter(this.dataSource, i =>
+						this.filter.status.includes(i.status)
+					);
+				} else {
+					this.configs_xVirTable.dataSource = this.dataSource;
+				}
+			}, 300),
+			genNewData: xU.debounce(function (total) {
+				this.configs_xVirTable.selected = [];
+				this.filter.status = [];
+				this.dataSource = [...new Array(total)].map((i, ii) => {
+					let upperName = ii + " 正常显示";
+					if (ii % 5 === 0) {
+						upperName =
+							ii +
+							" v-uiPopover={{ onlyEllipsis: true }}。 有省略号才显示tips。 category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18category18" +
+							ii;
+					}
+					return {
+						upperName,
+						id: ii,
+						_index: ii,
+						capacity: ii,
+						name: "name" + ii,
+						status: ii % 2 == 0 ? "ACTIVATION" : "DOWN",
+						select: ["ACTIVATION"],
+						category: "category" + ii,
+						startDate: Date.now(),
+						endDate: Date.now()
+					};
+				});
+			}, 1000)
+		}
+	});
+}
+</script>

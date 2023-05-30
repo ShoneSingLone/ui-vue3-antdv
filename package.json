@@ -1,6 +1,6 @@
 {
   "name": "@ventose/ui",
-  "version": "0.0.16",
+  "version": "0.0.18",
   "main": "./dist/VentoseUI.es.js",
   "module": "./dist/VentoseUI.es.js",
   "types": "./src/ui/index.tsx",
@@ -23,9 +23,11 @@
     "build:lib:xMenuTree": "cross-env type=lib.xxx libName=xMenuTree vite build",
     "git:pull": "git pull gitee dev & git pull github dev",
     "git:push": "git push gitee dev & git push github dev",
+    "lint:other": "prettier --write D:/Users/SSL/Documents/ghca_code/anxin/anxin-oc/src/main/resources/static/modules",
     "lint": "prettier --write ./src"
   },
   "dependencies": {
+    
     "ant-design-vue": "^3.2.13",
     "axios": "^1.1.2",
     "copy-to-clipboard": "^3.3.3",
