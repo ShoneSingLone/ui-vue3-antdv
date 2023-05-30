@@ -4,7 +4,7 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-import Antd, { Table, DatePicker as DatePicker$3, Modal, message, notification } from "ant-design-vue";
+import Antd, { Table, RangePicker as RangePicker$1, DatePicker as DatePicker$3, Modal, message, notification } from "ant-design-vue";
 import $$1 from "jquery";
 import { default as default2 } from "jquery";
 import { defineComponent, markRaw, h, openBlock, createElementBlock, renderSlot, reactive, watch, computed, createVNode, Fragment, resolveComponent, mergeProps, createBlock, withDirectives, createElementVNode, vShow, createStaticVNode, isVNode, withCtx, renderList, createTextVNode, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, isProxy, toRaw, inject, provide, createApp, getCurrentInstance } from "vue";
@@ -2766,14 +2766,28 @@ const DatePicker = ({
   slots,
   listeners
 }) => {
-  let value = "";
-  if (properties.value) {
-    value = dayjs(properties.value);
-    xU.doNothing(value, properties.value);
-    if (value === "Invalid Date") {
+  let value;
+  function checkOneValue(value2) {
+    value2 = dayjs(value2);
+    xU.doNothing(value2, properties.value);
+    if (value2 === "Invalid Date") {
       xU.doNothing("properties.value", properties.value);
-      value = "";
+      value2 = "";
     }
+    return value2;
+  }
+  if (properties.isRange) {
+    if (properties.isRange) {
+      if (xU.isArray(properties.value)) {
+        value = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
+      } else {
+        value = [];
+      }
+    }
+    return createVNode(RangePicker$1, mergeProps(properties, listeners, {
+      "value": value,
+      "locale": Cpt_UI_locale.value.DatePicker
+    }), slots);
   }
   return createVNode(DatePicker$3, mergeProps(properties, listeners, {
     "value": value,

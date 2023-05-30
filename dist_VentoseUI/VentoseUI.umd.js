@@ -2767,14 +2767,28 @@ var __publicField = (obj, key, value) => {
     slots,
     listeners
   }) => {
-    let value = "";
-    if (properties.value) {
-      value = dayjs__default.default(properties.value);
-      xU.doNothing(value, properties.value);
-      if (value === "Invalid Date") {
+    let value;
+    function checkOneValue(value2) {
+      value2 = dayjs__default.default(value2);
+      xU.doNothing(value2, properties.value);
+      if (value2 === "Invalid Date") {
         xU.doNothing("properties.value", properties.value);
-        value = "";
+        value2 = "";
       }
+      return value2;
+    }
+    if (properties.isRange) {
+      if (properties.isRange) {
+        if (xU.isArray(properties.value)) {
+          value = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
+        } else {
+          value = [];
+        }
+      }
+      return vue.createVNode(Antd.RangePicker, vue.mergeProps(properties, listeners, {
+        "value": value,
+        "locale": Cpt_UI_locale.value.DatePicker
+      }), slots);
     }
     return vue.createVNode(Antd.DatePicker, vue.mergeProps(properties, listeners, {
       "value": value,
