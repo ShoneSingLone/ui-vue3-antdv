@@ -23,7 +23,6 @@
     "build:lib:xMenuTree": "cross-env type=lib.xxx libName=xMenuTree vite build",
     "git:pull": "git pull gitee dev & git pull github dev",
     "git:push": "git push gitee dev & git push github dev",
-    "lint:other": "prettier --write D:/Users/SSL/Documents/ghca_code/anxin/anxin-oc/src/main/resources/static/modules",
     "lint": "prettier --write ./src"
   },
   "dependencies": {
