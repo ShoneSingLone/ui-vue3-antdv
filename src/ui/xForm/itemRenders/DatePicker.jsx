@@ -25,20 +25,24 @@ export default ({ properties, slots, listeners }) => {
 	if (properties.isRange) {
 		let value;
 		if (xU.isArray(properties.value)) {
-			value = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
+			value = [
+				checkOneValue(properties.value[0]),
+				checkOneValue(properties.value[1])
+			];
 		} else {
 			value = [];
 		}
 
-		return <RangePicker
-			{...properties}
-			{...listeners}
-			v-slots={slots}
-			value={value}
-			locale={Cpt_UI_locale.value.DatePicker}
-		/>;
+		return (
+			<RangePicker
+				{...properties}
+				{...listeners}
+				v-slots={slots}
+				value={value}
+				locale={Cpt_UI_locale.value.DatePicker}
+			/>
+		);
 	}
-
 
 	return (
 		<DatePicker

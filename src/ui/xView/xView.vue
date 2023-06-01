@@ -31,7 +31,8 @@ export default defineComponent({
 <style lang="scss">
 [id^="xView"] {
 	height: 100%;
-	width: 100%;
+	width: 1px;
+	flex: 1;
 	background: white;
 
 	.xView-body {

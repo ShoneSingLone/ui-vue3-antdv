@@ -48,6 +48,12 @@ export default defineComponent({
 		};
 	},
 	mounted() {
+		xU.scopeCss(this, ({ selector }) => {
+			return `
+			${selector} *{
+				outline:1px solid red;
+			}
+			` });
 		this.genNewData();
 	},
 	methods: {
@@ -94,11 +100,10 @@ export default defineComponent({
 </script>
 
 <template>
-	<!-- <aButton @click="add">add</aButton>
-		
-
-
-	<div class="flex horizon">
+	<aButton @click="add">add</aButton>
+	<div style="width:600px;height:600px;border:1px solid black">
+	</div>
+	<!-- <div class="flex horizon">
 		<pre
 			class="flex1 overflow-auto elevation-1 padding10"
 			style="

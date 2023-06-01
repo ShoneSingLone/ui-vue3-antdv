@@ -4,6 +4,10 @@
 ## 通用
 - [x] indexeddb 前缀，方便清理和枚举
 
+## 工具函数
+- [x] xU.scopeCss css样式编辑方案
+
+
 ## 组件 
 
 - [x] Demo页面加载独立的vue文档，弹窗展示源码

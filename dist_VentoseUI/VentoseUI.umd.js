@@ -142,6 +142,21 @@ var __publicField = (obj, key, value) => {
       INVALID_DATE: "Invalid Date",
       format_ymd: "YYYY-MM-DD"
     },
+    scopeCss(vm, genCssStringFn) {
+      const cssEleSelector = `scope-css_${vm._.uid}`;
+      let $cssEle = $__default.default(`#${cssEleSelector}`);
+      if ($cssEle.length === 0) {
+        const domStyle = document.createElement("style");
+        domStyle.id = cssEleSelector;
+        const domWrapper = vm.$el.nextElementSibling;
+        domWrapper.dataset.styleId = cssEleSelector;
+        domWrapper.appendChild(domStyle);
+        $cssEle = $__default.default(`#${cssEleSelector}`);
+      }
+      $cssEle.html(
+        genCssStringFn({ vm, selector: `[data-style-id=${cssEleSelector}]` })
+      );
+    },
     launchFullscreen(element) {
       if (element.requestFullscreen) {
         element.requestFullscreen();
@@ -2767,23 +2782,21 @@ var __publicField = (obj, key, value) => {
     slots,
     listeners
   }) => {
-    let value;
-    function checkOneValue(value2) {
-      value2 = dayjs__default.default(value2);
-      xU.doNothing(value2, properties.value);
-      if (value2 === "Invalid Date") {
+    function checkOneValue(value) {
+      value = dayjs__default.default(value);
+      xU.doNothing(value, properties.value);
+      if (value === "Invalid Date") {
         xU.doNothing("properties.value", properties.value);
-        value2 = "";
+        value = "";
       }
-      return value2;
+      return value;
     }
     if (properties.isRange) {
-      if (properties.isRange) {
-        if (xU.isArray(properties.value)) {
-          value = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
-        } else {
-          value = [];
-        }
+      let value;
+      if (xU.isArray(properties.value)) {
+        value = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
+      } else {
+        value = [];
       }
       return vue.createVNode(Antd.RangePicker, vue.mergeProps(properties, listeners, {
         "value": value,
@@ -2791,7 +2804,7 @@ var __publicField = (obj, key, value) => {
       }), slots);
     }
     return vue.createVNode(Antd.DatePicker, vue.mergeProps(properties, listeners, {
-      "value": value,
+      "value": checkOneValue(properties.value),
       "locale": Cpt_UI_locale.value.DatePicker
     }), slots);
   };

@@ -29661,7 +29661,8 @@ div.ant-typography-edit-content.ant-typography-rtl {
 }
 /*# sourceMappingURL=antd.css.map */[id^=xView] {
   height: 100%;
-  width: 100%;
+  width: 1px;
+  flex: 1;
   background: white;
 }
 [id^=xView] .xView-body {

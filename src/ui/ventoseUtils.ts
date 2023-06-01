@@ -41,6 +41,21 @@ const privateLodash = {
 		INVALID_DATE: "Invalid Date",
 		format_ymd: "YYYY-MM-DD"
 	},
+	scopeCss(vm /* vue实例，带有_.id */, genCssStringFn) {
+		const cssEleSelector = `scope-css_${vm._.uid}`;
+		let $cssEle = $(`#${cssEleSelector}`);
+		if ($cssEle.length === 0) {
+			const domStyle = document.createElement("style");
+			domStyle.id = cssEleSelector;
+			const domWrapper = vm.$el.nextElementSibling;
+			domWrapper.dataset.styleId = cssEleSelector;
+			domWrapper.appendChild(domStyle);
+			$cssEle = $(`#${cssEleSelector}`);
+		}
+		$cssEle.html(
+			genCssStringFn({ vm, selector: `[data-style-id=${cssEleSelector}]` })
+		);
+	},
 	launchFullscreen(element: any) {
 		if (element.requestFullscreen) {
 			element.requestFullscreen();

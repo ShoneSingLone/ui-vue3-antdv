@@ -1,1 +1,1 @@
-export declare function compileVNode(template: string, setupReturn: object, prop: string): any;
+export declare function compileVNode(template: string, setupReturn: object, prop: any): any;
