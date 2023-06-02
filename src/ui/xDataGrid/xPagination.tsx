@@ -52,7 +52,7 @@ export const xPagination = defineComponent({
 	},
 	render() {
 		const { page, size, total } = State_UI.pagination;
-		console.log(page, size, total);
+		xU(page, size, total);
 
 		if (!this.pagination[total]) {
 			return null;

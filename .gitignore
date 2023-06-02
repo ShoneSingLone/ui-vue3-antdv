@@ -22,3 +22,5 @@ dist-ssr
 *.sln
 *.sw?
 appdist
+dist_VentoseUI/assets
+dist_VentoseUI_xmenuTree/assets

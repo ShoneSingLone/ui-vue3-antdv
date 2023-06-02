@@ -1,10 +1,13 @@
 [Home](./README.md)
 
-
 ## 通用
+
 - [x] indexeddb 前缀，方便清理和枚举
 
+- [x] compileVNode
+
 ## 工具函数
+
 - [x] xU.scopeCss css样式编辑方案
 
 
@@ -41,7 +44,12 @@
     - [x] layerIndex 动态增减
 - [ ] 虚拟列表 onSelectedChange emit
 - [ ] 组件的单独加载？
+    - [x] 参考DemoAndCode
     - [ ] 路由与视图的 import 加载，默认文件夹？
+
+### i18n
+
+- [ ] $t
 
 ### xItem
 

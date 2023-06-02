@@ -4,7 +4,6 @@ import { State_UI, xU, UI, compileVNode, defCol, $, defItem } from "../ui";
 import { DialogSourceCode } from "./DialogSourceCode";
 import { defXVirTableConfigs } from "./../ui/xDataGrid/xVirTable/xVirTable";
 import App from "../App.vue";
-const { $t } = State_UI;
 
 export const DemoAndCode = defineComponent({
 	props: ["path", "title"],
@@ -42,21 +41,34 @@ export const DemoAndCode = defineComponent({
 			const _BussinessComponent = await xU.getVueComponentBySourceCode(
 				this.sfcURL,
 				scfObjSourceCode,
-				{
-					reactive,
-					defineComponent,
-					markRaw,
-					State_UI,
-					xU,
-					UI,
-					compileVNode,
-					defXVirTableConfigs,
-					defCol,
-					$,
-					defItem,
-					resolveComponent,
-					App
-				}
+				new Proxy(
+					{
+						reactive,
+						defineComponent,
+						markRaw,
+						State_UI,
+						xU,
+						UI,
+						compileVNode,
+						defXVirTableConfigs,
+						defCol,
+						$,
+						defItem,
+						resolveComponent,
+						App
+					},
+					{
+						get(target, prop) {
+							if (target.hasOwnProperty(prop)) {
+								return target[prop];
+							}
+							if (xU[prop]) {
+								return xU[prop];
+							}
+							return Vue[prop];
+						}
+					}
+				)
 			);
 
 			this.BussinessComponent = markRaw(_BussinessComponent);
