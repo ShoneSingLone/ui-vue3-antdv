@@ -47,7 +47,7 @@ const privateLodash = {
 		if ($cssEle.length === 0) {
 			const domStyle = document.createElement("style");
 			domStyle.id = cssEleSelector;
-			const domWrapper = vm.$el.nextElementSibling;
+			const domWrapper = vm.$el.__vnode ? vm.$el : vm.$el.parentElement;
 			domWrapper.dataset.styleId = cssEleSelector;
 			domWrapper.appendChild(domStyle);
 			$cssEle = $(`#${cssEleSelector}`);
@@ -149,12 +149,9 @@ const privateLodash = {
 		scfObjSourceCode = scfObjSourceCode.replace("export default", "");
 		const scfObjAsyncFn = new Function(
 			"argVue",
-			"argPayload",
-			`const THIS_FILE_URL = (\`${url}\`); var fn = ${scfObjSourceCode} return fn.call(null,argVue,argPayload);`
+			`const THIS_FILE_URL = (\`${url}\`);try{const fn = ${scfObjSourceCode};return fn(argVue);}catch(e){console.error(e)}`
 		);
-		const scfObj = await scfObjAsyncFn(__Vue, {
-			url
-		});
+		const scfObj = await scfObjAsyncFn(__Vue);
 		return scfObj;
 	},
 	/* * @parseContent：满足`return {}`形式的字符串 */

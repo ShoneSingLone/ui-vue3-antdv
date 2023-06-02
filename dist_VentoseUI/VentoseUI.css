@@ -1611,6 +1611,10 @@ div[id^=svg-icon_] {
   white-space: nowrap;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -29586,18 +29590,7 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
-/*# sourceMappingURL=antd.css.map */[id^=xView] {
-  height: 100%;
-  width: 1px;
-  flex: 1;
-  background: white;
-}
-[id^=xView] .xView-body {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-  padding: 0 10px;
-}.xIcon {
+/*# sourceMappingURL=antd.css.map */.xIcon {
   width: 16px;
   height: 16px;
 }

@@ -54,6 +54,10 @@ export const xPagination = defineComponent({
 		const { page, size, total } = State_UI.pagination;
 		console.log(page, size, total);
 
+		if (!this.pagination[total]) {
+			return null;
+		}
+
 		return (
 			<aPagination
 				v-model:current={this.pagination[page]}

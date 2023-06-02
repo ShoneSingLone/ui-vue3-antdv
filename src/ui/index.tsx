@@ -149,6 +149,7 @@ export { compileVNode as compileVNode };
 
 export const VentoseUIWithInstall = {
 	install: (app, options /* {appPlugins,dependState} */) => {
+		app.config.globalProperties.$t = $t;
 		installDirective(app, options);
 		installUIDialogComponent(UI, options, app);
 		xU.each(components, (component, name) => {

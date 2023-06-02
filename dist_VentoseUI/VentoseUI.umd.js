@@ -148,7 +148,7 @@ var __publicField = (obj, key, value) => {
       if ($cssEle.length === 0) {
         const domStyle = document.createElement("style");
         domStyle.id = cssEleSelector;
-        const domWrapper = vm.$el.nextElementSibling;
+        const domWrapper = vm.$el.__vnode ? vm.$el : vm.$el.parentElement;
         domWrapper.dataset.styleId = cssEleSelector;
         domWrapper.appendChild(domStyle);
         $cssEle = $__default.default(`#${cssEleSelector}`);
@@ -224,12 +224,9 @@ var __publicField = (obj, key, value) => {
       scfObjSourceCode = scfObjSourceCode.replace("export default", "");
       const scfObjAsyncFn = new Function(
         "argVue",
-        "argPayload",
-        `const THIS_FILE_URL = (\`${url}\`); var fn = ${scfObjSourceCode} return fn.call(null,argVue,argPayload);`
+        `const THIS_FILE_URL = (\`${url}\`);try{const fn = ${scfObjSourceCode};return fn(argVue);}catch(e){console.error(e)}`
       );
-      const scfObj = await scfObjAsyncFn(__Vue, {
-        url
-      });
+      const scfObj = await scfObjAsyncFn(__Vue);
       return scfObj;
     },
     parseContent: (returnSentence) => {
@@ -1566,7 +1563,7 @@ var __publicField = (obj, key, value) => {
   function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", {
       id: _ctx.id,
-      class: "flex flex1"
+      class: "flex flex1 vertical"
     }, [
       vue.createElementVNode("div", _hoisted_2$c, [
         vue.renderSlot(_ctx.$slots, "default")
@@ -2067,6 +2064,9 @@ var __publicField = (obj, key, value) => {
         total
       } = State_UI.pagination;
       console.log(page, size, total);
+      if (!this.pagination[total]) {
+        return null;
+      }
       return vue.createVNode(vue.resolveComponent("aPagination"), {
         "current": this.pagination[page],
         "onUpdate:current": ($event) => this.pagination[page] = $event,
@@ -7042,6 +7042,7 @@ var __publicField = (obj, key, value) => {
   };
   const VentoseUIWithInstall = {
     install: (app, options) => {
+      app.config.globalProperties.$t = $t$1;
       installDirective(app, options);
       installUIDialogComponent(UI, options, app);
       xU.each(components, (component, name) => {

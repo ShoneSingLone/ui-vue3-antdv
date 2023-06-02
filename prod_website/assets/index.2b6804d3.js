@@ -83,12 +83,12 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
   })).then(() => baseModule());
 };
 const routes = [
-  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.63a2d141.js"), true ? ["Dev.63a2d141.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.63a2d141.js"), true ? ["Dev.63a2d141.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.63a2d141.js"), true ? ["Dev.63a2d141.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.63a2d141.js"), true ? ["Dev.63a2d141.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.63a2d141.js"), true ? ["Dev.63a2d141.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.63a2d141.js"), true ? ["Dev.63a2d141.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
   {
     category: "inset",
     path: "/xDirective",
@@ -97,32 +97,32 @@ const routes = [
   {
     category: "inset",
     path: "/xIcon",
-    component: () => __vitePreload(() => import("./DemoXIcon.c9a49cf0.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXIcon.967cc854.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xButton",
-    component: () => __vitePreload(() => import("./DemoXButton.34c5a608.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXButton.be9e451b.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDialog",
-    component: () => __vitePreload(() => import("./DemoDialog.95e8d2fb.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoDialog.cdd3e333.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xForm",
-    component: () => __vitePreload(() => import("./DemoXForm.d835ea00.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXForm.7f985a45.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDataGrid",
-    component: () => __vitePreload(() => import("./DemoXDataGrid.1ff73766.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXDataGrid.0a619da8.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "plugin",
     path: "/xMenuTree",
-    component: () => __vitePreload(() => import("./DemoxMenuTree.cbba99c2.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoxMenuTree.fa5e7d36.js"), true ? [] : void 0, import.meta.url)
   }
 ];
 const router = VueRouter.createRouter({
@@ -263,7 +263,7 @@ const privateLodash = {
     if ($cssEle.length === 0) {
       const domStyle = document.createElement("style");
       domStyle.id = cssEleSelector;
-      const domWrapper = vm.$el.nextElementSibling;
+      const domWrapper = vm.$el.__vnode ? vm.$el : vm.$el.parentElement;
       domWrapper.dataset.styleId = cssEleSelector;
       domWrapper.appendChild(domStyle);
       $cssEle = $(`#${cssEleSelector}`);
@@ -339,12 +339,9 @@ const privateLodash = {
     scfObjSourceCode = scfObjSourceCode.replace("export default", "");
     const scfObjAsyncFn = new Function(
       "argVue",
-      "argPayload",
-      `const THIS_FILE_URL = (\`${url}\`); var fn = ${scfObjSourceCode} return fn.call(null,argVue,argPayload);`
+      `const THIS_FILE_URL = (\`${url}\`);try{const fn = ${scfObjSourceCode};return fn(argVue);}catch(e){console.error(e)}`
     );
-    const scfObj = await scfObjAsyncFn(__Vue, {
-      url
-    });
+    const scfObj = await scfObjAsyncFn(__Vue);
     return scfObj;
   },
   parseContent: (returnSentence) => {
@@ -2018,6 +2015,9 @@ const xPagination = Vue.defineComponent({
       total
     } = State_UI.pagination;
     console.log(page, size, total);
+    if (!this.pagination[total]) {
+      return null;
+    }
     return Vue.createVNode(Vue.resolveComponent("aPagination"), {
       "current": this.pagination[page],
       "onUpdate:current": ($event) => this.pagination[page] = $event,

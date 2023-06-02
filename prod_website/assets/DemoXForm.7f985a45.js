@@ -1,5 +1,5 @@
 import { defItem, FormRules, validateForm, AllWasWell, State_UI, pickValueFrom, $t as $t$1, VNodeCollection, UI, components } from "@ventose/ui";
-import { x as xU, e as _export_sfc } from "./index.5d1fc43c.js";
+import { x as xU, e as _export_sfc } from "./index.2b6804d3.js";
 const {
   $t
 } = State_UI;

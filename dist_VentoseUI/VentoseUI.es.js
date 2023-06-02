@@ -147,7 +147,7 @@ const privateLodash = {
     if ($cssEle.length === 0) {
       const domStyle = document.createElement("style");
       domStyle.id = cssEleSelector;
-      const domWrapper = vm.$el.nextElementSibling;
+      const domWrapper = vm.$el.__vnode ? vm.$el : vm.$el.parentElement;
       domWrapper.dataset.styleId = cssEleSelector;
       domWrapper.appendChild(domStyle);
       $cssEle = $$1(`#${cssEleSelector}`);
@@ -223,12 +223,9 @@ const privateLodash = {
     scfObjSourceCode = scfObjSourceCode.replace("export default", "");
     const scfObjAsyncFn = new Function(
       "argVue",
-      "argPayload",
-      `const THIS_FILE_URL = (\`${url}\`); var fn = ${scfObjSourceCode} return fn.call(null,argVue,argPayload);`
+      `const THIS_FILE_URL = (\`${url}\`);try{const fn = ${scfObjSourceCode};return fn(argVue);}catch(e){console.error(e)}`
     );
-    const scfObj = await scfObjAsyncFn(__Vue, {
-      url
-    });
+    const scfObj = await scfObjAsyncFn(__Vue);
     return scfObj;
   },
   parseContent: (returnSentence) => {
@@ -1565,7 +1562,7 @@ const _hoisted_2$c = { class: "xView-body flex vertical flex1" };
 function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
   return withDirectives((openBlock(), createElementBlock("div", {
     id: _ctx.id,
-    class: "flex flex1"
+    class: "flex flex1 vertical"
   }, [
     createElementVNode("div", _hoisted_2$c, [
       renderSlot(_ctx.$slots, "default")
@@ -2066,6 +2063,9 @@ const xPagination = defineComponent({
       total
     } = State_UI.pagination;
     console.log(page, size, total);
+    if (!this.pagination[total]) {
+      return null;
+    }
     return createVNode(resolveComponent("aPagination"), {
       "current": this.pagination[page],
       "onUpdate:current": ($event) => this.pagination[page] = $event,
@@ -7041,6 +7041,7 @@ const components = {
 };
 const VentoseUIWithInstall = {
   install: (app, options) => {
+    app.config.globalProperties.$t = $t$1;
     installDirective(app, options);
     installUIDialogComponent(UI, options, app);
     xU.each(components, (component, name) => {
