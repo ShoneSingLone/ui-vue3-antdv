@@ -1,8 +1,7 @@
-import { defItem, FormRules, validateForm, AllWasWell, State_UI, pickValueFrom, $t as $t$1, VNodeCollection, UI, components } from "@ventose/ui";
-import { x as xU, e as _export_sfc } from "./index.2b6804d3.js";
+import { x as xU, e as _export_sfc } from "./index.114df8fa.js";
 const {
   $t
-} = State_UI;
+} = VentoseUI.State_UI;
 const DemoXFormWithForm = Vue.defineComponent({
   props: {
     options: {
@@ -35,25 +34,25 @@ console.log(window)
       },
       row: row || {},
       dataXItem: {
-        ...defItem({
+        ...VentoseUI.defItem({
           value: name || "\u65B0\u589E",
           label: $t("name").label,
           prop: "name",
-          rules: [FormRules.required()]
+          rules: [VentoseUI.FormRules.required()]
         }),
-        ...defItem({
+        ...VentoseUI.defItem({
           value: age || 0,
           label: $t("age").label,
           prop: "age",
-          rules: [FormRules.required()]
+          rules: [VentoseUI.FormRules.required()]
         })
       }
     };
   },
   methods: {
     async verifyForm() {
-      const validateResults = await validateForm(this.dataXItem);
-      return AllWasWell(validateResults);
+      const validateResults = await VentoseUI.validateForm(this.dataXItem);
+      return VentoseUI.AllWasWell(validateResults);
     },
     getParams() {
       return {
@@ -116,7 +115,7 @@ styleForm: {
     }, null)]);
   }
 });
-const { xItem } = components;
+const { xItem } = VentoseUI.components;
 const _sfc_main = {
   components: {
     DemoXFormWithForm
@@ -127,34 +126,34 @@ const _sfc_main = {
   },
   setup(props) {
     return {
-      pickValueFrom
+      pickValueFrom: VentoseUI.pickValueFrom
     };
   },
   computed: {
     valueFromConfigs() {
-      return JSON.stringify(pickValueFrom(this.xForm));
+      return JSON.stringify(VentoseUI.pickValueFrom(this.xForm));
     }
   },
   data() {
     const vm = this;
     const xForm = {
-      ...defItem({
+      ...VentoseUI.defItem({
         value: [],
         prop: "slotsAddonBefore",
         itemType: "Select",
         options: [
           {
-            label: $t$1("\u7C7B\u578BA").label,
+            label: VentoseUI.$t("\u7C7B\u578BA").label,
             value: "AAA"
           },
           {
-            label: $t$1("\u7C7B\u578BB").label,
+            label: VentoseUI.$t("\u7C7B\u578BB").label,
             value: "BBB"
           }
         ],
         style: { width: "80px" }
       }),
-      ...defItem({
+      ...VentoseUI.defItem({
         prop: "search",
         placeholder: "Input",
         allowClear: true,
@@ -162,14 +161,14 @@ const _sfc_main = {
           console.log("\u{1F680}:", "search configs", this, val);
         }
       }),
-      ...defItem({
+      ...VentoseUI.defItem({
         label: "withLabelProperty",
         prop: "withLabelProperty",
         placeholder: "Input",
         allowClear: true,
-        rules: [FormRules.required()]
+        rules: [VentoseUI.FormRules.required()]
       }),
-      ...defItem({
+      ...VentoseUI.defItem({
         label: "slots",
         prop: "slots",
         value: "slots\u7684value",
@@ -183,40 +182,40 @@ const _sfc_main = {
             addonBefore: () => vDomSlotsSelector
           });
         },
-        rules: [FormRules.required()]
+        rules: [VentoseUI.FormRules.required()]
       }),
-      ...defItem({
-        labelVNodeRender: VNodeCollection.labelTips(
+      ...VentoseUI.defItem({
+        labelVNodeRender: VentoseUI.VNodeCollection.labelTips(
           Vue.h(
             "ul",
             null,
             [
-              $t$1(`\u53EA\u80FD\u7531\u82F1\u6587\u5B57\u6BCD(\u533A\u5206\u5927\u5C0F\u5199)\u3001\u6570\u5B57\u548C\u7279\u6B8A\u5B57\u7B26@.\\_-\u7EC4\u6210`).label,
-              $t$1(`\u4E0D\u80FD\u4EE5"op_svc"\u3001"paas_op"\u6216\\\u5F00\u5934`).label,
-              $t$1(`\u4E0D\u80FD\u4EE5\\\u7ED3\u5C3E`).label,
-              $t$1(`\u4E0D\u80FD\u547D\u540D\u4E3A"admin"\u3001"power_user"\u6216"guest"`).label,
-              $t$1(`\u957F\u5EA6\u8303\u56F4\u662F4\u523032\u4F4D`).label
+              VentoseUI.$t(`\u53EA\u80FD\u7531\u82F1\u6587\u5B57\u6BCD(\u533A\u5206\u5927\u5C0F\u5199)\u3001\u6570\u5B57\u548C\u7279\u6B8A\u5B57\u7B26@.\\_-\u7EC4\u6210`).label,
+              VentoseUI.$t(`\u4E0D\u80FD\u4EE5"op_svc"\u3001"paas_op"\u6216\\\u5F00\u5934`).label,
+              VentoseUI.$t(`\u4E0D\u80FD\u4EE5\\\u7ED3\u5C3E`).label,
+              VentoseUI.$t(`\u4E0D\u80FD\u547D\u540D\u4E3A"admin"\u3001"power_user"\u6216"guest"`).label,
+              VentoseUI.$t(`\u957F\u5EA6\u8303\u56F4\u662F4\u523032\u4F4D`).label
             ].map((content) => Vue.h("li", null, content))
           )
         ),
-        label: $t$1("label\u4F7F\u7528Tips").label,
+        label: VentoseUI.$t("label\u4F7F\u7528Tips").label,
         prop: "withLabelProperty",
         placeholder: "Input",
         allowClear: true,
-        rules: [FormRules.required()]
+        rules: [VentoseUI.FormRules.required()]
       }),
-      ...defItem({
+      ...VentoseUI.defItem({
         value: [],
         prop: "select",
-        label: $t$1("\u7C7B\u578B").label,
+        label: VentoseUI.$t("\u7C7B\u578B").label,
         itemType: "Select",
         options: [
           {
-            label: $t$1("\u7C7B\u578BA").label,
+            label: VentoseUI.$t("\u7C7B\u578BA").label,
             value: "AAA"
           },
           {
-            label: $t$1("\u7C7B\u578BB").label,
+            label: VentoseUI.$t("\u7C7B\u578BB").label,
             value: "BBB"
           }
         ],
@@ -231,14 +230,14 @@ const _sfc_main = {
         text: "\u6821\u9A8C",
         async onClick() {
           try {
-            const validateResults = await validateForm(vm.xForm);
-            if (AllWasWell(validateResults)) {
-              UI.message.success("\u6821\u9A8C\u6210\u529F");
+            const validateResults = await VentoseUI.validateForm(vm.xForm);
+            if (VentoseUI.AllWasWell(validateResults)) {
+              VentoseUI.UI.message.success("\u6821\u9A8C\u6210\u529F");
             } else {
-              UI.message.error("\u6821\u9A8C\u5931\u8D25");
+              VentoseUI.UI.message.error("\u6821\u9A8C\u5931\u8D25");
             }
           } catch (error) {
-            UI.notification.error((error == null ? void 0 : error.message) || "\u9519\u8BEF");
+            VentoseUI.UI.notification.error((error == null ? void 0 : error.message) || "\u9519\u8BEF");
           }
         }
       },

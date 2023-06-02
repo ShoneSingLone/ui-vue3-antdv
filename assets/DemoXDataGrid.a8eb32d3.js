@@ -1,5 +1,4 @@
-import { xU, defDataGridOption, defCol, $t } from "@ventose/ui";
-import { e as _export_sfc } from "./index.2b6804d3.js";
+import { e as _export_sfc } from "./index.114df8fa.js";
 const ITEM_OPTIONS = {
   status: [
     { label: "\u5F00\u901A", value: "ACTIVATED" },
@@ -43,32 +42,32 @@ const _sfc_main = {
   name: "DemoXDataGrid",
   methods: {
     handlePaginationChange(pagination) {
-      xU("\u{1F680}:", "pagination", JSON.stringify(pagination, null, 2));
+      VentoseUI.xU("\u{1F680}:", "pagination", JSON.stringify(pagination, null, 2));
     }
   },
   data() {
     return {
-      configs_table: defDataGridOption({
+      configs_table: VentoseUI.defDataGridOption({
         async queryTableList(params) {
         },
         dataSource: [],
         columns: {
-          ...defCol({
+          ...VentoseUI.defCol({
             prop: "name",
-            label: $t("\u540D\u79F0").label
+            label: VentoseUI.$t("\u540D\u79F0").label
           }),
-          ...defCol({
+          ...VentoseUI.defCol({
             prop: "status",
-            label: $t("\u72B6\u6001").label,
+            label: VentoseUI.$t("\u72B6\u6001").label,
             renderCell({
               record
             }) {
-              return `${xU.valueToLabel(record.status, ITEM_OPTIONS.status)}`;
+              return `${VentoseUI.xU.valueToLabel(record.status, ITEM_OPTIONS.status)}`;
             }
           }),
-          ...defCol({
+          ...VentoseUI.defCol({
             prop: "capacity",
-            label: $t("\u603B\u5BB9\u91CF").label,
+            label: VentoseUI.$t("\u603B\u5BB9\u91CF").label,
             renderCell({
               record
             }) {
@@ -83,44 +82,44 @@ const _sfc_main = {
               return `${usedCapacity || "--"} / ${totalCapacity || "--"} GB`;
             }
           }),
-          ...defCol({
+          ...VentoseUI.defCol({
             prop: "category",
-            label: $t("\u7C7B\u522B").label,
+            label: VentoseUI.$t("\u7C7B\u522B").label,
             renderCell({
               record
             }) {
               if (record.tenant) {
-                return $t("\u79DF\u6237").label;
+                return VentoseUI.$t("\u79DF\u6237").label;
               }
               if (record.level) {
-                return $t("\u7EA7VDC", {
+                return VentoseUI.$t("\u7EA7VDC", {
                   level: record.level || "1"
                 }).label;
               }
               return "--";
             }
           }),
-          ...defCol({
+          ...VentoseUI.defCol({
             prop: "upperName",
             isShow: false,
-            label: $t("\u4E0A\u7EA7\u540D\u79F0").label
+            label: VentoseUI.$t("\u4E0A\u7EA7\u540D\u79F0").label
           }),
-          ...defCol({
+          ...VentoseUI.defCol({
             prop: "startDate",
-            label: $t("\u5F00\u59CB\u65F6\u95F4").label,
+            label: VentoseUI.$t("\u5F00\u59CB\u65F6\u95F4").label,
             renderCell({
               record
             }) {
-              return xU.dateFormat(record.startDate);
+              return VentoseUI.xU.dateFormat(record.startDate);
             }
           }),
-          ...defCol({
+          ...VentoseUI.defCol({
             prop: "endDate",
-            label: $t("\u5230\u671F\u65F6\u95F4").label,
+            label: VentoseUI.$t("\u5230\u671F\u65F6\u95F4").label,
             renderCell({
               record
             }) {
-              return xU.dateFormat(record.endDate);
+              return VentoseUI.xU.dateFormat(record.endDate);
             }
           })
         }

@@ -1,5 +1,4 @@
-import { e as _export_sfc } from "./index.2b6804d3.js";
-import "@ventose/ui";
+import { e as _export_sfc } from "./index.114df8fa.js";
 const _sfc_main = {
   name: "DemoXIcon"
 };
