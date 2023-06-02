@@ -1,4 +1,4 @@
-import { e as _export_sfc } from "./index.e0678b9a.js";
+import { e as _export_sfc } from "./index.2b6804d3.js";
 import "@ventose/ui";
 const _sfc_main = {};
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {

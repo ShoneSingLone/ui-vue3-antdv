@@ -1,4 +1,4 @@
-import { _ as _sfc_main$1, d as defXVirTableConfigs, x as xU, a as defItem, b as defCol, c as compileVNode, e as _export_sfc } from "./index.e0678b9a.js";
+import { _ as _sfc_main$1, d as defXVirTableConfigs, x as xU, a as defItem, b as defCol, c as compileVNode, e as _export_sfc } from "./index.2b6804d3.js";
 import "@ventose/ui";
 const _sfc_main = Vue.defineComponent({
   components: {
@@ -48,6 +48,15 @@ const _sfc_main = Vue.defineComponent({
     };
   },
   mounted() {
+    xU.scopeCss(this, ({
+      selector
+    }) => {
+      return `
+			${selector} *{
+				outline:1px solid red;
+			}
+			`;
+    });
     this.genNewData();
   },
   methods: {
@@ -93,11 +102,22 @@ const _sfc_main = Vue.defineComponent({
     }, 10)
   }
 });
-const Dev_vue_vue_type_style_index_0_scoped_61886e36_lang = "";
+const Dev_vue_vue_type_style_index_0_scoped_f3522d65_lang = "";
+const _withScopeId = (n) => (Vue.pushScopeId("data-v-f3522d65"), n = n(), Vue.popScopeId(), n);
+const _hoisted_1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ Vue.createElementVNode("div", { style: { "width": "600px", "height": "600px", "border": "1px solid black" } }, null, -1));
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return null;
+  const _component_aButton = Vue.resolveComponent("aButton");
+  return Vue.openBlock(), Vue.createElementBlock(Vue.Fragment, null, [
+    Vue.createVNode(_component_aButton, { onClick: _ctx.add }, {
+      default: Vue.withCtx(() => [
+        Vue.createTextVNode("add")
+      ]),
+      _: 1
+    }, 8, ["onClick"]),
+    _hoisted_1
+  ], 64);
 }
-const Dev = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-61886e36"]]);
+const Dev = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-f3522d65"]]);
 export {
   Dev as default
 };

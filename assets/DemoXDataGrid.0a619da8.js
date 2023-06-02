@@ -1,5 +1,5 @@
 import { xU, defDataGridOption, defCol, $t } from "@ventose/ui";
-import { e as _export_sfc } from "./index.e0678b9a.js";
+import { e as _export_sfc } from "./index.2b6804d3.js";
 const ITEM_OPTIONS = {
   status: [
     { label: "\u5F00\u901A", value: "ACTIVATED" },

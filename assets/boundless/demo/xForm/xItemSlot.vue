@@ -2,7 +2,7 @@
 	<mkit md="## slots" />
 	<xItem :configs="configsInput">
 		<template v-slot:afterControll>
-            <xButton class="ml10" type="primary">button</xButton>
+			<xButton class="ml10" type="primary">button</xButton>
 		</template>
 	</xItem>
 </template>
@@ -23,7 +23,7 @@ async function sfc({
 
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
-		setup() {},
+		setup() { },
 		data() {
 			return {
 				configsInput: defItem.item({

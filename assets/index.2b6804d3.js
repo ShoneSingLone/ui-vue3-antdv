@@ -56,7 +56,6 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
   if (!deps || deps.length === 0) {
     return baseModule();
   }
-  const links = document.getElementsByTagName("link");
   return Promise.all(deps.map((dep) => {
     dep = assetsURL(dep, importerUrl);
     if (dep in seen)
@@ -64,15 +63,7 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
     seen[dep] = true;
     const isCss = dep.endsWith(".css");
     const cssSelector = isCss ? '[rel="stylesheet"]' : "";
-    const isBaseRelative = !!importerUrl;
-    if (isBaseRelative) {
-      for (let i = links.length - 1; i >= 0; i--) {
-        const link2 = links[i];
-        if (link2.href === dep && (!isCss || link2.rel === "stylesheet")) {
-          return;
-        }
-      }
-    } else if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
+    if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
       return;
     }
     const link = document.createElement("link");
@@ -92,12 +83,12 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
   })).then(() => baseModule());
 };
 const routes = [
-  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.ea2a397a.js"), true ? ["./Dev.ea2a397a.js","./css/Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
   {
     category: "inset",
     path: "/xDirective",
@@ -106,32 +97,32 @@ const routes = [
   {
     category: "inset",
     path: "/xIcon",
-    component: () => __vitePreload(() => import("./DemoXIcon.e11ce7ac.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXIcon.967cc854.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xButton",
-    component: () => __vitePreload(() => import("./DemoXButton.a3964e88.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXButton.be9e451b.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDialog",
-    component: () => __vitePreload(() => import("./DemoDialog.52377635.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoDialog.cdd3e333.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xForm",
-    component: () => __vitePreload(() => import("./DemoXForm.90253371.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXForm.7f985a45.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDataGrid",
-    component: () => __vitePreload(() => import("./DemoXDataGrid.4318eb65.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXDataGrid.0a619da8.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "plugin",
     path: "/xMenuTree",
-    component: () => __vitePreload(() => import("./DemoxMenuTree.6c5e34f7.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoxMenuTree.fa5e7d36.js"), true ? [] : void 0, import.meta.url)
   }
 ];
 const router = VueRouter.createRouter({
@@ -266,6 +257,21 @@ const privateLodash = {
     INVALID_DATE: "Invalid Date",
     format_ymd: "YYYY-MM-DD"
   },
+  scopeCss(vm, genCssStringFn) {
+    const cssEleSelector = `scope-css_${vm._.uid}`;
+    let $cssEle = $(`#${cssEleSelector}`);
+    if ($cssEle.length === 0) {
+      const domStyle = document.createElement("style");
+      domStyle.id = cssEleSelector;
+      const domWrapper = vm.$el.__vnode ? vm.$el : vm.$el.parentElement;
+      domWrapper.dataset.styleId = cssEleSelector;
+      domWrapper.appendChild(domStyle);
+      $cssEle = $(`#${cssEleSelector}`);
+    }
+    $cssEle.html(
+      genCssStringFn({ vm, selector: `[data-style-id=${cssEleSelector}]` })
+    );
+  },
   launchFullscreen(element) {
     if (element.requestFullscreen) {
       element.requestFullscreen();
@@ -333,12 +339,9 @@ const privateLodash = {
     scfObjSourceCode = scfObjSourceCode.replace("export default", "");
     const scfObjAsyncFn = new Function(
       "argVue",
-      "argPayload",
-      `const THIS_FILE_URL = (\`${url}\`); var fn = ${scfObjSourceCode} return fn.call(null,argVue,argPayload);`
+      `const THIS_FILE_URL = (\`${url}\`);try{const fn = ${scfObjSourceCode};return fn(argVue);}catch(e){console.error(e)}`
     );
-    const scfObj = await scfObjAsyncFn(__Vue, {
-      url
-    });
+    const scfObj = await scfObjAsyncFn(__Vue);
     return scfObj;
   },
   parseContent: (returnSentence) => {
@@ -808,32 +811,7 @@ const Pagination$1 = {
   prev_3: "Previous 3 Pages",
   next_3: "Next 3 Pages"
 };
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj2) {
-    return typeof obj2;
-  } : function(obj2) {
-    return obj2 && "function" == typeof Symbol && obj2.constructor === Symbol && obj2 !== Symbol.prototype ? "symbol" : typeof obj2;
-  }, _typeof(obj);
-}
-function _toPrimitive(input, hint) {
-  if (_typeof(input) !== "object" || input === null)
-    return input;
-  var prim = input[Symbol.toPrimitive];
-  if (prim !== void 0) {
-    var res = prim.call(input, hint || "default");
-    if (_typeof(res) !== "object")
-      return res;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return (hint === "string" ? String : Number)(input);
-}
-function _toPropertyKey(arg) {
-  var key = _toPrimitive(arg, "string");
-  return _typeof(key) === "symbol" ? key : String(key);
-}
 function _defineProperty(obj, key, value) {
-  key = _toPropertyKey(key);
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value,
@@ -2037,6 +2015,9 @@ const xPagination = Vue.defineComponent({
       total
     } = State_UI.pagination;
     console.log(page, size, total);
+    if (!this.pagination[total]) {
+      return null;
+    }
     return Vue.createVNode(Vue.resolveComponent("aPagination"), {
       "current": this.pagination[page],
       "onUpdate:current": ($event) => this.pagination[page] = $event,
@@ -2654,17 +2635,29 @@ const DatePicker = ({
   slots,
   listeners
 }) => {
-  let value = "";
-  if (properties.value) {
-    value = dayjs(properties.value);
+  function checkOneValue(value) {
+    value = dayjs(value);
     xU.doNothing(value, properties.value);
     if (value === "Invalid Date") {
       xU.doNothing("properties.value", properties.value);
       value = "";
     }
+    return value;
+  }
+  if (properties.isRange) {
+    let value;
+    if (xU.isArray(properties.value)) {
+      value = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
+    } else {
+      value = [];
+    }
+    return Vue.createVNode(antd.RangePicker, Vue.mergeProps(properties, listeners, {
+      "value": value,
+      "locale": Cpt_UI_locale.value.DatePicker
+    }), slots);
   }
   return Vue.createVNode(antd.DatePicker, Vue.mergeProps(properties, listeners, {
-    "value": value,
+    "value": checkOneValue(properties.value),
     "locale": Cpt_UI_locale.value.DatePicker
   }), slots);
 };
@@ -5914,35 +5907,42 @@ const delayDeleteUnmountedInstance = xU.debounce(function() {
   });
 }, 1e3 * DELAY);
 function compileVNode(template, setupReturn, prop) {
+  if (xU.isPlainObject(prop) && prop.vNode) {
+    return prop.vNode;
+  }
   const no_cache = !prop;
-  if (!no_cache && CACHE_V_NODE[prop]) {
+  if (xU.isString(no_cache) && CACHE_V_NODE[prop]) {
     WILL_DELETE_PROPS.remove(prop);
     delayDeleteUnmountedInstance();
     return CACHE_V_NODE[prop];
-  } else {
-    return Vue.h(Vue.defineComponent({
-      template,
-      mounted() {
-        if (no_cache) {
-          return;
-        }
-        WILL_DELETE_PROPS.remove(prop);
-        CACHE_V_NODE[prop] = this._.vnode;
-      },
-      unmounted() {
-        if (no_cache) {
-          return;
-        }
-        deleteUnmountedInstance(prop);
-      },
-      setup() {
-        if (xU.isFunction(setupReturn)) {
-          return setupReturn();
-        } else {
-          return setupReturn;
-        }
+  }
+  const vNode = Vue.h(Vue.defineComponent({
+    template,
+    mounted() {
+      if (no_cache) {
+        return;
       }
-    }));
+      WILL_DELETE_PROPS.remove(prop);
+      CACHE_V_NODE[prop] = this._.vnode;
+    },
+    unmounted() {
+      if (no_cache) {
+        return;
+      }
+      deleteUnmountedInstance(prop);
+    },
+    setup() {
+      if (xU.isFunction(setupReturn)) {
+        return setupReturn();
+      } else {
+        return setupReturn;
+      }
+    }
+  }));
+  if (xU.isPlainObject(prop)) {
+    prop.vNode = vNode;
+  } else {
+    return vNode;
   }
 }
 Vue.defineComponent({
@@ -6329,7 +6329,9 @@ const _hoisted_1$1 = /* @__PURE__ */ Vue.createElementVNode("div", { class: "log
 const _hoisted_2$1 = { class: "flex middle" };
 const _hoisted_3 = /* @__PURE__ */ Vue.createElementVNode("span", { class: "ml4" }, "\u5355\u7EC4\u4EF6", -1);
 const _hoisted_4 = { class: "flex middle" };
-const _hoisted_5 = /* @__PURE__ */ Vue.createElementVNode("span", { class: "ml4" }, "\u9700\u8981\u5355\u72EC\u5F15\u7528", -1);
+const _hoisted_5 = /* @__PURE__ */ Vue.createElementVNode("span", { class: "ml4" }, "\u5355\u7EC4\u4EF6", -1);
+const _hoisted_6 = { class: "flex middle" };
+const _hoisted_7 = /* @__PURE__ */ Vue.createElementVNode("span", { class: "ml4" }, "\u9700\u8981\u5355\u72EC\u5F15\u7528", -1);
 function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_a_menu_item = Vue.resolveComponent("a-menu-item");
   const _component_a_menu = Vue.resolveComponent("a-menu");
@@ -6431,6 +6433,34 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
                       Vue.createElementVNode("span", _hoisted_4, [
                         Vue.createVNode(_component_xIcon, { icon: "UserOutlined" }),
                         _hoisted_5
+                      ])
+                    ]),
+                    default: Vue.withCtx(() => [
+                      (Vue.openBlock(true), Vue.createElementBlock(Vue.Fragment, null, Vue.renderList(_ctx.routes.filter((i) => i.category == "inset"), (menu) => {
+                        return Vue.openBlock(), Vue.createBlock(_component_a_menu_item, {
+                          key: menu.path
+                        }, {
+                          default: Vue.withCtx(() => [
+                            Vue.createVNode(_component_RouterLink, {
+                              to: menu.path
+                            }, {
+                              default: Vue.withCtx(() => [
+                                Vue.createTextVNode(Vue.toDisplayString(menu.path), 1)
+                              ]),
+                              _: 2
+                            }, 1032, ["to"])
+                          ]),
+                          _: 2
+                        }, 1024);
+                      }), 128))
+                    ]),
+                    _: 1
+                  }),
+                  Vue.createVNode(_component_a_sub_menu, { key: "sub2" }, {
+                    title: Vue.withCtx(() => [
+                      Vue.createElementVNode("span", _hoisted_6, [
+                        Vue.createVNode(_component_xIcon, { icon: "UserOutlined" }),
+                        _hoisted_7
                       ])
                     ]),
                     default: Vue.withCtx(() => [

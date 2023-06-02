@@ -1684,6 +1684,10 @@ div[id^=svg-icon_] {
   white-space: nowrap;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -2262,7 +2266,7 @@ div.xVirTable-row > div.xVirTable-cell::after {
   flex: 1;
 }/*!
  * 
- * ant-design-vue v3.2.20
+ * ant-design-vue v3.2.13
  *
  * Copyright 2017-present, ant-design-vue.
  * All rights reserved.
@@ -19712,8 +19716,8 @@ _:-ms-fullscreen .ant-picker-range-wrapper .ant-picker-year-panel .ant-picker-ce
 .ant-form-item-has-warning .ant-input-number-prefix {
   color: #faad14;
 }
-.ant-form-item-has-warning :not(.ant-input-group-addon-disabled).ant-input-group-addon,
-.ant-form-item-has-warning :not(.ant-input-number-group-addon-disabled).ant-input-number-group-addon {
+.ant-form-item-has-warning .ant-input-group-addon,
+.ant-form-item-has-warning .ant-input-number-group-addon {
   color: #faad14;
   border-color: #faad14;
 }
@@ -19793,8 +19797,8 @@ _:-ms-fullscreen .ant-picker-range-wrapper .ant-picker-year-panel .ant-picker-ce
 .ant-form-item-has-error .ant-input-number-prefix {
   color: #ff4d4f;
 }
-.ant-form-item-has-error :not(.ant-input-group-addon-disabled).ant-input-group-addon,
-.ant-form-item-has-error :not(.ant-input-number-group-addon-disabled).ant-input-number-group-addon {
+.ant-form-item-has-error .ant-input-group-addon,
+.ant-form-item-has-error .ant-input-number-group-addon {
   color: #ff4d4f;
   border-color: #ff4d4f;
 }
@@ -29659,17 +29663,7 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
-/*# sourceMappingURL=antd.css.map */[id^=xView] {
-  height: 100%;
-  width: 100%;
-  background: white;
-}
-[id^=xView] .xView-body {
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-  padding: 0 10px;
-}.xIcon {
+/*# sourceMappingURL=antd.css.map */.xIcon {
   width: 16px;
   height: 16px;
 }
