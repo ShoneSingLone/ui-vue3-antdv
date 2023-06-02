@@ -45,16 +45,25 @@ let _State_UI = {
 	/* 放svg文件的文件夹路径*/
 	assetsSvgPath: "",
 	assetsPath: "",
-	bashPath: "",
+	basePath: "",
+	setBasePath(basePath) {
+		console.log("basePath", basePath);
+		debugger;
+		State_UI.assetsSvgPath = basePath + "assets/svg";
+		
+		State_UI.assetsPath = basePath + "assets";
+		State_UI.basePath = basePath;
+	},
 	setAssetsBaseById(eleId: string) {
 		const img = document.getElementById(eleId);
 		if (img) {
 			//@ts-ignore
-			const src = String(img.href);
+			const src = String(img.src || img.href);
+			debugger;
 			const index = src.match(/assets(.*)/)?.index || 0;
-			this.assetsSvgPath = src.substring(0, index) + "assets/svg";
-			this.assetsPath = src.substring(0, index) + "assets";
-			this.bashPath = src.substring(0, index);
+			State_UI.assetsSvgPath = src.substring(0, index) + "assets/svg";
+			State_UI.assetsPath = src.substring(0, index) + "assets";
+			State_UI.basePath = src.substring(0, index);
 		}
 	},
 	$t,

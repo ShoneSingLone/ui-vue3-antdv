@@ -44,10 +44,7 @@ export default {
 	},
 	methods: {
 		init() {
-			console.log(this.$slots.default()[0]);
-			debugger;
 			this.originHTML = this.md || this.$slots.default()[0].children;
-			debugger;
 			const { Renderer } = marked;
 			marked.options = { langClass: "hljs" };
 			const renderer = new Renderer();

@@ -7,9 +7,12 @@ import App from "../App.vue";
 
 export const DemoAndCode = defineComponent({
 	props: ["path", "title"],
+	setup() {
+		return { State_UI };
+	},
 	computed: {
 		sfcURL() {
-			return `${State_UI.assetsPath}${this.path}`;
+			return `${this.State_UI.assetsPath}${this.path}`;
 		},
 		styleContainer() {
 			return {

@@ -66,8 +66,10 @@ const ConfigOptions = {
 			external: Object.keys(externalLibs),
 			plugins: [],
 			output: {
+				chunkFileNames: ({ name, type: assetType }) => {
+					return "assets/chunk/[name].js";
+				},
 				assetFileNames: ({ name, type: assetType }) => {
-					console.log("assetFileNames", assetType);
 					if (name === "style.css" && isLib) {
 						return "VentoseUI.css";
 					} else {

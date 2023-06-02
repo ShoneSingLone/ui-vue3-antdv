@@ -1194,16 +1194,24 @@ var __publicField = (obj, key, value) => {
     i18nMessage: {},
     assetsSvgPath: "",
     assetsPath: "",
-    bashPath: "",
+    basePath: "",
+    setBasePath(basePath) {
+      console.log("basePath", basePath);
+      debugger;
+      State_UI.assetsSvgPath = basePath + "assets/svg";
+      State_UI.assetsPath = basePath + "assets";
+      State_UI.basePath = basePath;
+    },
     setAssetsBaseById(eleId) {
       var _a;
       const img = document.getElementById(eleId);
       if (img) {
-        const src = String(img.href);
+        const src = String(img.src || img.href);
+        debugger;
         const index2 = ((_a = src.match(/assets(.*)/)) == null ? void 0 : _a.index) || 0;
-        this.assetsSvgPath = src.substring(0, index2) + "assets/svg";
-        this.assetsPath = src.substring(0, index2) + "assets";
-        this.bashPath = src.substring(0, index2);
+        State_UI.assetsSvgPath = src.substring(0, index2) + "assets/svg";
+        State_UI.assetsPath = src.substring(0, index2) + "assets";
+        State_UI.basePath = src.substring(0, index2);
       }
     },
     $t: $t$1,
