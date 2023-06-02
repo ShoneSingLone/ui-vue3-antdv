@@ -37,7 +37,6 @@ const plugins = [
 	useVueJsx(),
 	svgHelper(),
 	// cssInjectedByJsPlugin(),
-	visualizer(),
 	/* 可访问public里面的静态资源 */
 	useDevServer()
 ];
@@ -91,7 +90,13 @@ export default defineConfig(ConfigOptions);
 function handleVentoseUI() {
 	/* VentoseUI */
 	if (isLib) {
-		ConfigOptions.build.outDir = `dist_VentoseUI`;
+		const outDir = `dist_VentoseUI`;
+		ConfigOptions.build.outDir = outDir;
+		ConfigOptions.plugins.push(
+			visualizer({
+				filename: `${outDir}/VentoseUI_stats.html`
+			})
+		);
 
 		ConfigOptions.build.lib = {
 			formats: ["umd", "es"],
@@ -105,7 +110,11 @@ function handleVentoseUI() {
 function handleVentoseUIxxx() {
 	/* VentoseUI.xxx 依赖VentoseUI或者其他，总之没有打入VentoseUI */
 	if (isLibXXX) {
-		ConfigOptions.build.outDir = `dist_VentoseUI_${libXxxName}`;
+		const outDir = `dist_VentoseUI_${libXxxName}`;
+		ConfigOptions.build.outDir = outDir;
+		ConfigOptions.plugins.push(
+			visualizer({ filename: `${outDir}/${libXxxName}_stats.html` })
+		);
 		// plugins.unshift(dts());
 		ConfigOptions.build.lib = {
 			formats: ["umd", "es"],
@@ -122,6 +131,23 @@ function handleApp() {
 			importToCdn({
 				modules: [
 					{
+						name: "dayjs",
+						var: "dayjs",
+						path: "./assets/libs/dayjs.js"
+					},
+					{
+						name: "axios",
+						var: "axios",
+						path: "./assets/libs/axios/0.26.0/axios.min.js"
+					},
+					{ name: "jquery", var: "$", path: "./assets/libs/jquery.js" },
+					{ name: "lodash", var: "_", path: "./assets/libs/lodash.js" },
+					{
+						name: "jsondiffpatch",
+						var: "jsondiffpatch",
+						path: "./assets/libs/jsondiffpatch.umd.js"
+					},
+					{
 						name: "vue",
 						var: "Vue",
 						path: "./assets/libs/vue/3.2.31/vue.global.js"
@@ -132,27 +158,15 @@ function handleApp() {
 						path: "./assets/libs/vue/router/4.0.12/vue-router.global.min.js"
 					},
 					{
-						name: "dayjs",
-						var: "dayjs",
-						path: "./assets/libs/dayjs.js"
-					},
-					{
-						name: "axios",
-						var: "axios",
-						path: "./assets/libs/axios/0.26.0/axios.min.js"
-					},
-					{
 						name: "ant-design-vue",
 						var: "antd",
 						path: "./assets/libs/vue/atdv/3.1.0-rc.4/antd.min.js"
 					},
-					{ name: "jquery", var: "$", path: "./assets/libs/jquery.js" },
-					{ name: "lodash", var: "_", path: "./assets/libs/lodash.js" },
-					{ name: "dayjs", var: "dayjs", path: "./assets/libs/dayjs" },
 					{
-						name: "jsondiffpatch",
-						var: "jsondiffpatch",
-						path: "./assets/libs/jsondiffpatch.umd.js"
+						name: "@ventose/ui",
+						var: "VentoseUI",
+						path: "./assets/libs/dist_VentoseUI/VentoseUI.umd.js",
+						css: "./assets/libs/dist_VentoseUI/VentoseUI.css"
 					}
 				]
 			}),

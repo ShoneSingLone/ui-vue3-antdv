@@ -2193,7 +2193,7 @@ div.xVirTable-row > div.xVirTable-cell::after {
   flex: 1;
 }/*!
  * 
- * ant-design-vue v3.2.13
+ * ant-design-vue v3.2.20
  *
  * Copyright 2017-present, ant-design-vue.
  * All rights reserved.
@@ -19643,8 +19643,8 @@ _:-ms-fullscreen .ant-picker-range-wrapper .ant-picker-year-panel .ant-picker-ce
 .ant-form-item-has-warning .ant-input-number-prefix {
   color: #faad14;
 }
-.ant-form-item-has-warning .ant-input-group-addon,
-.ant-form-item-has-warning .ant-input-number-group-addon {
+.ant-form-item-has-warning :not(.ant-input-group-addon-disabled).ant-input-group-addon,
+.ant-form-item-has-warning :not(.ant-input-number-group-addon-disabled).ant-input-number-group-addon {
   color: #faad14;
   border-color: #faad14;
 }
@@ -19724,8 +19724,8 @@ _:-ms-fullscreen .ant-picker-range-wrapper .ant-picker-year-panel .ant-picker-ce
 .ant-form-item-has-error .ant-input-number-prefix {
   color: #ff4d4f;
 }
-.ant-form-item-has-error .ant-input-group-addon,
-.ant-form-item-has-error .ant-input-number-group-addon {
+.ant-form-item-has-error :not(.ant-input-group-addon-disabled).ant-input-group-addon,
+.ant-form-item-has-error :not(.ant-input-number-group-addon-disabled).ant-input-number-group-addon {
   color: #ff4d4f;
   border-color: #ff4d4f;
 }

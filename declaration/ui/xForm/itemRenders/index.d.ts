@@ -1,8 +1,8 @@
 import { InputProps, TextAreaProps } from "ant-design-vue";
 declare const itemRenders: {
     Input: import("vue").DefineComponent<Readonly<{
-        properties?: any;
         slots?: any;
+        properties?: any;
         listeners?: any;
         propsWillDeleteFromConfigs?: any;
     }>, unknown, {
@@ -16,19 +16,19 @@ declare const itemRenders: {
     }, {
         diffComponent(type: any): any;
     }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<Readonly<{
-        properties?: any;
         slots?: any;
+        properties?: any;
         listeners?: any;
         propsWillDeleteFromConfigs?: any;
     }>>>, {
-        readonly properties?: any;
         readonly slots?: any;
+        readonly properties?: any;
         readonly listeners?: any;
         readonly propsWillDeleteFromConfigs?: any;
-    }>;
+    }, {}>;
     Checkbox: import("vue").DefineComponent<Readonly<{
-        properties?: any;
         slots?: any;
+        properties?: any;
         listeners?: any;
         propsWillDeleteFromConfigs?: any;
     }>, any, any, {
@@ -37,60 +37,60 @@ declare const itemRenders: {
             set(val: any): void;
         };
     }, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<Readonly<{
-        properties?: any;
         slots?: any;
+        properties?: any;
         listeners?: any;
         propsWillDeleteFromConfigs?: any;
     }>>>, {
-        readonly properties?: any;
         readonly slots?: any;
+        readonly properties?: any;
         readonly listeners?: any;
         readonly propsWillDeleteFromConfigs?: any;
-    }>;
+    }, {}>;
     Select: import("vue").DefineComponent<Readonly<{
-        properties?: any;
         slots?: any;
+        properties?: any;
         listeners?: any;
         propsWillDeleteFromConfigs?: any;
     }>, unknown, {
         _modelValue: string;
     }, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<Readonly<{
-        properties?: any;
         slots?: any;
+        properties?: any;
         listeners?: any;
         propsWillDeleteFromConfigs?: any;
     }>>>, {
-        readonly properties?: any;
         readonly slots?: any;
+        readonly properties?: any;
         readonly listeners?: any;
         readonly propsWillDeleteFromConfigs?: any;
-    }>;
+    }, {}>;
     Switch: import("vue").DefineComponent<Readonly<{
-        properties?: any;
         slots?: any;
+        properties?: any;
         listeners?: any;
         propsWillDeleteFromConfigs?: any;
     }>, unknown, {
         _modelValue: string;
     }, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<Readonly<{
-        properties?: any;
         slots?: any;
+        properties?: any;
         listeners?: any;
         propsWillDeleteFromConfigs?: any;
     }>>>, {
-        readonly properties?: any;
         readonly slots?: any;
+        readonly properties?: any;
         readonly listeners?: any;
         readonly propsWillDeleteFromConfigs?: any;
-    }>;
+    }, {}>;
     DatePicker: ({ properties, slots, listeners }: any) => any;
     RangePicker: ({ properties, slots, listeners }: any) => any;
     RadioGroup: ({ properties, slots, listeners, propsWillDeleteFromConfigs }: any) => any;
     CheckboxGroup: ({ properties, slots, listeners }: any) => any;
 };
 export default itemRenders;
-export declare type t_xItem = keyof typeof itemRenders;
-export declare type t_itemConfigs = {
+export type t_xItem = keyof typeof itemRenders;
+export type t_itemConfigs = {
     style?: any;
     label?: string | Function | JSX.Element;
     isShow?: boolean | Function;

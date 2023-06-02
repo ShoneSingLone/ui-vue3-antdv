@@ -4,7 +4,6 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-import { xU as xU$1, VentoseUIWithInstall, State_UI as State_UI$1, $ as $$1 } from "@ventose/ui";
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -56,6 +55,7 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
   if (!deps || deps.length === 0) {
     return baseModule();
   }
+  const links = document.getElementsByTagName("link");
   return Promise.all(deps.map((dep) => {
     dep = assetsURL(dep, importerUrl);
     if (dep in seen)
@@ -63,7 +63,15 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
     seen[dep] = true;
     const isCss = dep.endsWith(".css");
     const cssSelector = isCss ? '[rel="stylesheet"]' : "";
-    if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
+    const isBaseRelative = !!importerUrl;
+    if (isBaseRelative) {
+      for (let i = links.length - 1; i >= 0; i--) {
+        const link2 = links[i];
+        if (link2.href === dep && (!isCss || link2.rel === "stylesheet")) {
+          return;
+        }
+      }
+    } else if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
       return;
     }
     const link = document.createElement("link");
@@ -83,12 +91,12 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
   })).then(() => baseModule());
 };
 const routes = [
-  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.c83b7c70.js"), true ? ["Dev.c83b7c70.js","css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.fedbe9f3.js"), true ? ["./Dev.fedbe9f3.js","./css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.fedbe9f3.js"), true ? ["./Dev.fedbe9f3.js","./css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.fedbe9f3.js"), true ? ["./Dev.fedbe9f3.js","./css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.fedbe9f3.js"), true ? ["./Dev.fedbe9f3.js","./css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.fedbe9f3.js"), true ? ["./Dev.fedbe9f3.js","./css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.fedbe9f3.js"), true ? ["./Dev.fedbe9f3.js","./css\\Dev.css"] : void 0, import.meta.url) },
   {
     category: "inset",
     path: "/xDirective",
@@ -97,32 +105,32 @@ const routes = [
   {
     category: "inset",
     path: "/xIcon",
-    component: () => __vitePreload(() => import("./DemoXIcon.967cc854.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXIcon.af42b705.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xButton",
-    component: () => __vitePreload(() => import("./DemoXButton.be9e451b.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXButton.3e0286b8.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDialog",
-    component: () => __vitePreload(() => import("./DemoDialog.cdd3e333.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoDialog.fe6702f3.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xForm",
-    component: () => __vitePreload(() => import("./DemoXForm.7f985a45.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXForm.f1d6d28d.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDataGrid",
-    component: () => __vitePreload(() => import("./DemoXDataGrid.0a619da8.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXDataGrid.a8eb32d3.js"), true ? [] : void 0, import.meta.url)
   },
   {
     category: "plugin",
     path: "/xMenuTree",
-    component: () => __vitePreload(() => import("./DemoxMenuTree.fa5e7d36.js"), true ? [] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoxMenuTree.1c6b1663.js"), true ? [] : void 0, import.meta.url)
   }
 ];
 const router = VueRouter.createRouter({
@@ -811,7 +819,32 @@ const Pagination$1 = {
   prev_3: "Previous 3 Pages",
   next_3: "Next 3 Pages"
 };
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj2) {
+    return typeof obj2;
+  } : function(obj2) {
+    return obj2 && "function" == typeof Symbol && obj2.constructor === Symbol && obj2 !== Symbol.prototype ? "symbol" : typeof obj2;
+  }, _typeof(obj);
+}
+function _toPrimitive(input, hint) {
+  if (_typeof(input) !== "object" || input === null)
+    return input;
+  var prim = input[Symbol.toPrimitive];
+  if (prim !== void 0) {
+    var res = prim.call(input, hint || "default");
+    if (_typeof(res) !== "object")
+      return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (hint === "string" ? String : Number)(input);
+}
+function _toPropertyKey(arg) {
+  var key = _toPrimitive(arg, "string");
+  return _typeof(key) === "symbol" ? key : String(key);
+}
 function _defineProperty(obj, key, value) {
+  key = _toPropertyKey(key);
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value,
@@ -2014,7 +2047,7 @@ const xPagination = Vue.defineComponent({
       size,
       total
     } = State_UI.pagination;
-    console.log(page, size, total);
+    xU(page, size, total);
     if (!this.pagination[total]) {
       return null;
     }
@@ -13412,7 +13445,7 @@ const DemoAndCode = Vue.defineComponent({
       }
     },
     async rerun(scfObjSourceCode) {
-      const _BussinessComponent = await xU.getVueComponentBySourceCode(this.sfcURL, scfObjSourceCode, {
+      const _BussinessComponent = await xU.getVueComponentBySourceCode(this.sfcURL, scfObjSourceCode, new Proxy({
         reactive: Vue.reactive,
         defineComponent: Vue.defineComponent,
         markRaw: Vue.markRaw,
@@ -13426,7 +13459,17 @@ const DemoAndCode = Vue.defineComponent({
         defItem,
         resolveComponent: Vue.resolveComponent,
         App
-      });
+      }, {
+        get(target, prop) {
+          if (target.hasOwnProperty(prop)) {
+            return target[prop];
+          }
+          if (xU[prop]) {
+            return xU[prop];
+          }
+          return Vue[prop];
+        }
+      }));
       this.BussinessComponent = Vue.markRaw(_BussinessComponent);
       this.isLoading = false;
     },
@@ -13501,7 +13544,7 @@ const _sfc_main = Vue.defineComponent({
     return {};
   },
   data(vm) {
-    vm.setActiveMenuHighlight = xU$1.debounce(function() {
+    vm.setActiveMenuHighlight = VentoseUI.xU.debounce(function() {
       const openKey = vm.pathAndIdCollection[vm.currentPath];
       if (!openKey) {
         return;
@@ -13527,11 +13570,11 @@ const _sfc_main = Vue.defineComponent({
   },
   methods: {
     onOpenChange(openKeys) {
-      if (!xU$1.isArrayFill(openKeys)) {
+      if (!VentoseUI.xU.isArrayFill(openKeys)) {
         return;
       }
-      const latestOpenKey = xU$1.last(openKeys) || "";
-      const openKeyArray = xU$1.safeSplit(latestOpenKey, "###").filter((i) => i);
+      const latestOpenKey = VentoseUI.xU.last(openKeys) || "";
+      const openKeyArray = VentoseUI.xU.safeSplit(latestOpenKey, "###").filter((i) => i);
       const _openKeys = [];
       for (let index2 = 0; index2 < openKeyArray.length; index2++) {
         const element = openKeyArray[index2];
@@ -13558,13 +13601,13 @@ const _sfc_main = Vue.defineComponent({
             return null;
           }
         }
-        if (xU$1.isArrayFill(currentMenuInfo.children)) {
+        if (VentoseUI.xU.isArrayFill(currentMenuInfo.children)) {
           return Vue.createVNode(Vue.resolveComponent("aSubMenu"), {
             "key": currentId
           }, {
             icon: () => getIcon(currentMenuInfo.icon),
             title: () => currentMenuInfo.label,
-            default: () => xU$1.map(currentMenuInfo.children, (i) => MenuItemRender(i, currentId))
+            default: () => VentoseUI.xU.map(currentMenuInfo.children, (i) => MenuItemRender(i, currentId))
           });
         } else {
           vm.pathAndIdCollection[currentMenuInfo.path] = currentId;
@@ -13606,8 +13649,8 @@ const _sfc_main = Vue.defineComponent({
           });
         }
       };
-      if (xU$1.isArrayFill(treeArray)) {
-        return xU$1.map(treeArray, (i) => {
+      if (VentoseUI.xU.isArrayFill(treeArray)) {
+        return VentoseUI.xU.map(treeArray, (i) => {
           return MenuItemRender(i, "");
         });
       } else {
@@ -13629,7 +13672,7 @@ const _sfc_main = Vue.defineComponent({
 });
 const appPlugins = {
   install: (app, options) => {
-    app.use(VentoseUIWithInstall, {
+    app.use(VentoseUI.VentoseUIWithInstall, {
       appPlugins,
       dependState: options.dependState
     });
@@ -13638,9 +13681,9 @@ const appPlugins = {
         app2.component(_sfc_main.name, _sfc_main);
         app2.component("Mkit", Mkit);
         app2.component("DemoAndCode", DemoAndCode);
-        app2.config.globalProperties.$t = State_UI$1.$t;
-        State_UI$1.setAssetsBaseById("svg_assets_img");
-        $$1("html").attr("lang", State_UI$1.language);
+        app2.config.globalProperties.$t = VentoseUI.State_UI.$t;
+        VentoseUI.State_UI.setAssetsBaseById("svg_assets_img");
+        VentoseUI.$("html").attr("lang", VentoseUI.State_UI.language);
         watch && watch();
       }
     });

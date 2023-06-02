@@ -4,7 +4,7 @@ export declare const STATIC_WORD: {
     OPERATION: string;
     NEXT_TICK_TIME: number;
 };
-export declare type t_col = {
+export type t_col = {
     prop: string;
     label: any;
     width?: string;
@@ -14,7 +14,7 @@ export declare type t_col = {
     renderHeader?: Function;
     renderCell?: Function;
 };
-export declare type t_dataGridOptions = {
+export type t_dataGridOptions = {
     isLoading?: boolean;
     queryTableList: Function;
     antTableProperty?: object;
@@ -103,7 +103,7 @@ export declare function defColActionsBtnlist(options: {
     btns: t_buttonOptions[];
 }): JSX.Element;
 export declare function filterColIsShow(isShow: any, prop: any): boolean;
-declare type t_result = {
+type t_result = {
     total?: false | number;
     selected?: string[] | false;
     data: any[];
@@ -118,7 +118,7 @@ declare type t_result = {
 }
  */
 export declare function setDataGridInfo(StateBind: any, result?: t_result): void;
-declare type t_pagination = {
+type t_pagination = {
     page: number;
     size: number;
     total: number;

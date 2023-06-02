@@ -1,4 +1,4 @@
-declare type t_ReactiveState = {
+type t_ReactiveState = {
     _$resetSelf: Function;
     _$null: Function;
 };

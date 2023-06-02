@@ -1,5 +1,3 @@
-declare module "@ventose/ui";
-
 //@ts-nocheck
 import "./index.less";
 import "./ui.scss";

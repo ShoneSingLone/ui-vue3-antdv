@@ -136,7 +136,7 @@ declare const privateLodash: {
      */
     MutatingProps: (item: any, prop: string, val?: any, isDelete?: boolean) => any;
 };
-declare type xUFunction = (...args: any[]) => void;
-declare type t_all_lodash_and_mine = xUFunction & LoDashStatic & typeof privateLodash;
+type xUFunction = (...args: any[]) => void;
+type t_all_lodash_and_mine = xUFunction & LoDashStatic & typeof privateLodash;
 export declare const xU: t_all_lodash_and_mine;
 export {};

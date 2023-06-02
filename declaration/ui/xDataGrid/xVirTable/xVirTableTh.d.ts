@@ -12,4 +12,4 @@ export declare const xVirTableTh: import("vue").DefineComponent<Readonly<{
 }>>>, {
     readonly column?: any;
     readonly index?: any;
-}>;
+}, {}>;

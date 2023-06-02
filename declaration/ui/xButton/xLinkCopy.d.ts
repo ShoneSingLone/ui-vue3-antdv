@@ -9,4 +9,4 @@ export declare const xLinkCopy: import("vue").DefineComponent<Readonly<{
     to?: any;
 }>>>, {
     readonly to?: any;
-}>;
+}, {}>;

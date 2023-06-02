@@ -29,4 +29,4 @@ export declare const DemoXFormWithForm: import("vue").DefineComponent<{
     };
 }>>, {
     options: Record<string, any>;
-}>;
+}, {}>;

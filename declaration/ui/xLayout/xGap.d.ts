@@ -28,4 +28,4 @@ export declare const xGap: import("vue").DefineComponent<Readonly<{
     readonly t?: any;
     readonly l?: any;
     readonly r?: any;
-}>;
+}, {}>;

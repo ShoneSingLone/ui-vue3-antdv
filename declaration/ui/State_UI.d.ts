@@ -26,7 +26,7 @@ declare let _State_UI: {
     isDev: boolean;
     dev(isDev: any): void;
 };
-declare type t_State_UI = typeof _State_UI;
+type t_State_UI = typeof _State_UI;
 export declare const State_UI: t_State_UI;
 export declare const Cpt_UI_locale: import("vue").ComputedRef<any>;
 export {};

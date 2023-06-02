@@ -55,4 +55,4 @@ export declare const xItem: import("vue").DefineComponent<{
 }, {
     configs: Record<string, any>;
     modelValue: string | number | boolean | Record<string, any>;
-}>;
+}, {}>;

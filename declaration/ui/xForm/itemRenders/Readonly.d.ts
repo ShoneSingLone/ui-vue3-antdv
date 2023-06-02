@@ -4,4 +4,4 @@ export declare const ReadonlyItem: import("vue").DefineComponent<Readonly<{
     value?: any;
 }>>>, {
     readonly value?: any;
-}>;
+}, {}>;

@@ -52,4 +52,4 @@ export declare const xPagination: import("vue").DefineComponent<{
 }>>, {
     pagination: Record<string, any>;
     onPaginationChange: Function;
-}>;
+}, {}>;

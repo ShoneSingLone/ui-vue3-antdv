@@ -1,6 +1,6 @@
 /// <reference types="jquery" />
 /// <reference types="jquery" />
-export declare type t_dialogOptions = {
+export type t_dialogOptions = {
     keepTop?: boolean;
     payload?: any;
     isEcsCloseDialog?: boolean;

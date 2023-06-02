@@ -14,4 +14,4 @@ export declare const DialogSourceCode: import("vue").DefineComponent<{
     };
 }>>, {
     propDialogOptions: Record<string, any>;
-}>;
+}, {}>;

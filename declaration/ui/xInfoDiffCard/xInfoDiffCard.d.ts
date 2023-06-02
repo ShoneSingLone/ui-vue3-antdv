@@ -11,4 +11,4 @@ export declare const xInfoDiffCard: import("vue").DefineComponent<Readonly<{
     readonly title?: any;
     readonly old?: any;
     readonly new?: any;
-}>;
+}, {}>;

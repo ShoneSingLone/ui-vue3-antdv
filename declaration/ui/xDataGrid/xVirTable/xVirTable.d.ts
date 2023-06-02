@@ -1,11 +1,11 @@
 import { t_rowPayload } from "./xVirTableBody";
-declare type t_selectedConfigs = {
+type t_selectedConfigs = {
     type: keyof typeof defXVirTableConfigs.type;
     prop: string;
     isDisabled?: Function;
     isSelect?: Function;
 };
-declare type t_defXVirTableConfigs = {
+type t_defXVirTableConfigs = {
     queryTableList?: Function;
     selectedConfigs?: t_selectedConfigs;
     selected?: [];
@@ -64,5 +64,5 @@ export declare const xVirTable: import("vue").DefineComponent<Readonly<{
 }>>>, {
     readonly configs?: any;
     readonly uniqBy?: any;
-}>;
+}, {}>;
 export {};

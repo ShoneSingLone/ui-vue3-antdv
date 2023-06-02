@@ -10,7 +10,7 @@ export declare const InfoCardCol: import("vue").DefineComponent<Readonly<{
     col?: any;
 }>>>, {
     readonly col?: any;
-}>;
+}, {}>;
 export declare const InfoCardRow: import("vue").DefineComponent<Readonly<{
     row?: any;
 }>, unknown, unknown, {
@@ -21,7 +21,7 @@ export declare const InfoCardRow: import("vue").DefineComponent<Readonly<{
     row?: any;
 }>>>, {
     readonly row?: any;
-}>;
+}, {}>;
 export declare const xInfoCard: import("vue").DefineComponent<Readonly<{
     title?: any;
     info?: any;
@@ -39,4 +39,4 @@ export declare const xInfoCard: import("vue").DefineComponent<Readonly<{
 }>>>, {
     readonly title?: any;
     readonly info?: any;
-}>;
+}, {}>;

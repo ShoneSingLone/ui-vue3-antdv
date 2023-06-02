@@ -1,6 +1,6 @@
-export declare type t_anyStringString = [string, string];
-export declare type t_subfix<TKey, TSubfix extends string> = TKey extends number ? `${TKey}${TSubfix}` : never;
-export declare type t_offsetString = "auto" | "t" | "r" | "b" | "l" | "lt" | "lb" | "rt" | "rb";
+export type t_anyStringString = [string, string];
+export type t_subfix<TKey, TSubfix extends string> = TKey extends number ? `${TKey}${TSubfix}` : never;
+export type t_offsetString = "auto" | "t" | "r" | "b" | "l" | "lt" | "lb" | "rt" | "rb";
 export interface i_layerOptions {
     contentClass?: string;
     type?: number;

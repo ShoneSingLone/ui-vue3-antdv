@@ -25,4 +25,4 @@ export declare const DemoAndCode: import("vue").DefineComponent<Readonly<{
 }>>>, {
     readonly title?: any;
     readonly path?: any;
-}>;
+}, {}>;

@@ -23,4 +23,4 @@ export declare const xVirTableTd: import("vue").DefineComponent<Readonly<{
 }, {
     readonly data?: any;
     readonly column?: any;
-}>;
+}, {}>;

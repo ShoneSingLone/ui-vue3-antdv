@@ -1,4 +1,4 @@
-export declare type t_buttonOptions = {
+export type t_buttonOptions = {
     text?: any;
     onClick?: () => Promise<any>;
 };
@@ -35,5 +35,5 @@ declare const _default: import("vue").DefineComponent<{
 }>>, {
     configs: Record<string, any>;
     payload: Record<string, any>;
-}>;
+}, {}>;
 export default _default;
