@@ -29782,15 +29782,15 @@ div[id^="lazy-svg_"] {
 	overflow: auto;
 }
 
-.logo[data-v-1140181a] {
+.logo[data-v-ac147fcf] {
 	height: 6em;
 	padding: 1.5em;
 	will-change: filter;
 }
-.logo[data-v-1140181a]:hover {
+.logo[data-v-ac147fcf]:hover {
 	filter: drop-shadow(0 0 2em #646cffaa);
 }
-.logo.vue[data-v-1140181a]:hover {
+.logo.vue[data-v-ac147fcf]:hover {
 	filter: drop-shadow(0 0 2em #42b883aa);
 }
 .markdown-wrapper {

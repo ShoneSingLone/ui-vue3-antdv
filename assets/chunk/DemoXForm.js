@@ -1,4 +1,5 @@
-import { x as xU, e as _export_sfc } from "./index.114df8fa.js";
+import { x as xU, e as _export_sfc } from "./app.js";
+import "../index.ac72f167.js";
 const {
   $t
 } = VentoseUI.State_UI;
