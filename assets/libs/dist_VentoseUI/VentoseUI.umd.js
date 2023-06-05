@@ -142,20 +142,34 @@ var __publicField = (obj, key, value) => {
       INVALID_DATE: "Invalid Date",
       format_ymd: "YYYY-MM-DD"
     },
-    scopeCss(vm, genCssStringFn) {
-      const cssEleSelector = `scope-css_${vm._.uid}`;
-      let $cssEle = $__default.default(`#${cssEleSelector}`);
-      if ($cssEle.length === 0) {
-        const domStyle = document.createElement("style");
-        domStyle.id = cssEleSelector;
-        const domWrapper = vm.$el.__vnode ? vm.$el : vm.$el.parentElement;
-        domWrapper.dataset.styleId = cssEleSelector;
-        domWrapper.appendChild(domStyle);
-        $cssEle = $__default.default(`#${cssEleSelector}`);
+    useScopeCss() {
+      const state = vue.reactive({ id: "", cssEleSelector: "", content: "" });
+      function scopeCss(genCssStringFn) {
+        const content = genCssStringFn({
+          selector: `[data-style-id-${state.cssEleSelector}]`
+        });
+        $__default.default(state.id).html(content);
       }
-      $cssEle.html(
-        genCssStringFn({ vm, selector: `[data-style-id=${cssEleSelector}]` })
-      );
+      vue.onMounted(() => {
+        const vm = vue.getCurrentInstance();
+        state.cssEleSelector = `scope-css_${vm.uid}`;
+        state.id = `#${state.cssEleSelector}`;
+        let $cssEle = $__default.default(state.id);
+        if ($cssEle.length === 0) {
+          const domStyle = document.createElement("style");
+          domStyle.id = state.cssEleSelector;
+          const domWrapper = vm.ctx.$el.__vnode ? vm.ctx.$el : vm.ctx.$el.parentElement;
+          $__default.default(domWrapper).attr(`data-style-id-${state.cssEleSelector}`, "").append(domStyle);
+          $cssEle = $__default.default(`#${state.cssEleSelector}`);
+        }
+      });
+      vue.onUnmounted(() => {
+        const wrapperAttr = `data-style-id-${state.cssEleSelector}`;
+        const selector = `[${wrapperAttr}]`;
+        $__default.default(state.id).remove();
+        $__default.default(selector).removeAttr(wrapperAttr);
+      });
+      return { scopeCss };
     },
     launchFullscreen(element) {
       if (element.requestFullscreen) {
@@ -548,9 +562,6 @@ var __publicField = (obj, key, value) => {
       let nextItem = item;
       const setVal = () => {
         while (key = propArray.shift()) {
-          if (!key) {
-            debugger;
-          }
           if (propArray.length === 0) {
             if (val === "never" && isDelete) {
               delete nextItem[key];
@@ -1196,8 +1207,6 @@ var __publicField = (obj, key, value) => {
     assetsPath: "",
     basePath: "",
     setBasePath(basePath) {
-      console.log("basePath", basePath);
-      debugger;
       State_UI.assetsSvgPath = basePath + "assets/svg";
       State_UI.assetsPath = basePath + "assets";
       State_UI.basePath = basePath;
@@ -1207,7 +1216,6 @@ var __publicField = (obj, key, value) => {
       const img = document.getElementById(eleId);
       if (img) {
         const src = String(img.src || img.href);
-        debugger;
         const index2 = ((_a = src.match(/assets(.*)/)) == null ? void 0 : _a.index) || 0;
         State_UI.assetsSvgPath = src.substring(0, index2) + "assets/svg";
         State_UI.assetsPath = src.substring(0, index2) + "assets";
@@ -4716,7 +4724,6 @@ var __publicField = (obj, key, value) => {
   const $win = $__default.default(window);
   const $html = $__default.default("html");
   const $document = $__default.default(document);
-  const $body = $__default.default("body");
   const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
   const DATA_V_UI_MOVE = "data-directive-ui-move";
   const TYPE_IFRAME = "iframe";
@@ -4742,7 +4749,7 @@ var __publicField = (obj, key, value) => {
     `<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
   );
   setTimeout(() => {
-    $body.append($MoveMask);
+    $html.append($MoveMask);
   }, 0);
   const READY = {
     zIndex: 0,
@@ -5146,7 +5153,7 @@ var __publicField = (obj, key, value) => {
       } else {
         const selector = `.set-layer-top[type=${type2}]`;
         $__default.default(selector).removeClass("set-layer-top");
-        $current.addClass("set-layer-top").appendTo($body);
+        $current.addClass("set-layer-top").appendTo($html);
       }
     }
   };
@@ -5472,9 +5479,9 @@ var __publicField = (obj, key, value) => {
         top: "100%",
         left: "100%"
       });
-      $body.append(layerInstance.$eleLayer);
+      $html.append(layerInstance.$eleLayer);
       if (layerInstance.cptDomShade) {
-        $body.append(layerInstance.cptDomShade);
+        $html.append(layerInstance.cptDomShade);
         layerInstance.$eleShade = $__default.default(`#${_IDShade}`);
         layerInstance.$eleShade.css({
           "background-color": config.shade[1] || "#000",
@@ -5547,7 +5554,7 @@ var __publicField = (obj, key, value) => {
       ];
       let $eleFollow = $__default.default(config.follow);
       if ($eleFollow.length == 0) {
-        $eleFollow = $body;
+        $eleFollow = $html;
       }
       var followInfo = {
         width: $eleFollow.outerWidth(),
@@ -7041,9 +7048,12 @@ var __publicField = (obj, key, value) => {
       }, [vue.createVNode("pre", null, [this.new])])])]);
     }
   });
-  window.dayjs = dayjs__default.default;
-  window.moment = dayjs__default.default;
-  window.jquery = $__default.default;
+  if (State_UI.isDev) {
+    window.dayjs = dayjs__default.default;
+    window.moment = dayjs__default.default;
+    window.jquery = $__default.default;
+    window._ = lodash;
+  }
   const compositionAPI = {
     usefnObserveDomResize,
     useScopeStyle

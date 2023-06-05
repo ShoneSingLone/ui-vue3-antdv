@@ -1,5 +1,5 @@
 <template>
-	<mkit md="## title" />
+	<mkit><code>## title</code></mkit>
 </template>
 
 <script>
