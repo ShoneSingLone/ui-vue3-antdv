@@ -47,10 +47,7 @@ let _State_UI = {
 	assetsPath: "",
 	basePath: "",
 	setBasePath(basePath) {
-		console.log("basePath", basePath);
-		debugger;
 		State_UI.assetsSvgPath = basePath + "assets/svg";
-		
 		State_UI.assetsPath = basePath + "assets";
 		State_UI.basePath = basePath;
 	},
@@ -59,7 +56,6 @@ let _State_UI = {
 		if (img) {
 			//@ts-ignore
 			const src = String(img.src || img.href);
-			debugger;
 			const index = src.match(/assets(.*)/)?.index || 0;
 			State_UI.assetsSvgPath = src.substring(0, index) + "assets/svg";
 			State_UI.assetsPath = src.substring(0, index) + "assets";

@@ -1,8 +1,16 @@
 //@ts-nocheck
 import { defineComponent, h, reactive, markRaw, resolveComponent } from "vue";
-import { State_UI, xU, UI, compileVNode, defCol, $, defItem } from "../ui";
 import { DialogSourceCode } from "./DialogSourceCode";
-import { defXVirTableConfigs } from "./../ui/xDataGrid/xVirTable/xVirTable";
+import {
+	defXVirTableConfigs,
+	State_UI,
+	xU,
+	UI,
+	compileVNode,
+	defCol,
+	$,
+	defItem
+} from "@ventose/ui";
 import App from "../App.vue";
 
 export const DemoAndCode = defineComponent({
@@ -68,7 +76,9 @@ export const DemoAndCode = defineComponent({
 							if (xU[prop]) {
 								return xU[prop];
 							}
-							return Vue[prop];
+							if (target.State_UI[prop]) {
+								return target.State_UI[prop];
+							}
 						}
 					}
 				)

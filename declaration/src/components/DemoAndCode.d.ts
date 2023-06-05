@@ -21,7 +21,7 @@ export declare const DemoAndCode: import("vue").DefineComponent<Readonly<{
         basePath: string;
         setBasePath(basePath: any): void;
         setAssetsBaseById(eleId: string): void;
-        $t: typeof import("../ui").$t;
+        $t: typeof import("@ventose/ui").$t;
         isDev: boolean;
         dev(isDev: any): void;
     };

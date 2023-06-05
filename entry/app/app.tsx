@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { createApp, reactive } from "vue";
 import "@/AppStyle.less";
-import { xU, $, VentoseUIWithInstall, State_UI } from "@ventose/ui";
+import { $, VentoseUIWithInstall, State_UI } from "@ventose/ui";
 import { router } from "@/router";
 import App from "@/App.vue";
 import Mkit from "@/components/MarkdownIt.vue";
@@ -24,8 +24,6 @@ const appPlugins = {
 				//注册i8n实例并引入语言文件
 				app.config.globalProperties.$t = State_UI.$t;
 				const link = document.getElementById("svg_assets_img");
-				console.log(link);
-				debugger;
 				if (link) {
 					//@ts-ignore
 					const src = String(link.href);

@@ -19,7 +19,6 @@ export const KEY = {
 const $win = $(window);
 const $html = $("html");
 const $document = $(document);
-const $body = $("body");
 
 /* 缓存常用字符 */
 export const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
@@ -52,7 +51,7 @@ export const $MoveMask: JQuery = $(
 	`<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
 );
 setTimeout(() => {
-	$body.append($MoveMask);
+	$html.append($MoveMask);
 }, 0);
 
 export const READY: {
@@ -544,7 +543,7 @@ const LayerUtils = {
 			const selector = `.set-layer-top[type=${type}]`;
 			/* FIX: 防止不同类型的层重排 */
 			$(selector).removeClass("set-layer-top");
-			$current.addClass("set-layer-top").appendTo($body);
+			$current.addClass("set-layer-top").appendTo($html);
 		}
 	}
 };
@@ -967,11 +966,11 @@ class ClassLayer {
 			top: "100%",
 			left: "100%"
 		});
-		$body.append(layerInstance.$eleLayer);
+		$html.append(layerInstance.$eleLayer);
 
 		/* 当前实例的遮罩 */
 		if (layerInstance.cptDomShade) {
-			$body.append(layerInstance.cptDomShade);
+			$html.append(layerInstance.cptDomShade);
 			layerInstance.$eleShade = $(`#${_IDShade}`);
 			layerInstance.$eleShade.css({
 				"background-color": config.shade[1] || "#000",
@@ -1076,7 +1075,7 @@ class ClassLayer {
 		let $eleFollow = $(config.follow);
 
 		if ($eleFollow.length == 0) {
-			$eleFollow = $body;
+			$eleFollow = $html;
 		}
 
 		var followInfo = {

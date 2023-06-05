@@ -7,7 +7,7 @@ export declare const routes: ({
     category: string;
     path: string;
     component: () => Promise<{
-        default: typeof import("./ui/directive/DemoDirective");
+        default: typeof import("./demo/DemoDirective");
     }>;
 } | {
     category: string;

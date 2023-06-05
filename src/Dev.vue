@@ -3,10 +3,28 @@
 
 import { defineComponent } from "vue";
 import xMenuTree from "../entry/lib/xMenuTree.vue";
-import { xU, defItem, defCol, defXVirTableConfigs, compileVNode } from "./ui";
+import { xU, defItem, defCol, defXVirTableConfigs, compileVNode } from "@ventose/ui";
 
 export default defineComponent({
 	components: { xMenuTree },
+	setup() {
+		const { scopeCss } = xU.useScopeCss();
+		return { scopeCss }
+	},
+	mounted() {
+		this.scopeCss(({ selector }) => `${selector} *{ outline:1px solid red; }`);
+		setTimeout(() => {
+			this.scopeCss(({ selector }) => `${selector} *{ outline:1px solid green; }`);
+			setTimeout(() => {
+				this.scopeCss(({ selector }) => `${selector} *{ outline:1px solid blue; }`);
+				setTimeout(() => {
+					this.scopeCss(({ selector }) => ``);
+				}, 3000);
+			}, 3000);
+		}, 3000);
+
+		this.genNewData();
+	},
 	data(vm) {
 		return {
 			configs_xVirTable: defXVirTableConfigs({
@@ -46,15 +64,6 @@ export default defineComponent({
 				}
 			})
 		};
-	},
-	mounted() {
-		xU.scopeCss(this, ({ selector }) => {
-			return `
-			${selector} *{
-				outline:1px solid red;
-			}
-			` });
-		this.genNewData();
 	},
 	methods: {
 		setTableValue(id, prop, val) {

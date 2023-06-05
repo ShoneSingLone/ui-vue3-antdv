@@ -83,7 +83,7 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
     }
   })).then(() => baseModule());
 };
-__vitePreload(() => import("./chunk/app.js").then((n) => n.f), true ? ["./chunk\\app.js","./css\\app.css"] : void 0, import.meta.url);
+__vitePreload(() => import("./chunk/app.js").then((n) => n.b), true ? ["./chunk\\app.js","./css\\app.css"] : void 0, import.meta.url);
 export {
   __vitePreload as _
 };

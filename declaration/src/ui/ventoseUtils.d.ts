@@ -8,7 +8,9 @@ declare const privateLodash: {
         INVALID_DATE: string;
         format_ymd: string;
     };
-    scopeCss(vm: any, genCssStringFn: any): void;
+    useScopeCss(): {
+        scopeCss: (genCssStringFn: any) => void;
+    };
     launchFullscreen(element: any): void;
     exitFullscreen(): void;
     hashCode(str: string): string;

@@ -4,10 +4,10 @@ import {
 	defItem,
 	FormRules,
 	State_UI,
-	validateForm
+	validateForm,
+	xU
 } from "@ventose/ui";
 import { defineComponent } from "vue";
-import { xU } from "../ventoseUtils";
 
 const { $t } = State_UI;
 export const DemoXFormWithForm = defineComponent({

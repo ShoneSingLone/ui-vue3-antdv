@@ -7,6 +7,13 @@ import { iStorage } from "./tools/storage";
 import { State_UI } from ".";
 //@ts-ignore
 import axios from "axios";
+import {
+	getCurrentInstance,
+	onMounted,
+	onUnmounted,
+	reactive,
+	watch
+} from "vue";
 
 /* 组件属性是否是on开头，组件的事件监听*/
 const onRE = /^on[^a-z]/;
@@ -41,20 +48,40 @@ const privateLodash = {
 		INVALID_DATE: "Invalid Date",
 		format_ymd: "YYYY-MM-DD"
 	},
-	scopeCss(vm /* vue实例，带有_.id */, genCssStringFn) {
-		const cssEleSelector = `scope-css_${vm._.uid}`;
-		let $cssEle = $(`#${cssEleSelector}`);
-		if ($cssEle.length === 0) {
-			const domStyle = document.createElement("style");
-			domStyle.id = cssEleSelector;
-			const domWrapper = vm.$el.__vnode ? vm.$el : vm.$el.parentElement;
-			domWrapper.dataset.styleId = cssEleSelector;
-			domWrapper.appendChild(domStyle);
-			$cssEle = $(`#${cssEleSelector}`);
+	useScopeCss() {
+		const state = reactive({ id: "", cssEleSelector: "", content: "" });
+		function scopeCss(genCssStringFn) {
+			const content = genCssStringFn({
+				selector: `[data-style-id-${state.cssEleSelector}]`
+			});
+			$(state.id).html(content);
 		}
-		$cssEle.html(
-			genCssStringFn({ vm, selector: `[data-style-id=${cssEleSelector}]` })
-		);
+		onMounted(() => {
+			/* getCurrentInstance获取的vue实例与optional的this实例属性略有不同，ctx才是上下文，带有_.id */
+			const vm = getCurrentInstance();
+			state.cssEleSelector = `scope-css_${vm.uid}`;
+			state.id = `#${state.cssEleSelector}`;
+			let $cssEle = $(state.id);
+			if ($cssEle.length === 0) {
+				const domStyle = document.createElement("style");
+				domStyle.id = state.cssEleSelector;
+				const domWrapper = vm.ctx.$el.__vnode
+					? vm.ctx.$el
+					: vm.ctx.$el.parentElement;
+				$(domWrapper)
+					.attr(`data-style-id-${state.cssEleSelector}`, "")
+					.append(domStyle);
+				$cssEle = $(`#${state.cssEleSelector}`);
+			}
+		});
+
+		onUnmounted(() => {
+			const wrapperAttr = `data-style-id-${state.cssEleSelector}`;
+			const selector = `[${wrapperAttr}]`;
+			$(state.id).remove();
+			$(selector).removeAttr(wrapperAttr);
+		});
+		return { scopeCss };
 	},
 	launchFullscreen(element: any) {
 		if (element.requestFullscreen) {
@@ -603,7 +630,6 @@ const privateLodash = {
 		const setVal = () => {
 			while (((key as any) = propArray.shift())) {
 				if (!key) {
-					debugger;
 				}
 				/* 如果是最后一项，就赋值后退出 */
 				if (propArray.length === 0) {

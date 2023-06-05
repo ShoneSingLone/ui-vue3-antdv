@@ -64,12 +64,16 @@ import { xInfoCard } from "./xView/xInfoCard";
 import { xLinkCopy } from "./xButton/xLinkCopy";
 import { xInfoDiffCard } from "./xInfoDiffCard/xInfoDiffCard";
 
-/* @ts-ignore */
-window.dayjs = dayjs;
-/* @ts-ignore */
-window.moment = dayjs;
-/* @ts-ignore */
-window.jquery = $;
+if (State_UI.isDev) {
+	/* @ts-ignore */
+	window.dayjs = dayjs;
+	/* @ts-ignore */
+	window.moment = dayjs;
+	/* @ts-ignore */
+	window.jquery = $;
+	/* @ts-ignore */
+	window._ = lodash;
+}
 
 export const compositionAPI = {
 	usefnObserveDomResize,

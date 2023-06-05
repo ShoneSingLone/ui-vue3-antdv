@@ -10,37 +10,37 @@ export const routes = [
 	{
 		category: "inset",
 		path: "/xDirective",
-		component: () => import("./ui/directive/DemoDirective.jsx")
+		component: () => import("./demo/DemoDirective.jsx")
 	},
 	{
 		category: "inset",
 		path: "/xIcon",
-		component: () => import("./ui/xIcon/DemoXIcon.vue")
+		component: () => import("./demo/DemoXIcon.vue")
 	},
 	{
 		category: "inset",
 		path: "/xButton",
-		component: () => import("./ui/xButton/DemoXButton.vue")
+		component: () => import("./demo/DemoXButton.vue")
 	},
 	{
 		category: "inset",
 		path: "/xDialog",
-		component: () => import("./ui/xSingle/dialog/DemoDialog.vue")
+		component: () => import("./demo/DemoDialog.vue")
 	},
 	{
 		category: "inset",
 		path: "/xForm",
-		component: () => import("./ui/xForm/DemoXForm.vue")
+		component: () => import("./demo/DemoXForm.vue")
 	},
 	{
 		category: "inset",
 		path: "/xDataGrid",
-		component: () => import("./ui/xDataGrid/DemoXDataGrid.vue")
+		component: () => import("./demo/DemoXDataGrid.vue")
 	},
 	{
 		category: "plugin",
 		path: "/xMenuTree",
-		component: () => import("../entry/lib/xMenuTree/DemoxMenuTree.vue")
+		component: () => import("./demo/DemoxMenuTree.vue")
 	}
 ];
 

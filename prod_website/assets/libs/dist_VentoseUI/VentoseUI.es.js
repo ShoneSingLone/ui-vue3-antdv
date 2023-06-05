@@ -7,7 +7,7 @@ var __publicField = (obj, key, value) => {
 import Antd, { Table, RangePicker as RangePicker$1, DatePicker as DatePicker$3, Modal, message, notification } from "ant-design-vue";
 import $$1 from "jquery";
 import { default as default2 } from "jquery";
-import { defineComponent, markRaw, h, openBlock, createElementBlock, renderSlot, reactive, watch, computed, createVNode, Fragment, resolveComponent, mergeProps, createBlock, withDirectives, createElementVNode, vShow, createStaticVNode, isVNode, withCtx, renderList, createTextVNode, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, isProxy, toRaw, inject, provide, createApp, getCurrentInstance } from "vue";
+import { defineComponent, markRaw, h, reactive, onMounted, getCurrentInstance, onUnmounted, openBlock, createElementBlock, renderSlot, watch, computed, createVNode, Fragment, resolveComponent, mergeProps, createBlock, withDirectives, createElementVNode, vShow, createStaticVNode, isVNode, withCtx, renderList, createTextVNode, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, isProxy, toRaw, inject, provide, createApp } from "vue";
 import _ from "lodash";
 import dayjs from "dayjs";
 import { default as default3, default as default4 } from "dayjs";
@@ -141,20 +141,34 @@ const privateLodash = {
     INVALID_DATE: "Invalid Date",
     format_ymd: "YYYY-MM-DD"
   },
-  scopeCss(vm, genCssStringFn) {
-    const cssEleSelector = `scope-css_${vm._.uid}`;
-    let $cssEle = $$1(`#${cssEleSelector}`);
-    if ($cssEle.length === 0) {
-      const domStyle = document.createElement("style");
-      domStyle.id = cssEleSelector;
-      const domWrapper = vm.$el.__vnode ? vm.$el : vm.$el.parentElement;
-      domWrapper.dataset.styleId = cssEleSelector;
-      domWrapper.appendChild(domStyle);
-      $cssEle = $$1(`#${cssEleSelector}`);
+  useScopeCss() {
+    const state = reactive({ id: "", cssEleSelector: "", content: "" });
+    function scopeCss(genCssStringFn) {
+      const content = genCssStringFn({
+        selector: `[data-style-id-${state.cssEleSelector}]`
+      });
+      $$1(state.id).html(content);
     }
-    $cssEle.html(
-      genCssStringFn({ vm, selector: `[data-style-id=${cssEleSelector}]` })
-    );
+    onMounted(() => {
+      const vm = getCurrentInstance();
+      state.cssEleSelector = `scope-css_${vm.uid}`;
+      state.id = `#${state.cssEleSelector}`;
+      let $cssEle = $$1(state.id);
+      if ($cssEle.length === 0) {
+        const domStyle = document.createElement("style");
+        domStyle.id = state.cssEleSelector;
+        const domWrapper = vm.ctx.$el.__vnode ? vm.ctx.$el : vm.ctx.$el.parentElement;
+        $$1(domWrapper).attr(`data-style-id-${state.cssEleSelector}`, "").append(domStyle);
+        $cssEle = $$1(`#${state.cssEleSelector}`);
+      }
+    });
+    onUnmounted(() => {
+      const wrapperAttr = `data-style-id-${state.cssEleSelector}`;
+      const selector = `[${wrapperAttr}]`;
+      $$1(state.id).remove();
+      $$1(selector).removeAttr(wrapperAttr);
+    });
+    return { scopeCss };
   },
   launchFullscreen(element) {
     if (element.requestFullscreen) {
@@ -547,9 +561,6 @@ const privateLodash = {
     let nextItem = item;
     const setVal = () => {
       while (key = propArray.shift()) {
-        if (!key) {
-          debugger;
-        }
         if (propArray.length === 0) {
           if (val === "never" && isDelete) {
             delete nextItem[key];
@@ -1195,8 +1206,6 @@ let _State_UI = {
   assetsPath: "",
   basePath: "",
   setBasePath(basePath) {
-    console.log("basePath", basePath);
-    debugger;
     State_UI.assetsSvgPath = basePath + "assets/svg";
     State_UI.assetsPath = basePath + "assets";
     State_UI.basePath = basePath;
@@ -1206,7 +1215,6 @@ let _State_UI = {
     const img = document.getElementById(eleId);
     if (img) {
       const src = String(img.src || img.href);
-      debugger;
       const index2 = ((_a = src.match(/assets(.*)/)) == null ? void 0 : _a.index) || 0;
       State_UI.assetsSvgPath = src.substring(0, index2) + "assets/svg";
       State_UI.assetsPath = src.substring(0, index2) + "assets";
@@ -4715,7 +4723,6 @@ const KEY = {
 const $win = $$1(window);
 const $html = $$1("html");
 const $document = $$1(document);
-const $body = $$1("body");
 const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
 const DATA_V_UI_MOVE = "data-directive-ui-move";
 const TYPE_IFRAME = "iframe";
@@ -4741,7 +4748,7 @@ const $MoveMask = $$1(
   `<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
 );
 setTimeout(() => {
-  $body.append($MoveMask);
+  $html.append($MoveMask);
 }, 0);
 const READY = {
   zIndex: 0,
@@ -5145,7 +5152,7 @@ const LayerUtils = {
     } else {
       const selector = `.set-layer-top[type=${type2}]`;
       $$1(selector).removeClass("set-layer-top");
-      $current.addClass("set-layer-top").appendTo($body);
+      $current.addClass("set-layer-top").appendTo($html);
     }
   }
 };
@@ -5471,9 +5478,9 @@ class ClassLayer {
       top: "100%",
       left: "100%"
     });
-    $body.append(layerInstance.$eleLayer);
+    $html.append(layerInstance.$eleLayer);
     if (layerInstance.cptDomShade) {
-      $body.append(layerInstance.cptDomShade);
+      $html.append(layerInstance.cptDomShade);
       layerInstance.$eleShade = $$1(`#${_IDShade}`);
       layerInstance.$eleShade.css({
         "background-color": config.shade[1] || "#000",
@@ -5546,7 +5553,7 @@ class ClassLayer {
     ];
     let $eleFollow = $$1(config.follow);
     if ($eleFollow.length == 0) {
-      $eleFollow = $body;
+      $eleFollow = $html;
     }
     var followInfo = {
       width: $eleFollow.outerWidth(),
@@ -7040,9 +7047,12 @@ const xInfoDiffCard = defineComponent({
     }, [createVNode("pre", null, [this.new])])])]);
   }
 });
-window.dayjs = dayjs;
-window.moment = dayjs;
-window.jquery = $$1;
+if (State_UI.isDev) {
+  window.dayjs = dayjs;
+  window.moment = dayjs;
+  window.jquery = $$1;
+  window._ = lodash;
+}
 const compositionAPI = {
   usefnObserveDomResize,
   useScopeStyle

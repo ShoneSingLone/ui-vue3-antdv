@@ -1,5 +1,5 @@
-import { x as xU, e as _export_sfc } from "./app.js";
-import "../index.ac72f167.js";
+import { a as _export_sfc } from "./app.js";
+import "../index.1d00bf66.js";
 const {
   $t
 } = VentoseUI.State_UI;
@@ -72,7 +72,7 @@ console.log(window)
       default: () => [Vue.createVNode(Vue.resolveComponent("aAlert"), {
         "message": this.$t("\u63D0\u793A\u4FE1\u606F").label,
         "type": "info"
-      }, null), xU.map(this.dataXItem, (item) => {
+      }, null), VentoseUI.xU.map(this.dataXItem, (item) => {
         return Vue.createVNode(Vue.Fragment, null, [Vue.createVNode(Vue.resolveComponent("xGap"), {
           "t": "10"
         }, null), Vue.createVNode(Vue.resolveComponent("xItem"), {

@@ -8,7 +8,7 @@
 
 ## 工具函数
 
-- [x] xU.scopeCss css样式编辑方案
+- [x] xU.useScopeCss css样式编辑方案
 
 
 ## 组件 

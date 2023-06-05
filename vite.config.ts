@@ -162,7 +162,7 @@ function handleApp() {
 					{
 						name: "ant-design-vue",
 						var: "antd",
-						path: "./assets/libs/vue/atdv/3.1.0-rc.4/antd.min.js"
+						path: "./assets/libs/antdv/3.1.0-rc.4/antd.min.js"
 					},
 					{
 						name: "@ventose/ui",

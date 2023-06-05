@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@types/jquery': ^3.5.16
   '@types/lodash': ^4.14.195
+  '@ventose/ui': file://./src/ui
   '@ventose/utils-node': ^0.0.15
   '@vitejs/plugin-vue': ^3.2.0
   '@vitejs/plugin-vue-jsx': ^2.1.1
@@ -31,6 +32,7 @@ specifiers:
   vue-tsc: ^0.40.13
 
 dependencies:
+  '@ventose/ui': file:src/ui
   ant-design-vue: 3.2.20_vue@3.3.4
   axios: 1.4.0
   copy-to-clipboard: 3.3.3
@@ -2435,3 +2437,9 @@ packages:
     optionalDependencies:
       commander: 9.5.0
     dev: true
+
+  file:src/ui:
+    resolution: {directory: src/ui, type: directory}
+    name: '@ventose/ui'
+    version: 0.0.0
+    dev: false
