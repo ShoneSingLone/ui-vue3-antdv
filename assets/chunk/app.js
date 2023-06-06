@@ -1,12 +1,12 @@
-import { _ as __vitePreload } from "../index.1d00bf66.js";
+import { _ as __vitePreload } from "../index.714dfc1b.js";
 const AppStyle = "";
 const routes = [
-  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.1d00bf66.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.1d00bf66.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.1d00bf66.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.1d00bf66.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.1d00bf66.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.1d00bf66.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
   {
     category: "inset",
     path: "/xDirective",
@@ -15,32 +15,32 @@ const routes = [
   {
     category: "inset",
     path: "/xIcon",
-    component: () => __vitePreload(() => import("./DemoXIcon.js"), true ? ["./DemoXIcon.js","..\\index.1d00bf66.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXIcon.js"), true ? ["./DemoXIcon.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xButton",
-    component: () => __vitePreload(() => import("./DemoXButton.js"), true ? ["./DemoXButton.js","..\\index.1d00bf66.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXButton.js"), true ? ["./DemoXButton.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDialog",
-    component: () => __vitePreload(() => import("./DemoDialog.js"), true ? ["./DemoDialog.js","..\\index.1d00bf66.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoDialog.js"), true ? ["./DemoDialog.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xForm",
-    component: () => __vitePreload(() => import("./DemoXForm.js"), true ? ["./DemoXForm.js","..\\index.1d00bf66.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXForm.js"), true ? ["./DemoXForm.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDataGrid",
-    component: () => __vitePreload(() => import("./DemoXDataGrid.js"), true ? ["./DemoXDataGrid.js","..\\index.1d00bf66.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXDataGrid.js"), true ? ["./DemoXDataGrid.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
   },
   {
     category: "plugin",
     path: "/xMenuTree",
-    component: () => __vitePreload(() => import("./DemoxMenuTree.js"), true ? ["./DemoxMenuTree.js","..\\index.1d00bf66.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoxMenuTree.js"), true ? ["./DemoxMenuTree.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
   }
 ];
 const router = VueRouter.createRouter({
@@ -81,9 +81,7 @@ const _hoisted_1$1 = /* @__PURE__ */ Vue.createElementVNode("div", { class: "log
 const _hoisted_2$1 = { class: "flex middle" };
 const _hoisted_3 = /* @__PURE__ */ Vue.createElementVNode("span", { class: "ml4" }, "\u5355\u7EC4\u4EF6", -1);
 const _hoisted_4 = { class: "flex middle" };
-const _hoisted_5 = /* @__PURE__ */ Vue.createElementVNode("span", { class: "ml4" }, "\u5355\u7EC4\u4EF6", -1);
-const _hoisted_6 = { class: "flex middle" };
-const _hoisted_7 = /* @__PURE__ */ Vue.createElementVNode("span", { class: "ml4" }, "\u9700\u8981\u5355\u72EC\u5F15\u7528", -1);
+const _hoisted_5 = /* @__PURE__ */ Vue.createElementVNode("span", { class: "ml4" }, "\u9700\u8981\u5355\u72EC\u5F15\u7528", -1);
 function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_a_menu_item = Vue.resolveComponent("a-menu-item");
   const _component_a_menu = Vue.resolveComponent("a-menu");
@@ -180,39 +178,11 @@ function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
                     ]),
                     _: 1
                   }),
-                  Vue.createVNode(_component_a_sub_menu, { key: "sub1" }, {
+                  Vue.createVNode(_component_a_sub_menu, { key: "sub2" }, {
                     title: Vue.withCtx(() => [
                       Vue.createElementVNode("span", _hoisted_4, [
                         Vue.createVNode(_component_xIcon, { icon: "UserOutlined" }),
                         _hoisted_5
-                      ])
-                    ]),
-                    default: Vue.withCtx(() => [
-                      (Vue.openBlock(true), Vue.createElementBlock(Vue.Fragment, null, Vue.renderList(_ctx.routes.filter((i) => i.category == "inset"), (menu) => {
-                        return Vue.openBlock(), Vue.createBlock(_component_a_menu_item, {
-                          key: menu.path
-                        }, {
-                          default: Vue.withCtx(() => [
-                            Vue.createVNode(_component_RouterLink, {
-                              to: menu.path
-                            }, {
-                              default: Vue.withCtx(() => [
-                                Vue.createTextVNode(Vue.toDisplayString(menu.path), 1)
-                              ]),
-                              _: 2
-                            }, 1032, ["to"])
-                          ]),
-                          _: 2
-                        }, 1024);
-                      }), 128))
-                    ]),
-                    _: 1
-                  }),
-                  Vue.createVNode(_component_a_sub_menu, { key: "sub2" }, {
-                    title: Vue.withCtx(() => [
-                      Vue.createElementVNode("span", _hoisted_6, [
-                        Vue.createVNode(_component_xIcon, { icon: "UserOutlined" }),
-                        _hoisted_7
                       ])
                     ]),
                     default: Vue.withCtx(() => [
