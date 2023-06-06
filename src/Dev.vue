@@ -3,7 +3,8 @@
 
 import { defineComponent } from "vue";
 import xMenuTree from "../entry/lib/xMenuTree.vue";
-import { xU, defItem, defCol, defXVirTableConfigs, compileVNode } from "@ventose/ui";
+import { xU, defItem, defCol, defXVirTableConfigs, compileVNode, dateFormat } from "@ventose/ui";
+import dayjs from "dayjs"
 
 export default defineComponent({
 	components: { xMenuTree },
@@ -27,6 +28,12 @@ export default defineComponent({
 	},
 	data(vm) {
 		return {
+			date: defItem.item({
+				value: xU.dateFormat(dayjs().subtract(1, "day")),
+				prop: "period",
+				itemType: "DatePicker",
+				style: { width: "140px" }
+			}),
 			configs_xVirTable: defXVirTableConfigs({
 				rowHeight: 32,
 				dataSource: [],
@@ -110,8 +117,9 @@ export default defineComponent({
 
 <template>
 	<aButton @click="add">add</aButton>
-	<div style="width:600px;height:600px;border:1px solid black">
-	</div>
+	<div style="width:600px;height:600px;border:1px solid black"> </div>
+	<!-- {{ JSON.stringify(date.value) }} -->
+	<xItem :configs="date" />
 	<!-- <div class="flex horizon">
 		<pre
 			class="flex1 overflow-auto elevation-1 padding10"

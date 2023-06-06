@@ -42,7 +42,7 @@ export declare const xVirTable: import("vue").DefineComponent<Readonly<{
     rowHeight(): any;
     xVirTableId(): string;
     columnOrder(): any;
-    columnWidthStyleArray(): any;
+    columnWidthStyleArray(): string[];
     vDomTheadSelect(): JSX.Element;
     vDomThead(): JSX.Element;
     styleContent(): string;

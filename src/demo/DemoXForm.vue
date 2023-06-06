@@ -5,6 +5,9 @@
 	<DemoAndCode
 		title="xItem特殊slot"
 		path="/boundless/demo/xForm/xItemSlot.sfc" />
+	<DemoAndCode
+		title="DatePicker"
+		path="/boundless/demo/xForm/xItemDatePicker.sfc" />
 	<aCard>
 		{{ valueFromConfigs }}
 		<xButton :configs="configsValidBtn" />
@@ -58,7 +61,7 @@ export default {
 		DemoXFormWithForm
 	},
 	methods: {
-		valid() {}
+		valid() { }
 	},
 	setup(props) {
 		return {

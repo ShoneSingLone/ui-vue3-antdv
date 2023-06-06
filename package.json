@@ -1,6 +1,5 @@
 {
   "name": "@ventose/ui",
-  "type": "module",
   "version": "0.0.18",
   "main": "./public/assets/libs/dist_VentoseUI/VentoseUI.es.js",
   "module": "./public/assets/libs/dist_VentoseUI/VentoseUI.es.js",

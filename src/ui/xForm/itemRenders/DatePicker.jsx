@@ -13,13 +13,28 @@ import { xU } from "../../ventoseUtils";
 export default ({ properties, slots, listeners }) => {
 	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
 	function checkOneValue(value) {
-		value = dayjs(value);
-		xU.doNothing(value, properties.value);
-		if (value === "Invalid Date") {
-			xU.doNothing("properties.value", properties.value);
+		if (!value) {
 			value = "";
+			return;
 		}
-		return value;
+
+		try {
+			value = dayjs(value);
+			if (typeof value === "object" && value.$d == "Invalid Date") {
+				value = "";
+				return;
+			}
+			xU(value, properties.value);
+			if (value === "Invalid Date") {
+				xU("properties.value", properties.value);
+				value = "";
+				return;
+			}
+		} catch (error) {
+
+		} finally {
+			return value;
+		}
 	}
 
 	if (properties.isRange) {
@@ -44,12 +59,14 @@ export default ({ properties, slots, listeners }) => {
 		);
 	}
 
+	const value = checkOneValue(properties.value);
+
 	return (
 		<DatePicker
 			{...properties}
 			{...listeners}
 			v-slots={slots}
-			value={checkOneValue(properties.value)}
+			value={value}
 			locale={Cpt_UI_locale.value.DatePicker}
 		/>
 	);

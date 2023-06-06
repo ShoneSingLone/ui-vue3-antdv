@@ -1,5 +1,5 @@
 import { _ as _sfc_main$1, a as _export_sfc } from "./app.js";
-import "../index.714dfc1b.js";
+import "../index.9c379766.js";
 const _sfc_main = Vue.defineComponent({
   components: {
     xMenuTree: _sfc_main$1
@@ -35,6 +35,14 @@ const _sfc_main = Vue.defineComponent({
   },
   data(vm) {
     return {
+      date: VentoseUI.defItem.item({
+        value: VentoseUI.xU.dateFormat(dayjs().subtract(1, "day")),
+        prop: "period",
+        itemType: "DatePicker",
+        style: {
+          width: "140px"
+        }
+      }),
       configs_xVirTable: VentoseUI.defXVirTableConfigs({
         rowHeight: 32,
         dataSource: [],
@@ -119,11 +127,12 @@ const _sfc_main = Vue.defineComponent({
     }, 10)
   }
 });
-const Dev_vue_vue_type_style_index_0_scoped_c2895f26_lang = "";
-const _withScopeId = (n) => (Vue.pushScopeId("data-v-c2895f26"), n = n(), Vue.popScopeId(), n);
+const Dev_vue_vue_type_style_index_0_scoped_57826125_lang = "";
+const _withScopeId = (n) => (Vue.pushScopeId("data-v-57826125"), n = n(), Vue.popScopeId(), n);
 const _hoisted_1 = /* @__PURE__ */ _withScopeId(() => /* @__PURE__ */ Vue.createElementVNode("div", { style: { "width": "600px", "height": "600px", "border": "1px solid black" } }, null, -1));
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_aButton = Vue.resolveComponent("aButton");
+  const _component_xItem = Vue.resolveComponent("xItem");
   return Vue.openBlock(), Vue.createElementBlock(Vue.Fragment, null, [
     Vue.createVNode(_component_aButton, { onClick: _ctx.add }, {
       default: Vue.withCtx(() => [
@@ -131,10 +140,11 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
       ]),
       _: 1
     }, 8, ["onClick"]),
-    _hoisted_1
+    _hoisted_1,
+    Vue.createVNode(_component_xItem, { configs: _ctx.date }, null, 8, ["configs"])
   ], 64);
 }
-const Dev = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-c2895f26"]]);
+const Dev = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__scopeId", "data-v-57826125"]]);
 export {
   Dev as default
 };

@@ -1,5 +1,5 @@
 import { a as _export_sfc } from "./app.js";
-import "../index.714dfc1b.js";
+import "../index.9c379766.js";
 const {
   $t
 } = VentoseUI.State_UI;
@@ -314,6 +314,10 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     Vue.createVNode(_component_DemoAndCode, {
       title: "xItem\u7279\u6B8Aslot",
       path: "/boundless/demo/xForm/xItemSlot.sfc"
+    }),
+    Vue.createVNode(_component_DemoAndCode, {
+      title: "DatePicker",
+      path: "/boundless/demo/xForm/xItemDatePicker.sfc"
     }),
     Vue.createVNode(_component_aCard, null, {
       default: Vue.withCtx(() => [

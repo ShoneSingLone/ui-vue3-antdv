@@ -12,6 +12,7 @@ import {
 	defItem
 } from "@ventose/ui";
 import App from "../App.vue";
+import dayjs from "dayjs"
 
 export const DemoAndCode = defineComponent({
 	props: ["path", "title"],
@@ -66,7 +67,8 @@ export const DemoAndCode = defineComponent({
 						$,
 						defItem,
 						resolveComponent,
-						App
+						App,
+						dayjs
 					},
 					{
 						get(target, prop) {

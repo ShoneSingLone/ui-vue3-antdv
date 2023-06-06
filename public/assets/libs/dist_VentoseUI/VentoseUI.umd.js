@@ -2823,29 +2823,43 @@ var __publicField = (obj, key, value) => {
     slots,
     listeners
   }) => {
-    function checkOneValue(value) {
-      value = dayjs__default.default(value);
-      xU.doNothing(value, properties.value);
-      if (value === "Invalid Date") {
-        xU.doNothing("properties.value", properties.value);
-        value = "";
+    function checkOneValue(value2) {
+      if (!value2) {
+        value2 = "";
+        return;
       }
-      return value;
+      try {
+        value2 = dayjs__default.default(value2);
+        if (typeof value2 === "object" && value2.$d == "Invalid Date") {
+          value2 = "";
+          return;
+        }
+        xU(value2, properties.value);
+        if (value2 === "Invalid Date") {
+          xU("properties.value", properties.value);
+          value2 = "";
+          return;
+        }
+      } catch (error) {
+      } finally {
+        return value2;
+      }
     }
     if (properties.isRange) {
-      let value;
+      let value2;
       if (xU.isArray(properties.value)) {
-        value = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
+        value2 = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
       } else {
-        value = [];
+        value2 = [];
       }
       return vue.createVNode(Antd.RangePicker, vue.mergeProps(properties, listeners, {
-        "value": value,
+        "value": value2,
         "locale": Cpt_UI_locale.value.DatePicker
       }), slots);
     }
+    const value = checkOneValue(properties.value);
     return vue.createVNode(Antd.DatePicker, vue.mergeProps(properties, listeners, {
-      "value": checkOneValue(properties.value),
+      "value": value,
       "locale": Cpt_UI_locale.value.DatePicker
     }), slots);
   };

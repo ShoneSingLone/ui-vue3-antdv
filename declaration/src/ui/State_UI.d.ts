@@ -14,8 +14,8 @@ declare let _State_UI: {
     language: any;
     onLanguageChange: boolean;
     LANGUAGE: {
-        enUs: any;
-        zhCn: any;
+        enUs: import("ant-design-vue/es/locale-provider/index").Locale;
+        zhCn: import("ant-design-vue/es/locale-provider/index").Locale;
     };
     i18nMessage: {};
     assetsSvgPath: string;

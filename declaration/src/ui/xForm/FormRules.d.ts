@@ -5,18 +5,18 @@ export namespace RegexFn {
 export namespace FormRules {
     export { SUCCESS };
     export { FAIL };
-    export function required(msg: any, trigger?: any[]): any;
+    export function required(msg: any, trigger?: string[]): any;
     export function demo(): {
         name: string;
         msg: string;
         validator(value: any): Promise<boolean>;
-        trigger: any[];
+        trigger: string[];
     };
     export function email(): {
         name: string;
-        msg: () => any;
+        msg: () => string | number;
         validator(value: any): Promise<boolean>;
-        trigger: any[];
+        trigger: string[];
     };
     export function custom({ name, msg, validator, trigger }: {
         name: any;

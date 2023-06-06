@@ -48,7 +48,7 @@ export type t_dataGridOptions = {
  */
 export declare function defDataGridOption(options: t_dataGridOptions): t_dataGridOptions;
 export declare function defPagination(num_page?: number, num_size?: number, num_total?: number): {
-    [x: number]: number;
+    [x: string]: number;
 };
 /***
  *  设置xPagination
@@ -57,7 +57,7 @@ export declare function defPagination(num_page?: number, num_size?: number, num_
  */
 export declare function setPagination(StateTable: any, pagination: t_pagination): void;
 export declare function getPaginationPageSize(StateTable: any): {
-    [x: number]: any;
+    [x: string]: any;
 };
 export declare function defCol(options: t_col): {
     [x: string]: {
@@ -102,7 +102,7 @@ export declare function defColActionsBtnlist(options: {
     fold: number;
     btns: t_buttonOptions[];
 }): JSX.Element;
-export declare function filterColIsShow(isShow: any, prop: any): any;
+export declare function filterColIsShow(isShow: any, prop: any): boolean;
 type t_result = {
     total?: false | number;
     selected?: string[] | false;

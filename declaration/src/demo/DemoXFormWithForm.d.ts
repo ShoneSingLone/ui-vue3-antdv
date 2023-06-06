@@ -10,9 +10,17 @@ export declare const DemoXFormWithForm: import("vue").DefineComponent<{
         "text-align": string;
     };
     row: any;
-    dataXItem: any;
+    dataXItem: {
+        [x: string]: {
+            prop: string;
+            itemTips: {
+                type: string;
+                msg: string;
+            };
+        } & import("../ui/xForm/itemRenders/index").t_itemConfigs;
+    };
 }, {}, {
-    verifyForm(): Promise<any>;
+    verifyForm(): Promise<boolean>;
     getParams(): any;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     options: {

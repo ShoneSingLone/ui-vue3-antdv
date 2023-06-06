@@ -8,7 +8,7 @@
 </template>
 
 <script>
-async function sfc({
+export default async function sfc({
 	defineComponent,
 	markRaw,
 	State_UI,

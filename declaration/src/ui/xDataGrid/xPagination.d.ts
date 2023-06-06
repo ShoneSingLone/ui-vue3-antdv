@@ -1,3 +1,4 @@
+/// <reference types="lodash" />
 export declare const xPagination: import("vue").DefineComponent<{
     onPaginationChange: {
         type: FunctionConstructor;
@@ -8,16 +9,38 @@ export declare const xPagination: import("vue").DefineComponent<{
         default(): {};
     };
 }, {
-    State_UI: any;
+    State_UI: {
+        xItemCollection: {};
+        pagination: {
+            page: string;
+            size: string;
+            total: string;
+        };
+        language: any;
+        onLanguageChange: boolean;
+        LANGUAGE: {
+            enUs: import("ant-design-vue/es/locale-provider/index").Locale;
+            zhCn: import("ant-design-vue/es/locale-provider/index").Locale;
+        };
+        i18nMessage: {};
+        assetsSvgPath: string;
+        assetsPath: string;
+        basePath: string;
+        setBasePath(basePath: any): void;
+        setAssetsBaseById(eleId: string): void;
+        $t: typeof import("../State_UI").$t;
+        isDev: boolean;
+        dev(isDev: any): void;
+    };
 }, {
     pageSizeOptions: string[];
-    page: any;
-    size: any;
-    total: any;
+    page: string;
+    size: string;
+    total: string;
 }, {
     i18nMessage(): any;
 }, {
-    onShowSizeChange: any;
+    onShowSizeChange: import("lodash").DebouncedFunc<(page: any, size: any) => void>;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     onPaginationChange: {
         type: FunctionConstructor;

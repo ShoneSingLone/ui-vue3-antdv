@@ -1,5 +1,5 @@
-/// <reference types="jquery" resolution-mode="require"/>
-/// <reference types="jquery" resolution-mode="require"/>
+/// <reference types="jquery" />
+/// <reference types="jquery" />
 export type t_dialogOptions = {
     keepTop?: boolean;
     payload?: any;

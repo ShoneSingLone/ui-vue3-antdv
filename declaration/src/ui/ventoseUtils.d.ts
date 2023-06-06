@@ -1,5 +1,5 @@
-/// <reference types="jquery" resolution-mode="require"/>
-/// <reference types="jquery" resolution-mode="require"/>
+/// <reference types="jquery" />
+/// <reference types="jquery" />
 import { LoDashStatic } from "lodash";
 import dayjs from "dayjs";
 export declare const isInput: (val: any) => boolean;

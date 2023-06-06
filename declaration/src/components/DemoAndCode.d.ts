@@ -2,7 +2,29 @@ export declare const DemoAndCode: import("vue").DefineComponent<Readonly<{
     title?: any;
     path?: any;
 }>, {
-    State_UI: any;
+    State_UI: {
+        xItemCollection: {};
+        pagination: {
+            page: string;
+            size: string;
+            total: string;
+        };
+        language: any;
+        onLanguageChange: boolean;
+        LANGUAGE: {
+            enUs: import("ant-design-vue/es/locale-provider/index").Locale;
+            zhCn: import("ant-design-vue/es/locale-provider/index").Locale;
+        };
+        i18nMessage: {};
+        assetsSvgPath: string;
+        assetsPath: string;
+        basePath: string;
+        setBasePath(basePath: any): void;
+        setAssetsBaseById(eleId: string): void;
+        $t: typeof import("@ventose/ui").$t;
+        isDev: boolean;
+        dev(isDev: any): void;
+    };
 }, {
     isInitDone: boolean;
     isFold: boolean;
