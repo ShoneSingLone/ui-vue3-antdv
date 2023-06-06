@@ -1,6 +1,5 @@
-/// <reference types="jquery" />
-/// <reference types="jquery" />
-import { i_layerOptions } from "./i_layerOptions";
+/// <reference types="jquery" resolution-mode="require"/>
+/// <reference types="jquery" resolution-mode="require"/>
 export declare const KEY: {
     right: number;
     left: number;

@@ -1,22 +1,10 @@
 import { t_itemConfigs } from "./itemRenders";
 export declare function defFormConfigs(configs: t_itemConfigs[]): Record<string, any>;
 export declare function defItem(options: t_itemConfigs): {
-    [x: string]: {
-        prop: string;
-        itemTips: {
-            type: string;
-            msg: string;
-        };
-    } & t_itemConfigs;
+    [x: number]: any;
 };
 export declare namespace defItem {
-    var item: (options: t_itemConfigs) => {
-        prop: string;
-        itemTips: {
-            type: string;
-            msg: string;
-        };
-    } & t_itemConfigs;
+    var item: (options: t_itemConfigs) => any;
     var labelWithTips: ({ label, tips, icon }: {
         label: any;
         tips: any;

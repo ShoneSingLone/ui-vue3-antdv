@@ -2,6 +2,7 @@ import externalGlobals from "rollup-plugin-external-globals";
 import fs from "fs";
 import path from "path";
 import { Plugin, UserConfig } from "vite";
+import { load as CheerioLoad } from "cheerio";
 
 export interface Module {
 	name: string;
@@ -180,8 +181,18 @@ function PluginImportToCDN(options: Options): Plugin[] {
 									.join("\n")
 							)
 							.join("\n");
+				fs.writeFileSync("./html.html", html, "utf-8");
 
-				return html.replace(/<\/title>/i, `</title>${cssCode}\n${jsCode}`);
+				const $ = CheerioLoad(html);
+				const $body = $("body");
+				const $mainJs = $("script[type=module]");
+				const mainJs = $mainJs.prop("outerHTML");
+				$mainJs.remove();
+				const appDiv = $body.html();
+				$body.empty();
+				$body.html(`${appDiv}${jsCode}${mainJs}`);
+				$("title").after(`${cssCode}`);
+				return $.html();
 			}
 		}
 	];

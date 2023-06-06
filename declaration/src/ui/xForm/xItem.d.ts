@@ -1,6 +1,6 @@
 export declare const xItem: import("vue").DefineComponent<{
     modelValue: {
-        type: (BooleanConstructor | StringConstructor | NumberConstructor | ObjectConstructor)[];
+        type: (BooleanConstructor | ObjectConstructor | NumberConstructor | StringConstructor)[];
         default: any;
     };
     configs: {
@@ -43,7 +43,7 @@ export declare const xItem: import("vue").DefineComponent<{
     setValidateInfo(rules: any): void;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, "update:modelValue"[], "update:modelValue", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
     modelValue: {
-        type: (BooleanConstructor | StringConstructor | NumberConstructor | ObjectConstructor)[];
+        type: (BooleanConstructor | ObjectConstructor | NumberConstructor | StringConstructor)[];
         default: any;
     };
     configs: {

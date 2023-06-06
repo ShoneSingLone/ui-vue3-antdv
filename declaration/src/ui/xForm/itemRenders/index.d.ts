@@ -26,67 +26,13 @@ declare const itemRenders: {
         readonly listeners?: any;
         readonly propsWillDeleteFromConfigs?: any;
     }, {}>;
-    Checkbox: import("vue").DefineComponent<Readonly<{
-        slots?: any;
-        properties?: any;
-        listeners?: any;
-        propsWillDeleteFromConfigs?: any;
-    }>, any, any, {
-        checked: {
-            get(): any;
-            set(val: any): void;
-        };
-    }, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<Readonly<{
-        slots?: any;
-        properties?: any;
-        listeners?: any;
-        propsWillDeleteFromConfigs?: any;
-    }>>>, {
-        readonly slots?: any;
-        readonly properties?: any;
-        readonly listeners?: any;
-        readonly propsWillDeleteFromConfigs?: any;
-    }, {}>;
-    Select: import("vue").DefineComponent<Readonly<{
-        slots?: any;
-        properties?: any;
-        listeners?: any;
-        propsWillDeleteFromConfigs?: any;
-    }>, unknown, {
-        _modelValue: string;
-    }, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<Readonly<{
-        slots?: any;
-        properties?: any;
-        listeners?: any;
-        propsWillDeleteFromConfigs?: any;
-    }>>>, {
-        readonly slots?: any;
-        readonly properties?: any;
-        readonly listeners?: any;
-        readonly propsWillDeleteFromConfigs?: any;
-    }, {}>;
-    Switch: import("vue").DefineComponent<Readonly<{
-        slots?: any;
-        properties?: any;
-        listeners?: any;
-        propsWillDeleteFromConfigs?: any;
-    }>, unknown, {
-        _modelValue: string;
-    }, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<Readonly<{
-        slots?: any;
-        properties?: any;
-        listeners?: any;
-        propsWillDeleteFromConfigs?: any;
-    }>>>, {
-        readonly slots?: any;
-        readonly properties?: any;
-        readonly listeners?: any;
-        readonly propsWillDeleteFromConfigs?: any;
-    }, {}>;
-    DatePicker: ({ properties, slots, listeners }: any) => any;
-    RangePicker: ({ properties, slots, listeners }: any) => any;
-    RadioGroup: ({ properties, slots, listeners, propsWillDeleteFromConfigs }: any) => any;
-    CheckboxGroup: ({ properties, slots, listeners }: any) => any;
+    Checkbox: any;
+    Select: any;
+    Switch: any;
+    DatePicker: any;
+    RangePicker: any;
+    RadioGroup: any;
+    CheckboxGroup: any;
 };
 export default itemRenders;
 export type t_xItem = keyof typeof itemRenders;

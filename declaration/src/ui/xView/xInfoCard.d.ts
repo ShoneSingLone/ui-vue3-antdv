@@ -15,7 +15,7 @@ export declare const InfoCardRow: import("vue").DefineComponent<Readonly<{
     row?: any;
 }>, unknown, unknown, {
     colArray(): any;
-    vDomCol(): JSX.Element[];
+    vDomCol(): any;
     styleRow(): any;
 }, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<Readonly<{
     row?: any;

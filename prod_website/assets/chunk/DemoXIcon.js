@@ -1,5 +1,5 @@
 import { a as _export_sfc } from "./app.js";
-import "../index.1d00bf66.js";
+import "../index.714dfc1b.js";
 const _sfc_main = {
   name: "DemoXIcon"
 };
