@@ -55,7 +55,7 @@ const ConfigOptions = {
 	},
 	build: {
 		cssMinify: true,
-		minify: false,
+		minify:"terser",
 		outDir: "dist",
 		terserOptions: {
 			compress: {
