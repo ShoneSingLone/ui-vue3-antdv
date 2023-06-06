@@ -1,12 +1,12 @@
-import { _ as __vitePreload } from "../index.714dfc1b.js";
+import { _ as __vitePreload } from "../index.9c379766.js";
 const AppStyle = "";
 const routes = [
-  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
-  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.714dfc1b.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.9c379766.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.9c379766.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.9c379766.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/b", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.9c379766.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/a", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.9c379766.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
+  { path: "/Dev/b/c/b", component: () => __vitePreload(() => import("./Dev.js"), true ? ["./Dev.js","..\\index.9c379766.js","..\\css\\Dev.css"] : void 0, import.meta.url) },
   {
     category: "inset",
     path: "/xDirective",
@@ -15,32 +15,32 @@ const routes = [
   {
     category: "inset",
     path: "/xIcon",
-    component: () => __vitePreload(() => import("./DemoXIcon.js"), true ? ["./DemoXIcon.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXIcon.js"), true ? ["./DemoXIcon.js","..\\index.9c379766.js"] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xButton",
-    component: () => __vitePreload(() => import("./DemoXButton.js"), true ? ["./DemoXButton.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXButton.js"), true ? ["./DemoXButton.js","..\\index.9c379766.js"] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDialog",
-    component: () => __vitePreload(() => import("./DemoDialog.js"), true ? ["./DemoDialog.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoDialog.js"), true ? ["./DemoDialog.js","..\\index.9c379766.js"] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xForm",
-    component: () => __vitePreload(() => import("./DemoXForm.js"), true ? ["./DemoXForm.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXForm.js"), true ? ["./DemoXForm.js","..\\index.9c379766.js"] : void 0, import.meta.url)
   },
   {
     category: "inset",
     path: "/xDataGrid",
-    component: () => __vitePreload(() => import("./DemoXDataGrid.js"), true ? ["./DemoXDataGrid.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoXDataGrid.js"), true ? ["./DemoXDataGrid.js","..\\index.9c379766.js"] : void 0, import.meta.url)
   },
   {
     category: "plugin",
     path: "/xMenuTree",
-    component: () => __vitePreload(() => import("./DemoxMenuTree.js"), true ? ["./DemoxMenuTree.js","..\\index.714dfc1b.js"] : void 0, import.meta.url)
+    component: () => __vitePreload(() => import("./DemoxMenuTree.js"), true ? ["./DemoxMenuTree.js","..\\index.9c379766.js"] : void 0, import.meta.url)
   }
 ];
 const router = VueRouter.createRouter({
@@ -7150,7 +7150,8 @@ const DemoAndCode = Vue.defineComponent({
         $: VentoseUI.$,
         defItem: VentoseUI.defItem,
         resolveComponent: Vue.resolveComponent,
-        App
+        App,
+        dayjs
       }, {
         get(target, prop) {
           if (target.hasOwnProperty(prop)) {

@@ -1,5 +1,5 @@
 import { a as _export_sfc } from "./app.js";
-import "../index.714dfc1b.js";
+import "../index.9c379766.js";
 const _sfc_main = {};
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_DemoAndCode = Vue.resolveComponent("DemoAndCode");
