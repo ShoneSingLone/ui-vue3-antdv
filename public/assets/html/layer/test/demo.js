@@ -3,7 +3,7 @@ $(function () {
     var inArea = {};
     var timer = {};
     function getContentTextWidth($ele) {
-        var $child = $('<span/>').text($ele.text()).css({ opacity: 0, position: "absolute" }).appendTo($("body"));
+        var $child = $('<span/>').text($ele.text()).css({ opacity: 0, position: "absolute", "z-index": -1 }).appendTo($("body"));
         var widthChild = $child.width();
         $child.remove();
         return widthChild;
