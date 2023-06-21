@@ -7,41 +7,14 @@ import { iStorage } from "./tools/storage";
 import { State_UI } from ".";
 //@ts-ignore
 import axios from "axios";
-import {
-	getCurrentInstance,
-	onMounted,
-	onUnmounted,
-	reactive,
-	watch
-} from "vue";
+import { getCurrentInstance, onMounted, onUnmounted, reactive } from "vue";
 
 /* 组件属性是否是on开头，组件的事件监听*/
 const onRE = /^on[^a-z]/;
 
 const VueComponents: any = {};
 
-export const isInput = (val: any) => {
-	if (val === undefined) {
-		return false;
-	}
-	try {
-		val = JSON.parse(JSON.stringify(val));
-	} catch (error) {
-		xU(val, "JSON.parse failed");
-	}
-	if (val === 0) {
-		return true;
-	}
-	if (val === false) {
-		return true;
-	}
-	if (_.isArray(val)) {
-		return val.length > 0;
-	} else if (val) {
-		return true;
-	}
-	return false;
-};
+const cache = {};
 
 const privateLodash = {
 	WORDS: {
@@ -191,17 +164,7 @@ const privateLodash = {
 			xU(error);
 		}
 	},
-	payloadIdCount: 1,
-	payloadIdCountMax: 40000,
-	payloadDateNow: Date.now(),
-	genId: (category: string) => {
-		const { payloadIdCount, payloadIdCountMax, payloadDateNow } = privateLodash;
-		if (payloadIdCount > payloadIdCountMax) {
-			privateLodash.payloadIdCount = 1;
-			privateLodash.payloadDateNow = Date.now();
-		}
-		return `${category}_${payloadDateNow}_${privateLodash.payloadIdCount++}`;
-	},
+	genId,
 	VueLoader: (code: string) => {
 		function getSource(source: string, type: string) {
 			var regex = new RegExp("<" + type + "[^>]*>");
@@ -254,7 +217,7 @@ const privateLodash = {
 	},
 	/* 睡眠 t:setTimeout during time*/
 	/* @ts-ignore */
-	sleep: (t: number) => new Promise(r => setTimeout(r, t)),
+	sleep,
 	isOn: (key: string) => onRE.test(key),
 	isModelListener: (key: string) => {
 		key = String(key);
@@ -476,22 +439,32 @@ const privateLodash = {
 		});
 	},
 	asyncGlobalJS: async (globalName: string, url: string) => {
-		/* @ts-ignore */
-		if (window[globalName]) {
+		try {
+			/* @ts-ignore */
+			if (window[globalName]) {
+				/* @ts-ignore */
+				return window[globalName];
+			}
+			if (!url) {
+				/* @ts-ignore */
+				alert("asyncGlobalJS miss url " + globalName);
+				return {};
+			}
+
+			if (cache[globalName]) {
+				await privateLodash.ensureValueDone(() => window[globalName]);
+				return window[globalName];
+			}
+			/* @ts-ignore */
+			const jsString = await privateLodash.asyncLoadText(url);
+			const fn = new Function(`with(window){${jsString}}`);
+			fn();
+			cache[globalName] = url;
 			/* @ts-ignore */
 			return window[globalName];
+		} catch (error) {
+			console.error(error);
 		}
-		if (!url) {
-			/* @ts-ignore */
-			alert("asyncGlobalJS miss url " + globalName);
-			return {};
-		}
-		/* @ts-ignore */
-		const jsString = await privateLodash.asyncLoadText(url);
-		const fn = new Function(`with(window){${jsString}}`);
-		fn();
-		/* @ts-ignore */
-		return window[globalName];
 	},
 	ensureValueDone: async (fnGetValue: Function) => {
 		return new Promise(async resolve => {
@@ -680,6 +653,47 @@ const privateLodash = {
 		return item;
 	}
 };
+
+let payloadIdCount = 1;
+let payloadIdCountMax = 40000;
+let payloadDateNow = Date.now();
+
+export function genId(category: string) {
+	if (payloadIdCount > payloadIdCountMax) {
+		payloadIdCount = 1;
+		payloadDateNow = Date.now();
+	}
+	return `${category}_${payloadDateNow}_${payloadIdCount++}`;
+}
+
+export function sleep(t: number) {
+	return new Promise(r => setTimeout(r, t));
+}
+
+export function isInput(val: any) {
+	{
+		if (val === undefined) {
+			return false;
+		}
+		try {
+			val = JSON.parse(JSON.stringify(val));
+		} catch (error) {
+			xU(val, "JSON.parse failed");
+		}
+		if (val === 0) {
+			return true;
+		}
+		if (val === false) {
+			return true;
+		}
+		if (_.isArray(val)) {
+			return val.length > 0;
+		} else if (val) {
+			return true;
+		}
+		return false;
+	}
+}
 
 type xUFunction = (...args: any[]) => void;
 type t_all_lodash_and_mine = xUFunction & LoDashStatic & typeof privateLodash;

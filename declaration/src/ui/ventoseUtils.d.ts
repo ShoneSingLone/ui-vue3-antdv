@@ -2,7 +2,6 @@
 /// <reference types="jquery" />
 import { LoDashStatic } from "lodash";
 import dayjs from "dayjs";
-export declare const isInput: (val: any) => boolean;
 declare const privateLodash: {
     WORDS: {
         INVALID_DATE: string;
@@ -30,10 +29,7 @@ declare const privateLodash: {
     asyncImportSFC(url: string, __Vue: object): Promise<object>;
     getVueComponentBySourceCode(url: string, scfObjSourceCode: string, __Vue: object): Promise<object>;
     parseContent: (returnSentence: string) => any;
-    payloadIdCount: number;
-    payloadIdCountMax: number;
-    payloadDateNow: number;
-    genId: (category: string) => string;
+    genId: typeof genId;
     VueLoader: (code: string) => string;
     /**
      * async 执行jsx module 文件
@@ -41,7 +37,7 @@ declare const privateLodash: {
      */
     asyncExecFnString(url: string): Promise<any>;
     doNothing: (...args: any[]) => void;
-    sleep: (t: number) => Promise<unknown>;
+    sleep: typeof sleep;
     isOn: (key: string) => boolean;
     isModelListener: (key: string) => boolean;
     isListener: (key: any) => boolean;
@@ -78,7 +74,7 @@ declare const privateLodash: {
      * @param val {any}
      * @returns {boolean}
      */
-    isInput: (val: any) => boolean;
+    isInput: typeof isInput;
     is$Selected: ($ele: JQuery) => boolean;
     /**
      * 获取对象的键和值
@@ -138,6 +134,9 @@ declare const privateLodash: {
      */
     MutatingProps: (item: any, prop: string, val?: any, isDelete?: boolean) => any;
 };
+export declare function genId(category: string): string;
+export declare function sleep(t: number): Promise<unknown>;
+export declare function isInput(val: any): boolean;
 type xUFunction = (...args: any[]) => void;
 type t_all_lodash_and_mine = xUFunction & LoDashStatic & typeof privateLodash;
 export declare const xU: t_all_lodash_and_mine;

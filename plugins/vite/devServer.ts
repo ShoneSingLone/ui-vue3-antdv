@@ -19,7 +19,7 @@ export function useDevServer(): Plugin {
 		configureServer(server: ViteDevServer) {
 			server.middlewares.use(
 				async (req: any, res: any, next: any): Promise<any> => {
-					/** 处理高亮css
+				/** 处理高亮css
 					1.解析路径
 					2.加载css 文本
 					3.转发文本

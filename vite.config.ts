@@ -20,7 +20,7 @@ const isLibXXX = process.env.type === "lib.xxx";
 const libXxxName = process.env.libName;
 const isUseDevServer = process.env.runPlugin === "useDevServer";
 
-const externalLibs = {
+const EXTERNAL_LIBS = {
 	"ant-design-vue": "antd",
 	vue: "Vue",
 	jquery: "$",
@@ -55,7 +55,8 @@ const ConfigOptions = {
 	},
 	build: {
 		cssMinify: true,
-		minify:"terser",
+		minify: "terser",
+		// minify: false,
 		outDir: "dist",
 		terserOptions: {
 			compress: {
@@ -63,7 +64,7 @@ const ConfigOptions = {
 			}
 		},
 		rollupOptions: {
-			external: Object.keys(externalLibs),
+			external: Object.keys(EXTERNAL_LIBS),
 			plugins: [],
 			output: {
 				chunkFileNames: ({ name, type: assetType }) => {
@@ -76,7 +77,7 @@ const ConfigOptions = {
 						return "assets/[ext]/[name].[ext]";
 					}
 				},
-				globals: externalLibs
+				globals: EXTERNAL_LIBS
 			}
 		}
 	}
@@ -117,12 +118,24 @@ function handleVentoseUIxxx() {
 		ConfigOptions.plugins.push(
 			visualizer({ filename: `${outDir}/${libXxxName}_stats.html` })
 		);
+
+		const [name, fileName] = (() => {
+			if (libXxxName === "layer") {
+				return ["layer", format => `layer.${format}.js`];
+			}
+
+			return [
+				`VentoseUI.components.${libXxxName}`,
+				format => `VentoseUI.${libXxxName}.${format}.js`
+			];
+		})();
+
 		// plugins.unshift(dts());
 		ConfigOptions.build.lib = {
 			formats: ["umd", "es"],
 			entry: path.resolve(__dirname, `entry/lib/${libXxxName}.vue`),
-			name: `VentoseUI.components.${libXxxName}`,
-			fileName: format => `VentoseUI.${libXxxName}.${format}.js`
+			name,
+			fileName
 		};
 	}
 }

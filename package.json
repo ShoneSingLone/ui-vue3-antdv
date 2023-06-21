@@ -21,6 +21,7 @@
     "build:app": "cross-env NODE_ENV=production cross-env type=app vite build && tsc",
     "build:lib": "cross-env type=lib vite build",
     "build:lib:xMenuTree": "cross-env type=lib.xxx libName=xMenuTree vite build",
+    "build:lib:layer": "cross-env type=lib.xxx libName=layer vite build",
     "git:pull": "git pull gitee dev & git pull github dev",
     "git:push": "git push gitee dev & git push github dev",
     "lint": "prettier --write ./src"
