@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+
+	<body>
+		<section class="Hui-article-box">
+			<nav class="breadcrumb">
+				<i class="Hui-iconfont"></i>
+				<a class="maincolor" href="/">脚本</a>
+				<span class="c-999 en">&gt;</span>
+				<span class="c-666">layer.js</span>
+			</nav>
+			<div class="Hui-article">
+				<article class="cl pd-20">
+					<h1 class="page_title">layer.js</h1>
+					<p>
+						lib中已收录，下载过H-ui框架，无需单独下载，但页面需要单独引入。单独下载地址
+						<a
+							href="//lib.h-ui.net/layer/layer_v3.1.1.zip"
+							class="btn radius btn-primary"
+							>layer_v3.1.1.js</a
+						>
+					</p>
+					<p>layer.js是由前端大牛贤心编写的web弹窗插件。</p>
+					<h2>使用方法</h2>
+					<p>1、layer.js依赖jquery或者zepto.js。</p>
+					<pre
+						class="prettyprint linenums"><ol class="linenums"><li class="L0"><span class="tag">&lt;script</span><span class="pln"> </span><span class="atn">type</span><span class="pun">=</span><span class="atv">"text/javascript"</span><span class="pln"> </span><span class="atn">src</span><span class="pun">=</span><span class="atv">"lib/layer/3.1.1/layer.js"</span><span class="tag">&gt;&lt;/script&gt;</span></li></ol></pre>
+					<p>js调用</p>
+					<pre
+						class="prettyprint linenums"><ol class="linenums"><li class="L0"><span class="pln">layer</span><span class="pun">.</span><span class="pln">open</span><span class="pun">({</span></li><li class="L1"><span class="pln">  title</span><span class="pun">:</span><span class="pln"> </span><span class="str">'在线调试'</span></li><li class="L2"><span class="pln">  </span><span class="pun">,</span><span class="pln">content</span><span class="pun">:</span><span class="pln"> </span><span class="str">'可以填写任意的layer代码'</span></li><li class="L3"><span class="pun">});</span></li></ol></pre>
+					<h2>demo效果</h2>
+					<p>
+						<button class="btn btn-primary radius" onclick="layer_demo()">
+							打开弹窗
+						</button>
+					</p>
+					<h2>相关参数</h2>
+					<table class="table table-border table-bg table-bordered">
+						<thead>
+							<tr>
+								<th width="20%">属性</th>
+								<th width="15%">默认值</th>
+								<th width="15%">描述</th>
+								<th>备注</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>type</td>
+								<td>0</td>
+								<td>类型</td>
+								<td>
+									0 信息框，默认 | 1 页面层 | 2 iframe层 | 3 加载层 | 4 tips层
+								</td>
+							</tr>
+							<tr>
+								<td>title</td>
+								<td>"信息"</td>
+								<td>标题</td>
+								<td>
+									<p>支持三种类型的值。</p>
+									<p>字符串："我是标题"</p>
+									<p></p>
+									<p>数组：['文本', 'font-size:18px;']</p>
+									<p>布尔值：false</p>
+								</td>
+							</tr>
+							<tr>
+								<td>content</td>
+								<td>""</td>
+								<td>内容</td>
+								<td>支持：String、html、DOM、URL、数组</td>
+							</tr>
+							<tr>
+								<td>skin</td>
+								<td>""</td>
+								<td>样式类名</td>
+								<td>可以定制layer皮肤。</td>
+							</tr>
+							<tr>
+								<td>area</td>
+								<td>"auto"</td>
+								<td>宽高</td>
+								<td>数组 ['500px', '300px']</td>
+							</tr>
+							<tr>
+								<td>offset</td>
+								<td>垂直水平居中</td>
+								<td>坐标</td>
+								<td>String/Array。['100px', '50px']</td>
+							</tr>
+							<tr>
+								<td>icon</td>
+								<td>-1</td>
+								<td>图标</td>
+								<td>-1（信息框）/0（加载层）</td>
+							</tr>
+							<tr>
+								<td>btn</td>
+								<td>"确认"</td>
+								<td>按钮</td>
+								<td>
+									<p>btn: ['按钮一', '按钮二', '按钮三'] //可以无限个按钮。</p>
+									<pre
+										class="prettyprint linenums"><ol class="linenums"><li class="L0"><span class="pun">,</span><span class="pln">yes</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">index</span><span class="pun">,</span><span class="pln"> layero</span><span class="pun">){</span></li><li class="L1"><span class="pln">  </span><span class="com">//按钮【按钮一】的回调</span></li><li class="L2"><span class="pun">}</span></li><li class="L3"><span class="pun">,</span><span class="pln">btn2</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">index</span><span class="pun">,</span><span class="pln"> layero</span><span class="pun">){</span></li><li class="L4"><span class="pln">  </span><span class="com">//按钮【按钮二】的回调</span></li><li class="L5"><span class="pln">  </span><span class="com">//return false 开启该代码可禁止点击该按钮关闭</span></li><li class="L6"><span class="pun">}</span></li><li class="L7"><span class="pun">,</span><span class="pln">btn3</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">index</span><span class="pun">,</span><span class="pln"> layero</span><span class="pun">){</span></li><li class="L8"><span class="pln">  </span><span class="com">//按钮【按钮三】的回调</span></li><li class="L9"><span class="pln">  </span><span class="com">//return false 开启该代码可禁止点击该按钮关闭</span></li><li class="L0"><span class="pun">}</span></li><li class="L1"><span class="pun">,</span><span class="pln">cancel</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(){</span></li><li class="L2"><span class="pln">  </span><span class="com">//右上角关闭回调</span></li><li class="L3"><span class="pln">  </span><span class="com">//return false 开启该代码可禁止点击该按钮关闭</span></li><li class="L4"><span class="pun">}</span></li></ol></pre>
+								</td>
+							</tr>
+							<tr>
+								<td>btnAlign</td>
+								<td>r</td>
+								<td>按钮排列</td>
+								<td>"l" 左对齐 | "c" 居中对齐 | "r" 右对齐</td>
+							</tr>
+							<tr>
+								<td>closeBtn</td>
+								<td>1</td>
+								<td>关闭按钮</td>
+								<td>两种风格：1 | 2 | 0 不显示</td>
+							</tr>
+							<tr>
+								<td>shade</td>
+								<td>0.3 透明度的黑色背景（'#000'）</td>
+								<td>遮罩</td>
+								<td>
+									<p>String/Array/Boolean</p>
+									<p>[0.8, '#393D49']</p>
+									<p>0 不显示遮罩。</p>
+								</td>
+							</tr>
+							<tr>
+								<td>shadeClose</td>
+								<td>false</td>
+								<td>是否点击遮罩关闭</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>time</td>
+								<td>0 不自动关闭</td>
+								<td>自动关闭所需毫秒</td>
+								<td>5000 5秒后自动关闭</td>
+							</tr>
+							<tr>
+								<td>id</td>
+								<td></td>
+								<td>用于控制弹层唯一标识</td>
+								<td>String</td>
+							</tr>
+							<tr>
+								<td>anim</td>
+								<td>0</td>
+								<td>弹出动画</td>
+								<td>
+									0 平滑放大 | 1 从上掉落 | 2 从最底部往上滑入 | 3 从左滑入 | 4
+									从左翻滚 | 5 渐显 | 6 抖动
+								</td>
+							</tr>
+							<tr>
+								<td>isOutAnim</td>
+								<td>true</td>
+								<td>关闭动画</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>maxmin</td>
+								<td>false</td>
+								<td>最大最小化</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>fixed</td>
+								<td>true</td>
+								<td>固定</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>resize</td>
+								<td>true</td>
+								<td>是否允许拉伸</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>resizing</td>
+								<td>null</td>
+								<td>监听窗口拉伸动作</td>
+								<td>回调函数。</td>
+							</tr>
+							<tr>
+								<td>scrollbar</td>
+								<td>true</td>
+								<td>是否允许浏览器出现滚动条</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>maxWidth</td>
+								<td>360</td>
+								<td>最大宽度</td>
+								<td>只有当area: 'auto'时，maxWidth的设定才有效。</td>
+							</tr>
+							<tr>
+								<td>maxHeight</td>
+								<td></td>
+								<td>最大高度</td>
+								<td>只有当高度自适应时，maxHeight的设定才有效。</td>
+							</tr>
+							<tr>
+								<td>zIndex</td>
+								<td>19891014 贤心生日</td>
+								<td>层叠顺序</td>
+								<td>用于解决和其它组件的层叠冲突。</td>
+							</tr>
+							<tr>
+								<td>move</td>
+								<td>'.layui-layer-title'</td>
+								<td>触发拖动的元素</td>
+								<td>
+									<p>String/DOM/Boolean。</p>
+									<p>
+										默认是触发标题区域拖拽。如果你想单独定义，指向元素的选择器或者DOM即可。如move:
+										'.mine-move'。你还配置设定move: false
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td>moveOut</td>
+								<td>false</td>
+								<td>是否允许拖拽到窗口外</td>
+								<td>
+									默认只能在窗口内拖拽，如果你想让拖到窗外，那么设定moveOut:
+									true即可。
+								</td>
+							</tr>
+							<tr>
+								<td>moveEnd</td>
+								<td>null</td>
+								<td>拖动完毕后的回调方法</td>
+								<td>回调函数。</td>
+							</tr>
+							<tr>
+								<td>tips</td>
+								<td>2</td>
+								<td>方向和颜色</td>
+								<td>Number/Array。tips层的私有参数。支持上右下左四个方向</td>
+							</tr>
+							<tr>
+								<td>tipsMore</td>
+								<td>false</td>
+								<td>是否允许多个tips</td>
+								<td>允许多个意味着不会销毁之前的tips层。</td>
+							</tr>
+							<tr>
+								<td>success</td>
+								<td>null</td>
+								<td>层弹出后的成功回调方法</td>
+								<td>回调函数</td>
+							</tr>
+							<tr>
+								<td>yes</td>
+								<td>null</td>
+								<td>确定按钮回调方法</td>
+								<td>回调函数</td>
+							</tr>
+							<tr>
+								<td>cancel</td>
+								<td>null</td>
+								<td>右上角关闭按钮触发的回调</td>
+								<td>
+									回调函数，携带两个参数。当前层索引参数（index）、当前层的DOM对象（layero）。如果不想关闭，return
+									false即可。
+								</td>
+							</tr>
+							<tr>
+								<td>end</td>
+								<td>null</td>
+								<td>层销毁后触发的回调</td>
+								<td>回调函数</td>
+							</tr>
+							<tr>
+								<td>full/min/restore</td>
+								<td>null</td>
+								<td>分别代表最大化、最小化、还原 后触发的回调</td>
+								<td>回调函数</td>
+							</tr>
+							<tr>
+								<td>layer.config(options)</td>
+								<td></td>
+								<td>初始化全局配置</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.open(options)</td>
+								<td></td>
+								<td>核心方法</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.alert(content, options, yes)</td>
+								<td></td>
+								<td>普通信息框</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.confirm(content, options, yes, cancel)</td>
+								<td></td>
+								<td>询问框</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.msg(content, options, end)</td>
+								<td></td>
+								<td>提示框</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.load(icon, options)</td>
+								<td></td>
+								<td>加载层</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.tips(content, follow, options)</td>
+								<td></td>
+								<td>tips层</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.close(index)</td>
+								<td></td>
+								<td>关闭特定层</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.closeAll(type)</td>
+								<td></td>
+								<td>关闭所有层</td>
+								<td>
+									"dialog" 关闭信息框 | "page" 关闭所有页面层 | "iframe"
+									关闭所有的iframe层 | "loading" 关闭加载层 | "tips"
+									关闭所有的tips层
+								</td>
+							</tr>
+							<tr>
+								<td>layer.style(index, cssStyle)</td>
+								<td></td>
+								<td>重新定义层的样式</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.title(title, index)</td>
+								<td></td>
+								<td>改变层的标题</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.getChildFrame(selector, index)</td>
+								<td></td>
+								<td>获取iframe页的DOM</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.getFrameIndex(windowName)</td>
+								<td></td>
+								<td>获取特定iframe层的索引</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.iframeAuto(index)</td>
+								<td></td>
+								<td>指定iframe层自适应</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.iframeSrc(index, url)</td>
+								<td></td>
+								<td>重置特定iframe url</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.setTop(layero)</td>
+								<td></td>
+								<td>置顶当前窗口</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.full()、layer.min()、layer.restore()</td>
+								<td></td>
+								<td>手工执行最大小化</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.prompt(options, yes)</td>
+								<td></td>
+								<td>输入层</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.tab(options)</td>
+								<td></td>
+								<td>tab层</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>layer.photos(options)</td>
+								<td></td>
+								<td>相册层</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="mt-10 text-c">
+						<p>微信扫码打赏</p>
+						<p class="mt-10">
+							<img
+								src="//static.h-ui.net/www/home/images/wxpay.png"
+								width="300" />
+						</p>
+						<p class="mt-10 f-14">觉得不好，您千万别打赏，退不了费的！</p>
+					</div>
+				</article>
+				&#xFEFF;
+				<footer class="footer mt-20">
+					<div class="container-fluid">
+						<nav>
+							<a href="/aboutHui.shtml" target="_blank">关于H-ui</a>
+							<span class="pipe">|</span>
+							<a href="/copyright.shtml" target="_blank">软件著作权</a>
+							<span class="pipe">|</span>
+							<a href="/juanzeng.shtml" target="_blank">感谢捐赠</a>
+						</nav>
+						<p>
+							Copyright ©2013-2020 H-ui.net All Rights Reserved. <br />
+							<a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow"
+								>豫ICP备19019279号-1</a
+							><br />
+							未经允许，禁止转载、抄袭、镜像<br />
+							用心做站，做不一样的站
+						</p>
+					</div>
+				</footer>
+				<script
+					type="text/javascript"
+					src="//lib.h-ui.net/prettify.js"></script>
+				<script
+					type="text/javascript"
+					src="//static.h-ui.net/h-ui/3.1/js/H-ui.min.js"></script>
+				<script
+					type="text/javascript"
+					src="//static.h-ui.net/www/home/js/H-ui.admin.www.js"></script>
+				<script
+					type="text/javascript"
+					src="//static.h-ui.net/www/home/js/common.js"></script>
+				<script>
+					var _hmt = _hmt || [];
+					(function () {
+						var hm = document.createElement("script");
+						hm.src =
+							"https://hm.baidu.com/hm.js?080836300300be57b7f34f4b3e97d911";
+						var s = document.getElementsByTagName("script")[0];
+						s.parentNode.insertBefore(hm, s);
+					})();
+				</script>
+				<script type="text/javascript">
+					document.write(
+						unescape(
+							"%3Cspan id='cnzz_stat_icon_1261104954'%3E%3C/span%3E%3Cscript src='https://s4.cnzz.com/stat.php%3Fid%3D1261104954' type='text/javascript'%3E%3C/script%3E"
+						)
+					);
+				</script>
+				<span id="cnzz_stat_icon_1261104954"
+					><a
+						href="https://www.cnzz.com/stat/website.php?web_id=1261104954"
+						target="_blank"
+						title="站长统计"
+						>站长统计</a
+					></span
+				>
+				<script
+					src="https://s4.cnzz.com/stat.php?id=1261104954"
+					type="text/javascript"></script>
+				<script
+					src="https://c.cnzz.com/core.php?web_id=1261104954&amp;t=z"
+					charset="utf-8"
+					type="text/javascript"></script>
+			</div>
+		</section>
+	</body>
+</html>

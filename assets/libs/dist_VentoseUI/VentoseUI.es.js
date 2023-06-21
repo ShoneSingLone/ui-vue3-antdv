@@ -114,28 +114,7 @@ const iStorage = async function(key, val) {
 iStorage.clear = clear;
 const onRE = /^on[^a-z]/;
 const VueComponents = {};
-const isInput = (val) => {
-  if (val === void 0) {
-    return false;
-  }
-  try {
-    val = JSON.parse(JSON.stringify(val));
-  } catch (error) {
-    xU(val, "JSON.parse failed");
-  }
-  if (val === 0) {
-    return true;
-  }
-  if (val === false) {
-    return true;
-  }
-  if (_.isArray(val)) {
-    return val.length > 0;
-  } else if (val) {
-    return true;
-  }
-  return false;
-};
+const cache = {};
 const privateLodash = {
   WORDS: {
     INVALID_DATE: "Invalid Date",
@@ -252,17 +231,7 @@ const privateLodash = {
       xU(error);
     }
   },
-  payloadIdCount: 1,
-  payloadIdCountMax: 4e4,
-  payloadDateNow: Date.now(),
-  genId: (category) => {
-    const { payloadIdCount, payloadIdCountMax, payloadDateNow } = privateLodash;
-    if (payloadIdCount > payloadIdCountMax) {
-      privateLodash.payloadIdCount = 1;
-      privateLodash.payloadDateNow = Date.now();
-    }
-    return `${category}_${payloadDateNow}_${privateLodash.payloadIdCount++}`;
-  },
+  genId,
   VueLoader: (code) => {
     function getSource(source, type2) {
       var regex = new RegExp("<" + type2 + "[^>]*>");
@@ -301,7 +270,7 @@ const privateLodash = {
       console.log.apply(console, args);
     }
   },
-  sleep: (t) => new Promise((r) => setTimeout(r, t)),
+  sleep,
   isOn: (key) => onRE.test(key),
   isModelListener: (key) => {
     key = String(key);
@@ -442,17 +411,26 @@ const privateLodash = {
     });
   },
   asyncGlobalJS: async (globalName, url) => {
-    if (window[globalName]) {
+    try {
+      if (window[globalName]) {
+        return window[globalName];
+      }
+      if (!url) {
+        alert("asyncGlobalJS miss url " + globalName);
+        return {};
+      }
+      if (cache[globalName]) {
+        await privateLodash.ensureValueDone(() => window[globalName]);
+        return window[globalName];
+      }
+      const jsString = await privateLodash.asyncLoadText(url);
+      const fn = new Function(`with(window){${jsString}}`);
+      fn();
+      cache[globalName] = url;
       return window[globalName];
+    } catch (error) {
+      console.error(error);
     }
-    if (!url) {
-      alert("asyncGlobalJS miss url " + globalName);
-      return {};
-    }
-    const jsString = await privateLodash.asyncLoadText(url);
-    const fn = new Function(`with(window){${jsString}}`);
-    fn();
-    return window[globalName];
   },
   ensureValueDone: async (fnGetValue) => {
     return new Promise(async (resolve) => {
@@ -600,6 +578,43 @@ const privateLodash = {
     return item;
   }
 };
+let payloadIdCount = 1;
+let payloadIdCountMax = 4e4;
+let payloadDateNow = Date.now();
+function genId(category) {
+  if (payloadIdCount > payloadIdCountMax) {
+    payloadIdCount = 1;
+    payloadDateNow = Date.now();
+  }
+  return `${category}_${payloadDateNow}_${payloadIdCount++}`;
+}
+function sleep(t) {
+  return new Promise((r) => setTimeout(r, t));
+}
+function isInput(val) {
+  {
+    if (val === void 0) {
+      return false;
+    }
+    try {
+      val = JSON.parse(JSON.stringify(val));
+    } catch (error) {
+      xU(val, "JSON.parse failed");
+    }
+    if (val === 0) {
+      return true;
+    }
+    if (val === false) {
+      return true;
+    }
+    if (_.isArray(val)) {
+      return val.length > 0;
+    } else if (val) {
+      return true;
+    }
+    return false;
+  }
+}
 const xU = new Proxy(
   function(...args) {
     if (State_UI.isDev) {
