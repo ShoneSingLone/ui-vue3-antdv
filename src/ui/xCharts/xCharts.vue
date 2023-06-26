@@ -1,4 +1,4 @@
-<script lang="jsx">
+<script lang="tsx">
 import { line } from "./configs/line";
 import { xU } from "../ventoseUtils";
 import { defineComponent } from "vue";
@@ -31,20 +31,22 @@ export default defineComponent({
 		}
 	},
 	data() {
-		const id = xU.genId("xChart");
-		this.updateOptions = xU.debounce(function () {
+		this.updateOptions = xU.debounce(async function () {
 			if (this.myChart) {
 				this.myChart.dispose();
 			}
+			await xU.ensureValueDone(() => this.$el);
 			const options = this.helper.initOptions(this.$props);
 			this.options = this.helper.updateOptions(options, this.dataset);
-			const dom = document.querySelector(`#${this.id}`);
-			this.myChart = this.$echarts.init(dom);
+			this.myChart = this.$echarts.init(this.$el);
+			if (this?.helper?.afterInit) {
+				this?.helper?.afterInit({ instance: this.myChart });
+			}
 			this.myChart.showLoading();
 			this.myChart.setOption(this.options);
 			this.myChart.hideLoading();
 		}, 300);
-		return { id };
+		return { myChart: false };
 	},
 	computed: {
 		helper() {
@@ -64,18 +66,23 @@ export default defineComponent({
 	},
 	methods: {
 		async init() {
-			await xU.ensureValueDone(() => this.myChart);
-			this.updateOptions();
 			this.observe();
+			this.updateOptions();
 		},
 		observe() {
-			//初始化这个观察类 如果有变化了 那么就调用二chart的resize方法改变大小
+			//如果有变化了 那么就调用echart的resize方法改变大小
 			this.resizeObserver = new ResizeObserver(() => {
 				if (this.myChart) {
-					this.myChart?.resize && this.myChart.resize();
+					this.updateOptions();
+					if (this?.helper?.onResize) {
+						this.helper.onResize({
+							instance: this.myChart,
+							chartVM: this
+						})
+					}
 				}
 			});
-			this.resizeObserver.observe(this.$el); //观察这个dom
+			this.resizeObserver.observe(this.$el);
 		}
 	}
 });
