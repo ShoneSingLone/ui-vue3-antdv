@@ -6,7 +6,7 @@ import Select from "./Select";
 import RadioGroup from "./RadioGroup";
 import CheckboxGroup from "./CheckboxGroup";
 import { xSwitch } from "./xSwitch";
-import { InputProps, TextAreaProps } from "ant-design-vue";
+import { InputProps, TextAreaProps } from "element-plus";
 
 const itemRenders = {
 	Input,

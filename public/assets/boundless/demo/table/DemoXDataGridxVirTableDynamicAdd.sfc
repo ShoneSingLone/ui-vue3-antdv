@@ -8,9 +8,9 @@
 - add和del时进行同步，
 " />
 	<div class="flex">
-		<aButton @click="add">add</aButton>
+		<elButton @click="add">add</elButton>
 		<xGap l="10" />
-		<aButton @click="syncDataSource">syncDataSource</aButton>
+		<elButton @click="syncDataSource">syncDataSource</elButton>
 	</div>
 	<div class="flex horizon">
 		<div style="width: 100%; height: 300px;overflow: auto;" class="flex1">

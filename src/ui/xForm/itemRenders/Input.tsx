@@ -32,12 +32,6 @@ export default defineComponent({
 			/* @ts-ignore */
 			ComponentInstance.__v_skip = true;
 			this.ComponentInstance = ComponentInstance;
-			if (type === "aTextarea") {
-				this.properties.autoSize = this.properties.autoSize || {
-					minRows: 4,
-					maxRows: 6
-				};
-			}
 		}
 	},
 	watch: {
@@ -55,16 +49,10 @@ export default defineComponent({
 	computed: {
 		component({ properties }) {
 			if (!this.ComponentInstance) {
-				this.diffComponent("aInput");
+				this.diffComponent("ElInput");
 			}
-			if (properties.isPassword) {
-				this.diffComponent("aInputPassword");
-			} else if (properties.isNumber) {
-				this.diffComponent("aInputNumber");
-			} else if (properties.isTextarea) {
-				this.diffComponent("aTextarea");
-			} else if (properties.isSearch) {
-				this.diffComponent("aInputSearch");
+			if (properties.isNumber) {
+				this.diffComponent("ElInputNumber");
 			}
 			return this.ComponentInstance;
 		}
@@ -84,10 +72,22 @@ export default defineComponent({
 			return <ReadonlyItem value={properties.value} />;
 		}
 
+		if (properties.isTextarea) {
+			properties.type = "textarea";
+			properties.autosize = properties.autoSize || {
+				minRows: 4,
+				maxRows: 6
+			};
+		}
+
 		return (
 			<component
-				v-model:value={this._modelValue}
-				{...xU.omit(properties, ["value", ...propsWillDeleteFromConfigs])}
+				v-model={this._modelValue}
+				{...xU.omit(properties, [
+					"value",
+					"isTextarea",
+					...propsWillDeleteFromConfigs
+				])}
 				{...xU.omit(listeners, ["onUpdate:value"])}
 				v-slots={slots}
 			/>

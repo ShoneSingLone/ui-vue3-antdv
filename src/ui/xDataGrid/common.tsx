@@ -1,7 +1,7 @@
 //@ts-nocheck
 import { t_buttonOptions } from "../xButton/xButton";
 import { xU } from "../ventoseUtils";
-import { ColumnProps } from "ant-design-vue/es/table";
+import { ColumnProps } from "element-plus/es/table";
 import { State_UI } from "../State_UI";
 
 /*ui 内部使用*/
@@ -205,25 +205,25 @@ export function defColActionsBtnlist(options: {
 							v-slots={{
 								default: () => {
 									return (
-										<aButton type="link">{State_UI.$t("更多").label}</aButton>
+										<elButton type="link">{State_UI.$t("更多").label}</elButton>
 									);
 								},
 								overlay: () => {
 									return (
 										<>
-											<aMenu>
+											<elMenu>
 												{xU.map(more, btn => {
 													const configs = xU.merge(
 														{ type: "link", size: "small" },
 														btn
 													);
 													return (
-														<aMenuItem key={btn.text}>
+														<elMenuItem key={btn.text}>
 															<xButton configs={configs} />
-														</aMenuItem>
+														</elMenuItem>
 													);
 												})}
-											</aMenu>
+											</elMenu>
 										</>
 									);
 								}

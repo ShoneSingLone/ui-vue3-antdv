@@ -60,10 +60,10 @@ export default defineComponent({
 				>
 			</p>
 		</template>
-		<aButton>
+		<elButton>
 			<template #icon>
 				<xIcon icon="insideSettingOutlined" style="height: 100%; width: 100%" />
 			</template>
-		</aButton>
+		</elButton>
 	</aPopover>
 </template>

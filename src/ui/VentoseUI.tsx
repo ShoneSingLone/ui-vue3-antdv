@@ -1,8 +1,8 @@
 //@ts-nocheck
 import "./index.less";
 import "./ui.scss";
-import "ant-design-vue/dist/antd.css";
-import Antd from "ant-design-vue";
+import "element-plus/dist/antd.css";
+import Antd from "element-plus";
 import $ from "jquery";
 import xRender from "./xRender/xRender.jsx";
 import xForm from "./xForm/xForm.vue";

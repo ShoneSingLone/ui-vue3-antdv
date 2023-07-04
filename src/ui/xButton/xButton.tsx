@@ -65,12 +65,8 @@ export default defineComponent({
 		const presetFn = BTN_PRESET_MAP[this.configs.preset];
 		if (presetFn) {
 			const preset = presetFn(this.configs);
-			this.configs.text = (
-				<>
-					{preset.icon}
-					<span class="ml4">{preset.text}</span>
-				</>
-			);
+			this.configs.icon = preset.icon;
+			this.configs.text = <span class="ml4">{preset.text}</span>;
 		}
 	},
 	data() {
@@ -172,9 +168,8 @@ export default defineComponent({
 		if (this.title) {
 			_properties.title = this.title;
 		}
-
 		return (
-			<aButton
+			<elButton
 				class="x-button antdv-button"
 				loading={this.loading}
 				disabled={!!this.disabled}

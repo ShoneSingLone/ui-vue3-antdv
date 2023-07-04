@@ -3,23 +3,23 @@ import "./index.less";
 import "./ui.scss";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
+import dayjs from "dayjs";
 import $ from "jquery";
+import xIcon from "./xIcon/xIcon.tsx";
+import xButton from "./xButton/xButton";
+import { xGap } from "./xLayout/xGap";
 import xRender from "./xRender/xRender.jsx";
 import xForm from "./xForm/xForm.vue";
-import xButton from "./xButton/xButton";
 import xButtonCountDown from "./xButton/xButtonCountDown.vue";
 import xCharts from "./xCharts/xCharts.vue";
 import xView from "./xView/xView.vue";
-import xIcon from "./xIcon/xIcon.tsx";
 import xDataGrid from "./xDataGrid/xDataGrid.vue";
 import xDataGridToolbar from "./xDataGrid/xDataGridToolbar.vue";
 import xCellLabel from "./xDataGrid/xCellLabel.vue";
 import xColFilter from "./xDataGrid/xColFilter.vue";
 import xVirScroll from "./xSingle/xScroll/xVirScroll.vue";
-import dayjs from "dayjs";
 import { xPagination } from "./xDataGrid/xPagination";
 import { xItem } from "./xForm/xItem";
-import { xGap } from "./xLayout/xGap";
 import {
 	defXVirTableConfigs as defXVirTableConfigs,
 	xVirTable
@@ -82,15 +82,15 @@ export const compositionAPI = {
 
 /* my-private-ui-component */
 const componentMyUI = {
+	xIcon,
 	xButton,
+	xGap,
 	xRender,
 	xItem,
 	xForm,
 	xButtonCountDown,
-	xGap,
 	xCharts,
 	xView,
-	xIcon,
 	xDataGrid,
 	xDataGridToolbar,
 	xColFilter,

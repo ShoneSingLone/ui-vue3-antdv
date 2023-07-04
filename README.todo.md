@@ -59,3 +59,7 @@
 
 - [x] v-uiPopover
 - [x] v-uiMove
+
+
+# i18n
+重新设计

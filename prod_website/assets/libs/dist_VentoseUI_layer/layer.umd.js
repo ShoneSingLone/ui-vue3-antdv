@@ -5,7 +5,7 @@ var __publicField = (obj, key, value) => {
   return value;
 };
 (function(global2, factory) {
-  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(require("jquery"), require("lodash"), require("dayjs"), require("ant-design-vue"), require("vue"), require("jsondiffpatch"), require("axios")) : typeof define === "function" && define.amd ? define(["jquery", "lodash", "dayjs", "ant-design-vue", "vue", "jsondiffpatch", "axios"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, global2.layer = factory(global2.$, global2._, global2.dayjs, global2.antd, global2.Vue, global2.jsondiffpatch, global2.axios));
+  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(require("jquery"), require("lodash"), require("dayjs"), require("element-plus"), require("vue"), require("jsondiffpatch"), require("axios")) : typeof define === "function" && define.amd ? define(["jquery", "lodash", "dayjs", "element-plus", "vue", "jsondiffpatch", "axios"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, global2.layer = factory(global2.$, global2._, global2.dayjs, global2.antd, global2.Vue, global2.jsondiffpatch, global2.axios));
 })(this, function($, _, dayjs, Antd, vue, jsondiffpatch, axios) {
   "use strict";
   const _interopDefaultLegacy = (e) => e && typeof e === "object" && "default" in e ? e : { default: e };

@@ -116,7 +116,7 @@ export default defineComponent({
 </script>
 
 <template>
-	<aButton @click="add">add</aButton>
+	<elButton @click="add">add</elButton>
 	<div style="width:600px;height:600px;border:1px solid black"> </div>
 	<!-- {{ JSON.stringify(date.value) }} -->
 	<xItem :configs="date" />

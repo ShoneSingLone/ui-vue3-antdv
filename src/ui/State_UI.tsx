@@ -1,9 +1,5 @@
 import { computed, reactive, watch } from "vue";
-import enUs from "ant-design-vue/es/locale/en_US";
-import zhCn from "ant-design-vue/es/locale/zh_CN";
 import dayjs from "dayjs";
-import "dayjs/locale/zh-cn";
-import "dayjs/locale/en-au";
 import { lStorage } from "./tools/storage";
 import { xU } from "./ventoseUtils";
 
@@ -37,10 +33,7 @@ let _State_UI = {
 	},
 	language: lStorage["language"] || "zh-CN",
 	onLanguageChange: false,
-	LANGUAGE: {
-		enUs,
-		zhCn
-	},
+	LANGUAGE: {},
 	i18nMessage: {},
 	/* 放svg文件的文件夹路径*/
 	assetsSvgPath: "",
@@ -81,7 +74,6 @@ watch(
 	() => State_UI.language,
 	language => {
 		lStorage["language"] = language;
-		dayjs.locale(language === "zh-CN" ? "zh-cn" : "en");
 		if (State_UI.onLanguageChange) {
 			//@ts-ignore
 			State_UI.onLanguageChange(language, State_UI);

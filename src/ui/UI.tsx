@@ -2,7 +2,12 @@
 import { t_dialogOptions } from "./xSingle/dialog/dialog";
 import { State_UI } from "./State_UI";
 import { LayerUtils } from "./xSingle/layer/LayerUtils";
-import { message, Modal, ModalFuncProps, notification } from "ant-design-vue";
+import {
+	ElMessage,
+	ElMessageBox,
+	ModalFuncProps,
+	ElNotification
+} from "element-plus";
 import $ from "jquery";
 import { xU } from "./ventoseUtils";
 
@@ -24,8 +29,8 @@ const useModel = type => {
 					return title;
 				}
 			})(!title);
-			Modal[type]({
-				title,
+			debugger;
+			ElMessageBox[type](content, title, {
 				icon: (
 					<link
 						rel="icon"
@@ -33,16 +38,12 @@ const useModel = type => {
 						href="/ExclamationCircleOutlined.svg"
 					/>
 				),
-				content: content,
-				onOk() {
-					resolve("ok");
-				},
-				onCancel() {
-					reject();
-				},
-				okText: State_UI.$t("确定").label,
+				confirmButtonText: State_UI.$t("确定").label,
+				cancelButtonText: State_UI.$t("取消").label,
 				class: "test"
-			});
+			})
+				.then(resolve)
+				.catch(reject);
 		});
 	};
 };
@@ -73,10 +74,13 @@ LayerUtils.loading = function (indexDelete) {
 };
 
 export const UI = {
-	confirm(options) {
-		options.okText = options.okText || State_UI.$t("确定").label;
-		options.cancelText = options.cancelText || State_UI.$t("取消").label;
-		Modal.confirm(options);
+	confirm({ title, content, okText, cancelText }) {
+		ElMessageBox.confirm(content, title, {
+			confirmButtonText: okText || State_UI.$t("确定").label,
+			cancelButtonText: cancelText || State_UI.$t("取消").label
+		})
+			.then(resolve)
+			.catch(reject);
 	},
 	dialog: {
 		/* installUIDialogComponent Vue3 依赖外部plugin，没有全局的 */
@@ -85,36 +89,21 @@ export const UI = {
 		info: useModel("info"),
 		error: useModel("error"),
 		warning: useModel("warning"),
-		confirm: (options: ModalFuncProps) => {
+		confirm: ({ title, content, okText, cancelText }) => {
 			return new Promise(async (resolve, reject) => {
-				options.okText = options.okText || State_UI.$t("确定").label;
-				options.cancelText = options.cancelText || State_UI.$t("取消").label;
-				if (options.onOk) {
-					const onOk = options.onOk;
-					options.onOk = () => {
-						return onOk(resolve, reject);
-					};
-				} else {
-					options.onOk = () => resolve("ok");
-				}
-
-				if (options.onCancel) {
-					const onCancel = options.onCancel;
-					options.onCancel = () => {
-						onCancel(resolve, reject);
-					};
-				} else {
-					options.onCancel = () => reject();
-				}
-
-				Modal.confirm(options);
+				ElMessageBox.confirm(content, title, {
+					confirmButtonText: okText || State_UI.$t("确定").label,
+					cancelButtonText: cancelText || State_UI.$t("取消").label
+				})
+					.then(resolve)
+					.catch(reject);
 			});
 		},
 		delete({ title, content } = {}) {
 			title = title || State_UI.$t("删除").label;
 			content = content || State_UI.$t("删除确认提示").label;
 			return new Promise((resolve, reject) => {
-				Modal.confirm({
+				ElMessageBox.confirm({
 					title,
 					icon: <ExclamationCircleOutlined style={"color:red"} />,
 					content,
@@ -131,8 +120,8 @@ export const UI = {
 			});
 		}
 	},
-	message,
-	notification: new Proxy(notification, {
+	message: ElMessage,
+	notification: new Proxy(ElNotification, {
 		get(target, p, receiver) {
 			const m = target[p];
 			return new Proxy(m, {

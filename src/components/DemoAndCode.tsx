@@ -113,7 +113,7 @@ ${this.BussinessComponentSourceCode}
 			<div
 				class="padding10"
 				style={this.styleContainer}
-				v-loading={this.isLoading}>
+				v-xloading={this.isLoading}>
 				<div
 					class="pointer"
 					onClick={this.toggleFold}

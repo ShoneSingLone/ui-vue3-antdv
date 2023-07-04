@@ -15,10 +15,10 @@ async function sfc({ defineComponent, State_UI, UI, xU, App }) {
 		setup() { },
 		mounted() {
 			/* 不然会无限弹窗 */
-			if (!window.isOpenAppFirst) {
-				this.openAppFirst();
-				window.isOpenAppFirst = true;
-			}
+			// if (!window.isOpenAppFirst) {
+			// 	this.openAppFirst();
+			// 	window.isOpenAppFirst = true;
+			// }
 		},
 		data() {
 			return {
@@ -64,7 +64,7 @@ async function sfc({ defineComponent, State_UI, UI, xU, App }) {
 															};
 														},
 														template: `<div class="padding20 flex1">
-												<aButton @click="setBtn"></aButton>
+												<elButton @click="setBtn"></elButton>
 										</div>
 										<xDialogFooter :configs="dialogDefautBtn"/>`
 													})
@@ -88,7 +88,7 @@ async function sfc({ defineComponent, State_UI, UI, xU, App }) {
 											};
 										},
 										template: `<div class="padding20 flex1">
-												<aButton @click="open">open</aButton>
+												<elButton @click="open">open</elButton>
 										</div>
 										<xDialogFooter :configs="dialogDefautBtn"/>`
 									})
@@ -155,7 +155,7 @@ async function sfc({ defineComponent, State_UI, UI, xU, App }) {
 											</ul>
 											<div class="flex">
 												<xGap f="1" />
-												<aButton @click="setBtn">count++: {{count}}</aButton>
+												<elButton @click="setBtn">count++: {{count}}</elButton>
 											</div>
 										</div>
 										<xDialogFooter :configs="dialogDefautBtn"/>`
@@ -176,9 +176,21 @@ async function sfc({ defineComponent, State_UI, UI, xU, App }) {
 											<p>演示使用bundless的形式，使用template，不使用jsx</p>
 										</div>
 										<xDialogFooter>
-											<xButton @click="propDialogOptions.closeDialog">
-												纯按钮
-											<xButton>
+											<elButton @click="propDialogOptions.closeDialog">
+												自定义按钮
+											</elButton>
+											<elButton @click="propDialogOptions.closeDialog">
+												自定义按钮
+											</elButton>
+											<elButton @click="propDialogOptions.closeDialog">
+												自定义按钮
+											</elButton>
+											<elButton @click="propDialogOptions.closeDialog">
+												自定义按钮
+											</elButton>
+											<elButton @click="propDialogOptions.closeDialog">
+												自定义按钮
+											</elButton>
 										</xDialogFooter>`
 									})
 								});

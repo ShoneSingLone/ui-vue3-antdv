@@ -8,7 +8,7 @@
 	<DemoAndCode
 		title="DatePicker"
 		path="/boundless/demo/xForm/xItemDatePicker.sfc" />
-	<aCard>
+	<elCard>
 		{{ valueFromConfigs }}
 		<xButton :configs="configsValidBtn" />
 		<mkit :md="tips1" />
@@ -32,11 +32,11 @@
 			:configs="xForm.withLabelProperty"
 			class="flex1"
 			v-model="formData.inputValue" />
-	</aCard>
+	</elCard>
 	<div class="mt10"></div>
-	<aCard>
+	<elCard>
 		<DemoXFormWithForm :options="{ payload: { row: {} } }" />
-	</aCard>
+	</elCard>
 </template>
 
 <script>

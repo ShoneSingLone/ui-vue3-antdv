@@ -80,7 +80,13 @@ const xDialogFooter = defineComponent({
 		},
 		vDomContent() {
 			if (this.$slots.default) {
-				return this.$slots.default();
+				try {
+					const vDom = this.$slots.default();
+					vDom[0].children.pop();
+					return vDom;
+				} catch (error) {
+					return this.$slots.default();
+				}
 			} else {
 				return (
 					<>
@@ -92,9 +98,7 @@ const xDialogFooter = defineComponent({
 		}
 	},
 	render() {
-		return (
-			<div class="flex middle end ant-modal-footer">{this.vDomContent}</div>
-		);
+		return <div class="flex middle end padding20">{this.vDomContent}</div>;
 	}
 });
 
@@ -105,9 +109,9 @@ export const installUIDialogComponent = (
 ) => {
 	app.component("xDialogFooter", xDialogFooter);
 	UI.dialog.component = async (dialogOptions: t_dialogOptions) =>
-		new Promise((resolve, reject) => {
+		new Promise(resolve => {
 			const { component: BussinessComponent, title, area } = dialogOptions;
-			const id = `xDialog_${Date.now()}`;
+			const id = xU.genId("xDialog");
 			let $container = $("<div/>", { id });
 			const _dialogId = `#${id}`;
 			/* FIXED: */

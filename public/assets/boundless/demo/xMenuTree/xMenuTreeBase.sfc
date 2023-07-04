@@ -7,7 +7,7 @@
 - :inline-collapsed 控制折叠的布尔值
     </pre>
     </mkit>
-    <aButton @click="collapsed = !collapsed">collapsed</aButton>
+    <elButton @click="collapsed = !collapsed">collapsed</elButton>
     <div style="width:500px">
         <xMenuTree :tree="treeArray" :inline-collapsed="collapsed" />
     </div>

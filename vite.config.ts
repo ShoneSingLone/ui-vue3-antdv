@@ -21,7 +21,7 @@ const libXxxName = process.env.libName;
 const isUseDevServer = process.env.runPlugin === "useDevServer";
 
 const EXTERNAL_LIBS = {
-	"ant-design-vue": "antd",
+	"element-plus": "antd",
 	vue: "Vue",
 	jquery: "$",
 	lodash: "_",
@@ -173,9 +173,9 @@ function handleApp() {
 						path: "./assets/libs/vue/router/4.0.12/vue-router.global.min.js"
 					},
 					{
-						name: "ant-design-vue",
-						var: "antd",
-						path: "./assets/libs/antdv/3.1.0-rc.4/antd.min.js"
+						name: "element-plus",
+						var: "ElementPlus",
+						path: "./assets/libs/element/index.full.min.js"
 					},
 					{
 						name: "@ventose/ui",

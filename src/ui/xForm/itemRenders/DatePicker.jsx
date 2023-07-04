@@ -1,6 +1,5 @@
-import { DatePicker, RangePicker } from "ant-design-vue";
+import { ElDatePicker } from "element-plus";
 import dayjs from "dayjs";
-import { Cpt_UI_locale } from "../../State_UI";
 import { xU } from "../../ventoseUtils";
 
 /**
@@ -37,37 +36,15 @@ export default ({ properties, slots, listeners }) => {
 		}
 	}
 
-	if (properties.isRange) {
-		let value;
-		if (xU.isArray(properties.value)) {
-			value = [
-				checkOneValue(properties.value[0]),
-				checkOneValue(properties.value[1])
-			];
-		} else {
-			value = [];
-		}
-
-		return (
-			<RangePicker
-				{...properties}
-				{...listeners}
-				v-slots={slots}
-				value={value}
-				locale={Cpt_UI_locale.value.DatePicker}
-			/>
-		);
-	}
 
 	const value = checkOneValue(properties.value);
 
 	return (
-		<DatePicker
+		<ElDatePicker
 			{...properties}
 			{...listeners}
 			v-slots={slots}
 			value={value}
-			locale={Cpt_UI_locale.value.DatePicker}
 		/>
 	);
 };

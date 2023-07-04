@@ -92,7 +92,7 @@ export default defineComponent({
 				} else {
 					vm.pathAndIdCollection[currentMenuInfo.path] = currentId;
 					return (
-						<aMenuItem key={currentId} class="flex middle">
+						<elMenuItem key={currentId} class="flex middle">
 							{{
 								icon: () => getIcon(currentMenuInfo.icon),
 								title: () => currentMenuInfo.label,
@@ -136,7 +136,7 @@ export default defineComponent({
 									);
 								}
 							}}
-						</aMenuItem>
+						</elMenuItem>
 					);
 				}
 			};
@@ -152,9 +152,9 @@ export default defineComponent({
 		}
 	},
 	render() {
-		return <aMenu openKeys={this.openKeys} onOpenChange={this.onOpenChange} v-model:selectedKeys={this.arr_selectedMenuId} mode="inline">
+		return <elMenu openKeys={this.openKeys} onOpenChange={this.onOpenChange} v-model:selectedKeys={this.arr_selectedMenuId} mode="inline">
 			{this.subTree}
-		</aMenu>
+		</elMenu>
 	}
 });
 
