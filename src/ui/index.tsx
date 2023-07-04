@@ -1,8 +1,8 @@
 //@ts-nocheck
 import "./index.less";
 import "./ui.scss";
-import "ant-design-vue/dist/antd.css";
-import Antd from "ant-design-vue";
+import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
 import $ from "jquery";
 import xRender from "./xRender/xRender.jsx";
 import xForm from "./xForm/xForm.vue";
@@ -162,6 +162,6 @@ export const VentoseUIWithInstall = {
 			}
 			app.component(component.name || name, component);
 		});
-		app.use(Antd);
+		app.use(ElementPlus);
 	}
 };

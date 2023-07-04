@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { Table } from "ant-design-vue";
+import { ElTable } from "element-plus";
 import { defineComponent } from "vue";
 import { xU } from "../ventoseUtils";
 import { filterColIsShow } from "./common";
@@ -93,7 +93,7 @@ export default defineComponent({
 					return { x: 300 };
 				})();
 				return (
-					<Table
+					<ElTable
 						loading={this.configs.isLoading}
 						dataSource={this.configs.dataSource}
 						columns={this.Cpt_Columns}
