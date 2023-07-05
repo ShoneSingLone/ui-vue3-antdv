@@ -81,7 +81,7 @@ const _sfc_main = defineComponent({
           });
         } else {
           vm.pathAndIdCollection[currentMenuInfo.path] = currentId;
-          return createVNode(resolveComponent("aMenuItem"), {
+          return createVNode(resolveComponent("elMenuItem"), {
             "key": currentId,
             "class": "flex middle"
           }, {
@@ -129,7 +129,7 @@ const _sfc_main = defineComponent({
     }
   },
   render() {
-    return createVNode(resolveComponent("aMenu"), {
+    return createVNode(resolveComponent("elMenu"), {
       "openKeys": this.openKeys,
       "onOpenChange": this.onOpenChange,
       "selectedKeys": this.arr_selectedMenuId,

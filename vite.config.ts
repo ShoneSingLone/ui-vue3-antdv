@@ -77,6 +77,9 @@ const ConfigOptions = {
 						return "assets/[ext]/[name].[ext]";
 					}
 				},
+				entryFileNames: ({ name, type: assetType }) => {
+					return "entry/[name].js";
+				},
 				globals: EXTERNAL_LIBS
 			}
 		}

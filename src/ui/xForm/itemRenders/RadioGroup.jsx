@@ -15,9 +15,9 @@ export default ({
 	propsWillDeleteFromConfigs
 }) => {
 	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
-	const Radio = resolveComponent("aRadio");
-	const RadioGroup = resolveComponent("aRadioGroup");
-	const RadioButton = resolveComponent("aRadioButton");
+	const Radio = resolveComponent("ElRadio");
+	const RadioGroup = resolveComponent("ElRadioGroup");
+	const RadioButton = resolveComponent("ElRadioButton");
 
 	const PROPERTY_OPTIONS = properties.options;
 	const componentPropertyOmitOptions = xU.omit(properties, ["options"]);

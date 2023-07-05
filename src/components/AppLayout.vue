@@ -1,11 +1,12 @@
 <template>
 	<ElContainer class="flex vertical" style="height: 100vh">
-		<ElHeader style="background-color: black" class="flex start middle" />
+		<ElHeader style="background-color: black" class="flex start middle">
+			<div class="padding10">
+				<xButton @click="openStatsDialog"> 分析报告 </xButton>
+			</div>
+		</ElHeader>
 		<ElContainer class="flex1" style="height: 1px">
 			<ElAside width="200px">
-				<div class="padding10">
-					<xButton @click="openStatsDialog"> buildのlib分析报告 </xButton>
-				</div>
 				<ElMenu default-active="">
 					<ElSubMenu index="sub1">
 						<template #title>

@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { Plugin, UserConfig } from "vite";
 import { load as CheerioLoad } from "cheerio";
+import dayjs from "dayjs";
 
 export interface Module {
 	name: string;
@@ -184,6 +185,9 @@ function PluginImportToCDN(options: Options): Plugin[] {
 				// fs.writeFileSync("./html.html", html, "utf-8");
 
 				const $ = CheerioLoad(html);
+				$("#app_version_info").html(
+					`window.__APP_VERSION="${dayjs().format("YYYY-MM-DD-HH_mm_ss")}"`
+				);
 				const $body = $("body");
 				const $mainJs = $("script[type=module]");
 				const mainJs = $mainJs.prop("outerHTML");

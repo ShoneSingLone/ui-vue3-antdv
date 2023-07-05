@@ -9,6 +9,10 @@ import { State_UI } from ".";
 import axios from "axios";
 import { getCurrentInstance, onMounted, onUnmounted, reactive } from "vue";
 
+/* nodejs 版本过低导致 */
+window.process = window.process || {};
+window.TEMPLATE_PLACEHOLDER = "";
+
 /* 组件属性是否是on开头，组件的事件监听*/
 const onRE = /^on[^a-z]/;
 

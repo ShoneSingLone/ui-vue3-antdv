@@ -1,11 +1,11 @@
 <template>
-	<mkit md="### xVirTable" />
+	<h4>element-plus已自带虚拟列表，之前用的组件库没有，所以目前没有继续优化的必要</h4>
 	<div class="mt10 mb10">
 		<div class="flex middle">
-			<aRadioGroup v-model:value="configs_xVirTable.selectedConfigs.type">
-				<aRadioButton value="many">多选</aRadioButton>
-				<aRadioButton value="one">单选</aRadioButton>
-			</aRadioGroup>
+			<ElRadioGroup v-model="configs_xVirTable.selectedConfigs.type">
+				<ElRadioButton label="many">多选</ElRadioButton>
+				<ElRadioButton label="one">单选</ElRadioButton>
+			</ElRadioGroup>
 			<span class="ml10 flex1" style="overflow: auto">
 				已选择：
 				{{ JSON.stringify(this.configs_xVirTable.selected) }}
@@ -14,15 +14,14 @@
 		<div>
 			<div class="flex mt10 middle">
 				<span>总记录数：</span>
-				<aInputNumber id="inputNumber" v-model:value="total" :min="0" />
+				<ElInputNumber id="inputNumber" v-model="total" :min="0" />
 			</div>
-			10000 以内，性能问题不大
-			<div>增加行高，可以减少viewport内的行数，起到减少计算总量的作用</div>
+			<div>增加行高，可以减少可视区域内的行数，减少计算总量</div>
 			<div class="flex middle mt10">
 				<span>行高：</span>
-				<aInputNumber
+				<ElInputNumber
 					id="inputNumber"
-					v-model:value="configs_xVirTable.rowHeight"
+					v-model="configs_xVirTable.rowHeight"
 					:min="32"
 					:max="100" />
 			</div>
@@ -63,7 +62,7 @@ async function sfc({
 
 	return defineComponent({
 		TEMPLATE_PLACEHOLDER,
-		setup() {},
+		setup() { },
 		data(vm) {
 			return {
 				dataSource: [],
@@ -75,8 +74,8 @@ async function sfc({
 					rowHeight: 32,
 					selected: [],
 					/* 自定义virTable 范围内的样式，通过 id 权重*/
-					customClass(tableId){
-						return `#${tableId} [role="body"] [data-prop=name]{color:blue;}`
+					customClass(tableId) {
+						return `#${tableId} [role="body"] [data-prop=name]{color:blue;}`;
 					},
 					selectedConfigs: {
 						type: defXVirTableConfigs.type.many,
@@ -100,7 +99,7 @@ async function sfc({
 							label: vm.$t("状态").label,
 							renderHeader({ label, index }) {
 								return compileVNode(
-									`<aSelect v-model:value="filter.status" mode="multiple" style="width: 100%" placeholder="类型" max-tag-count="1" :options="OPTIONS" allowClear />`,
+									`<ElSelect v-model="filter.status" mode="multiple" style="width: 100%" placeholder="类型" max-tag-count="1" :options="OPTIONS" allowClear />`,
 									{
 										OPTIONS,
 										filter: new Proxy(
@@ -126,7 +125,7 @@ async function sfc({
 							label: vm.$t("总容量输入框").label,
 							renderCell({ record, cell }) {
 								return compileVNode(
-									`{{key}}<aInput v-model:value="record.capacity" :key="key"/>`,
+									`{{key}}<ElInput v-model="record.capacity" :key="key"/>`,
 									{
 										key: record._index,
 										record: new Proxy(record, {

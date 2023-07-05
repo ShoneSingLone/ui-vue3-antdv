@@ -48,7 +48,7 @@ export const ComponentSample = defineComponent({
 			return null;
 		};
 		return (
-			<aInput
+			<ElInput
 				{...listeners}
 				{..._property}
 				v-slots={{ default: renderOptions }}

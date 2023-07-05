@@ -4,38 +4,22 @@ var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
-import Antd, { Table, RangePicker as RangePicker$1, DatePicker as DatePicker$3, Modal, message, notification } from "element-plus";
-import $$1 from "jquery";
-import { default as default2 } from "jquery";
-import { defineComponent, markRaw, h, reactive, onMounted, getCurrentInstance, onUnmounted, openBlock, createElementBlock, renderSlot, watch, computed, createVNode, Fragment, resolveComponent, mergeProps, createBlock, withDirectives, createElementVNode, vShow, createStaticVNode, isVNode, withCtx, renderList, createTextVNode, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, isProxy, toRaw, inject, provide, createApp } from "vue";
-import _ from "lodash";
+import ElementPlus, { ElTable, ElDatePicker, ElMessageBox, ElMessage, ElNotification } from "element-plus";
 import dayjs from "dayjs";
-import { default as default3, default as default4 } from "dayjs";
+import { default as default2, default as default3 } from "dayjs";
+import $$1 from "jquery";
+import { default as default4 } from "jquery";
+import { reactive, onMounted, getCurrentInstance, onUnmounted, openBlock, createElementBlock, createElementVNode, createStaticVNode, defineComponent, markRaw, createVNode, watch, computed, resolveComponent, mergeProps, Fragment, h, renderSlot, createBlock, withDirectives, vShow, isVNode, withCtx, renderList, createTextVNode, toDisplayString, createCommentVNode, normalizeStyle, resolveDynamicComponent, resolveDirective, isProxy, toRaw, inject, provide, createApp } from "vue";
+import _ from "lodash";
 import { diff } from "jsondiffpatch";
 import axios from "axios";
-const index = "";
+const index$1 = "";
 const ui = "";
-const antd = "";
-const xRender = defineComponent(markRaw({
-  name: "xRender",
-  props: {
-    render: {
-      type: Function,
-      required: true
-    }
-  },
-  render() {
-    return h(this.render, {
-      vm: this,
-      props: this.$props,
-      attrs: this.$attrs
-    });
-  }
-}));
+const index = "";
 function promisifyRequest(request) {
-  return new Promise((resolve, reject) => {
-    request.oncomplete = request.onsuccess = () => resolve(request.result);
-    request.onabort = request.onerror = () => reject(request.error);
+  return new Promise((resolve2, reject2) => {
+    request.oncomplete = request.onsuccess = () => resolve2(request.result);
+    request.onabort = request.onerror = () => reject2(request.error);
   });
 }
 function createStore(dbName, storeName) {
@@ -375,14 +359,15 @@ const privateLodash = {
       $style.html(content);
     }
   },
-  asyncLoadText: async function(url) {
-    if (!State_UI.isDev) {
+  asyncLoadText: async function(url, options = {}) {
+    let isForceUpdate = options.isForceUpdate || false;
+    if (!isForceUpdate && !State_UI.isDev) {
       const res = await iStorage(url);
       if (res) {
         return res;
       }
     }
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve2, reject2) => {
       try {
         const { data } = await axios.get(url, {
           headers: {
@@ -392,9 +377,9 @@ const privateLodash = {
         if (!State_UI.isDev) {
           await iStorage(url, data);
         }
-        resolve(data);
+        resolve2(data);
       } catch (error) {
-        reject(error);
+        reject2(error);
       }
     });
   },
@@ -433,12 +418,12 @@ const privateLodash = {
     }
   },
   ensureValueDone: async (fnGetValue) => {
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve2) => {
       let exeFnGetValue = async function() {
         const value = await fnGetValue();
         if (value) {
           exeFnGetValue = null;
-          resolve(value);
+          resolve2(value);
         } else {
           setTimeout(exeFnGetValue, 100 * exeFnGetValue.count++);
         }
@@ -642,549 +627,276 @@ const xU = new Proxy(
     }
   }
 );
-const _sfc_main$8 = defineComponent({
-  name: "xForm",
-  props: {
-    col: {
-      type: Number,
-      default: 1
-    },
-    labelStyle: {
-      type: Object,
-      default() {
-        return {};
-      }
-    },
-    formStyle: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
-  },
-  emits: [],
+const _hoisted_1$g = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$c = /* @__PURE__ */ createElementVNode("path", { d: "M338.261 137.045h-9.13a9.16 9.16 0 0 0 9.13-9.159v9.16h347.45v-9.16c0 5.035 4.095 9.16 9.101 9.16h-9.102v82.26h82.262v-91.42a73.216 73.216 0 0 0-73.131-73.13H329.102a73.216 73.216 0 0 0-73.159 73.13v91.45h82.29v-82.29zm576 82.29h-804.55c-20.253 0-36.58 16.327-36.58 36.551v36.58c0 5.034 4.096 9.159 9.13 9.159h69.063l28.217 597.703a73.216 73.216 0 0 0 73.046 69.689h518.826a73.045 73.045 0 0 0 73.046-69.689l28.245-597.732h69.006a9.16 9.16 0 0 0 9.16-9.102v-36.636c0-20.196-16.356-36.551-36.58-36.551zm-151.665 667.42h-501.22l-27.648-585.159H790.3l-27.676 585.16z" }, null, -1);
+const _hoisted_3$b = [
+  _hoisted_2$c
+];
+function render$a(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$g, _hoisted_3$b);
+}
+const InsideDeleteOutlined = { name: "DeleteOutlined", render: render$a };
+const _hoisted_1$f = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$b = /* @__PURE__ */ createElementVNode("path", { d: "M512 628c17.6 0 32-14.4 32-32V308c0-17.6-14.4-32-32-32s-32 14.4-32 32v288c0 17.6 14.4 32 32 32zm-44 76a44 44 0 1 0 88 0 44 44 0 1 0-88 0Zm44-640C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm271.5 719.5c-35.3 35.3-76.4 63-122.1 82.3-47.3 20-97.6 30.2-149.5 30.2s-102.2-10.1-149.5-30.2c-45.7-19.3-86.8-47-122.1-82.3s-63-76.4-82.3-122.1c-20-47.3-30.2-97.6-30.2-149.5s10.1-102.2 30.2-149.5c19.3-45.7 47-86.8 82.3-122.1s76.4-63 122.1-82.3c47.3-20 97.6-30.2 149.5-30.2s102.2 10.1 149.5 30.2c45.7 19.3 86.8 47 122.1 82.3s63 76.4 82.3 122.1c20 47.3 30.2 97.6 30.2 149.5s-10.1 102.2-30.2 149.5c-19.3 45.8-47 86.8-82.3 122.1z" }, null, -1);
+const _hoisted_3$a = [
+  _hoisted_2$b
+];
+function render$9(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$f, _hoisted_3$a);
+}
+const InsideExclamationCircleOutlined = { name: "ExclamationCircleOutlined", render: render$9 };
+const _hoisted_1$e = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$a = /* @__PURE__ */ createElementVNode("path", { d: "M448 128a64 64 0 1 0 128 0 64 64 0 1 0-128 0ZM257.1 180.5a61.3 61.3 0 1 0 122.6 0 61.3 61.3 0 1 0-122.6 0ZM121.8 318.4a58.7 58.7 0 1 0 117.4 0 58.7 58.7 0 1 0-117.4 0ZM72 512a56 56 0 1 0 112 0 56 56 0 1 0-112 0Zm55.2 193.6a53.3 53.3 0 1 0 106.6 0 53.3 53.3 0 1 0-106.6 0Zm140.5 137.9a50.7 50.7 0 1 0 101.4 0 50.7 50.7 0 1 0-101.4 0ZM464 896a48 48 0 1 0 96 0 48 48 0 1 0-96 0Zm196.3-52.5a45.3 45.3 0 1 0 90.6 0 45.3 45.3 0 1 0-90.6 0Zm140.5-137.9a42.7 42.7 0 1 0 85.4 0 42.7 42.7 0 1 0-85.4 0ZM856 512a40 40 0 1 0 80 0 40 40 0 1 0-80 0ZM837.9 377.7a33.8 33.8 0 1 0 67.6 0 33.8 33.8 0 1 0-67.6 0Zm-61.5-113.5a28.3 28.3 0 1 0 56.6 0 28.3 28.3 0 1 0-56.6 0ZM680 180a24 24 0 1 0 48 0 24 24 0 1 0-48 0Z" }, null, -1);
+const _hoisted_3$9 = /* @__PURE__ */ createElementVNode("animateTransform", {
+  additive: "sum",
+  attributeName: "transform",
+  attributeType: "XML",
+  begin: "0s",
+  dur: "4s",
+  from: "0",
+  repeatCount: "indefinite",
+  to: "360",
+  type: "rotate"
+}, null, -1);
+const _hoisted_4 = [
+  _hoisted_2$a,
+  _hoisted_3$9
+];
+function render$8(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$e, _hoisted_4);
+}
+const InsideLoadingOutlined = { name: "LoadingOutlined", render: render$8 };
+const _hoisted_1$d = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$9 = /* @__PURE__ */ createElementVNode("path", { d: "M144 928a48 48 0 0 1-48-48V144a48 48 0 0 1 48-48h592v.448a48 48 0 0 1 27.328 13.6l150.624 150.624A48 48 0 0 1 928 294.624V880a48 48 0 0 1-48 48H144zm144-768H160v704h128V496a48 48 0 0 1 43.392-47.776L336 448h352a48 48 0 0 1 48 48v368h128V301.248l-128-128V272a48 48 0 0 1-48 48H336a48 48 0 0 1-48-48V160zm384 352H352v352h320V512zm0-352H352v96h320v-96z" }, null, -1);
+const _hoisted_3$8 = [
+  _hoisted_2$9
+];
+function render$7(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$d, _hoisted_3$8);
+}
+const InsideSaveOutlined = { name: "SaveOutlined", render: render$7 };
+const _hoisted_1$c = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$8 = /* @__PURE__ */ createElementVNode("path", { d: "M479.04 128c176.16 0 318.976 142.848 318.976 319.04a317.984 317.984 0 0 1-86.976 218.976l175.616 175.552c11.52 11.52 12.384 29.568 2.656 42.08l-2.656 3.008a31.872 31.872 0 0 1-45.088 0L662.784 707.904a317.504 317.504 0 0 1-183.776 58.24C302.816 766.144 160 623.296 160 447.04S302.816 128 479.04 128zm0 63.808a255.232 255.232 0 0 0-255.232 255.264 255.232 255.232 0 1 0 510.4 0 255.232 255.232 0 0 0-255.2-255.264z" }, null, -1);
+const _hoisted_3$7 = [
+  _hoisted_2$8
+];
+function render$6(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$c, _hoisted_3$7);
+}
+const InsideSearchOutlined = { name: "SearchOutlined", render: render$6 };
+const _hoisted_1$b = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$7 = /* @__PURE__ */ createElementVNode("path", { d: "M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8zm756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8.1-4.5-3.5-8.2-8-8.2z" }, null, -1);
+const _hoisted_3$6 = [
+  _hoisted_2$7
+];
+function render$5(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$b, _hoisted_3$6);
+}
+const InsideSyncOutlined = { name: "SyncOutlined", render: render$5 };
+const _hoisted_1$a = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$6 = /* @__PURE__ */ createElementVNode("path", { d: "M512 85.333A426.667 426.667 0 1 0 938.667 512 426.667 426.667 0 0 0 512 85.333zm0 768A341.333 341.333 0 1 1 853.333 512 341.333 341.333 0 0 1 512 853.333zm30.72-587.946A32.853 32.853 0 0 0 520.107 256h-16.214a32 32 0 0 0-22.613 9.387L347.733 399.36a21.333 21.333 0 0 0 0 30.293l29.867 30.294a21.333 21.333 0 0 0 30.293 0l61.44-61.867v348.587A21.333 21.333 0 0 0 490.667 768h42.666a21.333 21.333 0 0 0 21.334-21.333V398.08l61.44 61.44a20.907 20.907 0 0 0 29.866 0l30.294-30.293a21.333 21.333 0 0 0 0-30.294z" }, null, -1);
+const _hoisted_3$5 = [
+  _hoisted_2$6
+];
+function render$4(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$a, _hoisted_3$5);
+}
+const InsideUploadOutlined = { name: "UploadOutlined", render: render$4 };
+const _hoisted_1$9 = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$5 = /* @__PURE__ */ createElementVNode("path", { d: "M512 128c212 0 384 172 384 384S724 896 512 896 128 724 128 512s172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64zm32 704h-64v-64h64v64zm11.2-203.2-5.6 4.8c-3.2 2.4-5.6 8-5.6 12.8v58.4h-64v-58.4c0-24.8 11.2-48 29.6-63.2l5.6-4.8c56-44.8 83.2-68 83.2-108 0-48-38.4-86.4-86.4-86.4-49.6 0-86.4 36.8-86.4 86.4h-64c0-84 66.4-150.4 150.4-150.4 83.2 0 150.4 67.2 150.4 150.4 0 72.8-49.6 112.8-107.2 158.4z" }, null, -1);
+const _hoisted_3$4 = [
+  _hoisted_2$5
+];
+function render$3(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$9, _hoisted_3$4);
+}
+const Insidetips = { name: "tips", render: render$3 };
+const _hoisted_1$8 = {
+  width: "64",
+  height: "41",
+  class: "x-empty-img-simple"
+};
+const _hoisted_2$4 = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="x-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="x-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="x-empty-img-simple-path"></path></g></g>', 1);
+const _hoisted_3$3 = [
+  _hoisted_2$4
+];
+function render$2(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$8, _hoisted_3$3);
+}
+const InsideEmpty = { name: "empty", render: render$2 };
+const _hoisted_1$7 = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$3 = /* @__PURE__ */ createElementVNode("path", { d: "M629.392 415.033 465.775 251.416c-7.992-7.992-20.947-7.992-28.939 0-7.992 8.002-7.992 20.957 0 28.95l128.68 128.68H389.97V184.083c0-11.298-9.17-20.467-20.466-20.467H21.813c-11.307 0-20.465 9.17-20.465 20.467v818.082c0 11.307 9.158 20.466 20.466 20.466h593.108c11.308 0 20.466-9.159 20.466-20.466V429.512c0-5.433-2.159-10.632-5.996-14.48zm-34.936 566.666H42.28v-777.15h306.756v224.963c0 11.298 9.159 20.466 20.467 20.466h224.953v531.72zm429.523-715.803v572.652c0 11.308-9.16 20.466-20.467 20.466H695.651c-11.298 0-20.466-9.158-20.466-20.466 0-11.297 9.168-20.466 20.466-20.466h287.395v-531.72H758.093c-11.308 0-20.466-9.169-20.466-20.466V40.932H430.87v75.694c0 11.308-9.169 20.466-20.466 20.466-11.307 0-20.466-9.158-20.466-20.466v-96.16C389.938 9.17 399.097 0 410.404 0h347.689c11.297 0 20.466 9.169 20.466 20.466V245.43h175.548l-128.68-128.681c-7.993-7.992-7.993-20.947 0-28.95 7.991-7.991 20.946-7.991 28.939 0l163.616 163.627a20.455 20.455 0 0 1 5.997 14.47z" }, null, -1);
+const _hoisted_3$2 = [
+  _hoisted_2$3
+];
+function render$1(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$7, _hoisted_3$2);
+}
+const InsideCopy = { name: "copy", render: render$1 };
+const _hoisted_1$6 = {
+  xmlns: "http://www.w3.org/2000/svg",
+  class: "icon",
+  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+  viewBox: "0 0 1024 1024"
+};
+const _hoisted_2$2 = /* @__PURE__ */ createElementVNode("path", {
+  fill: "#5A626A",
+  d: "M439.264 208a16 16 0 0 0-16 16v67.968a239.744 239.744 0 0 0-46.496 26.896l-58.912-34A16 16 0 0 0 296 290.72l-80 138.56a16 16 0 0 0 5.856 21.856l58.896 34a242.624 242.624 0 0 0 0 53.728l-58.88 34a16 16 0 0 0-6.72 20.176l.848 1.68 80 138.56a16 16 0 0 0 21.856 5.856l58.912-34a239.744 239.744 0 0 0 46.496 26.88V800a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-67.968a239.744 239.744 0 0 0 46.512-26.896l58.912 34a16 16 0 0 0 21.856-5.856l80-138.56a16 16 0 0 0-4.288-20.832l-1.568-1.024-58.896-34a242.624 242.624 0 0 0 0-53.728l58.88-34a16 16 0 0 0 6.72-20.176l-.848-1.68-80-138.56a16 16 0 0 0-21.856-5.856l-58.912 34a239.744 239.744 0 0 0-46.496-26.88V224a16 16 0 0 0-16-16h-160zm32 48h96v67.376l28.8 12.576a192.21 192.21 0 0 1 37.184 21.52l25.28 18.688 58.448-33.728 48 83.136-58.368 33.68 3.472 31.2a194.624 194.624 0 0 1 0 43.104l-3.472 31.2 58.368 33.68-48 83.136-58.432-33.728-25.296 18.688a192.21 192.21 0 0 1-37.184 21.52l-28.8 12.576V768h-96v-67.376l-28.784-12.576a192.21 192.21 0 0 1-37.184-21.52l-25.28-18.688-58.448 33.728-48-83.136 58.368-33.68-3.472-31.2a194.624 194.624 0 0 1 0-43.104l3.472-31.2-58.368-33.68 48-83.136L380 376.16l25.296-18.688a191.744 191.744 0 0 1 37.184-21.52l28.8-12.576V256zm47.28 144a112 112 0 1 0 0 224 112 112 0 0 0 0-224zm0 48a64 64 0 1 1 0 128 64 64 0 0 1 0-128z"
+}, null, -1);
+const _hoisted_3$1 = [
+  _hoisted_2$2
+];
+function render(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$6, _hoisted_3$1);
+}
+const insideSettingOutlined = { name: "SettingOutlined", render };
+const xIcon$1 = "";
+const insideIcons = {
+  InsideDeleteOutlined,
+  InsideExclamationCircleOutlined,
+  InsideLoadingOutlined,
+  InsideSaveOutlined,
+  InsideSearchOutlined,
+  InsideSyncOutlined,
+  InsideUploadOutlined,
+  Insidetips,
+  InsideEmpty,
+  InsideCopy,
+  insideSettingOutlined
+};
+const xIcon = defineComponent(markRaw({
+  name: "xIcon",
+  props: ["icon"],
   data() {
-    return {};
+    const id = "lazy-svg_" + this._.uid;
+    return {
+      id,
+      svgIcon: null
+    };
   },
   computed: {
-    xFormId() {
-      return `xForm_${this._.uid}`;
+    baseAttrs() {
+      return {
+        id: this.id,
+        role: "img",
+        ariaLabel: this.icon,
+        class: "xIcon anticon"
+      };
     },
-    formStyleText() {
-      return xU.map(xU.merge({}, this.formStyle), (value, prop) => `${prop}: ${value}`).join(";");
-    },
-    labelStyleText() {
-      return xU.map(xU.merge({
-        width: "120px",
-        "text-align": "right"
-      }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
-    },
-    styleContent() {
-      return [`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`, `#${this.xFormId} { ${this.formStyleText} }`, `#${this.xFormId} div.x-form-item-label { ${this.labelStyleText} }`].join("\n");
-    }
-  },
-  mounted() {
-    const $form = $$1(`#${this.xFormId}`);
-    const $style = $$1("<style/>", {
-      id: `style_${this.xFormId}`
-    }).append(this.styleContent);
-    $form.prepend($style);
-  },
-  watch: {
-    styleContent() {
-      this.updateStyle(this.styleContent);
+    iconKey() {
+      const _iconKey = xU.camelCase(this.getIconPath()).replace(/\s/, "");
+      return _iconKey;
     }
   },
   methods: {
-    updateStyle(styleContent) {
-      const $style = $$1(`#style_${this.xFormId}`);
-      $style.html(styleContent);
-    }
-  }
-});
-const _export_sfc = (sfc, props) => {
-  const target = sfc.__vccOpts || sfc;
-  for (const [key, val] of props) {
-    target[key] = val;
-  }
-  return target;
-};
-const _hoisted_1$g = ["id"];
-function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
-  return openBlock(), createElementBlock("form", { id: _ctx.xFormId }, [
-    renderSlot(_ctx.$slots, "default")
-  ], 8, _hoisted_1$g);
-}
-const xForm = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7]]);
-const Pagination$1 = {
-  items_per_page: "/ page",
-  jump_to: "Go to",
-  jump_to_confirm: "confirm",
-  page: "",
-  prev_page: "Previous Page",
-  next_page: "Next Page",
-  prev_5: "Previous 5 Pages",
-  next_5: "Next 5 Pages",
-  prev_3: "Previous 3 Pages",
-  next_3: "Next 3 Pages"
-};
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj2) {
-    return typeof obj2;
-  } : function(obj2) {
-    return obj2 && "function" == typeof Symbol && obj2.constructor === Symbol && obj2 !== Symbol.prototype ? "symbol" : typeof obj2;
-  }, _typeof(obj);
-}
-function _toPrimitive(input, hint) {
-  if (_typeof(input) !== "object" || input === null)
-    return input;
-  var prim = input[Symbol.toPrimitive];
-  if (prim !== void 0) {
-    var res = prim.call(input, hint || "default");
-    if (_typeof(res) !== "object")
-      return res;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return (hint === "string" ? String : Number)(input);
-}
-function _toPropertyKey(arg) {
-  var key = _toPrimitive(arg, "string");
-  return _typeof(key) === "symbol" ? key : String(key);
-}
-function _defineProperty(obj, key, value) {
-  key = _toPropertyKey(key);
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    enumerableOnly && (symbols = symbols.filter(function(sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    })), keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = null != arguments[i] ? arguments[i] : {};
-    i % 2 ? ownKeys(Object(source), true).forEach(function(key) {
-      _defineProperty(target, key, source[key]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function(key) {
-      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-    });
-  }
-  return target;
-}
-var locale$5 = {
-  locale: "en_US",
-  today: "Today",
-  now: "Now",
-  backToToday: "Back to today",
-  ok: "Ok",
-  clear: "Clear",
-  month: "Month",
-  year: "Year",
-  timeSelect: "select time",
-  dateSelect: "select date",
-  weekSelect: "Choose a week",
-  monthSelect: "Choose a month",
-  yearSelect: "Choose a year",
-  decadeSelect: "Choose a decade",
-  yearFormat: "YYYY",
-  dateFormat: "M/D/YYYY",
-  dayFormat: "D",
-  dateTimeFormat: "M/D/YYYY HH:mm:ss",
-  monthBeforeYear: true,
-  previousMonth: "Previous month (PageUp)",
-  nextMonth: "Next month (PageDown)",
-  previousYear: "Last year (Control + left)",
-  nextYear: "Next year (Control + right)",
-  previousDecade: "Last decade",
-  nextDecade: "Next decade",
-  previousCentury: "Last century",
-  nextCentury: "Next century"
-};
-const CalendarLocale$1 = locale$5;
-var locale$4 = {
-  placeholder: "Select time",
-  rangePlaceholder: ["Start time", "End time"]
-};
-const TimePicker$1 = locale$4;
-var locale$3 = {
-  lang: _objectSpread2({
-    placeholder: "Select date",
-    yearPlaceholder: "Select year",
-    quarterPlaceholder: "Select quarter",
-    monthPlaceholder: "Select month",
-    weekPlaceholder: "Select week",
-    rangePlaceholder: ["Start date", "End date"],
-    rangeYearPlaceholder: ["Start year", "End year"],
-    rangeQuarterPlaceholder: ["Start quarter", "End quarter"],
-    rangeMonthPlaceholder: ["Start month", "End month"],
-    rangeWeekPlaceholder: ["Start week", "End week"]
-  }, CalendarLocale$1),
-  timePickerLocale: _objectSpread2({}, TimePicker$1)
-};
-const DatePicker$2 = locale$3;
-var typeTemplate$1 = "${label} is not a valid ${type}";
-var localeValues$1 = {
-  locale: "en",
-  Pagination: Pagination$1,
-  DatePicker: DatePicker$2,
-  TimePicker: TimePicker$1,
-  Calendar: DatePicker$2,
-  global: {
-    placeholder: "Please select"
-  },
-  Table: {
-    filterTitle: "Filter menu",
-    filterConfirm: "OK",
-    filterReset: "Reset",
-    filterEmptyText: "No filters",
-    filterCheckall: "Select all items",
-    filterSearchPlaceholder: "Search in filters",
-    emptyText: "No data",
-    selectAll: "Select current page",
-    selectInvert: "Invert current page",
-    selectNone: "Clear all data",
-    selectionAll: "Select all data",
-    sortTitle: "Sort",
-    expand: "Expand row",
-    collapse: "Collapse row",
-    triggerDesc: "Click to sort descending",
-    triggerAsc: "Click to sort ascending",
-    cancelSort: "Click to cancel sorting"
-  },
-  Modal: {
-    okText: "OK",
-    cancelText: "Cancel",
-    justOkText: "OK"
-  },
-  Popconfirm: {
-    okText: "OK",
-    cancelText: "Cancel"
-  },
-  Transfer: {
-    titles: ["", ""],
-    searchPlaceholder: "Search here",
-    itemUnit: "item",
-    itemsUnit: "items",
-    remove: "Remove",
-    selectCurrent: "Select current page",
-    removeCurrent: "Remove current page",
-    selectAll: "Select all data",
-    removeAll: "Remove all data",
-    selectInvert: "Invert current page"
-  },
-  Upload: {
-    uploading: "Uploading...",
-    removeFile: "Remove file",
-    uploadError: "Upload error",
-    previewFile: "Preview file",
-    downloadFile: "Download file"
-  },
-  Empty: {
-    description: "No Data"
-  },
-  Icon: {
-    icon: "icon"
-  },
-  Text: {
-    edit: "Edit",
-    copy: "Copy",
-    copied: "Copied",
-    expand: "Expand"
-  },
-  PageHeader: {
-    back: "Back"
-  },
-  Form: {
-    optional: "(optional)",
-    defaultValidateMessages: {
-      default: "Field validation error for ${label}",
-      required: "Please enter ${label}",
-      enum: "${label} must be one of [${enum}]",
-      whitespace: "${label} cannot be a blank character",
-      date: {
-        format: "${label} date format is invalid",
-        parse: "${label} cannot be converted to a date",
-        invalid: "${label} is an invalid date"
-      },
-      types: {
-        string: typeTemplate$1,
-        method: typeTemplate$1,
-        array: typeTemplate$1,
-        object: typeTemplate$1,
-        number: typeTemplate$1,
-        date: typeTemplate$1,
-        boolean: typeTemplate$1,
-        integer: typeTemplate$1,
-        float: typeTemplate$1,
-        regexp: typeTemplate$1,
-        email: typeTemplate$1,
-        url: typeTemplate$1,
-        hex: typeTemplate$1
-      },
-      string: {
-        len: "${label} must be ${len} characters",
-        min: "${label} must be at least ${min} characters",
-        max: "${label} must be up to ${max} characters",
-        range: "${label} must be between ${min}-${max} characters"
-      },
-      number: {
-        len: "${label} must be equal to ${len}",
-        min: "${label} must be minimum ${min}",
-        max: "${label} must be maximum ${max}",
-        range: "${label} must be between ${min}-${max}"
-      },
-      array: {
-        len: "Must be ${len} ${label}",
-        min: "At least ${min} ${label}",
-        max: "At most ${max} ${label}",
-        range: "The amount of ${label} must be between ${min}-${max}"
-      },
-      pattern: {
-        mismatch: "${label} does not match the pattern ${pattern}"
+    getIconPath() {
+      if (!State_UI.assetsSvgPath) {
+        debugger;
+      }
+      const iconPath = `${State_UI.assetsSvgPath}/${this.icon}.svg`;
+      return iconPath;
+    },
+    async setIcon() {
+      if (!this.icon)
+        return;
+      try {
+        let SvgIconAny = await (async () => {
+          let _SvgIconAny = insideIcons[this.icon];
+          if (_SvgIconAny) {
+            xU(this.icon);
+            return _SvgIconAny;
+          }
+          if (!State_UI.isDev) {
+            _SvgIconAny = await iStorage(this.iconKey);
+            if (_SvgIconAny) {
+              return _SvgIconAny;
+            }
+          }
+          try {
+            _SvgIconAny = await xU.asyncLoadText(this.getIconPath());
+          } catch (error) {
+            console.error(error);
+          }
+          return _SvgIconAny;
+        })();
+        if (xU.isString(SvgIconAny) && SvgIconAny.length > 0) {
+          const SvgComponentByString = {
+            name: this.icon,
+            template: SvgIconAny
+          };
+          await iStorage(this.iconKey, SvgIconAny);
+          insideIcons[this.icon] = SvgComponentByString;
+          this.svgIcon = createVNode(SvgComponentByString, this.baseAttrs, null);
+        } else if ((SvgIconAny == null ? void 0 : SvgIconAny.render) || (SvgIconAny == null ? void 0 : SvgIconAny.template)) {
+          this.svgIcon = createVNode(SvgIconAny, this.baseAttrs, null);
+        } else {
+          console.error("component xIcon miss svg: " + this.icon);
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   },
-  Image: {
-    preview: "Preview"
-  }
-};
-const defaultLocale = localeValues$1;
-const Pagination = {
-  items_per_page: "\u6761/\u9875",
-  jump_to: "\u8DF3\u81F3",
-  jump_to_confirm: "\u786E\u5B9A",
-  page: "\u9875",
-  prev_page: "\u4E0A\u4E00\u9875",
-  next_page: "\u4E0B\u4E00\u9875",
-  prev_5: "\u5411\u524D 5 \u9875",
-  next_5: "\u5411\u540E 5 \u9875",
-  prev_3: "\u5411\u524D 3 \u9875",
-  next_3: "\u5411\u540E 3 \u9875"
-};
-var locale$2 = {
-  locale: "zh_CN",
-  today: "\u4ECA\u5929",
-  now: "\u6B64\u523B",
-  backToToday: "\u8FD4\u56DE\u4ECA\u5929",
-  ok: "\u786E\u5B9A",
-  timeSelect: "\u9009\u62E9\u65F6\u95F4",
-  dateSelect: "\u9009\u62E9\u65E5\u671F",
-  weekSelect: "\u9009\u62E9\u5468",
-  clear: "\u6E05\u9664",
-  month: "\u6708",
-  year: "\u5E74",
-  previousMonth: "\u4E0A\u4E2A\u6708 (\u7FFB\u9875\u4E0A\u952E)",
-  nextMonth: "\u4E0B\u4E2A\u6708 (\u7FFB\u9875\u4E0B\u952E)",
-  monthSelect: "\u9009\u62E9\u6708\u4EFD",
-  yearSelect: "\u9009\u62E9\u5E74\u4EFD",
-  decadeSelect: "\u9009\u62E9\u5E74\u4EE3",
-  yearFormat: "YYYY\u5E74",
-  dayFormat: "D\u65E5",
-  dateFormat: "YYYY\u5E74M\u6708D\u65E5",
-  dateTimeFormat: "YYYY\u5E74M\u6708D\u65E5 HH\u65F6mm\u5206ss\u79D2",
-  previousYear: "\u4E0A\u4E00\u5E74 (Control\u952E\u52A0\u5DE6\u65B9\u5411\u952E)",
-  nextYear: "\u4E0B\u4E00\u5E74 (Control\u952E\u52A0\u53F3\u65B9\u5411\u952E)",
-  previousDecade: "\u4E0A\u4E00\u5E74\u4EE3",
-  nextDecade: "\u4E0B\u4E00\u5E74\u4EE3",
-  previousCentury: "\u4E0A\u4E00\u4E16\u7EAA",
-  nextCentury: "\u4E0B\u4E00\u4E16\u7EAA"
-};
-const CalendarLocale = locale$2;
-var locale$1 = {
-  placeholder: "\u8BF7\u9009\u62E9\u65F6\u95F4",
-  rangePlaceholder: ["\u5F00\u59CB\u65F6\u95F4", "\u7ED3\u675F\u65F6\u95F4"]
-};
-const TimePicker = locale$1;
-var locale = {
-  lang: _objectSpread2({
-    placeholder: "\u8BF7\u9009\u62E9\u65E5\u671F",
-    yearPlaceholder: "\u8BF7\u9009\u62E9\u5E74\u4EFD",
-    quarterPlaceholder: "\u8BF7\u9009\u62E9\u5B63\u5EA6",
-    monthPlaceholder: "\u8BF7\u9009\u62E9\u6708\u4EFD",
-    weekPlaceholder: "\u8BF7\u9009\u62E9\u5468",
-    rangePlaceholder: ["\u5F00\u59CB\u65E5\u671F", "\u7ED3\u675F\u65E5\u671F"],
-    rangeYearPlaceholder: ["\u5F00\u59CB\u5E74\u4EFD", "\u7ED3\u675F\u5E74\u4EFD"],
-    rangeMonthPlaceholder: ["\u5F00\u59CB\u6708\u4EFD", "\u7ED3\u675F\u6708\u4EFD"],
-    rangeQuarterPlaceholder: ["\u5F00\u59CB\u5B63\u5EA6", "\u7ED3\u675F\u5B63\u5EA6"],
-    rangeWeekPlaceholder: ["\u5F00\u59CB\u5468", "\u7ED3\u675F\u5468"]
-  }, CalendarLocale),
-  timePickerLocale: _objectSpread2({}, TimePicker)
-};
-locale.lang.ok = "\u786E\u5B9A";
-const DatePicker$1 = locale;
-var typeTemplate = "${label}\u4E0D\u662F\u4E00\u4E2A\u6709\u6548\u7684${type}";
-var localeValues = {
-  locale: "zh-cn",
-  Pagination,
-  DatePicker: DatePicker$1,
-  TimePicker,
-  Calendar: DatePicker$1,
-  global: {
-    placeholder: "\u8BF7\u9009\u62E9"
+  render() {
+    if (this.svgIcon) {
+      return this.svgIcon;
+    }
+    return createVNode(InsideLoadingOutlined, this.baseAttrs, null);
   },
-  Table: {
-    filterTitle: "\u7B5B\u9009",
-    filterConfirm: "\u786E\u5B9A",
-    filterReset: "\u91CD\u7F6E",
-    filterEmptyText: "\u65E0\u7B5B\u9009\u9879",
-    filterCheckall: "\u5168\u9009",
-    filterSearchPlaceholder: "\u5728\u7B5B\u9009\u9879\u4E2D\u641C\u7D22",
-    selectAll: "\u5168\u9009\u5F53\u9875",
-    selectInvert: "\u53CD\u9009\u5F53\u9875",
-    selectNone: "\u6E05\u7A7A\u6240\u6709",
-    selectionAll: "\u5168\u9009\u6240\u6709",
-    sortTitle: "\u6392\u5E8F",
-    expand: "\u5C55\u5F00\u884C",
-    collapse: "\u5173\u95ED\u884C",
-    triggerDesc: "\u70B9\u51FB\u964D\u5E8F",
-    triggerAsc: "\u70B9\u51FB\u5347\u5E8F",
-    cancelSort: "\u53D6\u6D88\u6392\u5E8F"
-  },
-  Modal: {
-    okText: "\u786E\u5B9A",
-    cancelText: "\u53D6\u6D88",
-    justOkText: "\u77E5\u9053\u4E86"
-  },
-  Popconfirm: {
-    cancelText: "\u53D6\u6D88",
-    okText: "\u786E\u5B9A"
-  },
-  Transfer: {
-    searchPlaceholder: "\u8BF7\u8F93\u5165\u641C\u7D22\u5185\u5BB9",
-    itemUnit: "\u9879",
-    itemsUnit: "\u9879",
-    remove: "\u5220\u9664",
-    selectCurrent: "\u5168\u9009\u5F53\u9875",
-    removeCurrent: "\u5220\u9664\u5F53\u9875",
-    selectAll: "\u5168\u9009\u6240\u6709",
-    removeAll: "\u5220\u9664\u5168\u90E8",
-    selectInvert: "\u53CD\u9009\u5F53\u9875"
-  },
-  Upload: {
-    uploading: "\u6587\u4EF6\u4E0A\u4F20\u4E2D",
-    removeFile: "\u5220\u9664\u6587\u4EF6",
-    uploadError: "\u4E0A\u4F20\u9519\u8BEF",
-    previewFile: "\u9884\u89C8\u6587\u4EF6",
-    downloadFile: "\u4E0B\u8F7D\u6587\u4EF6"
-  },
-  Empty: {
-    description: "\u6682\u65E0\u6570\u636E"
-  },
-  Icon: {
-    icon: "\u56FE\u6807"
-  },
-  Text: {
-    edit: "\u7F16\u8F91",
-    copy: "\u590D\u5236",
-    copied: "\u590D\u5236\u6210\u529F",
-    expand: "\u5C55\u5F00"
-  },
-  PageHeader: {
-    back: "\u8FD4\u56DE"
-  },
-  Form: {
-    optional: "\uFF08\u53EF\u9009\uFF09",
-    defaultValidateMessages: {
-      default: "\u5B57\u6BB5\u9A8C\u8BC1\u9519\u8BEF${label}",
-      required: "\u8BF7\u8F93\u5165${label}",
-      enum: "${label}\u5FC5\u987B\u662F\u5176\u4E2D\u4E00\u4E2A[${enum}]",
-      whitespace: "${label}\u4E0D\u80FD\u4E3A\u7A7A\u5B57\u7B26",
-      date: {
-        format: "${label}\u65E5\u671F\u683C\u5F0F\u65E0\u6548",
-        parse: "${label}\u4E0D\u80FD\u8F6C\u6362\u4E3A\u65E5\u671F",
-        invalid: "${label}\u662F\u4E00\u4E2A\u65E0\u6548\u65E5\u671F"
-      },
-      types: {
-        string: typeTemplate,
-        method: typeTemplate,
-        array: typeTemplate,
-        object: typeTemplate,
-        number: typeTemplate,
-        date: typeTemplate,
-        boolean: typeTemplate,
-        integer: typeTemplate,
-        float: typeTemplate,
-        regexp: typeTemplate,
-        email: typeTemplate,
-        url: typeTemplate,
-        hex: typeTemplate
-      },
-      string: {
-        len: "${label}\u987B\u4E3A${len}\u4E2A\u5B57\u7B26",
-        min: "${label}\u6700\u5C11${min}\u4E2A\u5B57\u7B26",
-        max: "${label}\u6700\u591A${max}\u4E2A\u5B57\u7B26",
-        range: "${label}\u987B\u5728${min}-${max}\u5B57\u7B26\u4E4B\u95F4"
-      },
-      number: {
-        len: "${label}\u5FC5\u987B\u7B49\u4E8E${len}",
-        min: "${label}\u6700\u5C0F\u503C\u4E3A${min}",
-        max: "${label}\u6700\u5927\u503C\u4E3A${max}",
-        range: "${label}\u987B\u5728${min}-${max}\u4E4B\u95F4"
-      },
-      array: {
-        len: "\u987B\u4E3A${len}\u4E2A${label}",
-        min: "\u6700\u5C11${min}\u4E2A${label}",
-        max: "\u6700\u591A${max}\u4E2A${label}",
-        range: "${label}\u6570\u91CF\u987B\u5728${min}-${max}\u4E4B\u95F4"
-      },
-      pattern: {
-        mismatch: "${label}\u4E0E\u6A21\u5F0F\u4E0D\u5339\u914D${pattern}"
+  watch: {
+    icon: {
+      immediate: true,
+      handler() {
+        this.setIcon();
       }
     }
-  },
-  Image: {
-    preview: "\u9884\u89C8"
   }
-};
-const zhCn$1 = localeValues;
-var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-var zhCn = { exports: {} };
-(function(module, exports) {
-  !function(e, _2) {
-    module.exports = _2(dayjs);
-  }(commonjsGlobal, function(e) {
-    function _2(e2) {
-      return e2 && "object" == typeof e2 && "default" in e2 ? e2 : { default: e2 };
-    }
-    var t = _2(e), d = { name: "zh-cn", weekdays: "\u661F\u671F\u65E5_\u661F\u671F\u4E00_\u661F\u671F\u4E8C_\u661F\u671F\u4E09_\u661F\u671F\u56DB_\u661F\u671F\u4E94_\u661F\u671F\u516D".split("_"), weekdaysShort: "\u5468\u65E5_\u5468\u4E00_\u5468\u4E8C_\u5468\u4E09_\u5468\u56DB_\u5468\u4E94_\u5468\u516D".split("_"), weekdaysMin: "\u65E5_\u4E00_\u4E8C_\u4E09_\u56DB_\u4E94_\u516D".split("_"), months: "\u4E00\u6708_\u4E8C\u6708_\u4E09\u6708_\u56DB\u6708_\u4E94\u6708_\u516D\u6708_\u4E03\u6708_\u516B\u6708_\u4E5D\u6708_\u5341\u6708_\u5341\u4E00\u6708_\u5341\u4E8C\u6708".split("_"), monthsShort: "1\u6708_2\u6708_3\u6708_4\u6708_5\u6708_6\u6708_7\u6708_8\u6708_9\u6708_10\u6708_11\u6708_12\u6708".split("_"), ordinal: function(e2, _3) {
-      return "W" === _3 ? e2 + "\u5468" : e2 + "\u65E5";
-    }, weekStart: 1, yearStart: 4, formats: { LT: "HH:mm", LTS: "HH:mm:ss", L: "YYYY/MM/DD", LL: "YYYY\u5E74M\u6708D\u65E5", LLL: "YYYY\u5E74M\u6708D\u65E5Ah\u70B9mm\u5206", LLLL: "YYYY\u5E74M\u6708D\u65E5ddddAh\u70B9mm\u5206", l: "YYYY/M/D", ll: "YYYY\u5E74M\u6708D\u65E5", lll: "YYYY\u5E74M\u6708D\u65E5 HH:mm", llll: "YYYY\u5E74M\u6708D\u65E5dddd HH:mm" }, relativeTime: { future: "%s\u5185", past: "%s\u524D", s: "\u51E0\u79D2", m: "1 \u5206\u949F", mm: "%d \u5206\u949F", h: "1 \u5C0F\u65F6", hh: "%d \u5C0F\u65F6", d: "1 \u5929", dd: "%d \u5929", M: "1 \u4E2A\u6708", MM: "%d \u4E2A\u6708", y: "1 \u5E74", yy: "%d \u5E74" }, meridiem: function(e2, _3) {
-      var t2 = 100 * e2 + _3;
-      return t2 < 600 ? "\u51CC\u6668" : t2 < 900 ? "\u65E9\u4E0A" : t2 < 1100 ? "\u4E0A\u5348" : t2 < 1300 ? "\u4E2D\u5348" : t2 < 1800 ? "\u4E0B\u5348" : "\u665A\u4E0A";
-    } };
-    return t.default.locale(d, null, true), d;
-  });
-})(zhCn);
-var enAu = { exports: {} };
-(function(module, exports) {
-  !function(e, a) {
-    module.exports = a(dayjs);
-  }(commonjsGlobal, function(e) {
-    function a(e2) {
-      return e2 && "object" == typeof e2 && "default" in e2 ? e2 : { default: e2 };
-    }
-    var t = a(e), _2 = { name: "en-au", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_"), weekStart: 1, weekdaysShort: "Sun_Mon_Tue_Wed_Thu_Fri_Sat".split("_"), monthsShort: "Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec".split("_"), weekdaysMin: "Su_Mo_Tu_We_Th_Fr_Sa".split("_"), ordinal: function(e2) {
-      return e2;
-    }, formats: { LT: "h:mm A", LTS: "h:mm:ss A", L: "DD/MM/YYYY", LL: "D MMMM YYYY", LLL: "D MMMM YYYY h:mm A", LLLL: "dddd, D MMMM YYYY h:mm A" }, relativeTime: { future: "in %s", past: "%s ago", s: "a few seconds", m: "a minute", mm: "%d minutes", h: "an hour", hh: "%d hours", d: "a day", dd: "%d days", M: "a month", MM: "%d months", y: "a year", yy: "%d years" } };
-    return t.default.locale(_2, null, true), _2;
-  });
-})(enAu);
+}));
 function $t$1(prop, payload = {}, i18nMessage = false) {
   const result = {
     label: prop,
@@ -1212,10 +924,7 @@ let _State_UI = {
   },
   language: lStorage["language"] || "zh-CN",
   onLanguageChange: false,
-  LANGUAGE: {
-    enUs: defaultLocale,
-    zhCn: zhCn$1
-  },
+  LANGUAGE: {},
   i18nMessage: {},
   assetsSvgPath: "",
   assetsPath: "",
@@ -1249,7 +958,6 @@ let _State_UI = {
 const State_UI = reactive(_State_UI);
 watch(() => State_UI.language, (language) => {
   lStorage["language"] = language;
-  dayjs.locale(language === "zh-CN" ? "zh-cn" : "en");
   if (State_UI.onLanguageChange) {
     State_UI.onLanguageChange(language, State_UI);
   }
@@ -1258,8 +966,8 @@ watch(() => State_UI.language, (language) => {
 });
 const Cpt_UI_locale = computed(() => {
   const currentLanguage = xU.camelCase(State_UI.language);
-  const locale2 = State_UI.LANGUAGE[currentLanguage];
-  return locale2;
+  const locale = State_UI.LANGUAGE[currentLanguage];
+  return locale;
 });
 const BTN_PRESET_MAP = {
   query: () => ({
@@ -1329,9 +1037,10 @@ const xButton = defineComponent({
     const presetFn = BTN_PRESET_MAP[this.configs.preset];
     if (presetFn) {
       const preset = presetFn(this.configs);
-      this.configs.text = createVNode(Fragment, null, [preset.icon, createVNode("span", {
+      this.configs.icon = preset.icon;
+      this.configs.text = createVNode("span", {
         "class": "ml4"
-      }, [preset.text])]);
+      }, [preset.text]);
     }
   },
   data() {
@@ -1439,6 +1148,143 @@ const xButton = defineComponent({
     });
   }
 });
+const xGap = defineComponent({
+  name: "xGap",
+  props: ["t", "l", "r", "b", "a", "f"],
+  computed: {
+    gapClass: {
+      set() {
+      },
+      get() {
+        let basic = "x-gap";
+        if (this.f) {
+          basic += ` flex${this.f}`;
+        }
+        return basic;
+      }
+    },
+    gapStyle: {
+      set() {
+      },
+      get() {
+        const POSITION_MAP = {
+          t: "top",
+          r: "right",
+          b: "bottom",
+          l: "left"
+        };
+        const gapStyle = {};
+        if (this.a) {
+          gapStyle.margin = `${this.a}px`;
+        } else {
+          xU.map(POSITION_MAP, (prop, key) => {
+            const value = this[key];
+            if (value) {
+              gapStyle[`margin-${prop}`] = `${value}px`;
+            }
+          });
+        }
+        return gapStyle;
+      }
+    }
+  },
+  render(h2) {
+    return createVNode("div", {
+      "style": this.gapStyle,
+      "class": this.gapClass
+    }, null);
+  }
+});
+const xRender = defineComponent(markRaw({
+  name: "xRender",
+  props: {
+    render: {
+      type: Function,
+      required: true
+    }
+  },
+  render() {
+    return h(this.render, {
+      vm: this,
+      props: this.$props,
+      attrs: this.$attrs
+    });
+  }
+}));
+const _sfc_main$8 = defineComponent({
+  name: "xForm",
+  props: {
+    col: {
+      type: Number,
+      default: 1
+    },
+    labelStyle: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    formStyle: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
+  emits: [],
+  data() {
+    return {};
+  },
+  computed: {
+    xFormId() {
+      return `xForm_${this._.uid}`;
+    },
+    formStyleText() {
+      return xU.map(xU.merge({}, this.formStyle), (value, prop) => `${prop}: ${value}`).join(";");
+    },
+    labelStyleText() {
+      return xU.map(xU.merge({
+        width: "120px",
+        "text-align": "right"
+      }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
+    },
+    styleContent() {
+      return [`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`, `#${this.xFormId} { ${this.formStyleText} }`, `#${this.xFormId} div.x-form-item-label { ${this.labelStyleText} }`].join("\n");
+    }
+  },
+  mounted() {
+    const $form = $$1(`#${this.xFormId}`);
+    const $style = $$1("<style/>", {
+      id: `style_${this.xFormId}`
+    }).append(this.styleContent);
+    $form.prepend($style);
+  },
+  watch: {
+    styleContent() {
+      this.updateStyle(this.styleContent);
+    }
+  },
+  methods: {
+    updateStyle(styleContent) {
+      const $style = $$1(`#style_${this.xFormId}`);
+      $style.html(styleContent);
+    }
+  }
+});
+const _export_sfc = (sfc, props) => {
+  const target = sfc.__vccOpts || sfc;
+  for (const [key, val] of props) {
+    target[key] = val;
+  }
+  return target;
+};
+const _hoisted_1$5 = ["id"];
+function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+  return openBlock(), createElementBlock("form", { id: _ctx.xFormId }, [
+    renderSlot(_ctx.$slots, "default")
+  ], 8, _hoisted_1$5);
+}
+const xForm = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7]]);
 const _sfc_main$7 = defineComponent({
   name: "XButtonCountDown",
   props: {
@@ -1537,21 +1383,26 @@ const _sfc_main$6 = defineComponent({
     }
   },
   data() {
-    const id = xU.genId("xChart");
-    this.updateOptions = xU.debounce(function() {
+    this.updateOptions = xU.debounce(async function() {
+      var _a, _b;
       if (this.myChart) {
         this.myChart.dispose();
       }
+      await xU.ensureValueDone(() => this.$el);
       const options = this.helper.initOptions(this.$props);
       this.options = this.helper.updateOptions(options, this.dataset);
-      const dom = document.querySelector(`#${this.id}`);
-      this.myChart = this.$echarts.init(dom);
+      this.myChart = this.$echarts.init(this.$el);
+      if ((_a = this == null ? void 0 : this.helper) == null ? void 0 : _a.afterInit) {
+        (_b = this == null ? void 0 : this.helper) == null ? void 0 : _b.afterInit({
+          instance: this.myChart
+        });
+      }
       this.myChart.showLoading();
       this.myChart.setOption(this.options);
       this.myChart.hideLoading();
     }, 300);
     return {
-      id
+      myChart: false
     };
   },
   computed: {
@@ -1572,27 +1423,32 @@ const _sfc_main$6 = defineComponent({
   },
   methods: {
     async init() {
-      await xU.ensureValueDone(() => this.myChart);
-      this.updateOptions();
       this.observe();
+      this.updateOptions();
     },
     observe() {
       this.resizeObserver = new ResizeObserver(() => {
         var _a;
         if (this.myChart) {
-          ((_a = this.myChart) == null ? void 0 : _a.resize) && this.myChart.resize();
+          this.updateOptions();
+          if ((_a = this == null ? void 0 : this.helper) == null ? void 0 : _a.onResize) {
+            this.helper.onResize({
+              instance: this.myChart,
+              chartVM: this
+            });
+          }
         }
       });
       this.resizeObserver.observe(this.$el);
     }
   }
 });
-const _hoisted_1$f = ["id"];
+const _hoisted_1$4 = ["id"];
 function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("div", {
     id: _ctx.id,
     class: "x-charts flex flex1 center middle"
-  }, null, 8, _hoisted_1$f);
+  }, null, 8, _hoisted_1$4);
 }
 const xCharts = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5]]);
 const _sfc_main$5 = defineComponent({
@@ -1613,291 +1469,21 @@ const _sfc_main$5 = defineComponent({
   }
 });
 const xView_vue_vue_type_style_index_0_lang = "";
-const _hoisted_1$e = ["id"];
-const _hoisted_2$c = { class: "xView-body flex vertical flex1" };
+const _hoisted_1$3 = ["id"];
+const _hoisted_2$1 = { class: "xView-body flex vertical flex1" };
 function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
   return withDirectives((openBlock(), createElementBlock("div", {
     id: _ctx.id,
     class: "flex flex1 vertical"
   }, [
-    createElementVNode("div", _hoisted_2$c, [
+    createElementVNode("div", _hoisted_2$1, [
       renderSlot(_ctx.$slots, "default")
     ])
-  ], 8, _hoisted_1$e)), [
+  ], 8, _hoisted_1$3)), [
     [vShow, !!_ctx.isShow]
   ]);
 }
 const xView = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4]]);
-const _hoisted_1$d = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$b = /* @__PURE__ */ createElementVNode("path", { d: "M338.261 137.045h-9.13a9.16 9.16 0 0 0 9.13-9.159v9.16h347.45v-9.16c0 5.035 4.095 9.16 9.101 9.16h-9.102v82.26h82.262v-91.42a73.216 73.216 0 0 0-73.131-73.13H329.102a73.216 73.216 0 0 0-73.159 73.13v91.45h82.29v-82.29zm576 82.29h-804.55c-20.253 0-36.58 16.327-36.58 36.551v36.58c0 5.034 4.096 9.159 9.13 9.159h69.063l28.217 597.703a73.216 73.216 0 0 0 73.046 69.689h518.826a73.045 73.045 0 0 0 73.046-69.689l28.245-597.732h69.006a9.16 9.16 0 0 0 9.16-9.102v-36.636c0-20.196-16.356-36.551-36.58-36.551zm-151.665 667.42h-501.22l-27.648-585.159H790.3l-27.676 585.16z" }, null, -1);
-const _hoisted_3$b = [
-  _hoisted_2$b
-];
-function render$a(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$d, _hoisted_3$b);
-}
-const InsideDeleteOutlined = { name: "DeleteOutlined", render: render$a };
-const _hoisted_1$c = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$a = /* @__PURE__ */ createElementVNode("path", { d: "M512 628c17.6 0 32-14.4 32-32V308c0-17.6-14.4-32-32-32s-32 14.4-32 32v288c0 17.6 14.4 32 32 32zm-44 76a44 44 0 1 0 88 0 44 44 0 1 0-88 0Zm44-640C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm271.5 719.5c-35.3 35.3-76.4 63-122.1 82.3-47.3 20-97.6 30.2-149.5 30.2s-102.2-10.1-149.5-30.2c-45.7-19.3-86.8-47-122.1-82.3s-63-76.4-82.3-122.1c-20-47.3-30.2-97.6-30.2-149.5s10.1-102.2 30.2-149.5c19.3-45.7 47-86.8 82.3-122.1s76.4-63 122.1-82.3c47.3-20 97.6-30.2 149.5-30.2s102.2 10.1 149.5 30.2c45.7 19.3 86.8 47 122.1 82.3s63 76.4 82.3 122.1c20 47.3 30.2 97.6 30.2 149.5s-10.1 102.2-30.2 149.5c-19.3 45.8-47 86.8-82.3 122.1z" }, null, -1);
-const _hoisted_3$a = [
-  _hoisted_2$a
-];
-function render$9(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$c, _hoisted_3$a);
-}
-const InsideExclamationCircleOutlined = { name: "ExclamationCircleOutlined", render: render$9 };
-const _hoisted_1$b = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$9 = /* @__PURE__ */ createElementVNode("path", { d: "M448 128a64 64 0 1 0 128 0 64 64 0 1 0-128 0ZM257.1 180.5a61.3 61.3 0 1 0 122.6 0 61.3 61.3 0 1 0-122.6 0ZM121.8 318.4a58.7 58.7 0 1 0 117.4 0 58.7 58.7 0 1 0-117.4 0ZM72 512a56 56 0 1 0 112 0 56 56 0 1 0-112 0Zm55.2 193.6a53.3 53.3 0 1 0 106.6 0 53.3 53.3 0 1 0-106.6 0Zm140.5 137.9a50.7 50.7 0 1 0 101.4 0 50.7 50.7 0 1 0-101.4 0ZM464 896a48 48 0 1 0 96 0 48 48 0 1 0-96 0Zm196.3-52.5a45.3 45.3 0 1 0 90.6 0 45.3 45.3 0 1 0-90.6 0Zm140.5-137.9a42.7 42.7 0 1 0 85.4 0 42.7 42.7 0 1 0-85.4 0ZM856 512a40 40 0 1 0 80 0 40 40 0 1 0-80 0ZM837.9 377.7a33.8 33.8 0 1 0 67.6 0 33.8 33.8 0 1 0-67.6 0Zm-61.5-113.5a28.3 28.3 0 1 0 56.6 0 28.3 28.3 0 1 0-56.6 0ZM680 180a24 24 0 1 0 48 0 24 24 0 1 0-48 0Z" }, null, -1);
-const _hoisted_3$9 = /* @__PURE__ */ createElementVNode("animateTransform", {
-  additive: "sum",
-  attributeName: "transform",
-  attributeType: "XML",
-  begin: "0s",
-  dur: "4s",
-  from: "0",
-  repeatCount: "indefinite",
-  to: "360",
-  type: "rotate"
-}, null, -1);
-const _hoisted_4 = [
-  _hoisted_2$9,
-  _hoisted_3$9
-];
-function render$8(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$b, _hoisted_4);
-}
-const InsideLoadingOutlined = { name: "LoadingOutlined", render: render$8 };
-const _hoisted_1$a = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$8 = /* @__PURE__ */ createElementVNode("path", { d: "M144 928a48 48 0 0 1-48-48V144a48 48 0 0 1 48-48h592v.448a48 48 0 0 1 27.328 13.6l150.624 150.624A48 48 0 0 1 928 294.624V880a48 48 0 0 1-48 48H144zm144-768H160v704h128V496a48 48 0 0 1 43.392-47.776L336 448h352a48 48 0 0 1 48 48v368h128V301.248l-128-128V272a48 48 0 0 1-48 48H336a48 48 0 0 1-48-48V160zm384 352H352v352h320V512zm0-352H352v96h320v-96z" }, null, -1);
-const _hoisted_3$8 = [
-  _hoisted_2$8
-];
-function render$7(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$a, _hoisted_3$8);
-}
-const InsideSaveOutlined = { name: "SaveOutlined", render: render$7 };
-const _hoisted_1$9 = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$7 = /* @__PURE__ */ createElementVNode("path", { d: "M479.04 128c176.16 0 318.976 142.848 318.976 319.04a317.984 317.984 0 0 1-86.976 218.976l175.616 175.552c11.52 11.52 12.384 29.568 2.656 42.08l-2.656 3.008a31.872 31.872 0 0 1-45.088 0L662.784 707.904a317.504 317.504 0 0 1-183.776 58.24C302.816 766.144 160 623.296 160 447.04S302.816 128 479.04 128zm0 63.808a255.232 255.232 0 0 0-255.232 255.264 255.232 255.232 0 1 0 510.4 0 255.232 255.232 0 0 0-255.2-255.264z" }, null, -1);
-const _hoisted_3$7 = [
-  _hoisted_2$7
-];
-function render$6(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$9, _hoisted_3$7);
-}
-const InsideSearchOutlined = { name: "SearchOutlined", render: render$6 };
-const _hoisted_1$8 = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$6 = /* @__PURE__ */ createElementVNode("path", { d: "M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8zm756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8.1-4.5-3.5-8.2-8-8.2z" }, null, -1);
-const _hoisted_3$6 = [
-  _hoisted_2$6
-];
-function render$5(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$8, _hoisted_3$6);
-}
-const InsideSyncOutlined = { name: "SyncOutlined", render: render$5 };
-const _hoisted_1$7 = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$5 = /* @__PURE__ */ createElementVNode("path", { d: "M512 85.333A426.667 426.667 0 1 0 938.667 512 426.667 426.667 0 0 0 512 85.333zm0 768A341.333 341.333 0 1 1 853.333 512 341.333 341.333 0 0 1 512 853.333zm30.72-587.946A32.853 32.853 0 0 0 520.107 256h-16.214a32 32 0 0 0-22.613 9.387L347.733 399.36a21.333 21.333 0 0 0 0 30.293l29.867 30.294a21.333 21.333 0 0 0 30.293 0l61.44-61.867v348.587A21.333 21.333 0 0 0 490.667 768h42.666a21.333 21.333 0 0 0 21.334-21.333V398.08l61.44 61.44a20.907 20.907 0 0 0 29.866 0l30.294-30.293a21.333 21.333 0 0 0 0-30.294z" }, null, -1);
-const _hoisted_3$5 = [
-  _hoisted_2$5
-];
-function render$4(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$7, _hoisted_3$5);
-}
-const InsideUploadOutlined = { name: "UploadOutlined", render: render$4 };
-const _hoisted_1$6 = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$4 = /* @__PURE__ */ createElementVNode("path", { d: "M512 128c212 0 384 172 384 384S724 896 512 896 128 724 128 512s172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64zm32 704h-64v-64h64v64zm11.2-203.2-5.6 4.8c-3.2 2.4-5.6 8-5.6 12.8v58.4h-64v-58.4c0-24.8 11.2-48 29.6-63.2l5.6-4.8c56-44.8 83.2-68 83.2-108 0-48-38.4-86.4-86.4-86.4-49.6 0-86.4 36.8-86.4 86.4h-64c0-84 66.4-150.4 150.4-150.4 83.2 0 150.4 67.2 150.4 150.4 0 72.8-49.6 112.8-107.2 158.4z" }, null, -1);
-const _hoisted_3$4 = [
-  _hoisted_2$4
-];
-function render$3(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$6, _hoisted_3$4);
-}
-const Insidetips = { name: "tips", render: render$3 };
-const _hoisted_1$5 = {
-  width: "64",
-  height: "41",
-  class: "x-empty-img-simple"
-};
-const _hoisted_2$3 = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="x-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="x-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="x-empty-img-simple-path"></path></g></g>', 1);
-const _hoisted_3$3 = [
-  _hoisted_2$3
-];
-function render$2(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5, _hoisted_3$3);
-}
-const InsideEmpty = { name: "empty", render: render$2 };
-const _hoisted_1$4 = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$2 = /* @__PURE__ */ createElementVNode("path", { d: "M629.392 415.033 465.775 251.416c-7.992-7.992-20.947-7.992-28.939 0-7.992 8.002-7.992 20.957 0 28.95l128.68 128.68H389.97V184.083c0-11.298-9.17-20.467-20.466-20.467H21.813c-11.307 0-20.465 9.17-20.465 20.467v818.082c0 11.307 9.158 20.466 20.466 20.466h593.108c11.308 0 20.466-9.159 20.466-20.466V429.512c0-5.433-2.159-10.632-5.996-14.48zm-34.936 566.666H42.28v-777.15h306.756v224.963c0 11.298 9.159 20.466 20.467 20.466h224.953v531.72zm429.523-715.803v572.652c0 11.308-9.16 20.466-20.467 20.466H695.651c-11.298 0-20.466-9.158-20.466-20.466 0-11.297 9.168-20.466 20.466-20.466h287.395v-531.72H758.093c-11.308 0-20.466-9.169-20.466-20.466V40.932H430.87v75.694c0 11.308-9.169 20.466-20.466 20.466-11.307 0-20.466-9.158-20.466-20.466v-96.16C389.938 9.17 399.097 0 410.404 0h347.689c11.297 0 20.466 9.169 20.466 20.466V245.43h175.548l-128.68-128.681c-7.993-7.992-7.993-20.947 0-28.95 7.991-7.991 20.946-7.991 28.939 0l163.616 163.627a20.455 20.455 0 0 1 5.997 14.47z" }, null, -1);
-const _hoisted_3$2 = [
-  _hoisted_2$2
-];
-function render$1(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4, _hoisted_3$2);
-}
-const InsideCopy = { name: "copy", render: render$1 };
-const _hoisted_1$3 = {
-  xmlns: "http://www.w3.org/2000/svg",
-  class: "icon",
-  style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
-  viewBox: "0 0 1024 1024"
-};
-const _hoisted_2$1 = /* @__PURE__ */ createElementVNode("path", {
-  fill: "#5A626A",
-  d: "M439.264 208a16 16 0 0 0-16 16v67.968a239.744 239.744 0 0 0-46.496 26.896l-58.912-34A16 16 0 0 0 296 290.72l-80 138.56a16 16 0 0 0 5.856 21.856l58.896 34a242.624 242.624 0 0 0 0 53.728l-58.88 34a16 16 0 0 0-6.72 20.176l.848 1.68 80 138.56a16 16 0 0 0 21.856 5.856l58.912-34a239.744 239.744 0 0 0 46.496 26.88V800a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-67.968a239.744 239.744 0 0 0 46.512-26.896l58.912 34a16 16 0 0 0 21.856-5.856l80-138.56a16 16 0 0 0-4.288-20.832l-1.568-1.024-58.896-34a242.624 242.624 0 0 0 0-53.728l58.88-34a16 16 0 0 0 6.72-20.176l-.848-1.68-80-138.56a16 16 0 0 0-21.856-5.856l-58.912 34a239.744 239.744 0 0 0-46.496-26.88V224a16 16 0 0 0-16-16h-160zm32 48h96v67.376l28.8 12.576a192.21 192.21 0 0 1 37.184 21.52l25.28 18.688 58.448-33.728 48 83.136-58.368 33.68 3.472 31.2a194.624 194.624 0 0 1 0 43.104l-3.472 31.2 58.368 33.68-48 83.136-58.432-33.728-25.296 18.688a192.21 192.21 0 0 1-37.184 21.52l-28.8 12.576V768h-96v-67.376l-28.784-12.576a192.21 192.21 0 0 1-37.184-21.52l-25.28-18.688-58.448 33.728-48-83.136 58.368-33.68-3.472-31.2a194.624 194.624 0 0 1 0-43.104l3.472-31.2-58.368-33.68 48-83.136L380 376.16l25.296-18.688a191.744 191.744 0 0 1 37.184-21.52l28.8-12.576V256zm47.28 144a112 112 0 1 0 0 224 112 112 0 0 0 0-224zm0 48a64 64 0 1 1 0 128 64 64 0 0 1 0-128z"
-}, null, -1);
-const _hoisted_3$1 = [
-  _hoisted_2$1
-];
-function render(_ctx, _cache) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3, _hoisted_3$1);
-}
-const insideSettingOutlined = { name: "SettingOutlined", render };
-const xIcon$1 = "";
-const insideIcons = {
-  InsideDeleteOutlined,
-  InsideExclamationCircleOutlined,
-  InsideLoadingOutlined,
-  InsideSaveOutlined,
-  InsideSearchOutlined,
-  InsideSyncOutlined,
-  InsideUploadOutlined,
-  Insidetips,
-  InsideEmpty,
-  InsideCopy,
-  insideSettingOutlined
-};
-const xIcon = defineComponent(markRaw({
-  name: "xIcon",
-  props: ["icon"],
-  data() {
-    const id = "lazy-svg_" + this._.uid;
-    return {
-      id,
-      svgIcon: null
-    };
-  },
-  computed: {
-    baseAttrs() {
-      return {
-        id: this.id,
-        role: "img",
-        ariaLabel: this.icon,
-        class: "xIcon anticon"
-      };
-    },
-    iconKey() {
-      const _iconKey = xU.camelCase(this.getIconPath()).replace(/\s/, "");
-      return _iconKey;
-    }
-  },
-  methods: {
-    getIconPath() {
-      if (!State_UI.assetsSvgPath) {
-        debugger;
-      }
-      const iconPath = `${State_UI.assetsSvgPath}/${this.icon}.svg`;
-      return iconPath;
-    },
-    async setIcon() {
-      if (!this.icon)
-        return;
-      try {
-        let SvgIconAny = await (async () => {
-          let _SvgIconAny = insideIcons[this.icon];
-          if (_SvgIconAny) {
-            xU(this.icon);
-            return _SvgIconAny;
-          }
-          if (!State_UI.isDev) {
-            _SvgIconAny = await iStorage(this.iconKey);
-            if (_SvgIconAny) {
-              return _SvgIconAny;
-            }
-          }
-          try {
-            _SvgIconAny = await xU.asyncLoadText(this.getIconPath());
-          } catch (error) {
-            console.error(error);
-          }
-          return _SvgIconAny;
-        })();
-        if (xU.isString(SvgIconAny) && SvgIconAny.length > 0) {
-          const SvgComponentByString = {
-            name: this.icon,
-            template: SvgIconAny
-          };
-          await iStorage(this.iconKey, SvgIconAny);
-          insideIcons[this.icon] = SvgComponentByString;
-          this.svgIcon = createVNode(SvgComponentByString, this.baseAttrs, null);
-        } else if ((SvgIconAny == null ? void 0 : SvgIconAny.render) || (SvgIconAny == null ? void 0 : SvgIconAny.template)) {
-          this.svgIcon = createVNode(SvgIconAny, this.baseAttrs, null);
-        } else {
-          console.error("component xIcon miss svg: " + this.icon);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  },
-  render() {
-    if (this.svgIcon) {
-      return this.svgIcon;
-    }
-    return createVNode(InsideLoadingOutlined, this.baseAttrs, null);
-  },
-  watch: {
-    icon: {
-      immediate: true,
-      handler() {
-        this.setIcon();
-      }
-    }
-  }
-}));
 function _isSlot$1(s) {
   return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !isVNode(s);
 }
@@ -2015,12 +1601,12 @@ function defColActionsBtnlist(options) {
       },
       overlay: () => {
         let _slot;
-        return createVNode(Fragment, null, [createVNode(resolveComponent("aMenu"), null, _isSlot$1(_slot = xU.map(more, (btn) => {
+        return createVNode(Fragment, null, [createVNode(resolveComponent("elMenu"), null, _isSlot$1(_slot = xU.map(more, (btn) => {
           const configs = xU.merge({
             type: "link",
             size: "small"
           }, btn);
-          return createVNode(resolveComponent("aMenuItem"), {
+          return createVNode(resolveComponent("elMenuItem"), {
             "key": btn.text
           }, {
             default: () => [createVNode(resolveComponent("xButton"), {
@@ -2235,7 +1821,7 @@ const _sfc_main$4 = defineComponent({
             x: 300
           };
         })();
-        return createVNode(Table, mergeProps({
+        return createVNode(ElTable, mergeProps({
           "loading": this.configs.isLoading,
           "dataSource": this.configs.dataSource,
           "columns": this.Cpt_Columns,
@@ -2333,11 +1919,11 @@ const _sfc_main$3 = defineComponent({
   }
 });
 function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_aCheckbox = resolveComponent("aCheckbox");
+  const _component_ElCheckbox = resolveComponent("ElCheckbox");
   const _component_xIcon = resolveComponent("xIcon");
   const _component_elButton = resolveComponent("elButton");
-  const _component_aPopover = resolveComponent("aPopover");
-  return openBlock(), createBlock(_component_aPopover, {
+  const _component_ElPopover = resolveComponent("ElPopover");
+  return openBlock(), createBlock(_component_ElPopover, {
     placement: "leftTop",
     trigger: "click"
   }, {
@@ -2346,7 +1932,7 @@ function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
         return openBlock(), createElementBlock("p", {
           key: col.key
         }, [
-          createVNode(_component_aCheckbox, {
+          createVNode(_component_ElCheckbox, {
             checked: _ctx.checkedList.includes(col.key),
             onChange: ($event) => _ctx.handleChecked(col)
           }, {
@@ -2774,12 +2360,6 @@ const Input = defineComponent({
       const ComponentInstance = resolveComponent(type2);
       ComponentInstance.__v_skip = true;
       this.ComponentInstance = ComponentInstance;
-      if (type2 === "aTextarea") {
-        this.properties.autoSize = this.properties.autoSize || {
-          minRows: 4,
-          maxRows: 6
-        };
-      }
     }
   },
   watch: {
@@ -2799,16 +2379,10 @@ const Input = defineComponent({
       properties
     }) {
       if (!this.ComponentInstance) {
-        this.diffComponent("aInput");
+        this.diffComponent("ElInput");
       }
-      if (properties.isPassword) {
-        this.diffComponent("aInputPassword");
-      } else if (properties.isNumber) {
-        this.diffComponent("aInputNumber");
-      } else if (properties.isTextarea) {
-        this.diffComponent("aTextarea");
-      } else if (properties.isSearch) {
-        this.diffComponent("aInputSearch");
+      if (properties.isNumber) {
+        this.diffComponent("ElInputNumber");
       }
       return this.ComponentInstance;
     }
@@ -2826,10 +2400,17 @@ const Input = defineComponent({
         "value": properties.value
       }, null);
     }
+    if (properties.isTextarea) {
+      properties.type = "textarea";
+      properties.autosize = properties.autoSize || {
+        minRows: 4,
+        maxRows: 6
+      };
+    }
     return createVNode(component, mergeProps({
-      "value": this._modelValue,
-      "onUpdate:value": ($event) => this._modelValue = $event
-    }, xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), xU.omit(listeners, ["onUpdate:value"])), slots);
+      "modelValue": this._modelValue,
+      "onUpdate:modelValue": ($event) => this._modelValue = $event
+    }, xU.omit(properties, ["value", "isTextarea", ...propsWillDeleteFromConfigs]), xU.omit(listeners, ["onUpdate:value"])), slots);
   }
 });
 const DatePicker = ({
@@ -2859,22 +2440,9 @@ const DatePicker = ({
       return value2;
     }
   }
-  if (properties.isRange) {
-    let value2;
-    if (xU.isArray(properties.value)) {
-      value2 = [checkOneValue(properties.value[0]), checkOneValue(properties.value[1])];
-    } else {
-      value2 = [];
-    }
-    return createVNode(RangePicker$1, mergeProps(properties, listeners, {
-      "value": value2,
-      "locale": Cpt_UI_locale.value.DatePicker
-    }), slots);
-  }
   const value = checkOneValue(properties.value);
-  return createVNode(DatePicker$3, mergeProps(properties, listeners, {
-    "value": value,
-    "locale": Cpt_UI_locale.value.DatePicker
+  return createVNode(ElDatePicker, mergeProps(properties, listeners, {
+    "value": value
   }), slots);
 };
 const RangePicker = ({
@@ -2903,9 +2471,9 @@ const Checkbox = defineComponent({
   },
   render(vm) {
     const _properties = xU.omit(this.properties, [...this.propsWillDeleteFromConfigs]);
-    return createVNode(resolveComponent("aCheckbox"), mergeProps({
-      "checked": this.checked,
-      "onUpdate:checked": ($event) => this.checked = $event
+    return createVNode(resolveComponent("ElCheckbox"), mergeProps({
+      "modelValue": this.checked,
+      "onUpdate:modelValue": ($event) => this.checked = $event
     }, this.listeners, _properties), this.slots);
   }
 });
@@ -2945,20 +2513,23 @@ const Select = defineComponent({
       }, null);
     }
     const _property = xU.omit(properties, [...propsWillDeleteFromConfigs, "options", "renderOptions"]);
+    xU(_property);
     const renderOptions = () => {
       if (properties.renderOptions) {
         return properties.renderOptions();
       } else {
         return xU.map(properties.options, (option) => {
-          return createVNode(resolveComponent("aSelectOption"), {
-            "value": option.value
-          }, {
-            default: () => [option.label]
-          });
+          return createVNode(resolveComponent("ElOption"), {
+            "value": option.value,
+            "label": option.label
+          }, null);
         });
       }
     };
-    return createVNode(resolveComponent("aSelect"), mergeProps(listeners, _property), {
+    return createVNode(resolveComponent("ElSelect"), mergeProps({
+      "modelValue": this._modelValue,
+      "onUpdate:modelValue": ($event) => this._modelValue = $event
+    }, _property, listeners), {
       default: renderOptions
     });
   }
@@ -3001,7 +2572,7 @@ const CheckboxGroup = ({
   slots,
   listeners
 }) => {
-  return createVNode(resolveComponent("aCheckboxGroup"), mergeProps(properties, listeners), slots);
+  return createVNode(resolveComponent("ElCheckboxGroup"), mergeProps(properties, listeners), slots);
 };
 const xSwitch = defineComponent({
   props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
@@ -3035,12 +2606,10 @@ const xSwitch = defineComponent({
     } = vm;
     return createVNode("div", {
       "class": "x-item_switch"
-    }, [createVNode(resolveComponent("aSwitch"), mergeProps(xU.omit(listeners, ["onUpdate:value"]), xU.omit(properties, ["value", ...propsWillDeleteFromConfigs]), {
-      "checked": properties.value,
-      "onClick": () => {
-        listeners["onUpdate:value"](!properties.value);
-      }
-    }), null)]);
+    }, [createVNode(resolveComponent("ElSwitch"), mergeProps({
+      "modelValue": this._modelValue,
+      "onUpdate:modelValue": ($event) => this._modelValue = $event
+    }, xU.omit(listeners, ["onUpdate:value"]), xU.omit(properties, ["value", ...propsWillDeleteFromConfigs])), null)]);
   }
 });
 const itemRenders = {
@@ -3095,26 +2664,26 @@ async function validateForm(configsForm, valuesCollection) {
       value: valuesCollection && valuesCollection[prop] || configs.value,
       xItemConfigs: configs
     });
-    return new Promise((resolve) => {
+    return new Promise((resolve2) => {
       try {
         (() => {
           const isFalse = !configs.isShow;
           if (isFalse) {
-            return resolve("");
+            return resolve2("");
           }
           const isResFalse = xU.isFunction(configs.isShow) && !configs.isShow();
           if (isResFalse) {
-            return resolve("");
+            return resolve2("");
           }
         })();
         if (configs.validate) {
           configs.validate({
             eventType: EVENT_TYPE.validateForm,
             value: valueNeedVarify,
-            resolve
+            resolve: resolve2
           });
         } else {
-          resolve("");
+          resolve2("");
         }
       } catch (error) {
         console.error(error);
@@ -3135,7 +2704,7 @@ const checkXItem = async ({
   fnCheckedCallback,
   value,
   FormItemId,
-  resolve
+  resolve: resolve2
 }) => {
   const valueNeedVarify = getValueNeedVarify({
     value,
@@ -3211,8 +2780,8 @@ const checkXItem = async ({
   } catch (error) {
     console.error(error);
   } finally {
-    if (xU.isFunction(resolve)) {
-      resolve(result);
+    if (xU.isFunction(resolve2)) {
+      resolve2(result);
     }
     xItemConfigs.validate.triggerEventsObj = {};
     return result;
@@ -3415,7 +2984,7 @@ const xItem = defineComponent({
     itemWrapperClass() {
       return [
         this.configs.itemWrapperClass,
-        "x-form-item x-form-item-with-help x-item flex",
+        "x-item-wrapper flex middle",
         this.itemTips.type === TIPS_TYPE.error ? "x-form-item-has-error" : ""
       ].join(" ");
     },
@@ -3633,7 +3202,7 @@ const xItem = defineComponent({
         const fnConfigsValidate = ({
           eventType,
           value,
-          resolve
+          resolve: resolve2
         }) => {
           const prop = `configs.validate.triggerEventsObj.${eventType}`;
           MutatingProps$1(this, prop, true);
@@ -3642,7 +3211,7 @@ const xItem = defineComponent({
             xItemConfigs: this.configs,
             value,
             fnCheckedCallback,
-            resolve
+            resolve: resolve2
           });
         };
         MutatingProps$1(this, "configs.validate", fnConfigsValidate);
@@ -3693,53 +3262,6 @@ const xItem = defineComponent({
       "listeners": this.listeners,
       "slots": this.itemSlots
     }, null), this.tipsVNode]), this.$slots.afterControll && this.$slots.afterControll()]);
-  }
-});
-const xGap = defineComponent({
-  name: "xGap",
-  props: ["t", "l", "r", "b", "a", "f"],
-  computed: {
-    gapClass: {
-      set() {
-      },
-      get() {
-        let basic = "x-gap";
-        if (this.f) {
-          basic += ` flex${this.f}`;
-        }
-        return basic;
-      }
-    },
-    gapStyle: {
-      set() {
-      },
-      get() {
-        const POSITION_MAP = {
-          t: "top",
-          r: "right",
-          b: "bottom",
-          l: "left"
-        };
-        const gapStyle = {};
-        if (this.a) {
-          gapStyle.margin = `${this.a}px`;
-        } else {
-          xU.map(POSITION_MAP, (prop, key) => {
-            const value = this[key];
-            if (value) {
-              gapStyle[`margin-${prop}`] = `${value}px`;
-            }
-          });
-        }
-        return gapStyle;
-      }
-    }
-  },
-  render(h2) {
-    return createVNode("div", {
-      "style": this.gapStyle,
-      "class": this.gapClass
-    }, null);
   }
 });
 const xVirTableTh = defineComponent({
@@ -4187,13 +3709,13 @@ const xVirTableBody = defineComponent({
         const uiPopoverConfigs = {
           content: isDisabled
         };
-        vDomChecked = withDirectives(createVNode(resolveComponent("aCheckbox"), {
+        vDomChecked = withDirectives(createVNode(resolveComponent("ElCheckbox"), {
           "checked": isSelected,
           "onChange": handleChange,
           "disabled": true
         }, null), [[resolveDirective("uiPopover"), uiPopoverConfigs]]);
       } else {
-        vDomChecked = createVNode(resolveComponent("aCheckbox"), {
+        vDomChecked = createVNode(resolveComponent("ElCheckbox"), {
           "checked": isSelected,
           "onChange": handleChange,
           "disabled": isDisabled
@@ -4445,7 +3967,7 @@ const xVirTable = defineComponent({
       if (!this.selectedType) {
         return null;
       }
-      let vDomTheadSelect = createVNode(resolveComponent("aCheckbox"), {
+      let vDomTheadSelect = createVNode(resolveComponent("ElCheckbox"), {
         "checked": this.selectedAll,
         "indeterminate": this.selectedIndeterminate,
         "onChange": this.handleSelectedChangeTh
@@ -4982,7 +4504,7 @@ const LayerUtils = {
     if (!layerKey) {
       return Promise.reject();
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve2, reject2) => {
       try {
         let removeLayerDomFromHtml = function() {
           if (type2 === "dialog" && $eleLayer.attr("data-content-type") === "object") {
@@ -5024,11 +4546,11 @@ const LayerUtils = {
         }
         setTimeout(function() {
           removeLayerDomFromHtml();
-          resolve(true);
+          resolve2(true);
         }, 200);
       } catch (error) {
         console.error(error);
-        reject(false);
+        reject2(false);
       }
     });
   },
@@ -5870,7 +5392,13 @@ const xDialogFooter = defineComponent({
     },
     vDomContent() {
       if (this.$slots.default) {
-        return this.$slots.default();
+        try {
+          const vDom = this.$slots.default();
+          vDom[0].children.pop();
+          return vDom;
+        } catch (error) {
+          return this.$slots.default();
+        }
       } else {
         return createVNode(Fragment, null, [this.vDomCancel, this.vDomOk]);
       }
@@ -5878,7 +5406,7 @@ const xDialogFooter = defineComponent({
   },
   render() {
     return createVNode("div", {
-      "class": "flex middle end x-modal-footer"
+      "class": "flex middle end padding20"
     }, [this.vDomContent]);
   }
 });
@@ -5887,13 +5415,13 @@ const installUIDialogComponent = (UI2, {
   dependState
 }, app) => {
   app.component("xDialogFooter", xDialogFooter);
-  UI2.dialog.component = async (dialogOptions) => new Promise((resolve, reject) => {
+  UI2.dialog.component = async (dialogOptions) => new Promise((resolve2) => {
     const {
       component: BussinessComponent,
       title,
       area
     } = dialogOptions;
-    const id = `xDialog_${Date.now()}`;
+    const id = xU.genId("xDialog");
     let $container = $$1("<div/>", {
       id
     });
@@ -5962,7 +5490,7 @@ const installUIDialogComponent = (UI2, {
                   $$1(`#layui-layer-shade${_layerKey}`).css("z-index", 1);
                 }, 6);
               }
-              resolve(this.dialogOptions);
+              resolve2(this.dialogOptions);
             },
             data() {
               return {
@@ -6216,7 +5744,7 @@ $$1(document).on("mouseleave.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function
   closeTips(followId);
 });
 function installLoading(app, options = {}) {
-  app.directive("loading", {
+  app.directive("xloading", {
     updated(el, binding) {
       if (binding.value) {
         $$1(el).addClass("x-loading");
@@ -6349,7 +5877,7 @@ const useModel = (type2) => {
     title = "",
     content = ""
   }) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve2, reject2) => {
       title = ((isDefault) => {
         if (isDefault) {
           const title_map = {
@@ -6363,23 +5891,17 @@ const useModel = (type2) => {
           return title;
         }
       })(!title);
-      Modal[type2]({
-        title,
+      debugger;
+      ElMessageBox[type2](content, title, {
         icon: createVNode("link", {
           "rel": "icon",
           "type": "image/svg+xml",
           "href": "/ExclamationCircleOutlined.svg"
         }, null),
-        content,
-        onOk() {
-          resolve("ok");
-        },
-        onCancel() {
-          reject();
-        },
-        okText: State_UI.$t("\u786E\u5B9A").label,
+        confirmButtonText: State_UI.$t("\u786E\u5B9A").label,
+        cancelButtonText: State_UI.$t("\u53D6\u6D88").label,
         class: "test"
-      });
+      }).then(resolve2).catch(reject2);
     });
   };
 };
@@ -6406,10 +5928,16 @@ LayerUtils.loading = function(indexDelete) {
   }
 };
 const UI = {
-  confirm(options) {
-    options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
-    options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
-    Modal.confirm(options);
+  confirm({
+    title,
+    content,
+    okText,
+    cancelText
+  }) {
+    ElMessageBox.confirm(content, title, {
+      confirmButtonText: okText || State_UI.$t("\u786E\u5B9A").label,
+      cancelButtonText: cancelText || State_UI.$t("\u53D6\u6D88").label
+    }).then(resolve).catch(reject);
   },
   dialog: {
     component: async (options) => null,
@@ -6417,27 +5945,17 @@ const UI = {
     info: useModel("info"),
     error: useModel("error"),
     warning: useModel("warning"),
-    confirm: (options) => {
-      return new Promise(async (resolve, reject) => {
-        options.okText = options.okText || State_UI.$t("\u786E\u5B9A").label;
-        options.cancelText = options.cancelText || State_UI.$t("\u53D6\u6D88").label;
-        if (options.onOk) {
-          const onOk = options.onOk;
-          options.onOk = () => {
-            return onOk(resolve, reject);
-          };
-        } else {
-          options.onOk = () => resolve("ok");
-        }
-        if (options.onCancel) {
-          const onCancel = options.onCancel;
-          options.onCancel = () => {
-            onCancel(resolve, reject);
-          };
-        } else {
-          options.onCancel = () => reject();
-        }
-        Modal.confirm(options);
+    confirm: ({
+      title,
+      content,
+      okText,
+      cancelText
+    }) => {
+      return new Promise(async (resolve2, reject2) => {
+        ElMessageBox.confirm(content, title, {
+          confirmButtonText: okText || State_UI.$t("\u786E\u5B9A").label,
+          cancelButtonText: cancelText || State_UI.$t("\u53D6\u6D88").label
+        }).then(resolve2).catch(reject2);
       });
     },
     delete({
@@ -6446,8 +5964,8 @@ const UI = {
     } = {}) {
       title = title || State_UI.$t("\u5220\u9664").label;
       content = content || State_UI.$t("\u5220\u9664\u786E\u8BA4\u63D0\u793A").label;
-      return new Promise((resolve, reject) => {
-        Modal.confirm({
+      return new Promise((resolve2, reject2) => {
+        ElMessageBox.confirm({
           title,
           icon: createVNode(resolveComponent("ExclamationCircleOutlined"), {
             "style": "color:red"
@@ -6457,17 +5975,17 @@ const UI = {
           okText: State_UI.$t("\u786E\u5B9A").label,
           cancelText: State_UI.$t("\u53D6\u6D88").label,
           onOk() {
-            resolve("ok");
+            resolve2("ok");
           },
           onCancel() {
-            reject();
+            reject2();
           }
         });
       });
     }
   },
-  message,
-  notification: new Proxy(notification, {
+  message: ElMessage,
+  notification: new Proxy(ElNotification, {
     get(target, p, receiver) {
       const m = target[p];
       return new Proxy(m, {
@@ -6925,12 +6443,12 @@ var clipboardToIE11Formatting = {
   "default": "Text"
 };
 var defaultMessage = "Copy to clipboard: #{key}, Enter";
-function format(message2) {
+function format(message) {
   var copyKey = (/mac os x/i.test(navigator.userAgent) ? "\u2318" : "Ctrl") + "+C";
-  return message2.replace(/#{\s*key\s*}/g, copyKey);
+  return message.replace(/#{\s*key\s*}/g, copyKey);
 }
 function copy(text, options) {
-  var debug, message2, reselectPrevious, range, selection, mark, success = false;
+  var debug, message, reselectPrevious, range, selection, mark, success = false;
   if (!options) {
     options = {};
   }
@@ -6989,8 +6507,8 @@ function copy(text, options) {
     } catch (err2) {
       debug && console.error("unable to copy using clipboardData: ", err2);
       debug && console.error("falling back to prompt");
-      message2 = format("message" in options ? options.message : defaultMessage);
-      window.prompt(message2, text);
+      message = format("message" in options ? options.message : defaultMessage);
+      window.prompt(message, text);
     }
   } finally {
     if (selection) {
@@ -7080,22 +6598,22 @@ if (State_UI.isDev) {
   window.dayjs = dayjs;
   window.moment = dayjs;
   window.jquery = $$1;
-  window._ = lodash;
+  window._ = xU;
 }
 const compositionAPI = {
   usefnObserveDomResize,
   useScopeStyle
 };
 const componentMyUI = {
+  xIcon,
   xButton,
+  xGap,
   xRender,
   xItem,
   xForm,
   xButtonCountDown,
-  xGap,
   xCharts,
   xView,
-  xIcon,
   xDataGrid: _sfc_main$4,
   xDataGridToolbar,
   xColFilter,
@@ -7124,11 +6642,11 @@ const VentoseUIWithInstall = {
       }
       app.component(component.name || name, component);
     });
-    app.use(Antd);
+    app.use(ElementPlus);
   }
 };
 export {
-  default2 as $,
+  default4 as $,
   $t$1 as $t,
   AllWasWell,
   Cpt_UI_locale,
@@ -7144,7 +6662,7 @@ export {
   compileVNode,
   components,
   compositionAPI,
-  default3 as dayjs,
+  default2 as dayjs,
   defCol,
   defColActions,
   defColActionsBtnlist,
@@ -7156,7 +6674,7 @@ export {
   getPaginationPageSize,
   iStorage,
   lStorage,
-  default4 as moment,
+  default3 as moment,
   newReactiveState,
   pickValueFrom,
   resetValueOf,
