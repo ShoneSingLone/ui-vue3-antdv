@@ -224,7 +224,7 @@ export const xItem = defineComponent({
 			return [
 				this.configs.itemWrapperClass,
 				/*flex 一般与从简在同一行*/
-				"x-form-item-wrapper flex middle",
+				"x-item-wrapper flex middle",
 				this.itemTips.type === TIPS_TYPE.error ? "x-form-item-has-error" : ""
 			].join(" ");
 		},

@@ -30,9 +30,7 @@ export default defineComponent({
 
 <style lang="scss">
 [id^="xView"] {
-
 	.xView-body {
-		
 	}
 }
 </style>

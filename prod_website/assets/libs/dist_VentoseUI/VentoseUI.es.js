@@ -680,7 +680,7 @@ const _sfc_main$8 = defineComponent({
       }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
     },
     styleContent() {
-      return [`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`, `#${this.xFormId} { ${this.formStyleText} }`, `#${this.xFormId} div.ant-form-item-label { ${this.labelStyleText} }`].join("\n");
+      return [`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`, `#${this.xFormId} { ${this.formStyleText} }`, `#${this.xFormId} div.x-form-item-label { ${this.labelStyleText} }`].join("\n");
     }
   },
   mounted() {
@@ -1426,7 +1426,7 @@ const xButton = defineComponent({
     if (this.title) {
       _properties.title = this.title;
     }
-    return createVNode(resolveComponent("aButton"), mergeProps({
+    return createVNode(resolveComponent("elButton"), mergeProps({
       "class": "x-button antdv-button",
       "loading": this.loading,
       "disabled": !!this.disabled,
@@ -1755,9 +1755,9 @@ const Insidetips = { name: "tips", render: render$3 };
 const _hoisted_1$5 = {
   width: "64",
   height: "41",
-  class: "ant-empty-img-simple"
+  class: "x-empty-img-simple"
 };
-const _hoisted_2$3 = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="ant-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="ant-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="ant-empty-img-simple-path"></path></g></g>', 1);
+const _hoisted_2$3 = /* @__PURE__ */ createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="x-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="x-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="x-empty-img-simple-path"></path></g></g>', 1);
 const _hoisted_3$3 = [
   _hoisted_2$3
 ];
@@ -2007,7 +2007,7 @@ function defColActionsBtnlist(options) {
     }
     return createVNode(Fragment, null, [createVNode(resolveComponent("aDropdown"), null, {
       default: () => {
-        return createVNode(resolveComponent("aButton"), {
+        return createVNode(resolveComponent("elButton"), {
           "type": "link"
         }, {
           default: () => [State_UI.$t("\u66F4\u591A").label]
@@ -2205,14 +2205,14 @@ const _sfc_main$4 = defineComponent({
       } else {
         const slots = {
           emptyText: () => createVNode("div", {
-            "class": "ant-empty ant-empty-normal"
+            "class": "x-empty x-empty-normal"
           }, [createVNode("div", {
-            "class": "ant-empty-image"
+            "class": "x-empty-image"
           }, [createVNode(resolveComponent("xIcon"), {
             "icon": "InsideEmpty",
             "style": "width:64px"
           }, null)]), createVNode("p", {
-            "class": "ant-empty-description"
+            "class": "x-empty-description"
           }, [this.Cpt_UI_locale.Empty.description])]),
           bodyCell: (args) => {
             const {
@@ -2335,7 +2335,7 @@ const _sfc_main$3 = defineComponent({
 function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_aCheckbox = resolveComponent("aCheckbox");
   const _component_xIcon = resolveComponent("xIcon");
-  const _component_aButton = resolveComponent("aButton");
+  const _component_elButton = resolveComponent("elButton");
   const _component_aPopover = resolveComponent("aPopover");
   return openBlock(), createBlock(_component_aPopover, {
     placement: "leftTop",
@@ -2359,7 +2359,7 @@ function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
       }), 128))
     ]),
     default: withCtx(() => [
-      createVNode(_component_aButton, null, {
+      createVNode(_component_elButton, null, {
         icon: withCtx(() => [
           createVNode(_component_xIcon, {
             icon: "insideSettingOutlined",
@@ -2745,7 +2745,7 @@ const ReadonlyItem = defineComponent({
   props: ["value"],
   render() {
     return withDirectives(createVNode("div", {
-      "class": "ant-input cursor-not-allowed xItem_readonly ellipsis"
+      "class": "x-input cursor-not-allowed xItem_readonly ellipsis"
     }, [this.value, createVNode("span", {
       "style": "opacity:0"
     }, [createTextVNode(".")])]), [[resolveDirective("uiPopover"), {
@@ -3222,7 +3222,7 @@ const {
   MutatingProps: MutatingProps$1
 } = xU;
 const domClass = {
-  tipsError: "ant-form-item-explain ant-form-item-explain-error"
+  tipsError: "x-form-item-explain x-form-item-explain-error"
 };
 const devHelper = {};
 const WILL_DELETE = [
@@ -3415,8 +3415,8 @@ const xItem = defineComponent({
     itemWrapperClass() {
       return [
         this.configs.itemWrapperClass,
-        "ant-form-item ant-form-item-with-help x-item flex",
-        this.itemTips.type === TIPS_TYPE.error ? "ant-form-item-has-error" : ""
+        "x-form-item x-form-item-with-help x-item flex",
+        this.itemTips.type === TIPS_TYPE.error ? "x-form-item-has-error" : ""
       ].join(" ");
     },
     tipsVNode() {
@@ -3444,7 +3444,7 @@ const xItem = defineComponent({
       return null;
     },
     labelVNode() {
-      const classString = this.isRequired ? "ant-form-item-required" : "";
+      const classString = this.isRequired ? "x-form-item-required" : "";
       if (this.configs.labelVNodeRender) {
         return this.configs.labelVNodeRender(this.configs, classString);
       }
@@ -3464,7 +3464,7 @@ const xItem = defineComponent({
         return null;
       }
       return createVNode("div", {
-        "class": "ant-form-item-label"
+        "class": "x-form-item-label"
       }, [createVNode("label", {
         "for": this.configs.prop,
         "class": classString
@@ -3678,7 +3678,7 @@ const xItem = defineComponent({
       "id": FormItemId,
       "class": this.itemWrapperClass
     }, [this.labelVNode, createVNode("div", {
-      "class": "ant-form-item-control",
+      "class": "x-form-item-control",
       "data-type": itemTypeName
     }, [createVNode(CurrentXItem, {
       "id": `CurrentXItem_${FormItemId}`,
@@ -5820,7 +5820,7 @@ $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
   $MoveMask.hide();
 });
 const EcsPressHandler = xU.debounce(async function(event2, dialogOptions) {
-  const $antModal = $$1(".ant-modal-root");
+  const $antModal = $$1(".x-modal-root");
   if ($antModal.length > 0) {
     return;
   }
@@ -5878,7 +5878,7 @@ const xDialogFooter = defineComponent({
   },
   render() {
     return createVNode("div", {
-      "class": "flex middle end ant-modal-footer"
+      "class": "flex middle end x-modal-footer"
     }, [this.vDomContent]);
   }
 });
@@ -6555,7 +6555,7 @@ const VNodeCollection = {
       label
     } = configs;
     return createVNode("div", {
-      "class": "ant-form-item-label"
+      "class": "x-form-item-label"
     }, [createVNode("label", {
       "for": prop,
       "class": className
@@ -6770,10 +6770,10 @@ const InfoCardCol = defineComponent({
       return null;
     }
     return createVNode(Fragment, null, [createVNode("div", {
-      "class": "ant-descriptions-item-label",
+      "class": "x-descriptions-item-label",
       "style": this.styleLabel
     }, [this.vDomLabel]), createVNode("div", {
-      "class": "ant-descriptions-item-content flex1"
+      "class": "x-descriptions-item-content flex1"
     }, [this.vDomContent])]);
   }
 });
@@ -6804,7 +6804,7 @@ const InfoCardRow = defineComponent({
   },
   render() {
     return createVNode("div", {
-      "class": "InfoCardRow ant-descriptions-row flex middle",
+      "class": "InfoCardRow x-descriptions-row flex middle",
       "style": this.styleRow
     }, [this.vDomCol]);
   }
@@ -6817,7 +6817,7 @@ const xInfoCard = defineComponent({
         "min-width": "120px",
         "text-align": "right"
       }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
-      const styleContent = `#${this.id} .ant-descriptions-item-label {${styleString}}`;
+      const styleContent = `#${this.id} .x-descriptions-item-label {${styleString}}`;
       if (!this.$styleEle) {
         const $form = $$1(`#${this.id}`);
         const $style = $$1("<style/>", {
@@ -6859,15 +6859,15 @@ const xInfoCard = defineComponent({
         return null;
       }
       return createVNode("div", {
-        "class": "ant-descriptions-header"
+        "class": "x-descriptions-header"
       }, [createVNode("div", {
-        "class": "ant-descriptions-title"
+        "class": "x-descriptions-title"
       }, [this.title])]);
     },
     vDomDescriptions() {
       if (this.rowArray) {
         return createVNode("div", {
-          "class": "ant-descriptions-view"
+          "class": "x-descriptions-view"
         }, [xU.map(this.rowArray, (row) => {
           return createVNode(InfoCardRow, {
             "row": row
@@ -6882,7 +6882,7 @@ const xInfoCard = defineComponent({
   },
   render() {
     return createVNode("div", {
-      "class": "ant-descriptions ant-descriptions-middle ant-descriptions-bordered x-infomation-card",
+      "class": "x-descriptions x-descriptions-middle x-descriptions-bordered x-infomation-card",
       "id": this.id
     }, [this.vDomTitle, this.vDomDescriptions]);
   }
@@ -7048,7 +7048,7 @@ const xLinkCopy = defineComponent({
     copyText
   }) {
     return createVNode("div", {
-      "class": "xLinkCopy ant-btn ant-btn-link flex"
+      "class": "xLinkCopy x-btn x-btn-link flex"
     }, [withDirectives(createVNode("div", {
       "class": "flex1 ellipsis mr4",
       "onClick": handleClickText,

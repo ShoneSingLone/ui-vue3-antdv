@@ -3,21 +3,32 @@
 
 import { defineComponent } from "vue";
 import xMenuTree from "../entry/lib/xMenuTree.vue";
-import { xU, defItem, defCol, defXVirTableConfigs, compileVNode, dateFormat } from "@ventose/ui";
-import dayjs from "dayjs"
+import {
+	xU,
+	defItem,
+	defCol,
+	defXVirTableConfigs,
+	compileVNode,
+	dateFormat
+} from "@ventose/ui";
+import dayjs from "dayjs";
 
 export default defineComponent({
 	components: { xMenuTree },
 	setup() {
 		const { scopeCss } = xU.useScopeCss();
-		return { scopeCss }
+		return { scopeCss };
 	},
 	mounted() {
 		this.scopeCss(({ selector }) => `${selector} *{ outline:1px solid red; }`);
 		setTimeout(() => {
-			this.scopeCss(({ selector }) => `${selector} *{ outline:1px solid green; }`);
+			this.scopeCss(
+				({ selector }) => `${selector} *{ outline:1px solid green; }`
+			);
 			setTimeout(() => {
-				this.scopeCss(({ selector }) => `${selector} *{ outline:1px solid blue; }`);
+				this.scopeCss(
+					({ selector }) => `${selector} *{ outline:1px solid blue; }`
+				);
 				setTimeout(() => {
 					this.scopeCss(({ selector }) => ``);
 				}, 3000);
@@ -117,7 +128,7 @@ export default defineComponent({
 
 <template>
 	<elButton @click="add">add</elButton>
-	<div style="width:600px;height:600px;border:1px solid black"> </div>
+	<div style="width: 600px; height: 600px; border: 1px solid black"></div>
 	<!-- {{ JSON.stringify(date.value) }} -->
 	<xItem :configs="date" />
 	<!-- <div class="flex horizon">

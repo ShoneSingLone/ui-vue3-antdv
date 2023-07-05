@@ -78,7 +78,7 @@ export default defineComponent({
 						this.helper.onResize({
 							instance: this.myChart,
 							chartVM: this
-						})
+						});
 					}
 				}
 			});

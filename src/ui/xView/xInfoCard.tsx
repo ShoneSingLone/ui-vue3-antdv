@@ -29,9 +29,7 @@ export const InfoCardCol = defineComponent({
 				<div class="x-descriptions-item-label" style={this.styleLabel}>
 					{this.vDomLabel}
 				</div>
-				<div class="x-descriptions-item-content flex1">
-					{this.vDomContent}
-				</div>
+				<div class="x-descriptions-item-content flex1">{this.vDomContent}</div>
 			</>
 		);
 	}

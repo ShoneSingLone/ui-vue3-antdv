@@ -2,7 +2,7 @@
 import $ from "jquery";
 //@ts-nocheck
 import AppLayout from "./components/AppLayout.vue";
-$("#app").removeClass("x-loading")
+$("#app").removeClass("x-loading");
 </script>
 
 <template>

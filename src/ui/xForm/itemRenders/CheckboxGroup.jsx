@@ -7,5 +7,5 @@
  */
 export default ({ properties, slots, listeners }) => {
 	/* { properties, slots, listeners, propsWillDeleteFromConfigs } */
-	return <aCheckboxGroup {...properties} {...listeners} v-slots={slots} />;
+	return <ElCheckboxGroup {...properties} {...listeners} v-slots={slots} />;
 };

@@ -300,7 +300,7 @@ export const xVirTableBody = defineComponent({
 				isDisabled = true;
 				const uiPopoverConfigs = { content: isDisabled };
 				vDomChecked = (
-					<aCheckbox
+					<ElCheckbox
 						checked={isSelected}
 						onChange={handleChange}
 						disabled={true}
@@ -309,7 +309,7 @@ export const xVirTableBody = defineComponent({
 				);
 			} else {
 				vDomChecked = (
-					<aCheckbox
+					<ElCheckbox
 						checked={isSelected}
 						onChange={handleChange}
 						disabled={isDisabled}

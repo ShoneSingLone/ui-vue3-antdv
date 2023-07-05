@@ -1,52 +1,47 @@
 <template>
-	<el-container class="layout-container-demo" style="height: 500px">
-		<el-header style="background-color: black;" class="flex start middle">
-			<el-menu>
-				<el-menu-item key="1">
-					<div @click="openStatsDialog">latest buildのlib分析报告</div>
-				</el-menu-item>
-			</el-menu>
-		</el-header>
-		<el-container>
-			<el-aside width="200px">
-				<el-scrollbar>
-					<el-menu default-active="">
-						<el-sub-menu index="sub1">
-							<template #title>
-								<span class="flex middle">
-									<xIcon icon="UserOutlined" />
-									<span class="ml4">单组件</span>
-								</span>
-							</template>
-							<el-menu-item
-								:key="menu.path"
-								:index="menu.path"
-								v-for=" menu  in  routes.filter(i => i.category == 'inset') ">
-								<RouterLink :to="menu.path">{{ menu.path }}</RouterLink>
-							</el-menu-item>
-						</el-sub-menu>
-						<el-sub-menu index="sub2">
-							<template #title>
-								<span class="flex middle">
-									<xIcon icon="UserOutlined" />
-									<span class="ml4">需要单独引用</span>
-								</span>
-							</template>
-							<el-menu-item
-								:index="menu.path"
-								:key="menu.path"
-								v-for=" menu  in  routes.filter(i => i.category == 'plugin') ">
-								<RouterLink :to="menu.path">{{ menu.path }}</RouterLink>
-							</el-menu-item>
-						</el-sub-menu>
-					</el-menu>
-				</el-scrollbar>
-			</el-aside>
-			<el-main>
+	<ElContainer class="flex vertical" style="height: 100vh">
+		<ElHeader style="background-color: black" class="flex start middle" />
+		<ElContainer class="flex1" style="height: 1px">
+			<ElAside width="200px">
+				<div class="padding10">
+					<xButton @click="openStatsDialog"> buildのlib分析报告 </xButton>
+				</div>
+				<ElMenu default-active="">
+					<ElSubMenu index="sub1">
+						<template #title>
+							<span class="flex middle">
+								<xIcon icon="UserOutlined" />
+								<span class="ml4">单组件</span>
+							</span>
+						</template>
+						<ElMenuItem
+							:key="menu.path"
+							:index="menu.path"
+							v-for="menu in routes.filter(i => i.category == 'inset')">
+							<RouterLink :to="menu.path">{{ menu.path }}</RouterLink>
+						</ElMenuItem>
+					</ElSubMenu>
+					<ElSubMenu index="sub2">
+						<template #title>
+							<span class="flex middle">
+								<xIcon icon="UserOutlined" />
+								<span class="ml4">需要单独引用</span>
+							</span>
+						</template>
+						<ElMenuItem
+							:index="menu.path"
+							:key="menu.path"
+							v-for="menu in routes.filter(i => i.category == 'plugin')">
+							<RouterLink :to="menu.path">{{ menu.path }}</RouterLink>
+						</ElMenuItem>
+					</ElSubMenu>
+				</ElMenu>
+			</ElAside>
+			<ElScrollbar class="flex1">
 				<RouterView />
-			</el-main>
-		</el-container>
-	</el-container>
+			</ElScrollbar>
+		</ElContainer>
+	</ElContainer>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
@@ -69,7 +64,7 @@ export default defineComponent({
 				type: UI.layer.IFRAME,
 				maxmin: true,
 				fullscreen: true,
-				content: ["./assets/html/stats.html", ""]
+				content: ["./assets/libs/dist_VentoseUI/VentoseUI_stats.html", ""]
 			});
 		}
 	}

@@ -50,13 +50,13 @@ export default defineComponent({
 </script>
 
 <template>
-	<aPopover placement="leftTop" trigger="click">
+	<ElPopover placement="leftTop" trigger="click">
 		<template #content>
 			<p v-for="col in Cpt_Columns" :key="col.key">
-				<aCheckbox
+				<ElCheckbox
 					:checked="checkedList.includes(col.key)"
 					@change="handleChecked(col)"
-					>{{ col.title }}</aCheckbox
+					>{{ col.title }}</ElCheckbox
 				>
 			</p>
 		</template>
@@ -65,5 +65,5 @@ export default defineComponent({
 				<xIcon icon="insideSettingOutlined" style="height: 100%; width: 100%" />
 			</template>
 		</elButton>
-	</aPopover>
+	</ElPopover>
 </template>

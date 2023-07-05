@@ -1,13 +1,13 @@
 <template>
 	<mkit md="## v-uiPopover" />
-	<aTag v-uiPopover="configsUiPopoverNormal"
-		>添加v-uiPopover 指定content就行</aTag
+	<elTag v-uiPopover="configsUiPopoverNormal"
+		>添加v-uiPopover 指定content就行</elTag
 	>
 	<xGap t="10" />
-	<aTag v-uiPopover="configsUiPopoverComponent">使用Vue组件</aTag>
+	<elTag v-uiPopover="configsUiPopoverComponent">使用Vue组件</elTag>
 	<xGap t="10" />
 	<div v-uiPopover="{ onlyEllipsis: true }">
-		<aTag>没有省略号，无tips</aTag>
+		<elTag>没有省略号，无tips</elTag>
 	</div>
 	<xGap t="10" />
 	<!-- 原理就是，对比text排一行的宽度与实际宽度 -->
@@ -15,21 +15,21 @@
 		v-uiPopover="{ onlyEllipsis: true }"
 		class="ellipsis mb10"
 		style="width: 300px">
-		<aTag>内容太长,有ellipsis,鼠标放上来有tips</aTag>
+		<elTag>内容太长,有ellipsis,鼠标放上来有tips</elTag>
 		longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglong
 	</div>
 	<xGap t="10" />
-	<aTag v-uiPopover="{ delay: 3000, content: '有些图标用不着每次都提醒' }">
+	<elTag v-uiPopover="{ delay: 3000, content: '有些图标用不着每次都提醒' }">
 		延迟3s再展示tips
-	</aTag>
+	</elTag>
 	<xGap t="10" />
-	<aTag v-uiPopover="{ trigger: 'click', content: '点击触发' }">
+	<elTag v-uiPopover="{ trigger: 'click', content: '点击触发' }">
 		trigger:click
-	</aTag>
+	</elTag>
 	<xGap t="10" />
-	<aTag v-uiPopover="configsUiPopoverRightClick">
+	<elTag v-uiPopover="configsUiPopoverRightClick">
 		trigger:rightClick 右键点击 弹窗
-	</aTag>
+	</elTag>
 </template>
 
 <script>

@@ -221,7 +221,7 @@ export const xVirTable = defineComponent({
 				return null;
 			}
 			let vDomTheadSelect = (
-				<aCheckbox
+				<ElCheckbox
 					checked={this.selectedAll}
 					indeterminate={this.selectedIndeterminate}
 					onChange={this.handleSelectedChangeTh}

@@ -6,7 +6,7 @@
     // "emitDeclarationOnly": true, // 只输出声明文件(ts 产物)
     // "declaration": true, // 自动生成声明文件
     // "declarationDir": "declaration", // 声明文件生成的目录
-    "noEmit": false,
+    "noEmit": true,
     "module": "esnext",
     "allowJs": true,
     "moduleResolution": "NodeNext",

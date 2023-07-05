@@ -18,8 +18,8 @@ export const Checkbox = defineComponent({
 			...this.propsWillDeleteFromConfigs
 		]);
 		return (
-			<aCheckbox
-				v-model:checked={this.checked}
+			<ElCheckbox
+				v-model={this.checked}
 				v-slots={this.slots}
 				{...this.listeners}
 				{..._properties}

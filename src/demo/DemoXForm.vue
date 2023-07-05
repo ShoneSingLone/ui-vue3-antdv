@@ -1,14 +1,12 @@
 <template>
 	<DemoAndCode
-		title="xItem基本用法"
+		title="基本用法"
 		path="/boundless/demo/xForm/DialogDemoXItem.sfc" />
-	<DemoAndCode
-		title="xItem特殊slot"
-		path="/boundless/demo/xForm/xItemSlot.sfc" />
+	<DemoAndCode title="slot" path="/boundless/demo/xForm/xItemSlot.sfc" />
 	<DemoAndCode
 		title="DatePicker"
 		path="/boundless/demo/xForm/xItemDatePicker.sfc" />
-	<elCard>
+	<ElCard>
 		{{ valueFromConfigs }}
 		<xButton :configs="configsValidBtn" />
 		<mkit :md="tips1" />
@@ -32,11 +30,11 @@
 			:configs="xForm.withLabelProperty"
 			class="flex1"
 			v-model="formData.inputValue" />
-	</elCard>
+	</ElCard>
 	<div class="mt10"></div>
-	<elCard>
+	<ElCard>
 		<DemoXFormWithForm :options="{ payload: { row: {} } }" />
-	</elCard>
+	</ElCard>
 </template>
 
 <script>
@@ -61,7 +59,7 @@ export default {
 		DemoXFormWithForm
 	},
 	methods: {
-		valid() { }
+		valid() {}
 	},
 	setup(props) {
 		return {

@@ -30,12 +30,10 @@ export default ({ properties, slots, listeners }) => {
 				return;
 			}
 		} catch (error) {
-
 		} finally {
 			return value;
 		}
 	}
-
 
 	const value = checkOneValue(properties.value);
 
