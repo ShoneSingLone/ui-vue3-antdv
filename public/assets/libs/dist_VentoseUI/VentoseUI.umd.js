@@ -1,1 +1,6708 @@
-var __defProp=Object.defineProperty,__defNormalProp=(e,t,i)=>t in e?__defProp(e,t,{enumerable:!0,configurable:!0,writable:!0,value:i}):e[t]=i,__publicField=(e,t,i)=>(__defNormalProp(e,"symbol"!=typeof t?t+"":t,i),i);!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("element-plus"),require("dayjs"),require("jquery"),require("vue"),require("lodash"),require("jsondiffpatch"),require("axios")):"function"==typeof define&&define.amd?define(["exports","element-plus","dayjs","jquery","vue","lodash","jsondiffpatch","axios"],t):t((e="undefined"!=typeof globalThis?globalThis:e||self).VentoseUI={},e.antd,e.dayjs,e.$,e.Vue,e._,e.jsondiffpatch,e.axios)}(this,(function(e,t,i,n,o,s,l,r){"use strict";const a=e=>e&&"object"==typeof e&&"default"in e?e:{default:e},c=a(t),d=a(i),u=a(n),p=a(s),h=a(r);function f(e){return new Promise(((t,i)=>{e.oncomplete=e.onsuccess=()=>t(e.result),e.onabort=e.onerror=()=>i(e.error)}))}let m;function g(){return m||(m=function(e,t){const i=indexedDB.open(e);i.onupgradeneeded=()=>i.result.createObjectStore(t);const n=f(i);return(e,i)=>n.then((n=>i(n.transaction(t,e).objectStore(t))))}("keyval-store","keyval")),m}function y(e=g()){return e("readwrite",(e=>(e.clear(),f(e.transaction))))}const v=new Proxy(localStorage,{set:(e,t,i)=>(p.default.isPlainObject(i)?e[t]=JSON.stringify(i):e[t]=i,!0),get(e,t){const i=e[t];try{return JSON.parse(i)}catch(n){return"undefined"!==i&&(i||!1)}}});String(window.__APP_VERSION)!==String(v.__APP_VERSION)&&(y(),v.__APP_VERSION=window.__APP_VERSION||Date.now());const C=async function(e,t){const i=window.location.hostname;let n;e=p.default.camelCase(i+e);try{_(t)?(await function(e,t,i=g()){return i("readwrite",(i=>(i.put(t,e),f(i.transaction))))}(e,String(t)),n=!0):(n=await function(e,t=g()){return t("readonly",(t=>f(t.get(e))))}(e),n||k("get",e,n))}catch(o){console.error(o)}finally{return n}};C.clear=y;const b=/^on[^a-z]/,x={},w={},V={WORDS:{INVALID_DATE:"Invalid Date",format_ymd:"YYYY-MM-DD"},useScopeCss(){const e=o.reactive({id:"",cssEleSelector:"",content:""});return o.onMounted((()=>{const t=o.getCurrentInstance();e.cssEleSelector=`scope-css_${t.uid}`,e.id=`#${e.cssEleSelector}`;let i=u.default(e.id);if(0===i.length){const n=document.createElement("style");n.id=e.cssEleSelector;const o=t.ctx.$el.__vnode?t.ctx.$el:t.ctx.$el.parentElement;u.default(o).attr(`data-style-id-${e.cssEleSelector}`,"").append(n),i=u.default(`#${e.cssEleSelector}`)}})),o.onUnmounted((()=>{const t=`data-style-id-${e.cssEleSelector}`,i=`[${t}]`;u.default(e.id).remove(),u.default(i).removeAttr(t)})),{scopeCss:function(t){const i=t({selector:`[data-style-id-${e.cssEleSelector}]`});u.default(e.id).html(i)}}},launchFullscreen(e){e.requestFullscreen&&e.requestFullscreen()},exitFullscreen(){document.exitFullscreen&&document.exitFullscreen()},hashCode(e){var t,i=0;if(0===e.length)return"0";for(t=0;t<e.length;t++)i=(i<<5)-i+e.charCodeAt(t),i|=0;return String(i)},getLeftTopFromAbsolute(e){const t=e.css("top"),i=e.css("left"),n=e=>{const t=String(e).match(/^(.*)px$/);return t&&t[1]?Number(t[1]):0};return{top:n(t),left:n(i)}},getLeftTopFromTranslate(e){const t=e.css("transform"),i=String(t).match(/^matrix\((.*)\)$/);if(!i)return{top:0,left:0};if(i&&i[1]){const[e,t,n,o,s,l]=String(i[1]).split(",").map((e=>Number(p.default.trim(e))));return{left:e+n+s,top:t+o+l}}},async asyncImportSFC(e,t){if(x[e])return x[e];const i=await V.asyncLoadText(e),n=V.VueLoader(i);return x[e]=await V.getVueComponentBySourceCode(e,n,t),x[e]},async getVueComponentBySourceCode(e,t,i){i=i||window.Vue||{},t=t.replace("export default","");const n=new Function("argVue",`const THIS_FILE_URL = (\`${e}\`);try{const fn = ${t};return fn(argVue);}catch(e){console.error(e)}`);return await n(i)},parseContent:e=>{if(e)try{return new Function(`${e} return module();`)()}catch(t){k(t)}},genId:function(e){T>I&&(T=1,S=Date.now());return`${e}_${S}_${T++}`},VueLoader:e=>{function t(e,t){var i=new RegExp("<"+t+"[^>]*>"),n=e.match(i);if(!n)return"";n=n[0];var o=e.slice(e.indexOf(n)+n.length,e.lastIndexOf("</"+t+">"));return"template"===t?o.replace(/`/g,"\\`"):o}return/TEMPLATE_PLACEHOLDER/.test(e)||(alert("SFC miss TEMPLATE_PLACEHOLDER"),console.error(e)),t(e,"script").replace(/TEMPLATE_PLACEHOLDER/,`template: \`${t(e,"template")}\``)},async asyncExecFnString(e){const t=await V.asyncLoadText(e);return V.parseContent(t)},doNothing:(...e)=>{var t;if(localStorage.isShowDevLog){const i=new Error;console.log("🚀:",null==(t=null==i?void 0:i.stack)?void 0:t.split("\n")[2].replace("    at ","")),console.log.apply(console,e)}},sleep:function(e){return new Promise((t=>setTimeout(t,e)))},isOn:e=>b.test(e),isModelListener:e=>!!(e=String(e))&&e.startsWith("onUpdate:"),isListener:e=>!!(e=String(e))&&(V.isOn(e)||V.isModelListener(e)),isArrayFill:e=>!!(Array.isArray(e)&&e.length>0),isObjectFill:e=>p.default.isPlainObject(e)&&Object.keys(e).length>0,safeFirst:(e,t)=>{t=t||(e=>V.isInput(e));const i=p.default.first(e);return!!t(i)&&i},safeToString:(e,t=!1)=>{try{return t?JSON.stringify(e,null,2):JSON.stringify(e)}catch(i){return""}},safeParse:(e,t)=>{let i=t;try{if(i=JSON.parse(e),!e)throw i=t,new Error("json parse error")}catch(n){V.doNothing(n)}return i},safeSplit:(e,t="")=>(null==e?void 0:e.split)?e.split(t):[],safeDate:e=>{if(!e)return"";let t=d.default(e);return t===V.WORDS.INVALID_DATE?"":t},isInput:_,is$Selected:e=>e&&e.jquery&&e.length>0,getObjectFirstKeyValue:(e,t)=>{if(!e)return t;const i=Object.keys(e);if(!V.isArrayFill(i))return t;const n=i[0];return V.isInput(n)&&e[n]?e[n]:t},loadCss(e){const t=`${e}`;let i=u.default("<link/>",{rel:"stylesheet",type:"text/css"});return i.appendTo(u.default("head")),i[0].href=`${t}?_t=${Date.now()}`,()=>{i.remove(),i=null}},async asyncLoadStyle(e,t){let i,{isReplace:n,id:o}=t||{isReplace:!1,id:""};o=o||p.default.camelCase(e);let s=u.default(`#${o}`);0==s.length?(s=u.default("<style/>",{id:o}),u.default("body").append(s),i=await V.asyncLoadText(e),s.html(i)):n&&(i=await V.asyncLoadText(e),s.html(i))},asyncLoadText:async function(e,t={}){if(!(t.isForceUpdate||!1)&&!pe.isDev){const t=await C(e);if(t)return t}return new Promise((async(t,i)=>{try{const{data:i}=await h.default.get(e,{headers:{"Content-Type":"text/plain"}});pe.isDev||await C(e,i),t(i)}catch(n){i(n)}}))},asyncLoadJS:async(e,t)=>new Promise((i=>{window[t]&&i(window[t]);const n=u.default("<script/>").attr("id",`asyncLoadJS_${t}`);n.appendTo(u.default("body")).on("load",(function(){i(window[t])})),n.attr("src",e)})),asyncGlobalJS:async(e,t)=>{try{if(window[e])return window[e];if(!t)return alert("asyncGlobalJS miss url "+e),{};if(w[e])return await V.ensureValueDone((()=>window[e])),window[e];const i=await V.asyncLoadText(t);return new Function(`with(window){${i}}`)(),w[e]=t,window[e]}catch(i){console.error(i)}},ensureValueDone:async e=>new Promise((async t=>{let i=async function(){const n=await e();n?(i=null,t(n)):setTimeout(i,100*i.count++)};i.count=1,i()})),genProp:e=>`k${p.default.camelCase(e)}`,dateFormat:(e,t="YYYY-MM-DD")=>{"number"==typeof e&&(e=d.default.unix(e)),1===t&&(t="YYYY-MM-DD HH:mm:ss");const i=d.default(e).format(t);return i==V.WORDS.INVALID_DATE?"--":i},keepDecimals:function(e,t){let i=Number(100*e/1024/100).toFixed(t);return"NaN"===i&&(i="-"),i},valueToLabel:function(e,t){const i=p.default.find(t,{value:e});return i?i.label:"--"},timego:function(e){let t,i,n,o,s,l;return o=parseInt((new Date).getTime()/1e3)-e,l=o>31104e3?parseInt(o/31104e3):0,s=o>2592e3?parseInt(o/2592e3):0,n=o>86400?parseInt(o/86400):0,i=o>3600?parseInt(o/3600):0,t=parseInt(o/60),l>0?l+"年前":s>0&&l<=0?s+"月前":n>0&&s<=0?n+"天前":n<=0&&i>0?i+"小时前":i<=0&&t>0?t+"分钟前":t<=0&&o>0?o<30?"刚刚":o+"秒前":"刚刚"},htmlFilter:e=>{if(!e)return;return e.replace(/<\/?.+?\/?>/g,"")||""},MutatingProps:(e,t,i=null,n=!1)=>{e=e||{},/^\./.test(t)&&(t=String(t).substring(1));const o=t.split(".");let s="",l=e;return i||p.default.isString(i)||p.default.isBoolean(i)||p.default.isNumber(i)&&!p.default.isNaN(i)?((()=>{for(;s=o.shift();){if(0===o.length)return void("never"===i&&n?delete l[s]:l[s]=i);l[s]||(l[s]={}),l=l[s]}})(),e):(()=>{for(;s=o.shift();){const e=l[s];if(!e)return l[s];if(0===o.length)return e;l=l[s]}return l})()}};let T=1,I=4e4,S=Date.now();function _(e){if(void 0===e)return!1;try{e=JSON.parse(JSON.stringify(e))}catch(t){k(e,"JSON.parse failed")}return 0===e||(!1===e||(p.default.isArray(e)?e.length>0:!!e))}const k=new Proxy((function(...e){if(pe.isDev)try{throw new Error("")}catch(t){e.unshift(String(t.stack).split("\n")[2],"\n"),console.log.apply(console,e)}}),{get:(e,t)=>V[t]?V[t]:p.default[t]?p.default[t]:e[t],set:(e,t,i)=>(V[t]=i,!0)}),N={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},D=[o.createElementVNode("path",{d:"M338.261 137.045h-9.13a9.16 9.16 0 0 0 9.13-9.159v9.16h347.45v-9.16c0 5.035 4.095 9.16 9.101 9.16h-9.102v82.26h82.262v-91.42a73.216 73.216 0 0 0-73.131-73.13H329.102a73.216 73.216 0 0 0-73.159 73.13v91.45h82.29v-82.29zm576 82.29h-804.55c-20.253 0-36.58 16.327-36.58 36.551v36.58c0 5.034 4.096 9.159 9.13 9.159h69.063l28.217 597.703a73.216 73.216 0 0 0 73.046 69.689h518.826a73.045 73.045 0 0 0 73.046-69.689l28.245-597.732h69.006a9.16 9.16 0 0 0 9.16-9.102v-36.636c0-20.196-16.356-36.551-36.58-36.551zm-151.665 667.42h-501.22l-27.648-585.159H790.3l-27.676 585.16z"},null,-1)];const O={name:"DeleteOutlined",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",N,D)}},B={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},E=[o.createElementVNode("path",{d:"M512 628c17.6 0 32-14.4 32-32V308c0-17.6-14.4-32-32-32s-32 14.4-32 32v288c0 17.6 14.4 32 32 32zm-44 76a44 44 0 1 0 88 0 44 44 0 1 0-88 0Zm44-640C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm271.5 719.5c-35.3 35.3-76.4 63-122.1 82.3-47.3 20-97.6 30.2-149.5 30.2s-102.2-10.1-149.5-30.2c-45.7-19.3-86.8-47-122.1-82.3s-63-76.4-82.3-122.1c-20-47.3-30.2-97.6-30.2-149.5s10.1-102.2 30.2-149.5c19.3-45.7 47-86.8 82.3-122.1s76.4-63 122.1-82.3c47.3-20 97.6-30.2 149.5-30.2s102.2 10.1 149.5 30.2c45.7 19.3 86.8 47 122.1 82.3s63 76.4 82.3 122.1c20 47.3 30.2 97.6 30.2 149.5s-10.1 102.2-30.2 149.5c-19.3 45.8-47 86.8-82.3 122.1z"},null,-1)];const L={name:"ExclamationCircleOutlined",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",B,E)}},F={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},P=[o.createElementVNode("path",{d:"M448 128a64 64 0 1 0 128 0 64 64 0 1 0-128 0ZM257.1 180.5a61.3 61.3 0 1 0 122.6 0 61.3 61.3 0 1 0-122.6 0ZM121.8 318.4a58.7 58.7 0 1 0 117.4 0 58.7 58.7 0 1 0-117.4 0ZM72 512a56 56 0 1 0 112 0 56 56 0 1 0-112 0Zm55.2 193.6a53.3 53.3 0 1 0 106.6 0 53.3 53.3 0 1 0-106.6 0Zm140.5 137.9a50.7 50.7 0 1 0 101.4 0 50.7 50.7 0 1 0-101.4 0ZM464 896a48 48 0 1 0 96 0 48 48 0 1 0-96 0Zm196.3-52.5a45.3 45.3 0 1 0 90.6 0 45.3 45.3 0 1 0-90.6 0Zm140.5-137.9a42.7 42.7 0 1 0 85.4 0 42.7 42.7 0 1 0-85.4 0ZM856 512a40 40 0 1 0 80 0 40 40 0 1 0-80 0ZM837.9 377.7a33.8 33.8 0 1 0 67.6 0 33.8 33.8 0 1 0-67.6 0Zm-61.5-113.5a28.3 28.3 0 1 0 56.6 0 28.3 28.3 0 1 0-56.6 0ZM680 180a24 24 0 1 0 48 0 24 24 0 1 0-48 0Z"},null,-1),o.createElementVNode("animateTransform",{additive:"sum",attributeName:"transform",attributeType:"XML",begin:"0s",dur:"4s",from:"0",repeatCount:"indefinite",to:"360",type:"rotate"},null,-1)];const A={name:"LoadingOutlined",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",F,P)}},z={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},R=[o.createElementVNode("path",{d:"M144 928a48 48 0 0 1-48-48V144a48 48 0 0 1 48-48h592v.448a48 48 0 0 1 27.328 13.6l150.624 150.624A48 48 0 0 1 928 294.624V880a48 48 0 0 1-48 48H144zm144-768H160v704h128V496a48 48 0 0 1 43.392-47.776L336 448h352a48 48 0 0 1 48 48v368h128V301.248l-128-128V272a48 48 0 0 1-48 48H336a48 48 0 0 1-48-48V160zm384 352H352v352h320V512zm0-352H352v96h320v-96z"},null,-1)];const j={name:"SaveOutlined",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",z,R)}},W={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},M=[o.createElementVNode("path",{d:"M479.04 128c176.16 0 318.976 142.848 318.976 319.04a317.984 317.984 0 0 1-86.976 218.976l175.616 175.552c11.52 11.52 12.384 29.568 2.656 42.08l-2.656 3.008a31.872 31.872 0 0 1-45.088 0L662.784 707.904a317.504 317.504 0 0 1-183.776 58.24C302.816 766.144 160 623.296 160 447.04S302.816 128 479.04 128zm0 63.808a255.232 255.232 0 0 0-255.232 255.264 255.232 255.232 0 1 0 510.4 0 255.232 255.232 0 0 0-255.2-255.264z"},null,-1)];const H={name:"SearchOutlined",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",W,M)}},U={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},q=[o.createElementVNode("path",{d:"M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8zm756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8.1-4.5-3.5-8.2-8-8.2z"},null,-1)];const G={name:"SyncOutlined",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",U,q)}},Y={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},K=[o.createElementVNode("path",{d:"M512 85.333A426.667 426.667 0 1 0 938.667 512 426.667 426.667 0 0 0 512 85.333zm0 768A341.333 341.333 0 1 1 853.333 512 341.333 341.333 0 0 1 512 853.333zm30.72-587.946A32.853 32.853 0 0 0 520.107 256h-16.214a32 32 0 0 0-22.613 9.387L347.733 399.36a21.333 21.333 0 0 0 0 30.293l29.867 30.294a21.333 21.333 0 0 0 30.293 0l61.44-61.867v348.587A21.333 21.333 0 0 0 490.667 768h42.666a21.333 21.333 0 0 0 21.334-21.333V398.08l61.44 61.44a20.907 20.907 0 0 0 29.866 0l30.294-30.293a21.333 21.333 0 0 0 0-30.294z"},null,-1)];const X={name:"UploadOutlined",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",Y,K)}},J={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},Z=[o.createElementVNode("path",{d:"M512 128c212 0 384 172 384 384S724 896 512 896 128 724 128 512s172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64zm32 704h-64v-64h64v64zm11.2-203.2-5.6 4.8c-3.2 2.4-5.6 8-5.6 12.8v58.4h-64v-58.4c0-24.8 11.2-48 29.6-63.2l5.6-4.8c56-44.8 83.2-68 83.2-108 0-48-38.4-86.4-86.4-86.4-49.6 0-86.4 36.8-86.4 86.4h-64c0-84 66.4-150.4 150.4-150.4 83.2 0 150.4 67.2 150.4 150.4 0 72.8-49.6 112.8-107.2 158.4z"},null,-1)];const Q={name:"tips",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",J,Z)}},ee={width:"64",height:"41",class:"x-empty-img-simple"},te=[o.createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="x-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="x-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="x-empty-img-simple-path"></path></g></g>',1)];const ie={name:"empty",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",ee,te)}},ne={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{"vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},oe=[o.createElementVNode("path",{d:"M629.392 415.033 465.775 251.416c-7.992-7.992-20.947-7.992-28.939 0-7.992 8.002-7.992 20.957 0 28.95l128.68 128.68H389.97V184.083c0-11.298-9.17-20.467-20.466-20.467H21.813c-11.307 0-20.465 9.17-20.465 20.467v818.082c0 11.307 9.158 20.466 20.466 20.466h593.108c11.308 0 20.466-9.159 20.466-20.466V429.512c0-5.433-2.159-10.632-5.996-14.48zm-34.936 566.666H42.28v-777.15h306.756v224.963c0 11.298 9.159 20.466 20.467 20.466h224.953v531.72zm429.523-715.803v572.652c0 11.308-9.16 20.466-20.467 20.466H695.651c-11.298 0-20.466-9.158-20.466-20.466 0-11.297 9.168-20.466 20.466-20.466h287.395v-531.72H758.093c-11.308 0-20.466-9.169-20.466-20.466V40.932H430.87v75.694c0 11.308-9.169 20.466-20.466 20.466-11.307 0-20.466-9.158-20.466-20.466v-96.16C389.938 9.17 399.097 0 410.404 0h347.689c11.297 0 20.466 9.169 20.466 20.466V245.43h175.548l-128.68-128.681c-7.993-7.992-7.993-20.947 0-28.95 7.991-7.991 20.946-7.991 28.939 0l163.616 163.627a20.455 20.455 0 0 1 5.997 14.47z"},null,-1)];const se={name:"copy",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",ne,oe)}},le={xmlns:"http://www.w3.org/2000/svg",class:"icon",style:{width:"1em",height:"1em","vertical-align":"middle",fill:"currentColor",overflow:"hidden"},viewBox:"0 0 1024 1024"},re=[o.createElementVNode("path",{fill:"#5A626A",d:"M439.264 208a16 16 0 0 0-16 16v67.968a239.744 239.744 0 0 0-46.496 26.896l-58.912-34A16 16 0 0 0 296 290.72l-80 138.56a16 16 0 0 0 5.856 21.856l58.896 34a242.624 242.624 0 0 0 0 53.728l-58.88 34a16 16 0 0 0-6.72 20.176l.848 1.68 80 138.56a16 16 0 0 0 21.856 5.856l58.912-34a239.744 239.744 0 0 0 46.496 26.88V800a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-67.968a239.744 239.744 0 0 0 46.512-26.896l58.912 34a16 16 0 0 0 21.856-5.856l80-138.56a16 16 0 0 0-4.288-20.832l-1.568-1.024-58.896-34a242.624 242.624 0 0 0 0-53.728l58.88-34a16 16 0 0 0 6.72-20.176l-.848-1.68-80-138.56a16 16 0 0 0-21.856-5.856l-58.912 34a239.744 239.744 0 0 0-46.496-26.88V224a16 16 0 0 0-16-16h-160zm32 48h96v67.376l28.8 12.576a192.21 192.21 0 0 1 37.184 21.52l25.28 18.688 58.448-33.728 48 83.136-58.368 33.68 3.472 31.2a194.624 194.624 0 0 1 0 43.104l-3.472 31.2 58.368 33.68-48 83.136-58.432-33.728-25.296 18.688a192.21 192.21 0 0 1-37.184 21.52l-28.8 12.576V768h-96v-67.376l-28.784-12.576a192.21 192.21 0 0 1-37.184-21.52l-25.28-18.688-58.448 33.728-48-83.136 58.368-33.68-3.472-31.2a194.624 194.624 0 0 1 0-43.104l3.472-31.2-58.368-33.68 48-83.136L380 376.16l25.296-18.688a191.744 191.744 0 0 1 37.184-21.52l28.8-12.576V256zm47.28 144a112 112 0 1 0 0 224 112 112 0 0 0 0-224zm0 48a64 64 0 1 1 0 128 64 64 0 0 1 0-128z"},null,-1)];const ae={InsideDeleteOutlined:O,InsideExclamationCircleOutlined:L,InsideLoadingOutlined:A,InsideSaveOutlined:j,InsideSearchOutlined:H,InsideSyncOutlined:G,InsideUploadOutlined:X,Insidetips:Q,InsideEmpty:ie,InsideCopy:se,insideSettingOutlined:{name:"SettingOutlined",render:function(e,t){return o.openBlock(),o.createElementBlock("svg",le,re)}}},ce=o.defineComponent(o.markRaw({name:"xIcon",props:["icon"],data(){return{id:"lazy-svg_"+this._.uid,svgIcon:null}},computed:{baseAttrs(){return{id:this.id,role:"img",ariaLabel:this.icon,class:"xIcon anticon"}},iconKey(){return k.camelCase(this.getIconPath()).replace(/\s/,"")}},methods:{getIconPath(){pe.assetsSvgPath;return`${pe.assetsSvgPath}/${this.icon}.svg`},async setIcon(){if(this.icon)try{let e=await(async()=>{let e=ae[this.icon];if(e)return k(this.icon),e;if(!pe.isDev&&(e=await C(this.iconKey),e))return e;try{e=await k.asyncLoadText(this.getIconPath())}catch(t){console.error(t)}return e})();if(k.isString(e)&&e.length>0){const t={name:this.icon,template:e};await C(this.iconKey,e),ae[this.icon]=t,this.svgIcon=o.createVNode(t,this.baseAttrs,null)}else(null==e?void 0:e.render)||(null==e?void 0:e.template)?this.svgIcon=o.createVNode(e,this.baseAttrs,null):console.error("component xIcon miss svg: "+this.icon)}catch(e){console.error(e)}}},render(){return this.svgIcon?this.svgIcon:o.createVNode(A,this.baseAttrs,null)},watch:{icon:{immediate:!0,handler(){this.setIcon()}}}}));function de(e,t={},i=!1){const n={label:e,prop:e};if(k.templateSettings.interpolate=/{([\s\S]+?)}/g,pe.i18nMessage){const o=i?i[e]:pe.i18nMessage[e];o&&(n.label=k.template(o)(t),n.label||(n.label=e,console.error(`i18n:${e} "NOT_FOUND"`)))}return n}let ue={xItemCollection:{},pagination:{page:"page",size:"size",total:"total"},language:v.language||"zh-CN",onLanguageChange:!1,LANGUAGE:{},i18nMessage:{},assetsSvgPath:"",assetsPath:"",basePath:"",setBasePath(e){pe.assetsSvgPath=e+"assets/svg",pe.assetsPath=e+"assets",pe.basePath=e},setAssetsBaseById(e){var t;const i=document.getElementById(e);if(i){const e=String(i.src||i.href),n=(null==(t=e.match(/assets(.*)/))?void 0:t.index)||0;pe.assetsSvgPath=e.substring(0,n)+"assets/svg",pe.assetsPath=e.substring(0,n)+"assets",pe.basePath=e.substring(0,n)}},$t:de,isDev:"VENTOSE_UI_IS_DEV_MODE"===localStorage.___VENTOSE_UI_IS_DEV_MODE,dev(e){e?localStorage.___VENTOSE_UI_IS_DEV_MODE="VENTOSE_UI_IS_DEV_MODE":localStorage.removeItem("___VENTOSE_UI_IS_DEV_MODE")}};const pe=o.reactive(ue);o.watch((()=>pe.language),(e=>{v.language=e,pe.onLanguageChange&&pe.onLanguageChange(e,pe)}),{immediate:!0});const he=o.computed((()=>{const e=k.camelCase(pe.language);return pe.LANGUAGE[e]})),fe={query:()=>({icon:o.createVNode(o.resolveComponent("xIcon"),{class:"x-button_icon-wrapper",icon:"InsideSearchOutlined"},null),text:de("查询").label}),refresh:()=>({icon:o.createVNode(o.resolveComponent("xIcon"),{class:"x-button_icon-wrapper",icon:"InsideSyncOutlined"},null),text:de("刷新").label}),cancel:()=>({text:de("取消").label}),save:()=>({icon:o.createVNode(o.resolveComponent("xIcon"),{class:"x-button_icon-wrapper",icon:"InsideSaveOutlined"},null),text:de("保存").label}),upload:()=>({icon:o.createVNode(o.resolveComponent("xIcon"),{class:"x-button_icon-wrapper",icon:"InsideUploadOutlined"},null),text:de("上传").label}),delete:e=>(e.type="danger",e.ghost=!0,{icon:o.createVNode(o.resolveComponent("xIcon"),{class:"x-button_icon-wrapper",icon:"InsideDeleteOutlined"},null),text:de("删除").label})},me=o.defineComponent({name:"xButton",props:{payload:{type:Object,default:()=>({})},configs:{type:Object,default:()=>({})}},beforeMount(){if(!this.configs)return;const e=fe[this.configs.preset];if(e){const t=e(this.configs);this.configs.icon=t.icon,this.configs.text=o.createVNode("span",{class:"ml4"},[t.text])}},data:()=>({loading:!0}),setup(e){let t=!0;return void 0!==e.configs.isShow&&(k.isFunction(e.configs.isShow)&&(t=o.computed(e.configs.isShow)),k.isBoolean(e.configs.isShow)&&(t=e.configs.isShow)),{Cpt_isShow:t}},computed:{isClickHandlerOnAttrs(){var e;return!!(null==(e=this.$attrs)?void 0:e.onClick)},type(){return["query","save"].includes(this.configs.preset)?"primary":this.configs.type},title(){return k.isString(this.disabled)&&this.disabled.length>0?this.disabled:!!(k.isString(this.configs.title)&&this.configs.title.length>0)&&this.configs.title},disabled(){return k.isBoolean(this.configs.disabled)?this.configs.disabled:!!k.isFunction(this.configs.disabled)&&this.configs.disabled(this)},text(){return k.isFunction(this.configs.text)?this.configs.text(this)||"":this.configs.text||""}},watch:{configs:{immediate:!0,handler(e){this.loading=!!e.loading}}},created(){},methods:{async handleButtonClick(){var e,t;if(k.isFunction(null==(e=null==this?void 0:this.configs)?void 0:e.onClick)){this.loading=!0;try{await(null==(t=null==this?void 0:this.configs)?void 0:t.onClick.call(this.configs,this))}catch(i){console.error(i)}finally{this.loading=!1}}}},render(){if(!this.Cpt_isShow)return null;const e=k.omit(this.configs,["text","loading","disabled","title","onClick"]);return this.isClickHandlerOnAttrs||(e.onClick=this.handleButtonClick),this.title&&(e.title=this.title),o.createVNode(o.resolveComponent("elButton"),o.mergeProps({class:"x-button antdv-button",loading:this.loading,disabled:!!this.disabled,type:this.type},e),{default:()=>{const e=this.$slots.default&&this.$slots.default();return o.createVNode(o.Fragment,null,[this.text,e])}})}}),ge=o.defineComponent({name:"xGap",props:["t","l","r","b","a","f"],computed:{gapClass:{set(){},get(){let e="x-gap";return this.f&&(e+=` flex${this.f}`),e}},gapStyle:{set(){},get(){const e={t:"top",r:"right",b:"bottom",l:"left"},t={};return this.a?t.margin=`${this.a}px`:k.map(e,((e,i)=>{const n=this[i];n&&(t[`margin-${e}`]=`${n}px`)})),t}}},render(e){return o.createVNode("div",{style:this.gapStyle,class:this.gapClass},null)}}),ye=o.defineComponent(o.markRaw({name:"xRender",props:{render:{type:Function,required:!0}},render(){return o.h(this.render,{vm:this,props:this.$props,attrs:this.$attrs})}})),ve=o.defineComponent({name:"xForm",props:{col:{type:Number,default:1},labelStyle:{type:Object,default:()=>({})},formStyle:{type:Object,default:()=>({})}},emits:[],data:()=>({}),computed:{xFormId(){return`xForm_${this._.uid}`},formStyleText(){return k.map(k.merge({},this.formStyle),((e,t)=>`${t}: ${e}`)).join(";")},labelStyleText(){return k.map(k.merge({width:"120px","text-align":"right"},this.labelStyle),((e,t)=>`${t}: ${e}`)).join(";")},styleContent(){return[`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`,`#${this.xFormId} { ${this.formStyleText} }`,`#${this.xFormId} div.x-form-item-label { ${this.labelStyleText} }`].join("\n")}},mounted(){const e=u.default(`#${this.xFormId}`),t=u.default("<style/>",{id:`style_${this.xFormId}`}).append(this.styleContent);e.prepend(t)},watch:{styleContent(){this.updateStyle(this.styleContent)}},methods:{updateStyle(e){u.default(`#style_${this.xFormId}`).html(e)}}}),Ce=(e,t)=>{const i=e.__vccOpts||e;for(const[n,o]of t)i[n]=o;return i},be=["id"];const xe=Ce(ve,[["render",function(e,t,i,n,s,l){return o.openBlock(),o.createElementBlock("form",{id:e.xFormId},[o.renderSlot(e.$slots,"default")],8,be)}]]);const we=Ce(o.defineComponent({name:"XButtonCountDown",props:{configs:{type:Object,default:()=>({})}},data(){const e=this;return{state:{captchaCount:0},btnConfigs:{disabled:!1,size:"large",style:{minWidth:"112px"},class:"center",text:e.configs.text.normal,async onClick(){k.isFunction(e.configs.onClick)&&await e.configs.onClick({countDown:e.countDown})}}}},watch:{"state.captchaCount"(e){this.handleCaptchaCountChange(e)}},methods:{countDown(){this.state.captchaCount++,this.state.captchaCount<=this.configs.countMax?setTimeout(this.countDown,1e3):this.state.captchaCount=0},handleCaptchaCountChange(e){if(0===e)return this.btnConfigs.text=this.configs.text.normal,void(this.btnConfigs.disabled=!1);const t=()=>this.btnConfigs.text=this.configs.countMax-e+" s";if(1===e)return t(),void(this.btnConfigs.disabled=!0);e&&e<=this.configs.countMax&&t()}}}),[["render",function(e,t,i,n,s,l){const r=o.resolveComponent("xButton");return o.openBlock(),o.createBlock(r,{configs:e.btnConfigs},null,8,["configs"])}]]),Ve={line:{}},Te=o.defineComponent({name:"xCharts",props:{payload:{required:!1,type:[Object,String],default:""},configs:{type:[String,Object],required:!0},dataset:{type:[Array,Object],default:()=>[]}},data(){return this.updateOptions=k.debounce((async function(){var e,t;this.myChart&&this.myChart.dispose(),await k.ensureValueDone((()=>this.$el));const i=this.helper.initOptions(this.$props);this.options=this.helper.updateOptions(i,this.dataset),this.myChart=this.$echarts.init(this.$el),(null==(e=null==this?void 0:this.helper)?void 0:e.afterInit)&&(null==(t=null==this?void 0:this.helper)||t.afterInit({instance:this.myChart})),this.myChart.showLoading(),this.myChart.setOption(this.options),this.myChart.hideLoading()}),300),{myChart:!1}},computed:{helper(){return k.isPlainObject(this.configs)?this.configs:Ve[this.configs]}},watch:{dataset(){this.updateOptions()}},mounted(){this.init()},methods:{async init(){this.observe(),this.updateOptions()},observe(){this.resizeObserver=new ResizeObserver((()=>{var e;this.myChart&&(this.updateOptions(),(null==(e=null==this?void 0:this.helper)?void 0:e.onResize)&&this.helper.onResize({instance:this.myChart,chartVM:this}))})),this.resizeObserver.observe(this.$el)}}}),$e=["id"];const Ie=Ce(Te,[["render",function(e,t,i,n,s,l){return o.openBlock(),o.createElementBlock("div",{id:e.id,class:"x-charts flex flex1 center middle"},null,8,$e)}]]),Se=o.defineComponent({name:"xView",props:{isShow:{type:Boolean,default:!0}},data:()=>({}),computed:{id(){return`xView_${this._.uid}`}}}),_e=["id"],ke={class:"xView-body flex vertical flex1"};const Ne=Ce(Se,[["render",function(e,t,i,n,s,l){return o.withDirectives((o.openBlock(),o.createElementBlock("div",{id:e.id,class:"flex flex1 vertical"},[o.createElementVNode("div",ke,[o.renderSlot(e.$slots,"default")])],8,_e)),[[o.vShow,!!e.isShow]])}]]);const De="OPERATION",Oe=64;function Be(e=1,t=10,i=0){const{page:n,size:o,total:s}=pe.pagination;return{[n]:e||1,[o]:t||10,[s]:i||0}}function Ee(e,t){const i=pe.pagination;k.each(t,((t,n)=>{let o=i[n];o||(o=n),(null==e?void 0:e.pagination)&&(e.pagination[o]=t)}))}function Le(e){return{[e.prop]:{...e,key:e.prop,title:e.label,dataIndex:e.prop}}}function Fe(e,t){return!k.isBoolean(e)||e}const Pe=["10","20","30"],Ae=o.defineComponent({name:"xPagination",setup:()=>({State_UI:pe}),props:{onPaginationChange:{type:Function,default:!1},pagination:{type:Object,default:()=>({})}},data(){const{page:e,size:t,total:i}=pe.pagination;return{pageSizeOptions:Pe,page:e,size:t,total:i}},methods:{onShowSizeChange:k.debounce((function(e,t){Ee(this,{page:e,size:t}),this.onPaginationChange&&this.onPaginationChange(this.pagination)}),30)},computed:{i18nMessage(){return{"总条数":"总条数 {total}","条页":"{size}条/页",...this.State_UI.i18nMessage}}},render(){const{page:e,size:t,total:i}=pe.pagination;return k(e,t,i),this.pagination[i]?o.createVNode(o.resolveComponent("aPagination"),{current:this.pagination[e],"onUpdate:current":t=>this.pagination[e]=t,pageSizeOptions:this.pageSizeOptions,total:this.pagination[i],pageSize:this.pagination[t],"show-size-changer":!0,showTotal:e=>this.$t("总条数",{total:e},this.i18nMessage).label,onShowSizeChange:this.onShowSizeChange,onChange:this.onShowSizeChange},{buildOptionText:e=>o.createVNode("span",null,[this.$t("条页",{size:e.value},this.i18nMessage).label])}):null}}),ze=o.defineComponent({name:"XDataGrid",components:{xPagination:Ae},props:{configs:{type:Object,default:()=>({})}},setup:()=>({Cpt_UI_locale:he}),data:()=>({State:{id:k.genId("xDataGrid")}}),computed:{Cpt_Columns(){if(this.configs.isGroupingColumns)return this.configs.columns;let e=null;return e=k.map(this.Cpt_ColumnsOrder,(e=>k.find(this.configs.columns,{prop:e}))),e=k.filter(e,(e=>Fe(null==e?void 0:e.isShow,null==e||e.prop))),e},Cpt_ColumnsOrder(){const e=(()=>this.configs.columns_order?this.configs.columns_order:k.map(this.configs.columns,(e=>e.prop)))();return k.filter(e,(e=>!!e))},Cpt_AntTableProperty(){return this.configs.antTableProperty?this.configs.antTableProperty:{}},Cpt_VNodeTable(){if(this.configs.renderTable)return this.configs.renderTable({vm:this});{const e={emptyText:()=>o.createVNode("div",{class:"x-empty x-empty-normal"},[o.createVNode("div",{class:"x-empty-image"},[o.createVNode(o.resolveComponent("xIcon"),{icon:"InsideEmpty",style:"width:64px"},null)]),o.createVNode("p",{class:"x-empty-description"},[this.Cpt_UI_locale.Empty.description])]),bodyCell:e=>{const{column:t}=e;if(t&&t.renderCell){const i=t.renderCell(e);return k.isNull(i)||k.isUndefined(i)?"":i}}},i=(()=>this.configs.scroll?this.configs.scroll:{x:300})();return o.createVNode(t.ElTable,o.mergeProps({loading:this.configs.isLoading,dataSource:this.configs.dataSource,columns:this.Cpt_Columns,scroll:i,pagination:!1,locale:this.Cpt_UI_locale.Table},this.Cpt_AntTableProperty),e)}},Cpt_VNodePagination(){return this.configs.isHidePagination?null:o.createVNode(Ae,{class:"table-pagination",pagination:this.configs.pagination,onPaginationChange:this.handlePaginationChange},null)}},mounted(){this.configs.onMounted&&this.configs.onMounted({id:this.State.id})},watch:{"configs.pagination":{deep:!0,handler(e){k(JSON.stringify(e))}}},methods:{async handlePaginationChange(e){var t;(null==(t=null==this?void 0:this.configs)?void 0:t.onPaginationChange)&&(this.configs.isLoading=!0,await this.configs.onPaginationChange(e),this.configs.isLoading=!1)}},render(){return o.createVNode("div",{id:this.State.id},[this.Cpt_VNodeTable,this.Cpt_VNodePagination])}});const Re=Ce(o.defineComponent({name:"xColFilter",props:{configs:{type:Object,default:()=>({})}},methods:{handleChecked(e){const t=k.find(this.configs.columns,{key:e.key});t.isShow=!!k.isBoolean(t.isShow)&&!t.isShow}},computed:{Cpt_ColumnsOrder(){const e=(()=>this.configs.columns_order?this.configs.columns_order:k.map(this.configs.columns,(e=>e.prop)))();return k.filter(e,(e=>!!e))},Cpt_Columns(){return k.map(this.Cpt_ColumnsOrder,(e=>k.find(this.configs.columns,{prop:e})))},checkedList(){return k.filter(this.Cpt_ColumnsOrder,(e=>{const{isShow:t}=this.configs.columns[e];return Fe(t)}))}}}),[["render",function(e,t,i,n,s,l){const r=o.resolveComponent("ElCheckbox"),a=o.resolveComponent("xIcon"),c=o.resolveComponent("elButton"),d=o.resolveComponent("ElPopover");return o.openBlock(),o.createBlock(d,{placement:"leftTop",trigger:"click"},{content:o.withCtx((()=>[(o.openBlock(!0),o.createElementBlock(o.Fragment,null,o.renderList(e.Cpt_Columns,(t=>(o.openBlock(),o.createElementBlock("p",{key:t.key},[o.createVNode(r,{checked:e.checkedList.includes(t.key),onChange:i=>e.handleChecked(t)},{default:o.withCtx((()=>[o.createTextVNode(o.toDisplayString(t.title),1)])),_:2},1032,["checked","onChange"])])))),128))])),default:o.withCtx((()=>[o.createVNode(c,null,{icon:o.withCtx((()=>[o.createVNode(a,{icon:"insideSettingOutlined",style:{height:"100%",width:"100%"}})])),_:1})])),_:1})}]]),je=o.defineComponent({name:"xDataGridToolbar",components:{xColFilter:Re},props:{configs:{type:Object,default:()=>({})}},computed:{Cpt_btn_query(){return{preset:"query",onClick:async()=>{var e;(null==(e=this.configs)?void 0:e.queryTableList)&&(Ee(this.configs,{page:1}),await this.configs.queryTableList({pagination:{page:1}}))}}},Cpt_btn_refresh(){return{preset:"refresh",onClick:async()=>{this.configs.queryTableList&&await this.configs.queryTableList()}}},Cpt_isShowQuery(){return!!this.configs.queryTableList&&!this.configs.isHideQuery},Cpt_isShowRefresh(){return!!this.configs.queryTableList&&!this.configs.isHideRefresh},Cpt_isShowFilter(){return!this.configs.isGroupingColumns&&!this.configs.isHideFilter},Cpt_isSetConfigs(){return this.configs}}}),We={class:"table-options"},Me={class:"table-option-left flex flex1"},He={key:0,class:"table-filter flex"};const Ue=Ce(je,[["render",function(e,t,i,n,s,l){const r=o.resolveComponent("xButton"),a=o.resolveComponent("xGap"),c=o.resolveComponent("xColFilter");return o.openBlock(),o.createElementBlock("div",We,[o.createElementVNode("div",Me,[o.renderSlot(e.$slots,"default")]),e.Cpt_isSetConfigs?(o.openBlock(),o.createElementBlock("div",He,[e.Cpt_isShowQuery?(o.openBlock(),o.createBlock(r,{key:0,configs:e.Cpt_btn_query},null,8,["configs"])):o.createCommentVNode("",!0),o.createVNode(a,{l:"4"}),e.Cpt_isShowRefresh?(o.openBlock(),o.createBlock(r,{key:1,configs:e.Cpt_btn_refresh},null,8,["configs"])):o.createCommentVNode("",!0),o.createVNode(a,{l:"4"}),e.Cpt_isShowFilter?(o.openBlock(),o.createBlock(c,{key:2,configs:e.configs},null,8,["configs"])):o.createCommentVNode("",!0)])):o.createCommentVNode("",!0)])}]]),qe=o.defineComponent({name:"xCellLabel",props:{configs:{type:Object,default:()=>({})}},data:()=>({loading:!1,title:""}),computed:{id(){return`xLabel_${this._.uid}`}},watch:{configs:{immediate:!0,handler(e){this.loading=!!e.loading}}},methods:{updateTitle(e){this.title!==e&&(this.title=e)}},updated(){const e=u.default(`#${this.id}`);if(e.width()<u.default(`#${this.id} > span`).width()){const t=e.text();this.updateTitle(t)}else this.updateTitle("")}}),Ge=["title","id"];const Ye=Ce(qe,[["render",function(e,t,i,n,s,l){return o.openBlock(),o.createElementBlock("div",{class:"ellipsis",title:e.title,id:e.id},[o.createElementVNode("span",null,[o.renderSlot(e.$slots,"default")])],8,Ge)}]]),Ke=o.defineComponent({name:"XVirScroll",props:{configs:{type:Object,default:()=>({})},top:{type:Number,default:0},height:{type:Number,default:0},scrollHeight:{type:Number,default:0}},emits:["update:top","update:height","update:scrollHeight"],setup:()=>({}),data(){return{itemComponent:this.$slots.item,blockCount:0,isLoading:!1,styleWrapperAll:{height:0}}},computed:{allItems(){return this.configs.items||[]},positionBlock(){return this.blockCount%3},virs1(){const e=10*(Number(this.styleWrapper1.match(/(\d)/g).join(""))/580),t=e+10;return this.allItems.slice(e,t).map(((t,i)=>({...t,index:e+1+i})))},virs2(){const e=10*(Number(this.styleWrapper2.match(/(\d)/g).join(""))/580),t=e+10;return this.allItems.slice(e,t).map(((t,i)=>({...t,index:e+1+i})))},virs3(){const e=10*(Number(this.styleWrapper3.match(/(\d)/g).join(""))/580),t=e+10;return this.allItems.slice(e,t).map(((t,i)=>({...t,index:e+1+i})))},styleWrapper1(){return 0===this.positionBlock?`transform:translateY(${580*this.blockCount}px)`:1===this.positionBlock?`transform:translateY(${580*(this.blockCount+2)}px)`:`transform:translateY(${580*(this.blockCount+1)}px)`},styleWrapper2(){return 0===this.positionBlock?`transform:translateY(${580*(this.blockCount+1)}px)`:1===this.positionBlock?`transform:translateY(${580*this.blockCount}px)`:`transform:translateY(${580*(this.blockCount-1)}px)`},styleWrapper3(){return 0===this.positionBlock?`transform:translateY(${580*(this.blockCount+2)}px)`:1===this.positionBlock?`transform:translateY(${580*(this.blockCount+1)}px)`:`transform:translateY(${580*this.blockCount}px)`}},watch:{top(){this.setTop()},"allItems.length":{immediate:!0,handler(){this.updateTop(),this.setHeight()}}},updated(){var e,t;(null==(e=this.$wrapperEle)?void 0:e.height())!==this.height&&this.$emit("update:height",(null==(t=this.$wrapperEle)?void 0:t.height())||0)},mounted(){this.init()},beforeUnmount(){this.$wrapperEle.off("scroll")},methods:{setTop:k.debounce((function(){this.$refs.refWrapper&&this.$refs.refWrapper.scrollTo({top:this.top,behavior:"smooth"})}),1e3),init(){this.$wrapperEle=u.default(this.$refs.refWrapper),this.$wrapperEle.on("scroll",(()=>this.updateTop()))},updateTop(e){if(this.$refs.refWrapper){const e=this.$refs.refWrapper.scrollTop;this.blockCount=Math.floor(e/580),this.$emit("update:top",e)}},setHeight(){const e=48*this.allItems.length;this.styleWrapperAll.height=`${e}px`,this.$emit("update:scrollHeight",e)}}}),Xe={ref:"refWrapper",class:"wrapper vir-item-component"};const Je=Ce(Ke,[["render",function(e,t,i,n,s,l){return o.openBlock(),o.createElementBlock("div",Xe,[o.createElementVNode("div",{style:o.normalizeStyle(e.styleWrapperAll)},[o.createElementVNode("div",{class:"vir-item-wrapper item1",style:o.normalizeStyle(e.styleWrapper1)},[(o.openBlock(!0),o.createElementBlock(o.Fragment,null,o.renderList(e.virs1,(t=>(o.openBlock(),o.createElementBlock("div",{key:t.id,class:"vir-item"},[(o.openBlock(),o.createBlock(o.resolveDynamicComponent(e.itemComponent),{item:t},null,8,["item"]))])))),128))],4),o.createElementVNode("div",{class:"vir-item-wrapper item2",style:o.normalizeStyle(e.styleWrapper2)},[(o.openBlock(!0),o.createElementBlock(o.Fragment,null,o.renderList(e.virs2,(t=>(o.openBlock(),o.createElementBlock("div",{key:t.id,class:"vir-item"},[(o.openBlock(),o.createBlock(o.resolveDynamicComponent(e.itemComponent),{item:t},null,8,["item"]))])))),128))],4),o.createElementVNode("div",{class:"vir-item-wrapper item3",style:o.normalizeStyle(e.styleWrapper3)},[(o.openBlock(!0),o.createElementBlock(o.Fragment,null,o.renderList(e.virs3,(t=>(o.openBlock(),o.createElementBlock("div",{key:t.id,class:"vir-item"},[(o.openBlock(),o.createBlock(o.resolveDynamicComponent(e.itemComponent),{item:t},null,8,["item"]))])))),128))],4)],4)],512)}]]),Ze=o.defineComponent({props:["value"],render(){return o.withDirectives(o.createVNode("div",{class:"x-input cursor-not-allowed xItem_readonly ellipsis"},[this.value,o.createVNode("span",{style:"opacity:0"},[o.createTextVNode(".")])]),[[o.resolveDirective("uiPopover"),{onlyEllipsis:!0}]])}}),Qe={Input:o.defineComponent({props:["properties","slots","listeners","propsWillDeleteFromConfigs"],mounted(){k("xItem Input")},data:e=>({oldComponent:"",ComponentInstance:"",_modelValue:""}),methods:{diffComponent(e){if(e===this.oldComponent)return this.ComponentInstance;this.oldComponent=e;const t=o.resolveComponent(e);t.__v_skip=!0,this.ComponentInstance=t}},watch:{"properties.value"(e){void 0!==e&&e!==this._modelValue&&(this._modelValue=e)},_modelValue(e){this.listeners["onUpdate:value"](e)}},computed:{component({properties:e}){return this.ComponentInstance||this.diffComponent("ElInput"),e.isNumber&&this.diffComponent("ElInputNumber"),this.ComponentInstance}},render(e){const{properties:t,slots:i,listeners:n,propsWillDeleteFromConfigs:s,component:l}=e;return t.isReadonly?o.createVNode(Ze,{value:t.value},null):(t.isTextarea&&(t.type="textarea",t.autosize=t.autoSize||{minRows:4,maxRows:6}),o.createVNode(l,o.mergeProps({modelValue:this._modelValue,"onUpdate:modelValue":e=>this._modelValue=e},k.omit(t,["value","isTextarea",...s]),k.omit(n,["onUpdate:value"])),i))}}),Checkbox:o.defineComponent({props:["properties","slots","listeners","propsWillDeleteFromConfigs"],computed:{checked:{get(){var e;return(null==(e=this.properties)?void 0:e.value)||!1},set(e){this.listeners["onUpdate:value"](e)}}},render(e){const t=k.omit(this.properties,[...this.propsWillDeleteFromConfigs]);return o.createVNode(o.resolveComponent("ElCheckbox"),o.mergeProps({modelValue:this.checked,"onUpdate:modelValue":e=>this.checked=e},this.listeners,t),this.slots)}}),Select:o.defineComponent({props:["properties","slots","listeners","propsWillDeleteFromConfigs"],mounted(){k("xItem Select")},data:e=>({_modelValue:""}),methods:{},watch:{"properties.value"(e){void 0!==e&&e!==this._modelValue&&(this._modelValue=e)},_modelValue(e){this.listeners["onUpdate:value"](e)}},computed:{},render(e){const{properties:t,listeners:i,propsWillDeleteFromConfigs:n}=e;if(t.isReadonly)return o.createVNode(Ze,{value:t.value},null);const s=k.omit(t,[...n,"options","renderOptions"]);k(s);return o.createVNode(o.resolveComponent("ElSelect"),o.mergeProps({modelValue:this._modelValue,"onUpdate:modelValue":e=>this._modelValue=e},s,i),{default:()=>t.renderOptions?t.renderOptions():k.map(t.options,(e=>o.createVNode(o.resolveComponent("ElOption"),{value:e.value,label:e.label},null)))})}}),Switch:o.defineComponent({props:["properties","slots","listeners","propsWillDeleteFromConfigs"],mounted(){k("xItem ComponentSample")},data:e=>({_modelValue:""}),methods:{},watch:{"properties.value"(e){void 0!==e&&e!==this._modelValue&&(this._modelValue=e)},_modelValue(e){this.listeners["onUpdate:value"](e)}},computed:{},render(e){const{properties:t,listeners:i,propsWillDeleteFromConfigs:n}=e;return o.createVNode("div",{class:"x-item_switch"},[o.createVNode(o.resolveComponent("ElSwitch"),o.mergeProps({modelValue:this._modelValue,"onUpdate:modelValue":e=>this._modelValue=e},k.omit(i,["onUpdate:value"]),k.omit(t,["value",...n])),null)])}}),DatePicker:({properties:e,slots:i,listeners:n})=>{const s=function(t){if(t)try{if("object"==typeof(t=d.default(t))&&"Invalid Date"==t.$d)return void(t="");if(k(t,e.value),"Invalid Date"===t)return k("properties.value",e.value),void(t="")}catch(i){}finally{return t}else t=""}(e.value);return o.createVNode(t.ElDatePicker,o.mergeProps(e,n,{value:s}),i)},RangePicker:({properties:e,slots:t,listeners:i})=>{const n=o.resolveComponent("aRangePicker");return console.log("properties",e.value),o.createVNode(n,o.mergeProps(e,i,{locale:he.value.DatePicker}),t)},RadioGroup:({properties:e,slots:t,listeners:i,propsWillDeleteFromConfigs:n})=>{const s=o.resolveComponent("aRadio"),l=o.resolveComponent("aRadioGroup"),r=o.resolveComponent("aRadioButton"),a=e.options,c=k.omit(e,["options"]);return o.createVNode(l,o.mergeProps(c,i),{default:()=>e.isButton?k.map(a,(e=>o.createVNode(r,{value:e.value},{default:()=>[e.label]}))):k.map(a,(e=>o.createVNode(s,{value:e.value},{default:()=>[e.label]})))})},CheckboxGroup:({properties:e,slots:t,listeners:i})=>o.createVNode(o.resolveComponent("ElCheckboxGroup"),o.mergeProps(e,i),t)},et=({value:e,xItemConfigs:t})=>void 0!==e?e:void 0!==t.value?t.value:(console.error(new Error("miss value")),t.defaultValue),tt={validateForm:"validateForm",update:"update",change:"change",input:"input",blur:"blur",focus:"focus"},it="error";const nt=async({xItemConfigs:e,fnCheckedCallback:t,value:i,FormItemId:n,resolve:o})=>{const s=et({value:i,xItemConfigs:e});let l;e.checking=!0,t=t||k.doNothing,n=n||e.FormItemId;try{const{rules:i,prop:o}=e;l=await(async()=>{let t=0;for(const l of i){const i=l,r=i.trigger||[];if(await(async()=>{let n;const o=(()=>{if(e.validate.triggerEventsObj[tt.validateForm])return n="validateForm",!0;const t=t=>e.validate.triggerEventsObj[t];if(k.some(r,t))return n=`triggerEvent ${r.toString()}`,!0;if(r.includes(tt.update)){const e=[tt.change,tt.input,tt.blur];if(k.some(e,t))return n="update",!0}return!1})();if(n&&k.doNothing(`%cValidate trigger off by [${n}]`,"color:yellow;background:green;"),o){const t=(()=>{try{return JSON.parse(JSON.stringify(s))}catch(e){return""}})(),n=await i.validator(t,{configs:e,rule:i});if(n)return n}else t++;return!1})())return[o,i.msg,n]}return t===i.length?[!1,!1]:[o,!1]})(),t(l)}catch(r){console.error(r)}finally{return k.isFunction(o)&&o(l),e.validate.triggerEventsObj={},l}},{MutatingProps:ot}=k,st="x-form-item-explain x-form-item-explain-error",lt={},rt=["onValidateForm","_$updateUI","once","itemTips","rules","labelVNodeRender","slots","validate","value"],at=o.defineComponent({name:"XItem",props:{modelValue:{type:[Object,String,Number,Boolean],default:void 0},configs:{type:Object,default:()=>({})}},emits:["update:modelValue"],setup(e,{attrs:t,slots:i,emit:n,expose:s}){let l=!0,r=!1;return l=k.isFunction(e.configs.isShow)?o.computed(e.configs.isShow):k.isBoolean(e.configs.isShow)?o.computed((()=>!!e.configs.isShow)):o.computed((()=>(k.isUndefined(e.configs.isShow)&&(e.configs.isShow=!0),!!e.configs.isShow))),k.isFunction(e.configs.disabled)?r=o.computed(e.configs.disabled):k.isBoolean(e.configs.disabled)&&(r=o.computed((()=>!!e.configs.disabled))),{Cpt_isShowXItem:l,Cpt_isDisabled:r}},data(e){const{$props:t,$attrs:i}=e,n=k.debounce((function(t){const{configs:i}=e.$props;i.validate&&i.validate({eventType:t,value:e.properties.value})}),500),{listeners:o,propsWillDeleteFromConfigs:s}=(()=>{const{configs:o}=t,s=new Set,l={"onUpdate:value":t=>{if(void 0!==o.value){if(o.value===t)return;o.value=t}e.$emit("update:modelValue",t),k.isFunction(l.onAfterValueEmit)&&l.onAfterValueEmit(t),n(tt.update)},onValidateForm:()=>{n(tt.validateForm)},onChange:()=>{n(tt.change)},onInput:()=>{n(tt.input)},onBlur:()=>{n(tt.blur)},onFocus:()=>{n(tt.focus)}};function r(e,t){s.add(e),"object"==typeof l[e]&&k.isArray(l[e].handlerArray)?l[e].handlerArray.push(t):(l[e]=(...t)=>{k.each(l[e].handlerArray,(e=>{null==e||e.apply(o,t)}))},l[e].handlerArray=[t])}return k.each(l,((e,t)=>r(t,e))),k.each(o,((e,t)=>{k.isListener(t)&&r(t,e)})),k.each(i,((e,t)=>{k.isListener(t)&&r(t,e)})),{listeners:l,propsWillDeleteFromConfigs:[...s]}})();return{rerenderCount:0,isRequired:!1,properties:null,itemSlots:{},listeners:o,propsWillDeleteFromConfigs:s}},computed:{CurrentXItem(){return k.isObject(this.configs.itemType)?o.isProxy(this.configs.itemType)?o.toRaw(this.configs.itemType):this.configs.itemType:Qe[this.configs.itemType]||Qe.Input},itemTypeName(){return k.isString(this.configs.itemType)?String(this.configs.itemType):""},isChecking(){return Boolean(this.configs.checking)},FormItemId(){return`xItem_${this._.uid}`},itemTips(){var e,t;const i={type:"",msg:""};return(null==(t=null==(e=this.configs)?void 0:e.itemTips)?void 0:t.type)?{type:this.configs.itemTips.type,msg:k.isFunction(this.configs.itemTips.msg)?this.configs.itemTips.msg():this.configs.itemTips.msg}:(this.configs.itemTips=i,i)},itemWrapperClass(){return[this.configs.itemWrapperClass,"x-item-wrapper flex middle",this.itemTips.type===it?"x-form-item-has-error":""].join(" ")},tipsVNode(){return this.isChecking?o.createVNode("div",null,[o.createVNode("div",{"data-type":"checking"},[o.createTextVNode("checking...")])]):this.configs.tipsVNodeRender?this.configs.tipsVNodeRender({xItem:this,configs:this.configs,itemTips:this.itemTips}):this.itemTips.msg&&this.itemTips.type===it?o.createVNode("div",{class:st},[o.createVNode("div",{"data-type":"error"},[this.itemTips.msg])]):null},labelVNode(){const e=this.isRequired?"x-form-item-required":"";if(this.configs.labelVNodeRender)return this.configs.labelVNodeRender(this.configs,e);let t=(()=>{const e=this.configs.label;if(e){if(k.isFunction(e))return e();if(k.isString(e)||e.__v_isVNode)return e}return!1})();return!1===t?null:o.createVNode("div",{class:"x-form-item-label"},[o.createVNode("label",{for:this.configs.prop,class:e},[t])])}},watch:{$attrs:{handler(){this.setProperties()}},"properties.value":{handler(e){k(e)}},"configs.value":{handler(){this.updateValue()}},modelValue:{handler(){this.updateValue()}},rerenderCount:{handler(){this.setProperties()}},configs:{handler(){this.setProperties()}},"configs.options":{handler(e){this.setProperties()}},"configs.rules":{immediate:!0,handler(e){e&&this.setValidateInfo(e)}},"configs.slots":{immediate:!0,handler(e){e&&this.setItemSlots()}}},created(){const e=this;e.configs.FormItemId=e.FormItemId,e.forceUpdateUI=k.debounce((()=>e.rerenderCount++),64),e.configs._$updateUI=t=>{k.each(t,((t,i)=>{e.configs[i]=t})),e.forceUpdateUI()},e.updateValue=k.debounce(e.updateValueSync,94),e.updateValue(),e.setProperties=k.debounce((function(){k(e._.uid);const t={};k.each([this.configs,this.$attrs],(e=>{k.each(e,((e,i)=>{rt.includes(i)||(["placeholder"].includes(i)&&k.isFunction(e)?t[i]=e(this):t[i]=e)}))})),this.properties=t,this.updateValue()}),32),e.setProperties()},mounted(){var e;lt[this._.uid]=0,(null==(e=this.configs)?void 0:e.once)&&this.configs.once.call(this.configs,this),pe.xItemCollection[this.FormItemId]=this},beforeUnmount(){delete lt[this._.uid],delete pe.xItemCollection[this.FormItemId]},methods:{async updateValueSync(){await k.ensureValueDone((()=>this.properties));const e=this,t=(()=>{if(void 0!==e.modelValue)return e.modelValue;if(null==e.configs.value){if(void 0!==e.configs.defaultValue)return e.configs.defaultValue;k("either configs.value or modelValue")}return e.configs.value})(),i=l.diff(e.properties.value,t);i&&(k("diff xItem value",i),e.properties.value=t,e.listeners["onUpdate:value"](t))},setTips(e="",t=""){ot(this,"configs.itemTips",{type:e,msg:t})},setItemSlots(){this.itemSlots=this.configs.slots||{}},setValidateInfo(e){let t=!1;if(k.isArrayFill(e)){t=k.some(e,{name:"required"});const i=([e,t])=>{ot(this,"configs.checking",!1),e&&(t?(this.setTips(it,t),k.isFunction(this.configs.onValidateFail)&&this.configs.onValidateFail(this.configs)):this.setTips())},n=k.debounce(nt,300),o=({eventType:e,value:t,resolve:o})=>{ot(this,`configs.validate.triggerEventsObj.${e}`,!0),n({FormItemId:this.FormItemId,xItemConfigs:this.configs,value:t,fnCheckedCallback:i,resolve:o})};ot(this,"configs.validate",o),ot(this,"configs.validate.triggerEventsObj",{})}else k.isFunction(this.configs.validate)&&delete this.configs.validate;this.isRequired=t}},render(){if(!this.properties)return null;if(k.isUndefined(this.Cpt_isShowXItem),!this.Cpt_isShowXItem)return null;const{CurrentXItem:e,properties:t,Cpt_isDisabled:i,propsWillDeleteFromConfigs:n,itemTypeName:s,FormItemId:l}=this;return k(`xItem ${this._.uid} render ${++lt[this._.uid]} times`),o.createVNode("div",{id:l,class:this.itemWrapperClass},[this.labelVNode,o.createVNode("div",{class:"x-form-item-control","data-type":s},[o.createVNode(e,{id:`CurrentXItem_${l}`,"data-current-item-label":t.label,"data-current-item-prop":t.prop,"data-current-item-type":s,propsWillDeleteFromConfigs:n,properties:{...t,disabled:i},listeners:this.listeners,slots:this.itemSlots},null),this.tipsVNode]),this.$slots.afterControll&&this.$slots.afterControll()])}}),ct=o.defineComponent({props:["column","index"],computed:{prop(){var e;return null==(e=this.column)?void 0:e.prop},label(){var e;return null==(e=this.column)?void 0:e.label},renderHeader(){var e;return(null==(e=this.column)?void 0:e.renderHeader)||!1},vDomCellContent(){return this.renderHeader?this.renderHeader({label:this.label,prop:this.prop,index:this.index}):this.label}},render(){return o.createVNode("div",{role:"th",class:"xVirTable-cell","data-prop":this.prop,"data-index":this.index},[this.vDomCellContent])}}),dt=()=>({fnObserveDomResize:function(e,t){this.resizeObserver=new ResizeObserver(t),this.resizeObserver.observe(e)},fnUnobserveDomResize:function(e){this.resizeObserver.unobserve(e)}});u.default(window).on("click.virTableTdId",(function(e){const t=(()=>{let t=u.default(e.target),i=t.attr("id");return/^virTableTdId_/.test(i)||(t=t.parents("[id^=virTableTdId_]"),i=t.attr("id")),i})();u.default(window).trigger({type:"onAllCell",virTableTdId:t})}));const ut=o.defineComponent({props:["column","data"],emits:["update:data"],setup:()=>({configs:o.inject("configs")}),computed:{record(){const e=this;return new Proxy(e.data,{get:(t,i)=>e.data[i],set:(t,i,n)=>(e.data[i]=n,e.configs.dataSource[e.data.__virRowIndex][i]=n,!0)})},id(){return`virTableTdId_${this._.uid}`},prop(){var e;return null==(e=this.column)?void 0:e.prop},cell(){return this.data[this.prop]},renderEditor(){var e,t;return!!(null==(e=this.column)?void 0:e.renderEditor)&&(null==(t=this.column)?void 0:t.renderEditor)},renderCell(){var e,t;return!!(null==(e=this.column)?void 0:e.renderCell)&&(null==(t=this.column)?void 0:t.renderCell)}},data:e=>({isFocus:!1,count:0}),methods:{handleAllCell(e){e.virTableTdId===this.id?this.isFocus||(this.isFocus=!0,setTimeout((()=>{u.default(this.$refs.cell).find("input").trigger("focus")}),64)):this.isFocus&&(this.isFocus=!1)}},mounted(){u.default(window).on("onAllCell",this.handleAllCell),this.renderEditor&&u.default(this.$refs.cell).addClass("cursor-editor")},beforeUnmount(){u.default(window).off("onAllCell",this.handleAllCell)},render(){return o.createVNode("div",{id:this.id,ref:"cell",role:"td",class:"xVirTable-cell","data-count":this.count,"data-prop":this.prop,"data-row-index":this.data.__virRowIndex},[(()=>this.renderEditor&&this.renderCell?this.isFocus?this.renderEditor({configs:this.configs,record:this.record,cell:this.cell,index:this.data.__virRowIndex}):this.renderCell({configs:this.configs,record:this.record,cell:this.cell,index:this.data.__virRowIndex}):!this.renderEditor&&this.renderCell?this.renderCell({configs:this.configs,record:this.record,cell:this.cell,index:this.data.__virRowIndex}):this.renderEditor&&!this.renderCell&&this.isFocus?this.renderEditor({configs:this.configs,record:this.record,cell:this.cell,index:this.data.__virRowIndex}):this.cell)()])}}),pt=o.defineComponent({props:["columnOrder","columns","rowHeight","selectedConfigs","selected"],emits:["selectedChange","update:scrollHeight","scroll"],inject:["xVirTable"],components:{xVirTableTd:ut},setup(){const{fnObserveDomResize:e,fnUnobserveDomResize:t}=dt();return{uniqBy:o.inject("uniqBy"),configs:o.inject("configs"),rowCache:{},fnObserveDomResize:e,fnUnobserveDomResize:t}},data(e){return this.debounceSetPerBlockHeight=k.debounce((function(e){this.viewportHeight=e,this.perBlockRowCount=Math.ceil(e/this.rowHeight),this.perBlockHeight=this.perBlockRowCount*this.rowHeight,this.setHeight()}),64),{isLoading:!1,perBlockHeight:1,perBlockRowCount:0,blockInViewCount:0,styleWrapperAll:{height:0,position:"relative"},virs1:[],virs2:[],virs3:[]}},mounted(){this.fnObserveDomResize(this.$refs.wrapper,(()=>{this.xVirTable.layoutDebounce(),this.debounceSetPerBlockHeight(this.$refs.wrapper.offsetHeight)})),this.$watch((()=>`${this.configs.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper1}_${this.styleWrapper2}_${this.styleWrapper3}`),(()=>{this.updateCell()}))},beforeUnmount(){this.fnUnobserveDomResize(this.$refs.wrapper)},computed:{fnIsSelected(){const{isSelect:e,prop:t}=this.selectedConfigs||{};return k.isFunction(e)?t=>e.call(this,{...t,selected:this.selected}):({rowData:e})=>{const i=e[t];return this.selected.includes(i)}},fnIsDisabled(){const{isDisabled:e}=this.selectedConfigs||{};return k.isFunction(e)?(...t)=>e.apply(this,t):()=>!1},positionBlock(){return this.blockInViewCount%3},styleWrapper1(){return 0===this.positionBlock?`transform:translateY(${this.blockInViewCount*this.perBlockHeight}px)`:1===this.positionBlock?`transform:translateY(${(this.blockInViewCount+2)*this.perBlockHeight}px)`:`transform:translateY(${(this.blockInViewCount+1)*this.perBlockHeight}px)`},styleWrapper2(){return 0===this.positionBlock?`transform:translateY(${(this.blockInViewCount+1)*this.perBlockHeight}px)`:1===this.positionBlock?`transform:translateY(${this.blockInViewCount*this.perBlockHeight}px)`:`transform:translateY(${(this.blockInViewCount-1)*this.perBlockHeight}px)`},styleWrapper3(){return 0===this.positionBlock?`transform:translateY(${(this.blockInViewCount+2)*this.perBlockHeight}px)`:1===this.positionBlock?`transform:translateY(${(this.blockInViewCount+1)*this.perBlockHeight}px)`:`transform:translateY(${this.blockInViewCount*this.perBlockHeight}px)`},vDomBodyTr1(){return this.genTr(this.virs1)},vDomBodyTr2(){return this.genTr(this.virs2)},vDomBodyTr3(){return this.genTr(this.virs3)}},methods:{clearCacheRow(){const e=k.filter(this.rowCache,((e,t)=>/^blockId/.test(t)));k.each(e,(e=>delete this.rowCache[e]))},onClickRow(e){var t;(null==(t=null==this?void 0:this.configs)?void 0:t.onClickRow)&&this.configs.onClickRow(e)},genTr(e){return(()=>{if(this.uniqBy){const t=k.reduce(e,((e,t)=>e+=t[this.uniqBy]),"blockId");return this.rowCache[t]||(this.rowCache[t]=k.map(e,((e,t)=>{if(!this.rowCache[e[this.uniqBy]]){const{__virRowIndex:t}=e;this.rowCache[e[this.uniqBy]]=o.createVNode("div",{role:"tr",class:"xVirTable-row flex horizon","data-row-key":t},[this.genSelectedVDom({rowIndex:t,rowData:e}),k.map(this.columnOrder,((t,i)=>o.createVNode(ut,{column:this.columns[t],"data-col-index":i,data:e,"onUpdate:data":t=>e=t},null)))])}return this.rowCache[e._id]}))),this.rowCache[t]}return k.map(e,((e,t)=>{const{__virRowIndex:i}=e,n={rowIndex:i,rowData:e};return o.createVNode("div",{role:"tr",class:"xVirTable-row flex horizon","data-row-key":i,onClick:()=>this.onClickRow(n)},[this.genSelectedVDom(n),k.map(this.columnOrder,((t,i)=>o.createVNode(ut,{column:this.columns[t],"data-index":i,data:e,"onUpdate:data":t=>e=t},null)))])}))})()},updateCell(){k("updateCell"),this.setVirs1(),this.setVirs2(),this.setVirs3()},setVirs1(){const e=Number(this.styleWrapper1.match(/(\d)/g).join(""))/this.perBlockHeight*this.perBlockRowCount,t=e+this.perBlockRowCount;this.virs1=this.fragment(e,t)},setVirs2(){const e=Number(this.styleWrapper2.match(/(\d)/g).join(""))/this.perBlockHeight*this.perBlockRowCount,t=e+this.perBlockRowCount;this.virs2=this.fragment(e,t)},setVirs3(){const e=Number(this.styleWrapper3.match(/(\d)/g).join(""))/this.perBlockHeight*this.perBlockRowCount,t=e+this.perBlockRowCount;this.virs3=this.fragment(e,t)},fragment(e,t){return this.configs.dataSource.slice(e,t).map(((t,i)=>(t.__virRowIndex=e+i,t)))},genSelectedVDom(e){if(!this.selectedConfigs)return null;const t=this.fnIsSelected(e);let i=this.fnIsDisabled(e);const n=t=>{const{prop:i}=this.selectedConfigs;this.emitSelectedChange(t.target.checked,e.rowData[i])};let s;if(k.isString(i)){i=!0;const e={content:i};s=o.withDirectives(o.createVNode(o.resolveComponent("ElCheckbox"),{checked:t,onChange:n,disabled:!0},null),[[o.resolveDirective("uiPopover"),e]])}else s=o.createVNode(o.resolveComponent("ElCheckbox"),{checked:t,onChange:n,disabled:i},null);return o.createVNode("div",{role:"td","data-prop":"xVirSelected",class:"flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check"},[s])},emitSelectedChange(e,t){this.$emit("selectedChange",{checked:e,id:t})},setTop:k.debounce((function(){this.$refs.refWrapper&&this.$refs.refWrapper.scrollTo({top:this.top,behavior:"smooth"})}),1e3),updateTop(e){if(e){const t=e.target.scrollTop,i=e.target.scrollLeft;this.$emit("scroll",i),this.blockInViewCount=Math.floor(t/this.perBlockHeight)}},setHeight(){const e=this.configs.dataSource.length*this.rowHeight;e&&this.viewportHeight&&e<this.viewportHeight?this.styleWrapperAll.width="calc(100% - 6px)":delete this.styleWrapperAll.width,this.styleWrapperAll.height=`${e}px`,this.$refs.wrapper&&this.$nextTick((()=>{this.$refs.wrapper.scrollTop>1?this.$refs.wrapper.scrollTop--:this.$refs.wrapper.scrollTop++}))}},watch:{rowHeight:{immediate:!0,async handler(){await k.ensureValueDone((()=>{var e,t;return null==(t=null==(e=this.$refs)?void 0:e.wrapper)?void 0:t.offsetHeight})),this.debounceSetPerBlockHeight(this.$refs.wrapper.offsetHeight)}},top(){this.setTop()},"configs.dataSource":{immediate:!0,async handler(){await k.ensureValueDone((()=>this.perBlockHeight)),this.updateCell(),this.clearCacheRow(),this.updateTop(!1),this.setHeight()}}},render(){return o.createVNode("div",{role:"body",class:"xVirTable-body-wrapper flex1 width100",ref:"wrapper",onScroll:this.updateTop},[o.createVNode("div",{style:this.styleWrapperAll},[o.createVNode("div",{class:"xVirTable-body-item item1",style:this.styleWrapper1},[this.vDomBodyTr1]),o.createVNode("div",{class:"xVirTable-body-item item2",style:this.styleWrapper2},[this.vDomBodyTr2]),o.createVNode("div",{class:"xVirTable-body-item item3",style:this.styleWrapper3},[this.vDomBodyTr3])])])}}),{MutatingProps:ht}=k,ft=e=>`width:${e}; min-width:${e}; max-width:${e};`;function mt(e){if(k.some(["rowHeight","columns"],(t=>!e[t]&&(alert("defXVirTableConfigs miss required "+t),!0))))throw new Error("defXVirTableConfigs miss required");return e.selectedConfigs&&(e.selected=e.selected||[],e.getSelectedRow=o.markRaw((function(){return k.filter(e.dataSource,(t=>{const i=t[e.selectedConfigs.prop];return k.isArrayFill(null==e?void 0:e.selected)&&e.selected.includes(i)}))}))),e}mt.type={many:"many",one:"one"};const gt=o.defineComponent({props:["configs","uniqBy"],components:{xVirTableTh:ct,xVirTableBody:pt},setup(e){o.provide("uniqBy",e.uniqBy),o.provide("configs",e.configs)},mounted(){this.initStyle(),this.layoutDebounce()},provide(){return{xVirTable:this}},data(){return this.resetOperationWidthDebounce=k.debounce(this.resetOperationWidth,Oe),this.layoutDebounce=k.debounce(this.layout,Oe),this.resetColumnWidthDebounce=k.debounce(this.resetColumnWidth,Oe),{styleWidthXVirTable:0,styleWidthOperation:"120px",selectedAll:!1}},computed:{selectedIndeterminate(){var e,t;const i=(null==(t=null==(e=this.configs)?void 0:e.dataSource)?void 0:t.length)||0,n=this.selected.length;return 0!=i&&0!=n&&i!=n},selected(){var e;return(null==(e=this.configs)?void 0:e.selected)||[]},selectedType(){var e,t,i;return!!(null==(e=this.configs)?void 0:e.selectedConfigs)&&((null==(i=null==(t=this.configs)?void 0:t.selectedConfigs)?void 0:i.type)||mt.type.many)},selectedProp(){var e,t,i,n;return!!this.selectedType&&((null==(t=null==(e=this.configs)?void 0:e.selectedConfigs)?void 0:t.prop)||alert("vVirTable miss this.selected id prop"),null==(n=null==(i=this.configs)?void 0:i.selectedConfigs)?void 0:n.prop)},selectedBy(){var e,t,i,n;return!!this.selectedType&&(!!k.isFunction(null==(t=null==(e=this.configs)?void 0:e.selectedConfigs)?void 0:t.fn)&&(null==(n=null==(i=this.configs)?void 0:i.selectedConfigs)?void 0:n.fn))},customClass(){var e,t;return k.isFunction(null==(e=this.configs)?void 0:e.customClass)?null==(t=this.configs)?void 0:t.customClass(this.xVirTableId):""},rowHeight(){var e;return(null==(e=this.configs)?void 0:e.rowHeight)||32},xVirTableId(){return`xVirTableId_${this._.uid}`},columnOrder(){var e,t,i;return(null==(e=this.configs)?void 0:e.columnOrder)?null==(t=this.configs)?void 0:t.columnOrder:Object.keys((null==(i=this.configs)?void 0:i.columns)||{})},columnWidthStyleArray(){return k.reduce(this.columnOrder,((e,t)=>{if(t===De)return e;{const i=this.configs.columns[t]||{},{width:n,__calcWidth:o}=i,s=o||n;return s&&e.push(`#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=${t}],#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${t}]{ ${ft(s)} }`),e}}),[`#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=${De}]{  ${ft(this.styleWidthOperation)} }`,`#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${De}]{  ${ft(this.styleWidthOperation)} }`])},vDomTheadSelect(){if(!this.selectedType)return null;let e=o.createVNode(o.resolveComponent("ElCheckbox"),{checked:this.selectedAll,indeterminate:this.selectedIndeterminate,onChange:this.handleSelectedChangeTh},null);return"one"==this.selectedType&&(e=null),o.createVNode("div",{role:"th",class:"flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check","data-prop":"xVirSelected"},[e])},vDomThead(){return o.createVNode("div",{role:"thead",class:"xVirTable-thead"},[o.createVNode("div",{role:"tr",class:"flex horizon"},[this.vDomTheadSelect,k.map(this.columnOrder,((e,t)=>{var i;const n=null==(i=this.configs)?void 0:i.columns[e];return o.createVNode(ct,{column:n,index:t,key:e},null)}))])])},styleContent(){const e=[`#${this.xVirTableId} div[role=table]{overflow:hidden;}`,`#${this.xVirTableId} div[role=tr] >div{flex:1; }`,`#${this.xVirTableId} div[role=tr] >div[role=th]{ width:200px;min-width:200px;max-width:200px;text-align:center;white-space: nowrap; }`,`#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=xVirSelected],#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=xVirSelected]{ width:32px;max-width:32px;min-width:32px;overflow:hidden;text-align:center; }`,`#${this.xVirTableId} div[role=tr] >div[role=td]{ width:200px;min-width:200px;max-width:200px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`].concat(this.columnWidthStyleArray,this.customClass);return this.styleWidthXVirTable&&(e.unshift(`#${this.xVirTableId} div[role=table] div[role=thead] {width:${this.styleWidthXVirTable}; }`),0===this.configs.dataSource.length&&e.unshift(`#${this.xVirTableId} .xVirTable-body-wrapper.flex1.width100 >div {width:${this.styleWidthXVirTable}; }`)),e.join("\n")}},watch:{"configs.selected"(e){0===(null==e?void 0:e.length)&&(this.selectedAll=!1)},"configs.dataSource":{handler(){this.resetOperationWidthDebounce()}},styleContent(){this.updateStyle(this.styleContent)}},methods:{resetColumnWidth(e){const t=`#${this.xVirTableId}`,i=u.default(t).outerWidth(),n=i-e-6,o=n>1,s=n<-2;console.log("superfluous",n,"isGrow",o,"isShrink",s);const l=`${t} >div[role=table] >div[role=thead] >div[role=tr] >div[role=th]`,r=u.default(l),a=k.filter(this.configs.columns,(e=>e.prop!==De&&!e.width));if(o){const e=Math.floor(n/a.length)-.5;k.each(r,(t=>{const i=t.dataset.prop;if(k.some(a,(e=>e.prop===i))){const n=t.offsetWidth+e;this.configs.columns[i].__calcWidth=`${n}px`}}))}if(s&&a.length>0){let e=10;if(k.each(r,(t=>{const i=t.dataset.prop,n=k.some(a,(e=>e.prop===i));e+=n?200:t.offsetWidth})),e<i){const t=Math.floor((i-e)/a.length)-.5;k.each(a,(e=>{const i=200+t;e.__calcWidth=`${i}px`}))}}},onBodyScroll(e){this.$refs.thead.scrollLeft=e},resetOperationWidth(){if(0!==this.configs.dataSource.length)try{const e=u.default(`#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${De}]`),t=e.find(">div"),i=e.outerWidth(),n=t.outerWidth();if(!i&&!n)throw new Error("uninit");i<n&&(this.styleWidthOperation=`${n}px`),this.layoutDebounce()}catch(e){this.resetOperationWidthDebounce()}},layout(){const e=`#${this.xVirTableId} >div[role=table] >div[role=thead] >div[role=tr] >div[role=th]`,t=`#${this.xVirTableId} .xVirTable-body-item`,i=k.map(u.default(t),(e=>e.offsetWidth));i.push(k.reduce(u.default(e),((e,t)=>e+=t.offsetWidth),0));const n=k.max(i);n&&(this.styleWidthXVirTable=`${n}px`,this.resetColumnWidthDebounce(n))},initStyle(){const e=u.default(`#${this.xVirTableId}`),t=u.default("<style/>",{id:`style_${this.xVirTableId}`}).append(this.styleContent);e.prepend(t)},updateStyle(e){u.default(`#style_${this.xVirTableId}`).html(e)},handleSelectedChange(){},handleSelectedChangeTh(e){const{checked:t}=e.target;t?(this.selectedAll=!0,this.configs.selected=k.map(this.configs.dataSource,(e=>ht(e,this.selectedProp)))):this.configs.selected=[]},handleSelectedChangeTd({id:e}){var t;const i="one"===this.selectedType,n=k.findIndex(null==(t=this.configs)?void 0:t.selected,(t=>t===e));n>-1?i?this.configs.selected=[]:this.configs.selected.splice(n,1):i?this.configs.selected=[e]:this.configs.selected.push(e)}},render(){var e,t,i;return o.createVNode("div",{id:this.xVirTableId,class:"xVirTable-wrapper flex vertical"},[o.createVNode("div",{ref:"thead",role:"table",class:"xVirTable-header-wrapper",style:"padding-right: 6px;width:100%"},[this.vDomThead]),o.createVNode(pt,{onScroll:this.onBodyScroll,columnOrder:this.columnOrder,columns:null==(e=this.configs)?void 0:e.columns,rowHeight:this.rowHeight,onSelectedChange:this.handleSelectedChangeTd,selectedConfigs:null==(t=this.configs)?void 0:t.selectedConfigs,selected:null==(i=this.configs)?void 0:i.selected},null)])}}),{$t:yt}=pe,vt=!1,Ct=!0,bt={email:()=>/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,mobile:()=>/^1[34578]\d{9}$/},xt=e=>(e.trigger=e.trigger||[tt.update],e.msg=e.msg||"",e),wt={SUCCESS:vt,FAIL:Ct,required:(e,t=[tt.update])=>xt({name:"required",msg:e||yt("必填项").label,validator:async e=>e?k.isArray(e)?e.length>0?vt:Ct:vt:k.isBoolean(e)||k.isNumber(e)&&!k.isNaN(e)?vt:Ct,trigger:t}),demo:()=>({name:"Demo",msg:"Demo",validator:async e=>(await k.sleep(1e3),Ct),trigger:[tt.update,tt.input,tt.change,tt.blur]}),email:()=>({name:"email",msg:()=>yt("请输入email").label,validator:async e=>bt.email().test(e)?vt:Ct,trigger:[tt.update,tt.input,tt.change,tt.blur]}),custom:({name:e,msg:t,validator:i,trigger:n})=>xt({name:e,msg:t,validator:i,trigger:n})},Vt=27,Tt=u.default(window),$t=u.default("html"),It=u.default(document),St="data-tips-follow-id",_t="data-directive-ui-move",kt="iframe",Nt="layui-layer",Dt="layui-layer-shade",Ot="layui-layer-move",Bt="layui-layer-content",Et="layui-layer-close",Lt="layui-layer-iframe",Ft="layui-layer-title",Pt=["layer-anim-00","layer-anim-01","layer-anim-02","layer-anim-03","layer-anim-04","layer-anim-05","layer-anim-06"],At=u.default(`<div class="${Ot}" id="${Ot}"></div>`);setTimeout((()=>{$t.append(At)}),0);const zt={zIndex:0,pointMousedown:[],basePath:(Rt=document.currentScript?document.currentScript.src:function(){for(var e,t=document.scripts,i=t.length-1,n=i;n>0;n--)if("interactive"===t[n].readyState){e=t[n].src;break}return e||t[i].src}(),{}.layer_dir||Rt.substring(0,Rt.lastIndexOf("/")+1)),config:{},end:{},minIndex:0,minLeft:[],btn:["&#x786E;&#x5B9A;","&#x53D6;&#x6D88;"],type:["dialog","page","iframe","loading","tips"],getStyle:function(e,t){var i=e.currentStyle?e.currentStyle:window.getComputedStyle(e,null);return i[i.getPropertyValue?"getPropertyValue":"getAttribute"](t)},reselect(){u.default.each(u.default("select"),(function(e,t){var i=u.default(this);i.parents("."+Nt)[0]||1==i.attr("layer")&&u.default("."+Nt).length<1&&i.removeAttr("layer").show(),i=null}))},record(e){const[t,i]=[Tt.height(),Tt.width()],n=e.height()>t;var o=[e.width()>i?i-64:e.width(),n?t-64:e.height(),n?32:e.position().top,e.position().left+parseFloat(e.css("margin-left"))];e.find(".layui-layer-max").addClass("layui-layer-maxmin"),e.attr({area:o})},rescollbar(e){$t.attr("layer-full")==e&&($t[0].style.removeProperty?$t[0].style.removeProperty("overflow"):$t[0].style.removeAttribute("overflow"),$t.removeAttr("layer-full"))}};var Rt;const jt={setZIndex(e){zt.zIndex=e},MSG:0,DIALOG:1,IFRAME:2,LOADING:3,TIPS:4,UP:1,RIGHT:2,BOTTOM:3,LEFT:4,v:"3.5.1",ie:(()=>{var e=navigator.userAgent.toLowerCase();if("ActiveXObject"in window){let t=e.match(/msie\s(\d+)/);return t?Number(t[1]):11}return 0})(),path:zt.basePath,config:function(e,t){return e=e||{},jt.cache=zt.config=u.default.extend({},zt.config,e),jt.path=zt.config.path||jt.path,"string"==typeof e.extend&&(e.extend=[e.extend]),e.extend,this},open(e){const t=new Wt(e),{_layerKey:i}=t;return i},alert(e,t,i){var n="function"==typeof t;return n&&(i=t),jt.open(u.default.extend({content:e,yes:i},n?{}:t))},confirm:(e,t,i,n)=>(k.isFunction(t)&&(n=i,i=t),jt.open(u.default.extend({content:e,btn:zt.btn,yes:i,btn2:n},type?{}:t))),msg(e,t,i=(()=>null)){var n=k.isFunction(t),o=zt.config.skin,s=(o?o+" "+o+"-msg":"")||"layui-layer-msg",l=Pt.length-1;return n&&(i=t),jt.open(u.default.extend({content:e,time:3e3,shade:!1,skin:s,title:!1,closeBtn:!1,btn:!1,resize:!1,end:i},n&&!zt.config.skin?{skin:s+" layui-layer-hui",anim:l}:((-1===(t=t||{}).icon||void 0===t.icon&&!zt.config.skin)&&(t.skin=s+" "+(t.skin||"layui-layer-hui")),t)))},load:(e,t)=>jt.open(u.default.extend({type:3,icon:e||0,resize:!1,shade:.01},t)),tips:(e,t,i)=>jt.open(u.default.extend({type:jt.TIPS,content:[e,t],closeBtn:!1,time:3e3,shade:!1,resize:!1,fixed:!1,maxWidth:260},i)),close:e=>e?new Promise(((t,i)=>{try{let i=function(){if("dialog"===o&&"object"===n.attr("data-content-type"))n.children(`:not(.${Lt})`).remove();else if(o===kt)try{var t=u.default(`#${Bt}${e}`)[0];t.contentWindow.document.write(""),t.contentWindow.close(),n.find(`.${Lt}`)[0].removeChild(t)}catch(i){}n[0].innerHTML="",n.remove();try{zt.end[e]&&zt.end[e](),delete zt.end[e]}catch(i){}};var n=u.default(`#${Nt}${e}`),o=n.attr("type");if(0===n.length)return;n.data("isOutAnim")&&n.addClass("layer-anim layer-anim-close"),u.default(`#layui-layer-moves, #${Dt}${e}`).remove(),6==jt.ie&&zt.reselect(),zt.rescollbar(e),n.attr("minLeft")&&(zt.minIndex--,zt.minLeft.push(n.attr("minLeft"))),setTimeout((function(){i(),t(!0)}),200)}catch(s){console.error(s),i(!1)}})):Promise.reject(),getChildFrame:(e,t)=>(t=t||u.default(`.${Bt}`).attr("data-layer-key"),u.default("#"+Nt+t).find("iframe").contents().find(e)),getFrameIndex:e=>u.default("#"+e).parents(`.${Bt}`).attr("data-layer-key"),iframeAuto(e){if(e){var t=jt.getChildFrame("html",e).outerHeight(),i=u.default("#"+Nt+e),n=i.find(`.${Ft}`).outerHeight()||0,o=i.find(`.${Bt}`).outerHeight()||0;i.css({height:t+n+o}),i.find("iframe").css({height:t})}},iframeSrc(e,t){u.default("#"+Nt+e).find("iframe").attr("src",t)},style(e,t,i){var n=u.default("#"+Nt+e);const o=n.find(`.${Bt}`),s=n.attr("type"),l=n.find(`.${Ft}`).outerHeight()||0;let r=n.find(`.${Bt}`).outerHeight()||0;const[a,c]=[Tt.height(),Tt.width()];n.attr("minLeft"),"loading"!==s&&"tips"!==s&&(i||(parseFloat(t.width)<=260&&(t.width=260),parseFloat(t.height)-l-r<=64&&(t.height=64+l+r)),t.height>a&&(t.height=parseFloat(a)),n.css(t),r=o.outerHeight(),s===kt?n.find("iframe").addClass("flex1"):o.css({height:parseFloat(t.height)-l-r-parseFloat(o.css("padding-top"))-parseFloat(o.css("padding-bottom"))}))},min(e,t){t=t||{};var i=u.default("#"+Nt+e),n=u.default("#"+Dt+e),o=i.find(`.${Ft}`).outerHeight()||0,s=i.attr("minLeft")||181*zt.minIndex+"px",l=i.css("position"),r={width:180,height:o,position:"fixed",overflow:"hidden"};zt.record(i),zt.minLeft[0]&&(s=zt.minLeft[0],zt.minLeft.shift()),t.minStack&&(r.left=s,r.top=Tt.height()-o,i.attr("minLeft")||zt.minIndex++,i.attr("minLeft",s)),i.attr("position",l),jt.style(e,r,!0),i.find(".layui-layer-min").hide(),"page"===i.attr("type")&&i.find(Bt).hide(),zt.rescollbar(e),n.hide()},restore(e){var t=u.default("#"+Nt+e),i=u.default("#"+Dt+e),n=t.attr("area").split(",");t.attr("type"),jt.style(e,{width:parseFloat(n[0]),height:parseFloat(n[1]),top:parseFloat(n[2]),left:parseFloat(n[3]),position:t.attr("position"),overflow:"visible"},!0),t.find(".layui-layer-max").removeClass("layui-layer-maxmin"),t.find(".layui-layer-min").show(),"page"===t.attr("type")&&t.find(Bt).show(),zt.rescollbar(e),i.show()},full(e){var t,i=u.default("#"+Nt+e);zt.record(i),$t.attr("layer-full")||$t.css("overflow","hidden").attr("layer-full",e),clearTimeout(t),t=setTimeout((function(){var t="fixed"===i.css("position");jt.style(e,{top:t?0:Tt.scrollTop(),left:t?0:Tt.scrollLeft(),width:Tt.width(),height:Tt.height()},!0),i.find(".layui-layer-min").hide()}),100)},title(e,t){u.default(`#${Nt}${t}`).find(`.${Ft}`).html(e)},async closeAll(e){const t=[];return u.default(`.${Nt}`).each((function(){const i=u.default(this);e?i.attr("type")===e&&t.push(i.attr("data-layer-key")):t.push(i.attr("data-layer-key"))})),await Promise.all(t.map(jt.close))},setLayerTop(e){const t=e.attr("type");if(!e.hasClass("set-layer-top")){const i=`.set-layer-top[type=${t}]`;u.default(i).removeClass("set-layer-top"),e.addClass("set-layer-top").appendTo($t)}}};class Wt{constructor(e){__publicField(this,"_layerKey",0),__publicField(this,"_IDLayer",Nt),__publicField(this,"_IDShade",Dt),__publicField(this,"_IDContent",Bt),__publicField(this,"zIndex",0),__publicField(this,"typeName",""),__publicField(this,"ismax",!1),__publicField(this,"isNeedTitle",!1),__publicField(this,"isContentTypeObject",!1),__publicField(this,"$eleLayer",null),__publicField(this,"$eleShade",null),__publicField(this,"config",{type:0,title:"信息",content:"",skin:"",area:"auto",offset:"auto",icon:-1,btn:"确认",btnAlign:"r",closeBtn:"1",shade:"0.3",shadeClose:!1,during:0,id:"",anim:0,isOutAnim:!0,maxmin:!1,fixed:!0,resize:!0,onResizing:!1,scrollbar:!0,maxWidth:360,maxHeight:0,zIndex:1,move:".layui-layer-title",moveOut:!1,onMoveEnd:!1,tips:2,tipsMore:!1,success:!1,yes:!1,onClickClose:!1,end:!1,full:!1,minStack:!0}),this.initConfig(e).insertLayer().addLayerListener().handleAnimation()}get cptDomShade(){const{config:e,_IDShade:t}=this;return e.shade?`<div class="${Dt}" id="${t}" style="z-index:${this.zIndex-1};"></div>`:""}get cptDomTitle(){const{config:e,_IDLayer:t}=this;if(this.isContentTypeObject&&!this.isNeedTitle)return"";"object"==typeof e.title||(e.title=[String(e.title),""]);const[i,n]=e.title||["",""];return`<div class="${Ft}" style="${n}" data-layer-id="${t}"> ${i} </div >`}get cptDomIcon(){return this.config.type==jt.MSG&&-1!==this.config.icon?`<i class="layui-layer-ico layui-layer-ico${this.config.icon}></i>`:""}get cptDomContent(){return this.config.type==jt.DIALOG&&this.isContentTypeObject?"":this.config.content||""}get cptDomSetDialogOperations(){const{config:e,ismax:t,_IDLayer:i}=this;return'<span class="layui-layer-setwin">'+(n=t?'<a class="layui-layer-min" href="javascript:;"><cite></cite></a><a class="layui-layer-ico layui-layer-max" href="javascript:;"></a>':"",e.closeBtn&&(n+=`<a data-layer-id="${i}" class="layui-layer-ico ${Et} `+Et+(e.title?e.closeBtn:e.type==jt.TIPS?"1":"2")+'" href="javascript:;"></a>'),n+"</span>");var n}get cptDomFooterBtns(){const{config:e}=this;if(e.btn){if("string"==typeof e.btn&&(e.btn=[e.btn,""]),k.every(e.btn,(e=>!e)))return"";const t=k.reduce(e.btn,((e,t)=>(t&&(e+=`<a class="${Bt}">${t}</a>`),e)),"");return`<div class="${Bt} layui-layer-btn-${e.btnAlign||""}">${t}</div>`}return""}get cptDomResizeBar(){return this.config.resize?'<span class="layui-layer-resize"></span>':""}get cptDomContainer(){const{config:e,typeName:t,isContentTypeObject:i,zIndex:n,_layerKey:o,_IDLayer:s,_IDContent:l}=this,r=e=>!!e,a=["flex vertical elevation-2",`layui-layer-${t}`,Nt,e.skin,[jt.IFRAME,jt.MSG].includes(e.type)&&!e.shade?"layui-layer-border":""].filter(r).join(" "),c=[Bt,e.contentClass,e.type==jt.MSG&&-1!==e.icon?"layui-layer-padding":"",e.type==jt.LOADING?`layui-layer-loading${e.icon}`:""].filter(r).join(" "),[d,u]=e.area||[];return`\n<div id="${s}" layer-wrapper="${s}" type="${t}"\n\t\tclass="${a}" \n\t\tdata-z-index="${n}"\n\t\tdata-layer-key="${o}"\n\t\tdata-during-time="${e.during}"\n\t\tdata-content-type="${i?"object":"string"}"\n\t\tstyle="position:fixed;\n\t\t\tz-index:${n};\n\t\t\twidth:${d}; \n\t\t\theight:${u};"\n\t\t>\n\t\t\t${this.cptDomTitle}\n\t\t\t<div class="${c}" id="${l}">\n\t\t\t\t${this.cptDomIcon}\n\t\t\t\t${this.cptDomContent}\n\t\t\t</div>\n\t\t\t${this.cptDomSetDialogOperations}\n\t\t\t${this.cptDomFooterBtns}\n\t\t\t${this.cptDomResizeBar}\n</div>`}initConfig(e){const t=this;t.config=Object.assign(t.config,e),t.config.icon=e.type===jt.LOADING?0:-1,t.config.maxWidth=Tt.width()-30,t.config.custumSettings=e;const{config:i}=t;t._layerKey=k.genId(""),t._IDLayer=`${Nt}${t._layerKey}`,t._IDShade=`${Dt}${t._layerKey}`,t._IDContent=`${Bt}${t._layerKey}`,t.zIndex=zt.zIndex+t.config.zIndex,t.typeName=zt.type[i.type||0],t.isNeedTitle=[jt.IFRAME,jt.DIALOG].includes(Number(i.type)),t.ismax=Boolean(i.maxmin&&t.isNeedTitle),t.isContentTypeObject="object"==typeof i.content,t.config.onClickClose=async t=>{const i=e=>k.isBoolean(e)&&!e;if(e.onClickClose){if(i(await e.onClickClose(t)))return!1}else if(e.onBeforeClose&&i(await e.onBeforeClose(t)))return!1;return!0};const{isContentTypeObject:n}=t;"string"==typeof i.area&&(i.area="auto"===i.area?["",""]:[i.area,""]),i.shift&&(i.anim=i.shift),6==jt.ie&&(i.fixed=!1);const o={[jt.MSG](){i.btn="btn"in i?i.btn:zt.btn[0],jt.closeAll("dialog")},[jt.IFRAME](){let e="auto",t=i.content;n&&(e=i.content[1]||"auto",t=i.content[0]||""),i.btn=[],i.content=`\n<iframe class="layui-layer-load flex flex1" \n\t\tscrolling="${e}" \n\t\tsrc="${t}"\n\t\tallowtransparency="true"\n\t\tonload="this.className=''" \n\t\tstyle="height:100%;" \n\t\tframeborder="0">\n</iframe>`},[jt.LOADING](){delete i.title,delete i.closeBtn,-1===i.icon&&i.icon,jt.closeAll("loading")},[jt.TIPS](){var e;n||(i.content=[i.content,"body"]),i.follow=i.content[1];i.content=`<div style="max-width:${(null==(e=null==i?void 0:i.custumSettings)?void 0:e.maxWidth)||"300px"};overflow:auto;">${i.content[0]}<div><i class="layui-layer-TipsG"></i>`,delete i.title,i.btn=[],i.tips="object"==typeof i.tips?i.tips:[i.tips,!0],i.tipsMore||jt.closeAll("tips")}}[i.type];return o&&o(),t}async setLayerPosition(){await k.sleep(34);const e=this,{config:t,_layerKey:i}=e;return e.offset(),t.type===jt.TIPS&&e.setTips(),e.$eleLayer.css("visibility","visible"),t.fullscreen&&setTimeout((()=>{jt.full(i)}),500),t.fixed&&Tt.on("resize",(function(){e.offset(),(/^\d+%$/.test(t.area[0])||/^\d+%$/.test(t.area[1]))&&e.setPosition(),t.type==jt.tips&&e.setTips()})),"number"==typeof t.during&&t.during>0&&setTimeout((function(){jt.close(e._layerKey)}),t.during),jt.setLayerTop(e.$eleLayer),e}handleAnimation(){const e=this,{config:t}=e;if(Pt[t.anim]){var i="layer-anim "+Pt[t.anim];e.$eleLayer.addClass(i).one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",(function(){u.default(this).removeClass(i)}))}return t.isOutAnim&&e.$eleLayer.data("isOutAnim",!0),e}insertLayer(){const e=this,{config:t,_layerKey:i,_IDShade:n}=e;if(e.$eleLayer=u.default(e.cptDomContainer),k.isObject(t.content)&&(k.isString(t.content)||k.isString(t.content.jquery))){const i=u.default(t.content);e.$eleLayer.find(`.${Bt}`).append(i)}return e.$eleLayer.css({visibility:"hidden",top:"100%",left:"100%"}),$t.append(e.$eleLayer),e.cptDomShade&&($t.append(e.cptDomShade),e.$eleShade=u.default(`#${n}`),e.$eleShade.css({"background-color":t.shade[1]||"#000",opacity:t.shade[0]||t.shade})),t.scrollbar||$t.css("overflow","hidden").attr("layer-full",i),e.setLayerPosition(),e}offset(){var e=this,t=e.config,i=e.$eleLayer,n=[i.outerWidth(),i.outerHeight()],o="object"==typeof t.offset;if(e.offsetTop=(Tt.height()-n[1])/2,e.offsetLeft=(Tt.width()-n[0])/2,o){const[i,n]=t.offset;e.offsetTop=i,e.offsetLeft=n||e.offsetLeft}else"auto"!==t.offset&&("t"===t.offset?e.offsetTop=0:"r"===t.offset?e.offsetLeft=Tt.width()-n[0]:"b"===t.offset?e.offsetTop=Tt.height()-n[1]:"l"===t.offset?e.offsetLeft=0:"lt"===t.offset?(e.offsetTop=0,e.offsetLeft=0):"lb"===t.offset?(e.offsetTop=Tt.height()-n[1],e.offsetLeft=0):"rt"===t.offset?(e.offsetTop=0,e.offsetLeft=Tt.width()-n[0]):"rb"===t.offset?(e.offsetTop=Tt.height()-n[1],e.offsetLeft=Tt.width()-n[0]):e.offsetTop=t.offset);return t.fixed||(e.offsetTop=/%$/.test(e.offsetTop)?Tt.height()*parseFloat(e.offsetTop)/100:parseFloat(e.offsetTop),e.offsetLeft=/%$/.test(e.offsetLeft)?Tt.width()*parseFloat(e.offsetLeft)/100:parseFloat(e.offsetLeft),e.offsetTop+=Tt.scrollTop(),e.offsetLeft+=Tt.scrollLeft()),i.attr("minLeft")&&(e.offsetTop=Tt.height()-(i.find(`.${Ft}`).outerHeight()||0),e.offsetLeft=i.css("left")),i.css({top:e.offsetTop,left:e.offsetLeft}),e}async setTips(){const{config:e,$eleLayer:t}=this,[i,n]=[t.outerWidth(),t.outerHeight()];let o=u.default(e.follow);0==o.length&&(o=$t);var s={width:o.outerWidth(),height:o.outerHeight(),top:o.offset().top,left:o.offset().left,tipTop:0,tipLeft:0};if(e.openAtPoint){const{top:t,left:i}=e.openAtPoint;s.top=t,s.left=i}var l=t.find(".layui-layer-TipsG");const[r,a]=e.tips||["1",""];function c(){s.left+i-Tt.width()>0?(s.tipLeft=s.left+s.width-i,l.css({right:12,left:"auto"})):s.tipLeft=s.left}const d={[jt.UP](){c(),s.tipTop=s.top-n-10,l.removeClass("layui-layer-TipsB").addClass("layui-layer-TipsT").css("border-right-color",a),s.top-(Tt.scrollTop()+n+16)<0&&d[2]()},[jt.RIGHT](){s.tipLeft=s.left+s.width+10,s.tipTop=s.top,l.removeClass("layui-layer-TipsL").addClass("layui-layer-TipsR").css("border-bottom-color",a),Tt.width()-(s.left+s.width+i+16)>0||d[3]()},[jt.BOTTOM](){c(),s.tipTop=s.top+s.height+10,l.removeClass("layui-layer-TipsT").addClass("layui-layer-TipsB").css("border-right-color",a),s.top-Tt.scrollTop()+s.height+n+16-Tt.height()>0&&d[4]()},[jt.LEFT](){s.tipLeft=s.left-i-10,s.tipTop=s.top,l.removeClass("layui-layer-TipsR").addClass("layui-layer-TipsL").css("border-bottom-color",a),i+16-s.left>0&&d[1]()}};d[r]&&d[r](),t.attr(St,e.follow.substring(1)),t.find(`.${Bt}`).css({"background-color":a,"padding-right":e.closeBtn?"30px":""}),t.css({left:s.tipLeft-Tt.scrollLeft(),top:s.tipTop-Tt.scrollTop(),"transform-origin":[l.hasClass("layui-layer-TipsT")?"top":"bottem",l.hasClass("layui-layer-TipsL")?"left":"right"].join(" ")}),a||l.remove()}onMoveOrResize(){var e=this;const{config:t,$eleLayer:i}=e,n=i.find(t.move),o=i.find(".layui-layer-resize");return n.css("cursor","move"),n.on("mousedown",(function(n){jt.setLayerTop(i),n.preventDefault(),t.move&&(zt.moveOrResizeInstance=e,zt.moveOrResizeType="move",zt.pointMousedown=[n.clientX-parseFloat(i.css("left")),n.clientY-parseFloat(i.css("top"))],At.css("cursor","move").show())})),o.on("mousedown",(function(t){jt.setLayerTop(i),t.preventDefault(),zt.moveOrResizeInstance=e,zt.moveOrResizeType="resize",zt.pointMousedown=[t.clientX,t.clientY],zt.moveOrResizeWH=[i.outerWidth(),i.outerHeight()],At.css("cursor","se-resize").show()})),e}addLayerListener(){const e=this,{$eleLayer:t,config:i}=e;if(i.success){const n=[t,e._layerKey,e];i.type==jt.IFRAME?t.find("iframe").on("load",(function(){i.success.apply(i,n)})):i.success.apply(i,n)}return t.find(`.${Bt}`).children("a").on("click",(function(){var n=u.default(this).index();0===n?i.yes?i.yes(e._layerKey,t):i.btn1?i.btn1(e._layerKey,t):jt.close(e._layerKey):!1===(i["btn"+(n+1)]&&i["btn"+(n+1)](e._layerKey,t))||jt.close(e._layerKey)})),t.find(`.${Et}`).on("click",(async function(){let n=!1;await i.onClickClose({_layerKey:e._layerKey,$eleLayer:t,dialogOptions:""})&&(n||(n=await jt.close(e._layerKey)),n||await jt.close(u.default(this).attr("data-layer-id")))})),i.shadeClose&&e.$eleShade.on("click",(function(){jt.close(e._layerKey)})),t.find(".layui-layer-min").on("click",(function(){!1===(i.min&&i.min(t,e._layerKey))||jt.min(e._layerKey,i)})),t.find(".layui-layer-max").on("click",(function(){u.default(this).hasClass("layui-layer-maxmin")?(jt.restore(e._layerKey),i.restore&&i.restore(t,e._layerKey)):(jt.full(e._layerKey,i),setTimeout((function(){i.full&&i.full(t,e._layerKey)}),100))})),i.end&&(zt.end[e._layerKey]=i.end),[jt.TIPS,jt.MSG,jt.LOADING].includes(i.type)||e.onMoveOrResize(),e}}jt.cache,It.on("click.setLayerTop","[layer-wrapper]",(e=>{const{currentTarget:t}=e,i=u.default(t);jt.setLayerTop(i)})).on("mousemove",`.${Ot}`,(function(e){const{moveOrResizeInstance:t,moveOrResizeType:i,onMoving:n}=zt;if(t instanceof Wt){const{$eleLayer:n,config:o}=t;if("move"===i){e.preventDefault();let t=e.clientX-zt.pointMousedown[0],i=e.clientY-zt.pointMousedown[1];const s="fixed"===n.css("position");if(zt.stX=s?0:Tt.scrollLeft(),zt.stY=s?0:Tt.scrollTop(),!o.moveOut){let e=Tt.width()-n.outerWidth()+zt.stX,o=Tt.height()-n.outerHeight()+zt.stY;t<zt.stX&&(t=zt.stX),t>e&&(t=e),i<zt.stY&&(i=zt.stY),i>o&&(i=o)}n.css({left:t,top:i})}if(o.resize&&"resize"===zt.moveOrResizeType){e.preventDefault();const t=e.clientX-zt.pointMousedown[0],i=e.clientY-zt.pointMousedown[1];n.css({width:zt.moveOrResizeWH[0]+t,height:zt.moveOrResizeWH[1]+i}),o.onResizing&&o.onResizing(n)}}else"function"==typeof n&&event&&n(event)})).on("mouseup",(function(e){if(zt.moveOrResizeInstance instanceof Wt){const{config:e}=zt.moveOrResizeInstance;e.onMoveEnd&&e.onMoveEnd(zt.moveOrResizeInstance),zt.moveOrResizeInstance=!1}At.hide()}));const Mt=k.debounce((async function(e,t){u.default(".x-modal-root").length>0||e.keyCode===Vt&&await t.closeDialog()}),100),Ht=o.defineComponent({props:["configs"],computed:{onCancel(){return this.configs.onCancel},onOk(){return this.configs.onOk},vDomOk(){var e;if(null==(e=this.configs)?void 0:e.hideOk)return null;const t={text:k.isInput(this.configs.textOk)?this.configs.textOk:pe.$t("确定").label,disabled:!!k.isInput(this.configs.disabledOk)&&this.configs.disabledOk,onClick:this.onOk||k.doNothing};return o.createVNode(o.resolveComponent("xButton"),{type:"primary",class:"ml10",configs:t},null)},vDomCancel(){var e;if(null==(e=this.configs)?void 0:e.hideCancel)return null;const t={text:k.isInput(this.configs.textCancel)?this.configs.textCancel:pe.$t("取消").label,disabled:!!k.isInput(this.configs.disabledCancel)&&this.configs.disabledCancel,onClick:this.onCancel||k.doNothing};return o.createVNode(o.resolveComponent("xButton"),{class:"ml10",configs:t},null)},vDomContent(){if(!this.$slots.default)return o.createVNode(o.Fragment,null,[this.vDomCancel,this.vDomOk]);try{const e=this.$slots.default();return e[0].children.pop(),e}catch(e){return this.$slots.default()}}},render(){return o.createVNode("div",{class:"flex middle end padding20"},[this.vDomContent])}}),Ut=(e,{appPlugins:t,dependState:i},n)=>{n.component("xDialogFooter",Ht),e.dialog.component=async e=>new Promise((n=>{const{component:s,title:l,area:r}=e,a=k.genId("xDialog");let c=u.default("<div/>",{id:a});const d=`#${a}`;e.yes&&(e._yes=e.yes,delete e.yes),e.closeDialog=async()=>{let t=!0;if(e.onBeforeClose){const i=await e.onBeforeClose({dialogOptions:e,_layerKey:"",$eleLayer:""});k.isBoolean(i)&&!i&&(t=!1)}t&&jt.close(h._layerKey)};let p=null,h={_layerKey:"",handler:t=>Mt(t,e),on(t){h._layerKey=t,e.isEcsCloseDialog&&u.default(document).on(`keyup.${d}`,h.handler)},off(){u.default(document).off(`keyup.${d}`,h.handler),h=null}};const f=k.merge(e,{contentClass:"flex1",offset:["160px",null],btn:[]},e,{type:jt.DIALOG,title:[l||""],area:r||[],content:c,offset:["160px",null],btn:[],success(l,r,a){h.on(r),e._layerInstance=a,e._dialog$ele=l,e._layerKey=r;try{p=o.createApp(o.defineComponent({components:{BussinessComponent:s},created(){this.dialogOptions._contentInstance=this,this.dialogOptions.keepTop&&setTimeout((()=>{u.default(`#layui-layer-shade${r}`).css("z-index",1)}),6),n(this.dialogOptions)},data:()=>({dialogOptions:e}),render(){return o.createVNode("div",{class:"ventose-dialog-content","data-el-id":d},[o.createVNode(s,{propDialogOptions:this.dialogOptions},null)])}})),p.use(t,{dependState:i}),p.mount(d)}catch(c){console.error(c)}e.onAfterOpenDialoag&&e.onAfterOpenDialoag(p)},cancel:()=>(e.closeDialog(),!1),end(){h.off(),c.remove(),c=null,p&&(p.unmount(),p=null),e.payload=null,e._contentInstance=null,e=null}},k.omit(e,["end","cancel","success","content"]));jt.open(f)}))},qt={},Gt={},Yt={},Kt={},Xt="data-app-id",Jt="data-follow-id",Zt=200,Qt={},ei={};function ti({$ele:e,followId:t,appId:i,event:n}){const s=Qt[t]||{content:""};if(!s.content){if(!s.onlyEllipsis)return;{const t=e.width()||0,i=e.text(),n=u.default(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${i}</span>`);n.appendTo(u.default("body"));const o=n.width()||0;n.remove(),o>t&&(s.content=i)}}let l,r=s.content;if(!r)return;let a={tips:[{top:1,right:2,bottom:3,left:4}[s.placement||"top"],"#fff"],during:6e5};if(e.attr("data-open-at-point")&&(a.openAtPoint={left:e.clientX,top:e.clientY}),k.isPlainObject(s.content)){const e=`${t}_content`;r=`<div id="${e}"></div>`,a.success=function(t,n){l=o.createApp(s.content),l.use(qt[i],{dependState:Gt[i]}),l.mount(`#${e}`),s.afterOpenDialoag&&s.afterOpenDialoag(l)},a.end=function(){l&&(l.unmount(),l=null)}}s.maxWidth&&(a.maxWidth=maxWidth),setTimeout((()=>{Kt[t]&&(ei[t]=jt.tips(r,`#${t}`,a))}),s.delay||32)}function ii(e){Yt[e]&&(clearTimeout(Yt[e]),delete Yt[e]),Kt[e]=!0}function ni(e,t={}){delete Kt[e],Yt[e]=setTimeout((()=>{const t=ei[e];t&&jt.close(t).then((()=>{delete ei[e],delete Yt[e]}))}),Zt)}function oi(e){e.preventDefault();const t=u.default(this),i=t.attr(Jt),n=t.attr(Xt);Kt[i]=!0,ei[i]?ni(i):ti({$ele:t,followId:i,appId:n,event:e})}function si(e,t={}){e.directive("xloading",{updated(e,t){t.value?u.default(e).addClass("x-loading"):u.default(e).removeClass("x-loading")}})}function li(e){e.directive("uiMove",{mounted(e,t){if(t.value&&t.value.onMoving){const i=u.default(e),n=k.genId("xResize");i.attr(_t,n),i.on("mousedown",(function(e){At.css("cursor","move").show();const n=k.getLeftTopFromAbsolute(i);n.w=i.width(),n.h=i.height();const{top:o,left:s}=k.getLeftTopFromTranslate(i);n.translateX=s,n.translateY=o,zt.onMoving=o=>{t.value.onMoving({$ele:i,clickInfo:n,clickEvent:e,movingEvent:o})}}))}},unmounted(e){u.default(e).attr(_t)}})}u.default(document).on("click.uiPopver",`[${Jt}][data-trigger=click]`,oi),u.default(document).on("contextmenu.uiPopver",`[${Jt}][data-trigger=rightClick]`,oi),u.default(document).on("mouseenter.uiPopver",`[${Jt}]`,(function(e){const t=u.default(this),i=t.attr(Jt);if(!Kt[i]){const n=t.attr(Xt);if(ii(i),ei[i])return;if("click"===t.attr("data-trigger"))return;if("rightClick"===t.attr("data-trigger"))return;ti({$ele:t,followId:i,appId:n,event:e})}})),u.default(document).on("mouseleave.uiPopver",`[${Jt}]`,(function(e){ni(u.default(this).attr(Jt))})),u.default(document).on("mouseenter.uiPopverTips",`[${St}]`,(function(e){ii(u.default(this).attr(St))})),u.default(document).on("mouseleave.uiPopverTips",`[${St}]`,(function(e){ni(u.default(this).attr(St))}));const ri=(e,t)=>{!function(e,t){const i=k.genId("appId");function n(e,t){var i,n,o,s;const l=u.default(e),r=l.attr(Jt);if(t.value){if(Qt[r]=t.value,null==(i=t.value)?void 0:i.trigger){l.attr("data-trigger",null==(n=t.value)?void 0:n.trigger);const e={rightClick:"pointer-right-click"}[null==(o=t.value)?void 0:o.trigger]||"pointer";l.hasClass(e)||l.addClass()}(null==(s=t.value)?void 0:s.openAtPoint)&&l.attr("data-open-at-point",!0)}}qt[i]=t.appPlugins,Gt[i]=t.dependState,e.directive("uiPopover",{mounted(e,t){!function(){const t=k.genId("xPopoverTarget");u.default(e).addClass("x-ui-popover").attr("id",t).attr(Xt,i).attr(Jt,t)}(),n(e,t)},beforeUpdate(e,t){n(e,t)},unmounted(e){const t=u.default(e).attr(Jt);"string"==typeof ei[t]&&ei[t]&&jt.close(ei[t]),delete Qt[t],delete Kt[t]}})}(e,t),[si,li].forEach((t=>t(e)))};let ai=0;function ci(e){const t=ci.item(e);return{[t.prop]:t}}ci.item=e=>{e.itemType=e.itemType||"Input",k.isObject(e.itemType)&&(e.itemType.__v_isReactive=!1);const t=k.merge({prop:"xItem"+ai++,itemTips:{type:"",msg:""}},e);return t._$updateUI=e=>{k.each(e,((e,i)=>{t[i]=e}))},t},ci.labelWithTips=({label:e,tips:t,icon:i})=>{return o.createVNode("span",{class:"flex middle"},[e,o.createVNode(o.resolveComponent("aTooltip"),{title:t},(n=i,"function"==typeof n||"[object Object]"===Object.prototype.toString.call(n)&&!o.isVNode(n)?i:{default:()=>[i]}))]);var n};const di=e=>({title:i="",content:n=""})=>new Promise(((s,l)=>{i=(t=>{if(t){return{success:pe.$t("成功").label,info:pe.$t("提示").label,error:pe.$t("错误").label,warning:pe.$t("警告").label}[e]}return i})(!i),t.ElMessageBox[e](n,i,{icon:o.createVNode("link",{rel:"icon",type:"image/svg+xml",href:"/ExclamationCircleOutlined.svg"},null),confirmButtonText:pe.$t("确定").label,cancelButtonText:pe.$t("取消").label,class:"test"}).then(s).catch(l)}));jt.loading=function(e){if(this.loading.count=this.loading.count||1,this.loading.deep=this.loading.deep||new Set,u.default("body").trigger("click"),!(e>=0)){let e=this.loading.count++;return 0===this.loading.deep.size&&(this.loading.index=jt.load(1)),this.loading.deep.add(e),e}this.loading.deep.has(e)?(this.loading.deep.delete(e),0===this.loading.deep.size&&jt.close(this.loading.index)):console.error("loading",e)};const ui={confirm({title:e,content:i,okText:n,cancelText:o}){t.ElMessageBox.confirm(i,e,{confirmButtonText:n||pe.$t("确定").label,cancelButtonText:o||pe.$t("取消").label}).then(resolve).catch(reject)},dialog:{component:async e=>null,success:di("success"),info:di("info"),error:di("error"),warning:di("warning"),confirm:({title:e,content:i,okText:n,cancelText:o})=>new Promise((async(s,l)=>{t.ElMessageBox.confirm(i,e,{confirmButtonText:n||pe.$t("确定").label,cancelButtonText:o||pe.$t("取消").label}).then(s).catch(l)})),delete:({title:e,content:i}={})=>(e=e||pe.$t("删除").label,i=i||pe.$t("删除确认提示").label,new Promise(((n,s)=>{t.ElMessageBox.confirm({title:e,icon:o.createVNode(o.resolveComponent("ExclamationCircleOutlined"),{style:"color:red"},null),content:i,okType:"danger",okText:pe.$t("确定").label,cancelText:pe.$t("取消").label,onOk(){n("ok")},onCancel(){s()}})})))},message:t.ElMessage,notification:new Proxy(t.ElNotification,{get(e,t,i){const n=e[t];return new Proxy(n,{apply:(e,t,i)=>("string"==typeof i[0]&&(i[0]=k.merge({message:i[0]},i[1]||{})),e.apply(t,i))})}}),layer:jt},pi=()=>{let e=u.default("html head");return k.is$Selected(e)||(e=u.default("<head/>"),e.prependTo(u.default("html"))),e},hi={labelTips:e=>(t,i)=>{const{prop:n,label:s}=t;return o.createVNode("div",{class:"x-form-item-label"},[o.createVNode("label",{for:n,class:i},[s,o.createVNode(o.resolveComponent("aPopover"),{trigger:"hover",placement:"top"},{content:()=>e,default:()=>o.createVNode(o.resolveComponent("xIcon"),{icon:"Insidetips",class:"pointer ml4"},null)})])])}};const fi={},mi={idCounts:{},add(e){const t=this.idCounts[e]||0;this.idCounts[e]=t+1},remove(e){const t=(this.idCounts[e]||0)-1;this.idCounts[e]=t<0?0:t}},gi=k.debounce((function(){k.each(mi.idCounts,((e,t)=>{e>0&&(delete fi[t],delete mi.idCounts[t]),Object.keys(fi).includes(t)||delete mi.idCounts[t]}))}),3e5);const yi=o.defineComponent({name:"xLogObject",props:["obj"],computed:{objString:{get(){return k.isObject(this.obj)?JSON.stringify(this.obj,null,2):""}}},render(){return!pe.isDev||this.$attrs.hide?null:o.createVNode("pre",{style:"width:500px;height:400px;"},[o.createVNode("code",null,[o.createTextVNode(" "),this.objString,o.createTextVNode(" ")])])}}),vi=o.defineComponent({props:["col"],computed:{isHide(){return this.col.isHide||!1},styleLabel:()=>({}),vDomLabel(){return this.col.label},vDomContent(){return this.col.value}},render(){return this.isHide?null:o.createVNode(o.Fragment,null,[o.createVNode("div",{class:"x-descriptions-item-label",style:this.styleLabel},[this.vDomLabel]),o.createVNode("div",{class:"x-descriptions-item-content flex1"},[this.vDomContent])])}}),Ci=o.defineComponent({props:["row"],computed:{colArray(){var e;return(null==(e=null==this?void 0:this.row)?void 0:e.colArray)||!1},vDomCol(){return this.row?k.map(this.colArray,(e=>o.createVNode(vi,{col:e},null))):null},styleRow(){var e;return(null==(e=null==this?void 0:this.row)?void 0:e.style)?this.row.style:""}},render(){return o.createVNode("div",{class:"InfoCardRow x-descriptions-row flex middle",style:this.styleRow},[this.vDomCol])}}),bi=o.defineComponent({props:["info","title"],methods:{updateLableStyle(e){const t=k.map(k.merge({"min-width":"120px","text-align":"right"},e),((e,t)=>`${t}: ${e}`)).join(";"),i=`#${this.id} .x-descriptions-item-label {${t}}`;if(!this.$styleEle){const e=u.default(`#${this.id}`),t=u.default("<style/>",{id:`style_${this.id}`});e.prepend(t),this.$styleEle=t}this.$styleEle.html(i)}},mounted(){this.$watch("info.colLabelWidth",(e=>{e&&(k("width",e),this.updateLableStyle({width:e}))}),{immediate:!0,deep:!0})},computed:{id(){return`InfoCard_${this._.uid}`},colLabelWidth(){var e;return(null==(e=null==this?void 0:this.info)?void 0:e.colLabelWidth)||"120px"},rowArray(){var e;return(null==(e=null==this?void 0:this.info)?void 0:e.rowArray)||!1},vDomTitle(){return this.title?o.createVNode("div",{class:"x-descriptions-header"},[o.createVNode("div",{class:"x-descriptions-title"},[this.title])]):null},vDomDescriptions(){return this.rowArray?o.createVNode("div",{class:"x-descriptions-view"},[k.map(this.rowArray,(e=>o.createVNode(Ci,{row:e},null)))]):this.$slots.default?this.$slots.default():null}},render(){return o.createVNode("div",{class:"x-descriptions x-descriptions-middle x-descriptions-bordered x-infomation-card",id:this.id},[this.vDomTitle,this.vDomDescriptions])}});var xi=function(){var e=document.getSelection();if(!e.rangeCount)return function(){};for(var t=document.activeElement,i=[],n=0;n<e.rangeCount;n++)i.push(e.getRangeAt(n));switch(t.tagName.toUpperCase()){case"INPUT":case"TEXTAREA":t.blur();break;default:t=null}return e.removeAllRanges(),function(){"Caret"===e.type&&e.removeAllRanges(),e.rangeCount||i.forEach((function(t){e.addRange(t)})),t&&t.focus()}},wi={"text/plain":"Text","text/html":"Url",default:"Text"};var Vi=function(e,t){var i,n,o,s,l,r,a=!1;t||(t={}),i=t.debug||!1;try{if(o=xi(),s=document.createRange(),l=document.getSelection(),(r=document.createElement("span")).textContent=e,r.ariaHidden="true",r.style.all="unset",r.style.position="fixed",r.style.top=0,r.style.clip="rect(0, 0, 0, 0)",r.style.whiteSpace="pre",r.style.webkitUserSelect="text",r.style.MozUserSelect="text",r.style.msUserSelect="text",r.style.userSelect="text",r.addEventListener("copy",(function(n){if(n.stopPropagation(),t.format)if(n.preventDefault(),void 0===n.clipboardData){i&&console.warn("unable to use e.clipboardData"),i&&console.warn("trying IE specific stuff"),window.clipboardData.clearData();var o=wi[t.format]||wi.default;window.clipboardData.setData(o,e)}else n.clipboardData.clearData(),n.clipboardData.setData(t.format,e);t.onCopy&&(n.preventDefault(),t.onCopy(n.clipboardData))})),document.body.appendChild(r),s.selectNodeContents(r),l.addRange(s),!document.execCommand("copy"))throw new Error("copy command was unsuccessful");a=!0}catch(c){i&&console.error("unable to copy using execCommand: ",c),i&&console.warn("trying IE specific stuff");try{window.clipboardData.setData(t.format||"text",e),t.onCopy&&t.onCopy(window.clipboardData),a=!0}catch(d){i&&console.error("unable to copy using clipboardData: ",d),i&&console.error("falling back to prompt"),n=function(e){var t=(/mac os x/i.test(navigator.userAgent)?"⌘":"Ctrl")+"+C";return e.replace(/#{\s*key\s*}/g,t)}("message"in t?t.message:"Copy to clipboard: #{key}, Enter"),window.prompt(n,e)}}finally{l&&("function"==typeof l.removeRange?l.removeRange(s):l.removeAllRanges()),r&&document.body.removeChild(r),o()}return a};const Ti=o.defineComponent({name:"xLinkCopy",props:["to"],data:()=>({}),setup(e){},computed:{xDomText(){var e;return(null==(e=this.$slots)?void 0:e.default)?this.$slots.default():""}},watch:{},created(){},methods:{handleClickText(...e){this.to&&this.to.apply(this,e)},copyText(){Vi(u.default(this.$refs.contents).text())?ui.message.success(this.$t("已经成功复制到剪切板").label):ui.message.error(this.$t("复制到剪切板失败").label)}},render:({xDomText:e,handleClickText:t,copyText:i})=>o.createVNode("div",{class:"xLinkCopy x-btn x-btn-link flex"},[o.withDirectives(o.createVNode("div",{class:"flex1 ellipsis mr4",onClick:t,ref:"contents"},[e]),[[o.resolveDirective("uiPopover"),{onlyEllipsis:!0}]]),o.createVNode(o.resolveComponent("xIcon"),{icon:"InsideCopy",class:"xLinkCopy_icon",onClick:i},null)])}),$i=o.defineComponent({name:"xInfoDiffCard",props:["old","new","title"],render(){return o.createVNode("div",null,[o.createVNode("div",null,[this.title,o.createTextVNode(":")]),o.createVNode("div",{class:"flex vertical"},[o.createVNode("div",{class:"xInfoDiffCard-value xInfoDiffCard-delta xInfoDiffCard-left-value"},[o.createVNode("pre",null,[this.old])]),o.createVNode("div",{class:"xInfoDiffCard-value xInfoDiffCard-right-value"},[o.createVNode("pre",null,[this.new])])])])}});pe.isDev&&(window.dayjs=d.default,window.moment=d.default,window.jquery=u.default,window._=k);const Ii={usefnObserveDomResize:dt,useScopeStyle:()=>{const e=o.reactive({});return{setStyle:function(t){const i=o.getCurrentInstance();var n,s;k.each(t,((t,i)=>{e[i]=t})),n=i.ctx,s=function(e){return k.map(k.merge({width:"120px","text-align":"right"},e),((e,t)=>`${t}: ${e}`)).join(";")}(e),n.$styleEle||(n.$styleEle=$(n.ele)),n.$styleEle.html(s)}}}},Si={...{xIcon:ce,xButton:me,xGap:ge,xRender:ye,xItem:at,xForm:xe,xButtonCountDown:we,xCharts:Ie,xView:Ne,xDataGrid:ze,xDataGridToolbar:Ue,xColFilter:Re,xPagination:Ae,xCellLabel:Ye,xVirScroll:Je,xVirTable:gt,xLogObject:yi,xInfoCard:bi,xLinkCopy:Ti,xInfoDiffCard:$i}},_i={install:(e,t)=>{e.config.globalProperties.$t=de,ri(e,t),Ut(ui,t,e),k.each(Si,((t,i)=>{t.name?i=t.name:k.doNothing(i,"miss name"),e.component(t.name||i,t)})),e.use(c.default)}};Object.defineProperty(e,"dayjs",{enumerable:!0,get:()=>d.default}),Object.defineProperty(e,"moment",{enumerable:!0,get:()=>d.default}),Object.defineProperty(e,"$",{enumerable:!0,get:()=>u.default}),e.$t=de,e.AllWasWell=e=>k.isArray(e)&&0===e.length,e.Cpt_UI_locale=he,e.EVENT_TYPE=tt,e.FormRules=wt,e.RegexFn=bt,e.State_UI=pe,e.UI=ui,e.VNodeCollection=hi,e.VentoseUIWithInstall=_i,e._=k,e.antColKey=function(e,t){const i={dataIndex:e,prop:e,key:e};return t&&(i.renderCell=t(e)),i},e.compileVNode=function(e,t,i){if(k.isPlainObject(i)&&i.vNode)return i.vNode;const n=!i;if(k.isString(n)&&fi[i])return mi.remove(i),gi(),fi[i];const s=o.h(o.defineComponent({template:e,mounted(){n||(mi.remove(i),fi[i]=this._.vnode)},unmounted(){n||(e=>{mi.add(e),gi()})(i)},setup:()=>k.isFunction(t)?t():t}));if(!k.isPlainObject(i))return s;i.vNode=s},e.components=Si,e.compositionAPI=Ii,e.defCol=Le,e.defColActions=function(e){return Le(k.merge({label:pe.$t("操作").label,prop:De,fixed:"right",width:"100px"},e))},e.defColActionsBtnlist=function(e){const{fold:t=3,btns:i=[]}=e,[n,s]=i.length>t?[i.slice(0,t-1),i.slice(t-1)]:[i,[]];return o.createVNode("div",{class:"flex middle"},[o.createVNode(o.resolveComponent("xGap"),{l:"4"},null),k.map(n,(e=>{const t=k.merge({type:"link",size:"small"},e);return o.createVNode(o.Fragment,null,[o.createVNode(o.resolveComponent("xButton"),{configs:t},null),o.createVNode(o.resolveComponent("xGap"),{l:"4"},null)])})),0===s.length?null:o.createVNode(o.Fragment,null,[o.createVNode(o.resolveComponent("aDropdown"),null,{default:()=>o.createVNode(o.resolveComponent("elButton"),{type:"link"},{default:()=>[pe.$t("更多").label]}),overlay:()=>{let e;return o.createVNode(o.Fragment,null,[o.createVNode(o.resolveComponent("elMenu"),null,(t=e=k.map(s,(e=>{const t=k.merge({type:"link",size:"small"},e);return o.createVNode(o.resolveComponent("elMenuItem"),{key:e.text},{default:()=>[o.createVNode(o.resolveComponent("xButton"),{configs:t},null)]})})),"function"==typeof t||"[object Object]"===Object.prototype.toString.call(t)&&!o.isVNode(t)?e:{default:()=>[e]}))]);var t}}),o.createVNode(o.resolveComponent("xGap"),{l:"4"},null)])])},e.defDataGridOption=function(e){return e.pagination=e.pagination||Be(),e.isLoading=Boolean(e.isLoading),e.queryTableList&&(e._queryTableList_origin=e.queryTableList,e.queryTableList=async function(...e){this.isLoading=!0,await this._queryTableList_origin.apply(this,e),this.isLoading=!1}),e.onPaginationChange=e.onPaginationChange||async function(e){await this.queryTableList({pagination:e})},e},e.defFormConfigs=function(e){const t={};return e.forEach((e=>{e=ci.item(e),t[e.prop]=e})),t},e.defItem=ci,e.defPagination=Be,e.defXVirTableConfigs=mt,e.getPaginationPageSize=function(e){const t=pe.pagination,i=e.pagination,{page:n,size:o}=t;return{[n]:i[n],[o]:i[o]}},e.iStorage=C,e.lStorage=v,e.newReactiveState=function(e){const t={};function i({value:e,prop:t}){if(!e)return!1;{let i="function"==typeof e;if(i&&(i=/^_\$/.test(t),i))return!0}}p.default.each(e,((n,s)=>{if(i({value:n,prop:s}))e[s]=o.markRaw(n);else try{t[s]=p.default.cloneDeep(n)}catch(l){console.error(l)}}));const n={__defaultValues:o.markRaw(t),_$resetSelf:o.markRaw((function(){p.default.each(e.__defaultValues,((t,i)=>{e[i]=t}))})),_$null:o.markRaw((function(){p.default.each(e,((t,o)=>{i({value:t,prop:o})||Object.keys(n).includes(o)||delete e[o]}))}))};return p.default.each(n,((t,i)=>e[i]=t)),o.reactive(e)},e.pickValueFrom=e=>k.reduce(e,((e,t,i)=>{try{e[i]=JSON.parse(JSON.stringify(t.value))}catch(n){}return e}),{}),e.resetValueOf=(e,t)=>(k.each(t,((t,i)=>{e[i]=JSON.parse(JSON.stringify(t))})),e),e.setCSSVariables=e=>{let t=(()=>{let e=pi(),t=e.find("#cssVariables");return k.is$Selected(t)||(t=u.default("<style/>",{id:"cssVariables"}),t.appendTo(e)),t})();const i=k.map(e,((e,t)=>`--${t}:${e}`)).join(";");t.text(`:root{${i}}`)},e.setDataGridInfo=function(e,t={}){const{data:i=[],total:n=!1,selected:o=!1}=t;e.dataSource=i,o&&(e.selected=o),(n||0===n)&&Ee(e,{total:n})},e.setDocumentTitle=e=>{(()=>{let e=pi(),t=e.find("title");return k.is$Selected(t)||(t=u.default("<title/>"),t.prependTo(e)),t})().text(e)},e.setPagination=Ee,e.setValueTo=(e,t)=>{k.each(t,((t,i,n)=>{void 0!==i&&e[n]&&(e[n].value=i,k.isFunction(e[n].onChange)&&e[n].onChange(i))}))},e.vModel=function(e,t,i={data:"data",dataXItem:"dataXItem"}){const{data:n="data",dataXItem:o="dataXItem"}=i;return{value:e[n][t],configs:e[o][t],"onUpdate:modelValue"(i){e[n][t]=i}}},e.validateForm=async function(e,t){let i=Object.keys(e);return t&&(i=Object.keys(t)),Promise.all(k.map(i,(i=>{const n=e[i],o=et({value:t&&t[i]||n.value,xItemConfigs:n});return new Promise((e=>{try{(()=>{if(!n.isShow)return e("");k.isFunction(n.isShow)&&!n.isShow()&&e("")})(),n.validate?n.validate({eventType:tt.validateForm,value:o,resolve:e}):e("")}catch(t){console.error(t)}}))}))).then((e=>e=e.filter((e=>e&&e[0]&&e[1])))).catch((e=>e))},e.validateItem=async function(e){const t=u.default(`${e} [id^=xItem_]`);k.map(t,((e,t,i)=>{console.log(pe.xItemCollection[e.id])}))},e.xU=k,Object.defineProperties(e,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}})}));
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+(function(global, factory) {
+  typeof exports === "object" && typeof module !== "undefined" ? factory(exports, require("element-plus"), require("dayjs"), require("jquery"), require("vue"), require("lodash"), require("jsondiffpatch"), require("axios")) : typeof define === "function" && define.amd ? define(["exports", "element-plus", "dayjs", "jquery", "vue", "lodash", "jsondiffpatch", "axios"], factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, factory(global.VentoseUI = {}, global.ElementPlus, global.dayjs, global.$, global.Vue, global._, global.jsondiffpatch, global.axios));
+})(this, function(exports2, ElementPlus, dayjs, $$1, vue, _, jsondiffpatch, axios) {
+  "use strict";
+  const _interopDefaultLegacy = (e) => e && typeof e === "object" && "default" in e ? e : { default: e };
+  const ElementPlus__default = /* @__PURE__ */ _interopDefaultLegacy(ElementPlus);
+  const dayjs__default = /* @__PURE__ */ _interopDefaultLegacy(dayjs);
+  const $__default = /* @__PURE__ */ _interopDefaultLegacy($$1);
+  const ___default = /* @__PURE__ */ _interopDefaultLegacy(_);
+  const axios__default = /* @__PURE__ */ _interopDefaultLegacy(axios);
+  const index$1 = "";
+  const ui = "";
+  const index = "";
+  function promisifyRequest(request) {
+    return new Promise((resolve2, reject2) => {
+      request.oncomplete = request.onsuccess = () => resolve2(request.result);
+      request.onabort = request.onerror = () => reject2(request.error);
+    });
+  }
+  function createStore(dbName, storeName) {
+    const request = indexedDB.open(dbName);
+    request.onupgradeneeded = () => request.result.createObjectStore(storeName);
+    const dbp = promisifyRequest(request);
+    return (txMode, callback) => dbp.then((db) => callback(db.transaction(storeName, txMode).objectStore(storeName)));
+  }
+  let defaultGetStoreFunc;
+  function defaultGetStore() {
+    if (!defaultGetStoreFunc) {
+      defaultGetStoreFunc = createStore("keyval-store", "keyval");
+    }
+    return defaultGetStoreFunc;
+  }
+  function get(key, customStore = defaultGetStore()) {
+    return customStore("readonly", (store) => promisifyRequest(store.get(key)));
+  }
+  function set(key, value, customStore = defaultGetStore()) {
+    return customStore("readwrite", (store) => {
+      store.put(value, key);
+      return promisifyRequest(store.transaction);
+    });
+  }
+  function clear(customStore = defaultGetStore()) {
+    return customStore("readwrite", (store) => {
+      store.clear();
+      return promisifyRequest(store.transaction);
+    });
+  }
+  const lStorage = new Proxy(localStorage, {
+    set(_localStorage, prop, value) {
+      if (___default.default.isPlainObject(value)) {
+        _localStorage[prop] = JSON.stringify(value);
+      } else {
+        _localStorage[prop] = value;
+      }
+      return true;
+    },
+    get(_localStorage, prop) {
+      const objString = _localStorage[prop];
+      try {
+        return JSON.parse(objString);
+      } catch (error) {
+        if (objString === "undefined") {
+          return false;
+        }
+        return objString || false;
+      }
+    }
+  });
+  if (String(window.__APP_VERSION) !== String(lStorage.__APP_VERSION)) {
+    clear();
+    lStorage.__APP_VERSION = window.__APP_VERSION || Date.now();
+  }
+  const iStorage = async function(key, val) {
+    const keyPrefix = window.location.hostname;
+    key = ___default.default.camelCase(keyPrefix + key);
+    let res;
+    try {
+      if (isInput(val)) {
+        await set(key, String(val));
+        res = true;
+      } else {
+        res = await get(key);
+        if (!res) {
+          xU("get", key, res);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      return res;
+    }
+  };
+  iStorage.clear = clear;
+  window.process = window.process || {};
+  window.TEMPLATE_PLACEHOLDER = "";
+  const onRE = /^on[^a-z]/;
+  const VueComponents = {};
+  const cache = {};
+  const privateLodash = {
+    WORDS: {
+      INVALID_DATE: "Invalid Date",
+      format_ymd: "YYYY-MM-DD"
+    },
+    useScopeCss() {
+      const state = vue.reactive({ id: "", cssEleSelector: "", content: "" });
+      function scopeCss(genCssStringFn) {
+        const content = genCssStringFn({
+          selector: `[data-style-id-${state.cssEleSelector}]`
+        });
+        $__default.default(state.id).html(content);
+      }
+      vue.onMounted(() => {
+        const vm = vue.getCurrentInstance();
+        state.cssEleSelector = `scope-css_${vm.uid}`;
+        state.id = `#${state.cssEleSelector}`;
+        let $cssEle = $__default.default(state.id);
+        if ($cssEle.length === 0) {
+          const domStyle = document.createElement("style");
+          domStyle.id = state.cssEleSelector;
+          const domWrapper = vm.ctx.$el.__vnode ? vm.ctx.$el : vm.ctx.$el.parentElement;
+          $__default.default(domWrapper).attr(`data-style-id-${state.cssEleSelector}`, "").append(domStyle);
+          $cssEle = $__default.default(`#${state.cssEleSelector}`);
+        }
+      });
+      vue.onUnmounted(() => {
+        const wrapperAttr = `data-style-id-${state.cssEleSelector}`;
+        const selector = `[${wrapperAttr}]`;
+        $__default.default(state.id).remove();
+        $__default.default(selector).removeAttr(wrapperAttr);
+      });
+      return { scopeCss };
+    },
+    launchFullscreen(element) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      }
+    },
+    exitFullscreen() {
+      document.exitFullscreen && document.exitFullscreen();
+    },
+    hashCode(str) {
+      var hash = 0, i, chr;
+      if (str.length === 0) {
+        return "0";
+      }
+      for (i = 0; i < str.length; i++) {
+        chr = str.charCodeAt(i);
+        hash = (hash << 5) - hash + chr;
+        hash |= 0;
+      }
+      return String(hash);
+    },
+    getLeftTopFromAbsolute($ele) {
+      const _top = $ele.css("top");
+      const _left = $ele.css("left");
+      const getNum = (x) => {
+        const match = String(x).match(/^(.*)px$/);
+        if (match && match[1]) {
+          return Number(match[1]);
+        } else {
+          return 0;
+        }
+      };
+      const top = getNum(_top);
+      const left = getNum(_left);
+      return { top, left };
+    },
+    getLeftTopFromTranslate($ele) {
+      const transform = $ele.css("transform");
+      const match = String(transform).match(/^matrix\((.*)\)$/);
+      if (!match) {
+        return { top: 0, left: 0 };
+      }
+      if (match && match[1]) {
+        const [a, b, c, d, e, f] = String(match[1]).split(",").map((i) => Number(___default.default.trim(i)));
+        return {
+          left: a + c + e,
+          top: b + d + f
+        };
+      }
+    },
+    async asyncImportSFC(url, __Vue) {
+      if (VueComponents[url]) {
+        return VueComponents[url];
+      }
+      const scfSourceCode = await privateLodash.asyncLoadText(url);
+      const scfObjSourceCode = privateLodash.VueLoader(scfSourceCode);
+      VueComponents[url] = await privateLodash.getVueComponentBySourceCode(
+        url,
+        scfObjSourceCode,
+        __Vue
+      );
+      return VueComponents[url];
+    },
+    async getVueComponentBySourceCode(url, scfObjSourceCode, __Vue) {
+      __Vue = __Vue || window.Vue || {};
+      scfObjSourceCode = scfObjSourceCode.replace("export default", "");
+      const scfObjAsyncFn = new Function(
+        "argVue",
+        `const THIS_FILE_URL = (\`${url}\`);try{const fn = ${scfObjSourceCode};return fn(argVue);}catch(e){console.error(e)}`
+      );
+      const scfObj = await scfObjAsyncFn(__Vue);
+      return scfObj;
+    },
+    parseContent: (returnSentence) => {
+      if (!returnSentence)
+        return;
+      try {
+        const fn = new Function(`${returnSentence} return module();`);
+        return fn();
+      } catch (error) {
+        xU(error);
+      }
+    },
+    genId,
+    VueLoader: (code) => {
+      function getSource(source, type2) {
+        var regex = new RegExp("<" + type2 + "[^>]*>");
+        var openingTag = source.match(regex);
+        if (!openingTag)
+          return "";
+        else
+          openingTag = openingTag[0];
+        var targetSource = source.slice(
+          source.indexOf(openingTag) + openingTag.length,
+          source.lastIndexOf("</" + type2 + ">")
+        );
+        return type2 === "template" ? targetSource.replace(/`/g, "\\`") : targetSource;
+      }
+      function splitCode() {
+        if (!/TEMPLATE_PLACEHOLDER/.test(code)) {
+          alert("SFC miss TEMPLATE_PLACEHOLDER");
+          console.error(code);
+        }
+        return getSource(code, "script").replace(
+          /TEMPLATE_PLACEHOLDER/,
+          `template: \`${getSource(code, "template")}\``
+        );
+      }
+      return splitCode();
+    },
+    async asyncExecFnString(url) {
+      const data = await privateLodash.asyncLoadText(url);
+      return privateLodash.parseContent(data);
+    },
+    doNothing: (...args) => {
+      var _a;
+      if (localStorage.isShowDevLog) {
+        const e = new Error();
+        console.log("\u{1F680}:", (_a = e == null ? void 0 : e.stack) == null ? void 0 : _a.split("\n")[2].replace("    at ", ""));
+        console.log.apply(console, args);
+      }
+    },
+    sleep,
+    isOn: (key) => onRE.test(key),
+    isModelListener: (key) => {
+      key = String(key);
+      if (!key) {
+        return false;
+      }
+      return key.startsWith("onUpdate:");
+    },
+    isListener: (key) => {
+      key = String(key);
+      if (!key) {
+        return false;
+      }
+      return privateLodash.isOn(key) || privateLodash.isModelListener(key);
+    },
+    isArrayFill: (arr) => {
+      if (Array.isArray(arr)) {
+        if (arr.length > 0) {
+          return true;
+        }
+      }
+      return false;
+    },
+    isObjectFill: (obj) => ___default.default.isPlainObject(obj) && Object.keys(obj).length > 0,
+    safeFirst: (arr, fnCheck) => {
+      fnCheck = fnCheck || ((value) => privateLodash.isInput(value));
+      const obj = ___default.default.first(arr);
+      return fnCheck(obj) ? obj : false;
+    },
+    safeToString: (val, isBeautiful = false) => {
+      try {
+        if (isBeautiful) {
+          return JSON.stringify(val, null, 2);
+        } else {
+          return JSON.stringify(val);
+        }
+      } catch (error) {
+        return "";
+      }
+    },
+    safeParse: (val, defaultObj) => {
+      let obj = defaultObj;
+      try {
+        obj = JSON.parse(val);
+        if (!val) {
+          obj = defaultObj;
+          throw new Error("json parse error");
+        }
+      } catch (error) {
+        privateLodash.doNothing(error);
+      }
+      return obj;
+    },
+    safeSplit: (target, sp = "") => {
+      return (target == null ? void 0 : target.split) ? target.split(sp) : [];
+    },
+    safeDate: (val) => {
+      if (!val) {
+        return "";
+      }
+      let date = dayjs__default.default(val);
+      if (date === privateLodash.WORDS.INVALID_DATE) {
+        return "";
+      } else {
+        return date;
+      }
+    },
+    isInput,
+    is$Selected: ($ele) => $ele && $ele.jquery && $ele.length > 0,
+    getObjectFirstKeyValue: (obj, defaultValue) => {
+      if (!obj) {
+        return defaultValue;
+      }
+      const keyArray = Object.keys(obj);
+      if (!privateLodash.isArrayFill(keyArray))
+        return defaultValue;
+      const prop = keyArray[0];
+      return privateLodash.isInput(prop) && obj[prop] ? obj[prop] : defaultValue;
+    },
+    loadCss(cssname) {
+      const cssPath = `${cssname}`;
+      let $link = $__default.default("<link/>", { rel: "stylesheet", type: "text/css" });
+      $link.appendTo($__default.default("head"));
+      $link[0].href = `${cssPath}?_t=${Date.now()}`;
+      return () => {
+        $link.remove();
+        $link = null;
+      };
+    },
+    async asyncLoadStyle(cssURL, options) {
+      let { isReplace, id } = options || { isReplace: false, id: "" };
+      id = id || ___default.default.camelCase(cssURL);
+      let content;
+      let $style = $__default.default(`#${id}`);
+      if ($style.length == 0) {
+        $style = $__default.default("<style/>", { id });
+        $__default.default("body").append($style);
+        content = await privateLodash.asyncLoadText(cssURL);
+        $style.html(content);
+      } else if (isReplace) {
+        content = await privateLodash.asyncLoadText(cssURL);
+        $style.html(content);
+      }
+    },
+    asyncLoadText: async function(url, options = {}) {
+      let isForceUpdate = options.isForceUpdate || false;
+      if (!isForceUpdate && !State_UI.isDev) {
+        const res = await iStorage(url);
+        if (res) {
+          return res;
+        }
+      }
+      return new Promise(async (resolve2, reject2) => {
+        try {
+          const { data } = await axios__default.default.get(url, {
+            headers: {
+              "Content-Type": "text/plain"
+            }
+          });
+          if (!State_UI.isDev) {
+            await iStorage(url, data);
+          }
+          resolve2(data);
+        } catch (error) {
+          reject2(error);
+        }
+      });
+    },
+    asyncLoadJS: async (url, globalName) => {
+      return new Promise((r) => {
+        if (window[globalName]) {
+          r(window[globalName]);
+        }
+        const $style = $__default.default("<script/>").attr("id", `asyncLoadJS_${globalName}`);
+        $style.appendTo($__default.default("body")).on("load", function() {
+          r(window[globalName]);
+        });
+        $style.attr("src", url);
+      });
+    },
+    asyncGlobalJS: async (globalName, url) => {
+      try {
+        if (window[globalName]) {
+          return window[globalName];
+        }
+        if (!url) {
+          alert("asyncGlobalJS miss url " + globalName);
+          return {};
+        }
+        if (cache[globalName]) {
+          await privateLodash.ensureValueDone(() => window[globalName]);
+          return window[globalName];
+        }
+        const jsString = await privateLodash.asyncLoadText(url);
+        const fn = new Function(`with(window){${jsString}}`);
+        fn();
+        cache[globalName] = url;
+        return window[globalName];
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    ensureValueDone: async (fnGetValue) => {
+      return new Promise(async (resolve2) => {
+        let exeFnGetValue = async function() {
+          const value = await fnGetValue();
+          if (value) {
+            exeFnGetValue = null;
+            resolve2(value);
+          } else {
+            setTimeout(exeFnGetValue, 100 * exeFnGetValue.count++);
+          }
+        };
+        exeFnGetValue.count = 1;
+        exeFnGetValue();
+      });
+    },
+    genProp: (someString) => {
+      return `k${___default.default.camelCase(someString)}`;
+    },
+    dateFormat: (date, format2 = "YYYY-MM-DD") => {
+      if (typeof date === "number") {
+        date = dayjs__default.default.unix(date);
+      }
+      if (format2 === 1) {
+        format2 = "YYYY-MM-DD HH:mm:ss";
+      }
+      const label = dayjs__default.default(date).format(format2);
+      const isInvalidDate = label == privateLodash.WORDS.INVALID_DATE;
+      return isInvalidDate ? "--" : label;
+    },
+    isObjSetAttr: (obj, attrName = "value") => Object.keys(obj).includes(attrName),
+    keepDecimals: function(val, fractionDigits) {
+      let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
+      if (num === "NaN") {
+        num = "-";
+      }
+      return num;
+    },
+    valueToLabel: function(value, options) {
+      const target = ___default.default.find(options, {
+        value
+      });
+      if (target) {
+        return target.label;
+      } else {
+        return "--";
+      }
+    },
+    timego: function(timestamp) {
+      let minutes, hours, days, seconds, mouth, year;
+      const timeNow = parseInt(new Date().getTime() / 1e3);
+      seconds = timeNow - timestamp;
+      if (seconds > 86400 * 30 * 12) {
+        year = parseInt(seconds / (86400 * 30 * 12));
+      } else {
+        year = 0;
+      }
+      if (seconds > 86400 * 30) {
+        mouth = parseInt(seconds / (86400 * 30));
+      } else {
+        mouth = 0;
+      }
+      if (seconds > 86400) {
+        days = parseInt(seconds / 86400);
+      } else {
+        days = 0;
+      }
+      if (seconds > 3600) {
+        hours = parseInt(seconds / 3600);
+      } else {
+        hours = 0;
+      }
+      minutes = parseInt(seconds / 60);
+      if (year > 0) {
+        return year + "\u5E74\u524D";
+      } else if (mouth > 0 && year <= 0) {
+        return mouth + "\u6708\u524D";
+      } else if (days > 0 && mouth <= 0) {
+        return days + "\u5929\u524D";
+      } else if (days <= 0 && hours > 0) {
+        return hours + "\u5C0F\u65F6\u524D";
+      } else if (hours <= 0 && minutes > 0) {
+        return minutes + "\u5206\u949F\u524D";
+      } else if (minutes <= 0 && seconds > 0) {
+        if (seconds < 30) {
+          return "\u521A\u521A";
+        } else {
+          return seconds + "\u79D2\u524D";
+        }
+      } else {
+        return "\u521A\u521A";
+      }
+    },
+    htmlFilter: (html) => {
+      if (!html)
+        return;
+      let reg = /<\/?.+?\/?>/g;
+      return html.replace(reg, "") || "";
+    },
+    MutatingProps: (item, prop, val = null, isDelete = false) => {
+      item = item || {};
+      if (/^\./.test(prop)) {
+        prop = String(prop).substring(1);
+      }
+      const propArray = prop.split(".");
+      let key = "";
+      let nextItem = item;
+      const setVal = () => {
+        while (key = propArray.shift()) {
+          if (propArray.length === 0) {
+            if (val === "never" && isDelete) {
+              delete nextItem[key];
+            } else {
+              nextItem[key] = val;
+            }
+            return;
+          } else {
+            const _nextItem = nextItem[key];
+            if (!_nextItem) {
+              nextItem[key] = {};
+            }
+            nextItem = nextItem[key];
+          }
+        }
+      };
+      const getVal = () => {
+        while (key = propArray.shift()) {
+          const _nextItem = nextItem[key];
+          if (!_nextItem) {
+            return nextItem[key];
+          } else {
+            if (propArray.length === 0) {
+              return _nextItem;
+            } else {
+              nextItem = nextItem[key];
+            }
+          }
+        }
+        return nextItem;
+      };
+      if (val || ___default.default.isString(val) || ___default.default.isBoolean(val) || ___default.default.isNumber(val) && !___default.default.isNaN(val)) {
+        setVal();
+      } else {
+        return getVal();
+      }
+      return item;
+    }
+  };
+  let payloadIdCount = 1;
+  let payloadIdCountMax = 4e4;
+  let payloadDateNow = Date.now();
+  function genId(category) {
+    if (payloadIdCount > payloadIdCountMax) {
+      payloadIdCount = 1;
+      payloadDateNow = Date.now();
+    }
+    return `${category}_${payloadDateNow}_${payloadIdCount++}`;
+  }
+  function sleep(t) {
+    return new Promise((r) => setTimeout(r, t));
+  }
+  function isInput(val) {
+    {
+      if (val === void 0) {
+        return false;
+      }
+      try {
+        val = JSON.parse(JSON.stringify(val));
+      } catch (error) {
+        xU(val, "JSON.parse failed");
+      }
+      if (val === 0) {
+        return true;
+      }
+      if (val === false) {
+        return true;
+      }
+      if (___default.default.isArray(val)) {
+        return val.length > 0;
+      } else if (val) {
+        return true;
+      }
+      return false;
+    }
+  }
+  const xU = new Proxy(
+    function(...args) {
+      if (State_UI.isDev) {
+        try {
+          throw new Error("");
+        } catch (error) {
+          args.unshift(String(error.stack).split("\n")[2], "\n");
+          console.log.apply(console, args);
+        }
+      }
+    },
+    {
+      get(fn, prop) {
+        if (privateLodash[prop]) {
+          return privateLodash[prop];
+        }
+        if (___default.default[prop]) {
+          return ___default.default[prop];
+        }
+        return fn[prop];
+      },
+      set(fn, prop, val) {
+        privateLodash[prop] = val;
+        return true;
+      }
+    }
+  );
+  const _hoisted_1$g = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$c = /* @__PURE__ */ vue.createElementVNode("path", { d: "M338.261 137.045h-9.13a9.16 9.16 0 0 0 9.13-9.159v9.16h347.45v-9.16c0 5.035 4.095 9.16 9.101 9.16h-9.102v82.26h82.262v-91.42a73.216 73.216 0 0 0-73.131-73.13H329.102a73.216 73.216 0 0 0-73.159 73.13v91.45h82.29v-82.29zm576 82.29h-804.55c-20.253 0-36.58 16.327-36.58 36.551v36.58c0 5.034 4.096 9.159 9.13 9.159h69.063l28.217 597.703a73.216 73.216 0 0 0 73.046 69.689h518.826a73.045 73.045 0 0 0 73.046-69.689l28.245-597.732h69.006a9.16 9.16 0 0 0 9.16-9.102v-36.636c0-20.196-16.356-36.551-36.58-36.551zm-151.665 667.42h-501.22l-27.648-585.159H790.3l-27.676 585.16z" }, null, -1);
+  const _hoisted_3$b = [
+    _hoisted_2$c
+  ];
+  function render$a(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$g, _hoisted_3$b);
+  }
+  const InsideDeleteOutlined = { name: "DeleteOutlined", render: render$a };
+  const _hoisted_1$f = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$b = /* @__PURE__ */ vue.createElementVNode("path", { d: "M512 628c17.6 0 32-14.4 32-32V308c0-17.6-14.4-32-32-32s-32 14.4-32 32v288c0 17.6 14.4 32 32 32zm-44 76a44 44 0 1 0 88 0 44 44 0 1 0-88 0Zm44-640C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm271.5 719.5c-35.3 35.3-76.4 63-122.1 82.3-47.3 20-97.6 30.2-149.5 30.2s-102.2-10.1-149.5-30.2c-45.7-19.3-86.8-47-122.1-82.3s-63-76.4-82.3-122.1c-20-47.3-30.2-97.6-30.2-149.5s10.1-102.2 30.2-149.5c19.3-45.7 47-86.8 82.3-122.1s76.4-63 122.1-82.3c47.3-20 97.6-30.2 149.5-30.2s102.2 10.1 149.5 30.2c45.7 19.3 86.8 47 122.1 82.3s63 76.4 82.3 122.1c20 47.3 30.2 97.6 30.2 149.5s-10.1 102.2-30.2 149.5c-19.3 45.8-47 86.8-82.3 122.1z" }, null, -1);
+  const _hoisted_3$a = [
+    _hoisted_2$b
+  ];
+  function render$9(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$f, _hoisted_3$a);
+  }
+  const InsideExclamationCircleOutlined = { name: "ExclamationCircleOutlined", render: render$9 };
+  const _hoisted_1$e = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$a = /* @__PURE__ */ vue.createElementVNode("path", { d: "M448 128a64 64 0 1 0 128 0 64 64 0 1 0-128 0ZM257.1 180.5a61.3 61.3 0 1 0 122.6 0 61.3 61.3 0 1 0-122.6 0ZM121.8 318.4a58.7 58.7 0 1 0 117.4 0 58.7 58.7 0 1 0-117.4 0ZM72 512a56 56 0 1 0 112 0 56 56 0 1 0-112 0Zm55.2 193.6a53.3 53.3 0 1 0 106.6 0 53.3 53.3 0 1 0-106.6 0Zm140.5 137.9a50.7 50.7 0 1 0 101.4 0 50.7 50.7 0 1 0-101.4 0ZM464 896a48 48 0 1 0 96 0 48 48 0 1 0-96 0Zm196.3-52.5a45.3 45.3 0 1 0 90.6 0 45.3 45.3 0 1 0-90.6 0Zm140.5-137.9a42.7 42.7 0 1 0 85.4 0 42.7 42.7 0 1 0-85.4 0ZM856 512a40 40 0 1 0 80 0 40 40 0 1 0-80 0ZM837.9 377.7a33.8 33.8 0 1 0 67.6 0 33.8 33.8 0 1 0-67.6 0Zm-61.5-113.5a28.3 28.3 0 1 0 56.6 0 28.3 28.3 0 1 0-56.6 0ZM680 180a24 24 0 1 0 48 0 24 24 0 1 0-48 0Z" }, null, -1);
+  const _hoisted_3$9 = /* @__PURE__ */ vue.createElementVNode("animateTransform", {
+    additive: "sum",
+    attributeName: "transform",
+    attributeType: "XML",
+    begin: "0s",
+    dur: "4s",
+    from: "0",
+    repeatCount: "indefinite",
+    to: "360",
+    type: "rotate"
+  }, null, -1);
+  const _hoisted_4 = [
+    _hoisted_2$a,
+    _hoisted_3$9
+  ];
+  function render$8(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$e, _hoisted_4);
+  }
+  const InsideLoadingOutlined = { name: "LoadingOutlined", render: render$8 };
+  const _hoisted_1$d = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$9 = /* @__PURE__ */ vue.createElementVNode("path", { d: "M144 928a48 48 0 0 1-48-48V144a48 48 0 0 1 48-48h592v.448a48 48 0 0 1 27.328 13.6l150.624 150.624A48 48 0 0 1 928 294.624V880a48 48 0 0 1-48 48H144zm144-768H160v704h128V496a48 48 0 0 1 43.392-47.776L336 448h352a48 48 0 0 1 48 48v368h128V301.248l-128-128V272a48 48 0 0 1-48 48H336a48 48 0 0 1-48-48V160zm384 352H352v352h320V512zm0-352H352v96h320v-96z" }, null, -1);
+  const _hoisted_3$8 = [
+    _hoisted_2$9
+  ];
+  function render$7(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$d, _hoisted_3$8);
+  }
+  const InsideSaveOutlined = { name: "SaveOutlined", render: render$7 };
+  const _hoisted_1$c = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$8 = /* @__PURE__ */ vue.createElementVNode("path", { d: "M479.04 128c176.16 0 318.976 142.848 318.976 319.04a317.984 317.984 0 0 1-86.976 218.976l175.616 175.552c11.52 11.52 12.384 29.568 2.656 42.08l-2.656 3.008a31.872 31.872 0 0 1-45.088 0L662.784 707.904a317.504 317.504 0 0 1-183.776 58.24C302.816 766.144 160 623.296 160 447.04S302.816 128 479.04 128zm0 63.808a255.232 255.232 0 0 0-255.232 255.264 255.232 255.232 0 1 0 510.4 0 255.232 255.232 0 0 0-255.2-255.264z" }, null, -1);
+  const _hoisted_3$7 = [
+    _hoisted_2$8
+  ];
+  function render$6(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$c, _hoisted_3$7);
+  }
+  const InsideSearchOutlined = { name: "SearchOutlined", render: render$6 };
+  const _hoisted_1$b = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$7 = /* @__PURE__ */ vue.createElementVNode("path", { d: "M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8zm756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8.1-4.5-3.5-8.2-8-8.2z" }, null, -1);
+  const _hoisted_3$6 = [
+    _hoisted_2$7
+  ];
+  function render$5(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$b, _hoisted_3$6);
+  }
+  const InsideSyncOutlined = { name: "SyncOutlined", render: render$5 };
+  const _hoisted_1$a = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$6 = /* @__PURE__ */ vue.createElementVNode("path", { d: "M512 85.333A426.667 426.667 0 1 0 938.667 512 426.667 426.667 0 0 0 512 85.333zm0 768A341.333 341.333 0 1 1 853.333 512 341.333 341.333 0 0 1 512 853.333zm30.72-587.946A32.853 32.853 0 0 0 520.107 256h-16.214a32 32 0 0 0-22.613 9.387L347.733 399.36a21.333 21.333 0 0 0 0 30.293l29.867 30.294a21.333 21.333 0 0 0 30.293 0l61.44-61.867v348.587A21.333 21.333 0 0 0 490.667 768h42.666a21.333 21.333 0 0 0 21.334-21.333V398.08l61.44 61.44a20.907 20.907 0 0 0 29.866 0l30.294-30.293a21.333 21.333 0 0 0 0-30.294z" }, null, -1);
+  const _hoisted_3$5 = [
+    _hoisted_2$6
+  ];
+  function render$4(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$a, _hoisted_3$5);
+  }
+  const InsideUploadOutlined = { name: "UploadOutlined", render: render$4 };
+  const _hoisted_1$9 = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$5 = /* @__PURE__ */ vue.createElementVNode("path", { d: "M512 128c212 0 384 172 384 384S724 896 512 896 128 724 128 512s172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64zm32 704h-64v-64h64v64zm11.2-203.2-5.6 4.8c-3.2 2.4-5.6 8-5.6 12.8v58.4h-64v-58.4c0-24.8 11.2-48 29.6-63.2l5.6-4.8c56-44.8 83.2-68 83.2-108 0-48-38.4-86.4-86.4-86.4-49.6 0-86.4 36.8-86.4 86.4h-64c0-84 66.4-150.4 150.4-150.4 83.2 0 150.4 67.2 150.4 150.4 0 72.8-49.6 112.8-107.2 158.4z" }, null, -1);
+  const _hoisted_3$4 = [
+    _hoisted_2$5
+  ];
+  function render$3(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$9, _hoisted_3$4);
+  }
+  const Insidetips = { name: "tips", render: render$3 };
+  const _hoisted_1$8 = {
+    width: "64",
+    height: "41",
+    class: "x-empty-img-simple"
+  };
+  const _hoisted_2$4 = /* @__PURE__ */ vue.createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="x-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="x-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="x-empty-img-simple-path"></path></g></g>', 1);
+  const _hoisted_3$3 = [
+    _hoisted_2$4
+  ];
+  function render$2(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$8, _hoisted_3$3);
+  }
+  const InsideEmpty = { name: "empty", render: render$2 };
+  const _hoisted_1$7 = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$3 = /* @__PURE__ */ vue.createElementVNode("path", { d: "M629.392 415.033 465.775 251.416c-7.992-7.992-20.947-7.992-28.939 0-7.992 8.002-7.992 20.957 0 28.95l128.68 128.68H389.97V184.083c0-11.298-9.17-20.467-20.466-20.467H21.813c-11.307 0-20.465 9.17-20.465 20.467v818.082c0 11.307 9.158 20.466 20.466 20.466h593.108c11.308 0 20.466-9.159 20.466-20.466V429.512c0-5.433-2.159-10.632-5.996-14.48zm-34.936 566.666H42.28v-777.15h306.756v224.963c0 11.298 9.159 20.466 20.467 20.466h224.953v531.72zm429.523-715.803v572.652c0 11.308-9.16 20.466-20.467 20.466H695.651c-11.298 0-20.466-9.158-20.466-20.466 0-11.297 9.168-20.466 20.466-20.466h287.395v-531.72H758.093c-11.308 0-20.466-9.169-20.466-20.466V40.932H430.87v75.694c0 11.308-9.169 20.466-20.466 20.466-11.307 0-20.466-9.158-20.466-20.466v-96.16C389.938 9.17 399.097 0 410.404 0h347.689c11.297 0 20.466 9.169 20.466 20.466V245.43h175.548l-128.68-128.681c-7.993-7.992-7.993-20.947 0-28.95 7.991-7.991 20.946-7.991 28.939 0l163.616 163.627a20.455 20.455 0 0 1 5.997 14.47z" }, null, -1);
+  const _hoisted_3$2 = [
+    _hoisted_2$3
+  ];
+  function render$1(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$7, _hoisted_3$2);
+  }
+  const InsideCopy = { name: "copy", render: render$1 };
+  const _hoisted_1$6 = {
+    xmlns: "http://www.w3.org/2000/svg",
+    class: "icon",
+    style: { "width": "1em", "height": "1em", "vertical-align": "middle", "fill": "currentColor", "overflow": "hidden" },
+    viewBox: "0 0 1024 1024"
+  };
+  const _hoisted_2$2 = /* @__PURE__ */ vue.createElementVNode("path", {
+    fill: "#5A626A",
+    d: "M439.264 208a16 16 0 0 0-16 16v67.968a239.744 239.744 0 0 0-46.496 26.896l-58.912-34A16 16 0 0 0 296 290.72l-80 138.56a16 16 0 0 0 5.856 21.856l58.896 34a242.624 242.624 0 0 0 0 53.728l-58.88 34a16 16 0 0 0-6.72 20.176l.848 1.68 80 138.56a16 16 0 0 0 21.856 5.856l58.912-34a239.744 239.744 0 0 0 46.496 26.88V800a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-67.968a239.744 239.744 0 0 0 46.512-26.896l58.912 34a16 16 0 0 0 21.856-5.856l80-138.56a16 16 0 0 0-4.288-20.832l-1.568-1.024-58.896-34a242.624 242.624 0 0 0 0-53.728l58.88-34a16 16 0 0 0 6.72-20.176l-.848-1.68-80-138.56a16 16 0 0 0-21.856-5.856l-58.912 34a239.744 239.744 0 0 0-46.496-26.88V224a16 16 0 0 0-16-16h-160zm32 48h96v67.376l28.8 12.576a192.21 192.21 0 0 1 37.184 21.52l25.28 18.688 58.448-33.728 48 83.136-58.368 33.68 3.472 31.2a194.624 194.624 0 0 1 0 43.104l-3.472 31.2 58.368 33.68-48 83.136-58.432-33.728-25.296 18.688a192.21 192.21 0 0 1-37.184 21.52l-28.8 12.576V768h-96v-67.376l-28.784-12.576a192.21 192.21 0 0 1-37.184-21.52l-25.28-18.688-58.448 33.728-48-83.136 58.368-33.68-3.472-31.2a194.624 194.624 0 0 1 0-43.104l3.472-31.2-58.368-33.68 48-83.136L380 376.16l25.296-18.688a191.744 191.744 0 0 1 37.184-21.52l28.8-12.576V256zm47.28 144a112 112 0 1 0 0 224 112 112 0 0 0 0-224zm0 48a64 64 0 1 1 0 128 64 64 0 0 1 0-128z"
+  }, null, -1);
+  const _hoisted_3$1 = [
+    _hoisted_2$2
+  ];
+  function render(_ctx, _cache) {
+    return vue.openBlock(), vue.createElementBlock("svg", _hoisted_1$6, _hoisted_3$1);
+  }
+  const insideSettingOutlined = { name: "SettingOutlined", render };
+  const xIcon$1 = "";
+  const insideIcons = {
+    InsideDeleteOutlined,
+    InsideExclamationCircleOutlined,
+    InsideLoadingOutlined,
+    InsideSaveOutlined,
+    InsideSearchOutlined,
+    InsideSyncOutlined,
+    InsideUploadOutlined,
+    Insidetips,
+    InsideEmpty,
+    InsideCopy,
+    insideSettingOutlined
+  };
+  const xIcon = vue.defineComponent(vue.markRaw({
+    name: "xIcon",
+    props: ["icon"],
+    data() {
+      const id = "lazy-svg_" + this._.uid;
+      return {
+        id,
+        svgIcon: null
+      };
+    },
+    computed: {
+      baseAttrs() {
+        return {
+          id: this.id,
+          role: "img",
+          ariaLabel: this.icon,
+          class: "xIcon anticon"
+        };
+      },
+      iconKey() {
+        const _iconKey = xU.camelCase(this.getIconPath()).replace(/\s/, "");
+        return _iconKey;
+      }
+    },
+    methods: {
+      getIconPath() {
+        if (!State_UI.assetsSvgPath) {
+          debugger;
+        }
+        const iconPath = `${State_UI.assetsSvgPath}/${this.icon}.svg`;
+        return iconPath;
+      },
+      async setIcon() {
+        if (!this.icon)
+          return;
+        try {
+          let SvgIconAny = await (async () => {
+            let _SvgIconAny = insideIcons[this.icon];
+            if (_SvgIconAny) {
+              xU(this.icon);
+              return _SvgIconAny;
+            }
+            if (!State_UI.isDev) {
+              _SvgIconAny = await iStorage(this.iconKey);
+              if (_SvgIconAny) {
+                return _SvgIconAny;
+              }
+            }
+            try {
+              _SvgIconAny = await xU.asyncLoadText(this.getIconPath());
+            } catch (error) {
+              console.error(error);
+            }
+            return _SvgIconAny;
+          })();
+          if (xU.isString(SvgIconAny) && SvgIconAny.length > 0) {
+            const SvgComponentByString = {
+              name: this.icon,
+              template: SvgIconAny
+            };
+            await iStorage(this.iconKey, SvgIconAny);
+            insideIcons[this.icon] = SvgComponentByString;
+            this.svgIcon = vue.createVNode(SvgComponentByString, this.baseAttrs, null);
+          } else if ((SvgIconAny == null ? void 0 : SvgIconAny.render) || (SvgIconAny == null ? void 0 : SvgIconAny.template)) {
+            this.svgIcon = vue.createVNode(SvgIconAny, this.baseAttrs, null);
+          } else {
+            console.error("component xIcon miss svg: " + this.icon);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    },
+    render() {
+      if (this.svgIcon) {
+        return this.svgIcon;
+      }
+      return vue.createVNode(InsideLoadingOutlined, this.baseAttrs, null);
+    },
+    watch: {
+      icon: {
+        immediate: true,
+        handler() {
+          this.setIcon();
+        }
+      }
+    }
+  }));
+  function $t$1(prop, payload = {}, i18nMessage = false) {
+    const result = {
+      label: prop,
+      prop
+    };
+    xU.templateSettings.interpolate = /{([\s\S]+?)}/g;
+    if (State_UI.i18nMessage) {
+      const temp = i18nMessage ? i18nMessage[prop] : State_UI.i18nMessage[prop];
+      if (temp) {
+        result.label = xU.template(temp)(payload);
+        if (!result.label) {
+          result.label = prop;
+          console.error(`i18n:${prop} "NOT_FOUND"`);
+        }
+      }
+    }
+    return result;
+  }
+  let _State_UI = {
+    xItemCollection: {},
+    pagination: {
+      page: "page",
+      size: "size",
+      total: "total"
+    },
+    language: lStorage["language"] || "zh-CN",
+    onLanguageChange: false,
+    LANGUAGE: {},
+    i18nMessage: {},
+    assetsSvgPath: "",
+    assetsPath: "",
+    basePath: "",
+    setBasePath(basePath) {
+      State_UI.assetsSvgPath = basePath + "assets/svg";
+      State_UI.assetsPath = basePath + "assets";
+      State_UI.basePath = basePath;
+    },
+    setAssetsBaseById(eleId) {
+      var _a;
+      const img = document.getElementById(eleId);
+      if (img) {
+        const src = String(img.src || img.href);
+        const index2 = ((_a = src.match(/assets(.*)/)) == null ? void 0 : _a.index) || 0;
+        State_UI.assetsSvgPath = src.substring(0, index2) + "assets/svg";
+        State_UI.assetsPath = src.substring(0, index2) + "assets";
+        State_UI.basePath = src.substring(0, index2);
+      }
+    },
+    $t: $t$1,
+    isDev: localStorage.___VENTOSE_UI_IS_DEV_MODE === "VENTOSE_UI_IS_DEV_MODE",
+    dev(isDev) {
+      if (isDev) {
+        localStorage.___VENTOSE_UI_IS_DEV_MODE = "VENTOSE_UI_IS_DEV_MODE";
+      } else {
+        localStorage.removeItem("___VENTOSE_UI_IS_DEV_MODE");
+      }
+    }
+  };
+  const State_UI = vue.reactive(_State_UI);
+  vue.watch(() => State_UI.language, (language) => {
+    lStorage["language"] = language;
+    if (State_UI.onLanguageChange) {
+      State_UI.onLanguageChange(language, State_UI);
+    }
+  }, {
+    immediate: true
+  });
+  const Cpt_UI_locale = vue.computed(() => {
+    const currentLanguage = xU.camelCase(State_UI.language);
+    const locale = State_UI.LANGUAGE[currentLanguage];
+    return locale;
+  });
+  const BTN_PRESET_MAP = {
+    query: () => ({
+      icon: vue.createVNode(vue.resolveComponent("xIcon"), {
+        "class": "x-button_icon-wrapper",
+        "icon": "InsideSearchOutlined"
+      }, null),
+      text: $t$1("\u67E5\u8BE2").label
+    }),
+    refresh: () => ({
+      icon: vue.createVNode(vue.resolveComponent("xIcon"), {
+        "class": "x-button_icon-wrapper",
+        "icon": "InsideSyncOutlined"
+      }, null),
+      text: $t$1("\u5237\u65B0").label
+    }),
+    cancel: () => ({
+      text: $t$1("\u53D6\u6D88").label
+    }),
+    save: () => ({
+      icon: vue.createVNode(vue.resolveComponent("xIcon"), {
+        "class": "x-button_icon-wrapper",
+        "icon": "InsideSaveOutlined"
+      }, null),
+      text: $t$1("\u4FDD\u5B58").label
+    }),
+    upload: () => ({
+      icon: vue.createVNode(vue.resolveComponent("xIcon"), {
+        "class": "x-button_icon-wrapper",
+        "icon": "InsideUploadOutlined"
+      }, null),
+      text: $t$1("\u4E0A\u4F20").label
+    }),
+    delete: (configs) => {
+      configs.type = "danger";
+      configs.ghost = true;
+      return {
+        icon: vue.createVNode(vue.resolveComponent("xIcon"), {
+          "class": "x-button_icon-wrapper",
+          "icon": "InsideDeleteOutlined"
+        }, null),
+        text: $t$1("\u5220\u9664").label
+      };
+    }
+  };
+  const xButton = vue.defineComponent({
+    name: "xButton",
+    props: {
+      payload: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
+      configs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    beforeMount() {
+      if (!this.configs) {
+        debugger;
+        return;
+      }
+      const presetFn = BTN_PRESET_MAP[this.configs.preset];
+      if (presetFn) {
+        const preset = presetFn(this.configs);
+        this.configs.icon = preset.icon;
+        this.configs.text = vue.createVNode("span", {
+          "class": "ml4"
+        }, [preset.text]);
+      }
+    },
+    data() {
+      return {
+        loading: true
+      };
+    },
+    setup(props) {
+      let Cpt_isShow = true;
+      if (props.configs.isShow !== void 0) {
+        if (xU.isFunction(props.configs.isShow)) {
+          Cpt_isShow = vue.computed(props.configs.isShow);
+        }
+        if (xU.isBoolean(props.configs.isShow)) {
+          Cpt_isShow = props.configs.isShow;
+        }
+      }
+      return {
+        Cpt_isShow
+      };
+    },
+    computed: {
+      isClickHandlerOnAttrs() {
+        var _a;
+        return !!((_a = this.$attrs) == null ? void 0 : _a.onClick);
+      },
+      type() {
+        if (["query", "save"].includes(this.configs.preset)) {
+          return "primary";
+        }
+        return this.configs.type;
+      },
+      title() {
+        if (xU.isString(this.disabled) && this.disabled.length > 0) {
+          return this.disabled;
+        }
+        if (xU.isString(this.configs.title) && this.configs.title.length > 0) {
+          return this.configs.title;
+        }
+        return false;
+      },
+      disabled() {
+        if (xU.isBoolean(this.configs.disabled)) {
+          return this.configs.disabled;
+        }
+        if (xU.isFunction(this.configs.disabled)) {
+          return this.configs.disabled(this);
+        }
+        return false;
+      },
+      text() {
+        if (xU.isFunction(this.configs.text)) {
+          return this.configs.text(this) || "";
+        }
+        return this.configs.text || "";
+      }
+    },
+    watch: {
+      configs: {
+        immediate: true,
+        handler(configs) {
+          this.loading = !!configs.loading;
+        }
+      }
+    },
+    created() {
+    },
+    methods: {
+      async handleButtonClick() {
+        var _a, _b;
+        if (xU.isFunction((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClick)) {
+          this.loading = true;
+          try {
+            await ((_b = this == null ? void 0 : this.configs) == null ? void 0 : _b.onClick.call(this.configs, this));
+          } catch (e) {
+            console.error(e);
+          } finally {
+            this.loading = false;
+          }
+        }
+      }
+    },
+    render() {
+      if (!this.Cpt_isShow) {
+        return null;
+      }
+      const propsWillDeleteFromProperty = ["text", "loading", "disabled", "title", "onClick"];
+      const _properties = xU.omit(this.configs, propsWillDeleteFromProperty);
+      if (!this.isClickHandlerOnAttrs) {
+        _properties.onClick = this.handleButtonClick;
+      }
+      if (this.title) {
+        _properties.title = this.title;
+      }
+      return vue.createVNode(vue.resolveComponent("elButton"), vue.mergeProps({
+        "class": "x-button antdv-button",
+        "loading": this.loading,
+        "disabled": !!this.disabled,
+        "type": this.type
+      }, _properties), {
+        default: () => {
+          const vDomDefautl = this.$slots.default && this.$slots.default();
+          return vue.createVNode(vue.Fragment, null, [this.text, vDomDefautl]);
+        }
+      });
+    }
+  });
+  const xGap = vue.defineComponent({
+    name: "xGap",
+    props: ["t", "l", "r", "b", "a", "f"],
+    computed: {
+      gapClass: {
+        set() {
+        },
+        get() {
+          let basic = "x-gap";
+          if (this.f) {
+            basic += ` flex${this.f}`;
+          }
+          return basic;
+        }
+      },
+      gapStyle: {
+        set() {
+        },
+        get() {
+          const POSITION_MAP = {
+            t: "top",
+            r: "right",
+            b: "bottom",
+            l: "left"
+          };
+          const gapStyle = {};
+          if (this.a) {
+            gapStyle.margin = `${this.a}px`;
+          } else {
+            xU.map(POSITION_MAP, (prop, key) => {
+              const value = this[key];
+              if (value) {
+                gapStyle[`margin-${prop}`] = `${value}px`;
+              }
+            });
+          }
+          return gapStyle;
+        }
+      }
+    },
+    render(h) {
+      return vue.createVNode("div", {
+        "style": this.gapStyle,
+        "class": this.gapClass
+      }, null);
+    }
+  });
+  const xRender = vue.defineComponent(vue.markRaw({
+    name: "xRender",
+    props: {
+      render: {
+        type: Function,
+        required: true
+      }
+    },
+    render() {
+      return vue.h(this.render, {
+        vm: this,
+        props: this.$props,
+        attrs: this.$attrs
+      });
+    }
+  }));
+  const _sfc_main$8 = vue.defineComponent({
+    name: "xForm",
+    props: {
+      col: {
+        type: Number,
+        default: 1
+      },
+      labelStyle: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
+      formStyle: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    emits: [],
+    data() {
+      return {};
+    },
+    computed: {
+      xFormId() {
+        return `xForm_${this._.uid}`;
+      },
+      formStyleText() {
+        return xU.map(xU.merge({}, this.formStyle), (value, prop) => `${prop}: ${value}`).join(";");
+      },
+      labelStyleText() {
+        return xU.map(xU.merge({
+          width: "120px",
+          "text-align": "right"
+        }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
+      },
+      styleContent() {
+        return [`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`, `#${this.xFormId} { ${this.formStyleText} }`, `#${this.xFormId} div.x-form-item-label { ${this.labelStyleText} }`].join("\n");
+      }
+    },
+    mounted() {
+      const $form = $__default.default(`#${this.xFormId}`);
+      const $style = $__default.default("<style/>", {
+        id: `style_${this.xFormId}`
+      }).append(this.styleContent);
+      $form.prepend($style);
+    },
+    watch: {
+      styleContent() {
+        this.updateStyle(this.styleContent);
+      }
+    },
+    methods: {
+      updateStyle(styleContent) {
+        const $style = $__default.default(`#style_${this.xFormId}`);
+        $style.html(styleContent);
+      }
+    }
+  });
+  const _export_sfc = (sfc, props) => {
+    const target = sfc.__vccOpts || sfc;
+    for (const [key, val] of props) {
+      target[key] = val;
+    }
+    return target;
+  };
+  const _hoisted_1$5 = ["id"];
+  function _sfc_render$7(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("form", { id: _ctx.xFormId }, [
+      vue.renderSlot(_ctx.$slots, "default")
+    ], 8, _hoisted_1$5);
+  }
+  const xForm = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["render", _sfc_render$7]]);
+  const _sfc_main$7 = vue.defineComponent({
+    name: "XButtonCountDown",
+    props: {
+      configs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    data() {
+      const vm = this;
+      return {
+        state: {
+          captchaCount: 0
+        },
+        btnConfigs: {
+          disabled: false,
+          size: "large",
+          style: {
+            minWidth: "112px"
+          },
+          class: "center",
+          text: vm.configs.text.normal,
+          async onClick() {
+            if (xU.isFunction(vm.configs.onClick)) {
+              await vm.configs.onClick({
+                countDown: vm.countDown
+              });
+            }
+          }
+        }
+      };
+    },
+    watch: {
+      "state.captchaCount"(captchaCount) {
+        this.handleCaptchaCountChange(captchaCount);
+      }
+    },
+    methods: {
+      countDown() {
+        this.state.captchaCount++;
+        if (this.state.captchaCount <= this.configs.countMax) {
+          setTimeout(this.countDown, 1e3);
+        } else {
+          this.state.captchaCount = 0;
+        }
+      },
+      handleCaptchaCountChange(captchaCount) {
+        if (captchaCount === 0) {
+          this.btnConfigs.text = this.configs.text.normal;
+          this.btnConfigs.disabled = false;
+          return;
+        }
+        const setCounDownText = () => {
+          return this.btnConfigs.text = `${this.configs.countMax - captchaCount} s`;
+        };
+        if (captchaCount === 1) {
+          setCounDownText();
+          this.btnConfigs.disabled = true;
+          return;
+        }
+        if (captchaCount && captchaCount <= this.configs.countMax) {
+          setCounDownText();
+          return;
+        }
+      }
+    }
+  });
+  function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_xButton = vue.resolveComponent("xButton");
+    return vue.openBlock(), vue.createBlock(_component_xButton, { configs: _ctx.btnConfigs }, null, 8, ["configs"]);
+  }
+  const xButtonCountDown = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$6]]);
+  const line = {};
+  const CONFIGS_MAP = {
+    line
+  };
+  const _sfc_main$6 = vue.defineComponent({
+    name: "xCharts",
+    props: {
+      payload: {
+        required: false,
+        type: [Object, String],
+        default: ""
+      },
+      configs: {
+        type: [String, Object],
+        required: true
+      },
+      dataset: {
+        type: [Array, Object],
+        default() {
+          return [];
+        }
+      }
+    },
+    data() {
+      this.updateOptions = xU.debounce(async function() {
+        var _a, _b;
+        if (this.myChart) {
+          this.myChart.dispose();
+        }
+        await xU.ensureValueDone(() => this.$el);
+        const options = this.helper.initOptions(this.$props);
+        this.options = this.helper.updateOptions(options, this.dataset);
+        this.myChart = this.$echarts.init(this.$el);
+        if ((_a = this == null ? void 0 : this.helper) == null ? void 0 : _a.afterInit) {
+          (_b = this == null ? void 0 : this.helper) == null ? void 0 : _b.afterInit({
+            instance: this.myChart
+          });
+        }
+        this.myChart.showLoading();
+        this.myChart.setOption(this.options);
+        this.myChart.hideLoading();
+      }, 300);
+      return {
+        myChart: false
+      };
+    },
+    computed: {
+      helper() {
+        if (xU.isPlainObject(this.configs)) {
+          return this.configs;
+        }
+        return CONFIGS_MAP[this.configs];
+      }
+    },
+    watch: {
+      dataset() {
+        this.updateOptions();
+      }
+    },
+    mounted() {
+      this.init();
+    },
+    methods: {
+      async init() {
+        this.observe();
+        this.updateOptions();
+      },
+      observe() {
+        this.resizeObserver = new ResizeObserver(() => {
+          var _a;
+          if (this.myChart) {
+            this.updateOptions();
+            if ((_a = this == null ? void 0 : this.helper) == null ? void 0 : _a.onResize) {
+              this.helper.onResize({
+                instance: this.myChart,
+                chartVM: this
+              });
+            }
+          }
+        });
+        this.resizeObserver.observe(this.$el);
+      }
+    }
+  });
+  const _hoisted_1$4 = ["id"];
+  function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("div", {
+      id: _ctx.id,
+      class: "x-charts flex flex1 center middle"
+    }, null, 8, _hoisted_1$4);
+  }
+  const xCharts = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5]]);
+  const _sfc_main$5 = vue.defineComponent({
+    name: "xView",
+    props: {
+      isShow: {
+        type: Boolean,
+        default: true
+      }
+    },
+    data() {
+      return {};
+    },
+    computed: {
+      id() {
+        return `xView_${this._.uid}`;
+      }
+    }
+  });
+  const xView_vue_vue_type_style_index_0_lang = "";
+  const _hoisted_1$3 = ["id"];
+  const _hoisted_2$1 = { class: "xView-body flex vertical flex1" };
+  function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.withDirectives((vue.openBlock(), vue.createElementBlock("div", {
+      id: _ctx.id,
+      class: "flex flex1 vertical"
+    }, [
+      vue.createElementVNode("div", _hoisted_2$1, [
+        vue.renderSlot(_ctx.$slots, "default")
+      ])
+    ], 8, _hoisted_1$3)), [
+      [vue.vShow, !!_ctx.isShow]
+    ]);
+  }
+  const xView = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4]]);
+  function _isSlot$1(s) {
+    return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !vue.isVNode(s);
+  }
+  const STATIC_WORD = {
+    OPERATION: "OPERATION",
+    NEXT_TICK_TIME: 64
+  };
+  function defDataGridOption(options) {
+    options.pagination = options.pagination || defPagination();
+    options.isLoading = Boolean(options.isLoading);
+    if (options.queryTableList) {
+      options._queryTableList_origin = options.queryTableList;
+      options.queryTableList = async function(...args) {
+        this.isLoading = true;
+        await this._queryTableList_origin.apply(this, args);
+        this.isLoading = false;
+      };
+    }
+    options.onPaginationChange = options.onPaginationChange || async function(pagination) {
+      await this.queryTableList({
+        pagination
+      });
+    };
+    return options;
+  }
+  function defPagination(num_page = 1, num_size = 10, num_total = 0) {
+    const {
+      page,
+      size,
+      total
+    } = State_UI.pagination;
+    return {
+      [page]: num_page || 1,
+      [size]: num_size || 10,
+      [total]: num_total || 0
+    };
+  }
+  function setPagination(StateTable, pagination) {
+    const PAGINATION_MAP = State_UI.pagination;
+    xU.each(pagination, (value, prop) => {
+      let realProp = PAGINATION_MAP[prop];
+      if (!realProp) {
+        realProp = prop;
+      }
+      (StateTable == null ? void 0 : StateTable.pagination) && (StateTable.pagination[realProp] = value);
+    });
+  }
+  function getPaginationPageSize(StateTable) {
+    const PAGINATION_MAP = State_UI.pagination;
+    const pagination = StateTable.pagination;
+    const {
+      page,
+      size
+    } = PAGINATION_MAP;
+    return {
+      [page]: pagination[page],
+      [size]: pagination[size]
+    };
+  }
+  function defCol(options) {
+    return {
+      [options.prop]: {
+        ...options,
+        key: options.prop,
+        title: options.label,
+        dataIndex: options.prop
+      }
+    };
+  }
+  function defColActions(options) {
+    return defCol(xU.merge({
+      label: State_UI.$t("\u64CD\u4F5C").label,
+      prop: STATIC_WORD.OPERATION,
+      fixed: "right",
+      width: "100px"
+    }, options));
+  }
+  function defColActionsBtnlist(options) {
+    const {
+      fold = 3,
+      btns = []
+    } = options;
+    const [always, more] = (() => {
+      if (btns.length > fold) {
+        return [btns.slice(0, fold - 1), btns.slice(fold - 1)];
+      } else {
+        return [btns, []];
+      }
+    })();
+    return vue.createVNode("div", {
+      "class": "flex middle"
+    }, [vue.createVNode(vue.resolveComponent("xGap"), {
+      "l": "4"
+    }, null), xU.map(always, (btn) => {
+      const configs = xU.merge({
+        type: "link",
+        size: "small"
+      }, btn);
+      return vue.createVNode(vue.Fragment, null, [vue.createVNode(vue.resolveComponent("xButton"), {
+        "configs": configs
+      }, null), vue.createVNode(vue.resolveComponent("xGap"), {
+        "l": "4"
+      }, null)]);
+    }), (() => {
+      if (more.length === 0) {
+        return null;
+      }
+      return vue.createVNode(vue.Fragment, null, [vue.createVNode(vue.resolveComponent("aDropdown"), null, {
+        default: () => {
+          return vue.createVNode(vue.resolveComponent("elButton"), {
+            "type": "link"
+          }, {
+            default: () => [State_UI.$t("\u66F4\u591A").label]
+          });
+        },
+        overlay: () => {
+          let _slot;
+          return vue.createVNode(vue.Fragment, null, [vue.createVNode(vue.resolveComponent("elMenu"), null, _isSlot$1(_slot = xU.map(more, (btn) => {
+            const configs = xU.merge({
+              type: "link",
+              size: "small"
+            }, btn);
+            return vue.createVNode(vue.resolveComponent("elMenuItem"), {
+              "key": btn.text
+            }, {
+              default: () => [vue.createVNode(vue.resolveComponent("xButton"), {
+                "configs": configs
+              }, null)]
+            });
+          })) ? _slot : {
+            default: () => [_slot]
+          })]);
+        }
+      }), vue.createVNode(vue.resolveComponent("xGap"), {
+        "l": "4"
+      }, null)]);
+    })()]);
+  }
+  function filterColIsShow(isShow, prop) {
+    if (xU.isBoolean(isShow)) {
+      return isShow;
+    } else {
+      return true;
+    }
+  }
+  function setDataGridInfo(StateBind, result = {}) {
+    const {
+      data = [],
+      total = false,
+      selected = false
+    } = result;
+    StateBind.dataSource = data;
+    if (selected) {
+      StateBind.selected = selected;
+    }
+    if (total || total === 0) {
+      setPagination(StateBind, {
+        total
+      });
+    }
+  }
+  const PAGE_SIZE_OPTIONS = ["10", "20", "30"];
+  const xPagination = vue.defineComponent({
+    name: "xPagination",
+    setup() {
+      return {
+        State_UI
+      };
+    },
+    props: {
+      onPaginationChange: {
+        type: Function,
+        default: false
+      },
+      pagination: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    data() {
+      const {
+        page,
+        size,
+        total
+      } = State_UI.pagination;
+      return {
+        pageSizeOptions: PAGE_SIZE_OPTIONS,
+        page,
+        size,
+        total
+      };
+    },
+    methods: {
+      onShowSizeChange: xU.debounce(function(page, size) {
+        setPagination(this, {
+          page,
+          size
+        });
+        if (this.onPaginationChange) {
+          this.onPaginationChange(this.pagination);
+        }
+      }, 30)
+    },
+    computed: {
+      i18nMessage() {
+        return {
+          \u603B\u6761\u6570: "\u603B\u6761\u6570 {total}",
+          \u6761\u9875: "{size}\u6761/\u9875",
+          ...this.State_UI.i18nMessage
+        };
+      }
+    },
+    render() {
+      const {
+        page,
+        size,
+        total
+      } = State_UI.pagination;
+      xU(page, size, total);
+      if (!this.pagination[total]) {
+        return null;
+      }
+      return vue.createVNode(vue.resolveComponent("aPagination"), {
+        "current": this.pagination[page],
+        "onUpdate:current": ($event) => this.pagination[page] = $event,
+        "pageSizeOptions": this.pageSizeOptions,
+        "total": this.pagination[total],
+        "pageSize": this.pagination[size],
+        "show-size-changer": true,
+        "showTotal": (total2) => this.$t("\u603B\u6761\u6570", {
+          total: total2
+        }, this.i18nMessage).label,
+        "onShowSizeChange": this.onShowSizeChange,
+        "onChange": this.onShowSizeChange
+      }, {
+        buildOptionText: (props) => {
+          return vue.createVNode("span", null, [this.$t("\u6761\u9875", {
+            size: props.value
+          }, this.i18nMessage).label]);
+        }
+      });
+    }
+  });
+  const _sfc_main$4 = vue.defineComponent({
+    name: "XDataGrid",
+    components: {
+      xPagination
+    },
+    props: {
+      configs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    setup() {
+      return {
+        Cpt_UI_locale
+      };
+    },
+    data() {
+      return {
+        State: {
+          id: xU.genId("xDataGrid")
+        }
+      };
+    },
+    computed: {
+      Cpt_Columns() {
+        if (this.configs.isGroupingColumns) {
+          return this.configs.columns;
+        }
+        let columns = null;
+        columns = xU.map(this.Cpt_ColumnsOrder, (prop) => xU.find(this.configs.columns, {
+          prop
+        }));
+        columns = xU.filter(columns, (i) => filterColIsShow(i == null ? void 0 : i.isShow, i == null ? void 0 : i.prop));
+        return columns;
+      },
+      Cpt_ColumnsOrder() {
+        const order = (() => {
+          if (this.configs.columns_order) {
+            return this.configs.columns_order;
+          } else {
+            return xU.map(this.configs.columns, (i) => i.prop);
+          }
+        })();
+        return xU.filter(order, (i) => !!i);
+      },
+      Cpt_AntTableProperty() {
+        if (this.configs.antTableProperty) {
+          return this.configs.antTableProperty;
+        } else {
+          return {};
+        }
+      },
+      Cpt_VNodeTable() {
+        if (this.configs.renderTable) {
+          return this.configs.renderTable({
+            vm: this
+          });
+        } else {
+          const slots = {
+            emptyText: () => vue.createVNode("div", {
+              "class": "x-empty x-empty-normal"
+            }, [vue.createVNode("div", {
+              "class": "x-empty-image"
+            }, [vue.createVNode(vue.resolveComponent("xIcon"), {
+              "icon": "InsideEmpty",
+              "style": "width:64px"
+            }, null)]), vue.createVNode("p", {
+              "class": "x-empty-description"
+            }, [this.Cpt_UI_locale.Empty.description])]),
+            bodyCell: (args) => {
+              const {
+                column
+              } = args;
+              if (column && column.renderCell) {
+                const vNode = column.renderCell(args);
+                if (xU.isNull(vNode) || xU.isUndefined(vNode)) {
+                  return "";
+                }
+                return vNode;
+              }
+            }
+          };
+          const scroll = (() => {
+            if (this.configs.scroll) {
+              return this.configs.scroll;
+            }
+            return {
+              x: 300
+            };
+          })();
+          return vue.createVNode(ElementPlus.ElTable, vue.mergeProps({
+            "loading": this.configs.isLoading,
+            "dataSource": this.configs.dataSource,
+            "columns": this.Cpt_Columns,
+            "scroll": scroll,
+            "pagination": false,
+            "locale": this.Cpt_UI_locale.Table
+          }, this.Cpt_AntTableProperty), slots);
+        }
+      },
+      Cpt_VNodePagination() {
+        if (this.configs.isHidePagination) {
+          return null;
+        }
+        return vue.createVNode(xPagination, {
+          "class": "table-pagination",
+          "pagination": this.configs.pagination,
+          "onPaginationChange": this.handlePaginationChange
+        }, null);
+      }
+    },
+    mounted() {
+      if (this.configs.onMounted) {
+        this.configs.onMounted({
+          id: this.State.id
+        });
+      }
+    },
+    watch: {
+      "configs.pagination": {
+        deep: true,
+        handler(pagination) {
+          xU(JSON.stringify(pagination));
+        }
+      }
+    },
+    methods: {
+      async handlePaginationChange(pagination) {
+        var _a;
+        if ((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onPaginationChange) {
+          this.configs.isLoading = true;
+          await this.configs.onPaginationChange(pagination);
+          this.configs.isLoading = false;
+        }
+      }
+    },
+    render() {
+      return vue.createVNode("div", {
+        "id": this.State.id
+      }, [this.Cpt_VNodeTable, this.Cpt_VNodePagination]);
+    }
+  });
+  const xDataGrid_vue_vue_type_style_index_0_lang = "";
+  const _sfc_main$3 = vue.defineComponent({
+    name: "xColFilter",
+    props: {
+      configs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    methods: {
+      handleChecked(col) {
+        const target = xU.find(this.configs.columns, {
+          key: col.key
+        });
+        target.isShow = xU.isBoolean(target.isShow) ? !target.isShow : false;
+      }
+    },
+    computed: {
+      Cpt_ColumnsOrder() {
+        const order = (() => {
+          if (this.configs.columns_order) {
+            return this.configs.columns_order;
+          } else {
+            return xU.map(this.configs.columns, (i) => i.prop);
+          }
+        })();
+        return xU.filter(order, (i) => !!i);
+      },
+      Cpt_Columns() {
+        return xU.map(this.Cpt_ColumnsOrder, (prop) => xU.find(this.configs.columns, {
+          prop
+        }));
+      },
+      checkedList() {
+        return xU.filter(this.Cpt_ColumnsOrder, (prop) => {
+          const {
+            isShow
+          } = this.configs.columns[prop];
+          return filterColIsShow(isShow);
+        });
+      }
+    }
+  });
+  function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_ElCheckbox = vue.resolveComponent("ElCheckbox");
+    const _component_xIcon = vue.resolveComponent("xIcon");
+    const _component_elButton = vue.resolveComponent("elButton");
+    const _component_ElPopover = vue.resolveComponent("ElPopover");
+    return vue.openBlock(), vue.createBlock(_component_ElPopover, {
+      placement: "leftTop",
+      trigger: "click"
+    }, {
+      content: vue.withCtx(() => [
+        (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.Cpt_Columns, (col) => {
+          return vue.openBlock(), vue.createElementBlock("p", {
+            key: col.key
+          }, [
+            vue.createVNode(_component_ElCheckbox, {
+              checked: _ctx.checkedList.includes(col.key),
+              onChange: ($event) => _ctx.handleChecked(col)
+            }, {
+              default: vue.withCtx(() => [
+                vue.createTextVNode(vue.toDisplayString(col.title), 1)
+              ]),
+              _: 2
+            }, 1032, ["checked", "onChange"])
+          ]);
+        }), 128))
+      ]),
+      default: vue.withCtx(() => [
+        vue.createVNode(_component_elButton, null, {
+          icon: vue.withCtx(() => [
+            vue.createVNode(_component_xIcon, {
+              icon: "insideSettingOutlined",
+              style: { "height": "100%", "width": "100%" }
+            })
+          ]),
+          _: 1
+        })
+      ]),
+      _: 1
+    });
+  }
+  const xColFilter = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$3]]);
+  const _sfc_main$2 = vue.defineComponent({
+    name: "xDataGridToolbar",
+    components: {
+      xColFilter
+    },
+    props: {
+      configs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    computed: {
+      Cpt_btn_query() {
+        return {
+          preset: "query",
+          onClick: async () => {
+            var _a;
+            if ((_a = this.configs) == null ? void 0 : _a.queryTableList) {
+              setPagination(this.configs, {
+                page: 1
+              });
+              await this.configs.queryTableList({
+                pagination: {
+                  page: 1
+                }
+              });
+            }
+          }
+        };
+      },
+      Cpt_btn_refresh() {
+        return {
+          preset: "refresh",
+          onClick: async () => {
+            if (this.configs.queryTableList) {
+              await this.configs.queryTableList();
+            }
+          }
+        };
+      },
+      Cpt_isShowQuery() {
+        if (!this.configs.queryTableList) {
+          return false;
+        }
+        return !this.configs.isHideQuery;
+      },
+      Cpt_isShowRefresh() {
+        if (!this.configs.queryTableList) {
+          return false;
+        }
+        return !this.configs.isHideRefresh;
+      },
+      Cpt_isShowFilter() {
+        if (this.configs.isGroupingColumns) {
+          return false;
+        }
+        if (this.configs.isHideFilter) {
+          return false;
+        }
+        return true;
+      },
+      Cpt_isSetConfigs() {
+        return this.configs;
+      }
+    }
+  });
+  const _hoisted_1$2 = { class: "table-options" };
+  const _hoisted_2 = { class: "table-option-left flex flex1" };
+  const _hoisted_3 = {
+    key: 0,
+    class: "table-filter flex"
+  };
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_xButton = vue.resolveComponent("xButton");
+    const _component_xGap = vue.resolveComponent("xGap");
+    const _component_xColFilter = vue.resolveComponent("xColFilter");
+    return vue.openBlock(), vue.createElementBlock("div", _hoisted_1$2, [
+      vue.createElementVNode("div", _hoisted_2, [
+        vue.renderSlot(_ctx.$slots, "default")
+      ]),
+      _ctx.Cpt_isSetConfigs ? (vue.openBlock(), vue.createElementBlock("div", _hoisted_3, [
+        _ctx.Cpt_isShowQuery ? (vue.openBlock(), vue.createBlock(_component_xButton, {
+          key: 0,
+          configs: _ctx.Cpt_btn_query
+        }, null, 8, ["configs"])) : vue.createCommentVNode("", true),
+        vue.createVNode(_component_xGap, { l: "4" }),
+        _ctx.Cpt_isShowRefresh ? (vue.openBlock(), vue.createBlock(_component_xButton, {
+          key: 1,
+          configs: _ctx.Cpt_btn_refresh
+        }, null, 8, ["configs"])) : vue.createCommentVNode("", true),
+        vue.createVNode(_component_xGap, { l: "4" }),
+        _ctx.Cpt_isShowFilter ? (vue.openBlock(), vue.createBlock(_component_xColFilter, {
+          key: 2,
+          configs: _ctx.configs
+        }, null, 8, ["configs"])) : vue.createCommentVNode("", true)
+      ])) : vue.createCommentVNode("", true)
+    ]);
+  }
+  const xDataGridToolbar = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$2]]);
+  const _sfc_main$1 = vue.defineComponent({
+    name: "xCellLabel",
+    props: {
+      configs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    data() {
+      return {
+        loading: false,
+        title: ""
+      };
+    },
+    computed: {
+      id() {
+        return `xLabel_${this._.uid}`;
+      }
+    },
+    watch: {
+      configs: {
+        immediate: true,
+        handler(configs) {
+          this.loading = !!configs.loading;
+        }
+      }
+    },
+    methods: {
+      updateTitle(title) {
+        if (this.title !== title) {
+          this.title = title;
+        }
+      }
+    },
+    updated() {
+      const $dom = $__default.default(`#${this.id}`);
+      const domWidth = $dom.width();
+      const $span = $__default.default(`#${this.id} > span`);
+      const spanWidth = $span.width();
+      if (domWidth < spanWidth) {
+        const text = $dom.text();
+        this.updateTitle(text);
+      } else {
+        this.updateTitle("");
+      }
+    }
+  });
+  const _hoisted_1$1 = ["title", "id"];
+  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("div", {
+      class: "ellipsis",
+      title: _ctx.title,
+      id: _ctx.id
+    }, [
+      vue.createElementVNode("span", null, [
+        vue.renderSlot(_ctx.$slots, "default")
+      ])
+    ], 8, _hoisted_1$1);
+  }
+  const xCellLabel = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render$1]]);
+  const xVirScroll_vue_vue_type_style_index_0_lang = "";
+  const itemHeight = 48;
+  const oneBlockHeight = 580;
+  const _sfc_main = vue.defineComponent({
+    name: "XVirScroll",
+    props: {
+      configs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      },
+      top: {
+        type: Number,
+        default: 0
+      },
+      height: {
+        type: Number,
+        default: 0
+      },
+      scrollHeight: {
+        type: Number,
+        default: 0
+      }
+    },
+    emits: ["update:top", "update:height", "update:scrollHeight"],
+    setup() {
+      return {};
+    },
+    data() {
+      return {
+        itemComponent: this.$slots.item,
+        blockCount: 0,
+        isLoading: false,
+        styleWrapperAll: {
+          height: 0
+        }
+      };
+    },
+    computed: {
+      allItems() {
+        return this.configs.items || [];
+      },
+      positionBlock() {
+        return this.blockCount % 3;
+      },
+      virs1() {
+        const position = Number(this.styleWrapper1.match(/(\d)/g).join("")) / 580;
+        const start = position * 10;
+        const end = start + 10;
+        return this.allItems.slice(start, end).map((i, index2) => ({
+          ...i,
+          index: start + 1 + index2
+        }));
+      },
+      virs2() {
+        const position = Number(this.styleWrapper2.match(/(\d)/g).join("")) / 580;
+        const start = position * 10;
+        const end = start + 10;
+        return this.allItems.slice(start, end).map((i, index2) => ({
+          ...i,
+          index: start + 1 + index2
+        }));
+      },
+      virs3() {
+        const position = Number(this.styleWrapper3.match(/(\d)/g).join("")) / 580;
+        const start = position * 10;
+        const end = start + 10;
+        return this.allItems.slice(start, end).map((i, index2) => ({
+          ...i,
+          index: start + 1 + index2
+        }));
+      },
+      styleWrapper1() {
+        if (this.positionBlock === 0) {
+          return `transform:translateY(${this.blockCount * 580}px)`;
+        }
+        if (this.positionBlock === 1) {
+          return `transform:translateY(${(this.blockCount + 2) * 580}px)`;
+        }
+        return `transform:translateY(${(this.blockCount + 1) * 580}px)`;
+      },
+      styleWrapper2() {
+        if (this.positionBlock === 0) {
+          return `transform:translateY(${(this.blockCount + 1) * 580}px)`;
+        }
+        if (this.positionBlock === 1) {
+          return `transform:translateY(${this.blockCount * 580}px)`;
+        }
+        return `transform:translateY(${(this.blockCount - 1) * 580}px)`;
+      },
+      styleWrapper3() {
+        if (this.positionBlock === 0) {
+          return `transform:translateY(${(this.blockCount + 2) * 580}px)`;
+        }
+        if (this.positionBlock === 1) {
+          return `transform:translateY(${(this.blockCount + 1) * 580}px)`;
+        }
+        return `transform:translateY(${this.blockCount * 580}px)`;
+      }
+    },
+    watch: {
+      top() {
+        this.setTop();
+      },
+      "allItems.length": {
+        immediate: true,
+        handler() {
+          this.updateTop();
+          this.setHeight();
+        }
+      }
+    },
+    updated() {
+      var _a, _b;
+      const height = (_a = this.$wrapperEle) == null ? void 0 : _a.height();
+      if (height !== this.height) {
+        this.$emit("update:height", ((_b = this.$wrapperEle) == null ? void 0 : _b.height()) || 0);
+      }
+    },
+    mounted() {
+      this.init();
+    },
+    beforeUnmount() {
+      this.$wrapperEle.off("scroll");
+    },
+    methods: {
+      setTop: xU.debounce(function() {
+        if (this.$refs.refWrapper) {
+          this.$refs.refWrapper.scrollTo({
+            top: this.top,
+            behavior: "smooth"
+          });
+        }
+      }, 1e3),
+      init() {
+        this.$wrapperEle = $__default.default(this.$refs.refWrapper);
+        this.$wrapperEle.on("scroll", () => this.updateTop());
+      },
+      updateTop(event2) {
+        if (this.$refs.refWrapper) {
+          const top = this.$refs.refWrapper.scrollTop;
+          this.blockCount = Math.floor(top / oneBlockHeight);
+          this.$emit("update:top", top);
+        }
+      },
+      setHeight() {
+        const height = this.allItems.length * itemHeight;
+        this.styleWrapperAll.height = `${height}px`;
+        this.$emit("update:scrollHeight", height);
+      }
+    }
+  });
+  const _hoisted_1 = {
+    ref: "refWrapper",
+    class: "wrapper vir-item-component"
+  };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("div", _hoisted_1, [
+      vue.createElementVNode("div", {
+        style: vue.normalizeStyle(_ctx.styleWrapperAll)
+      }, [
+        vue.createElementVNode("div", {
+          class: "vir-item-wrapper item1",
+          style: vue.normalizeStyle(_ctx.styleWrapper1)
+        }, [
+          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.virs1, (vir) => {
+            return vue.openBlock(), vue.createElementBlock("div", {
+              key: vir.id,
+              class: "vir-item"
+            }, [
+              (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.itemComponent), { item: vir }, null, 8, ["item"]))
+            ]);
+          }), 128))
+        ], 4),
+        vue.createElementVNode("div", {
+          class: "vir-item-wrapper item2",
+          style: vue.normalizeStyle(_ctx.styleWrapper2)
+        }, [
+          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.virs2, (vir) => {
+            return vue.openBlock(), vue.createElementBlock("div", {
+              key: vir.id,
+              class: "vir-item"
+            }, [
+              (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.itemComponent), { item: vir }, null, 8, ["item"]))
+            ]);
+          }), 128))
+        ], 4),
+        vue.createElementVNode("div", {
+          class: "vir-item-wrapper item3",
+          style: vue.normalizeStyle(_ctx.styleWrapper3)
+        }, [
+          (vue.openBlock(true), vue.createElementBlock(vue.Fragment, null, vue.renderList(_ctx.virs3, (vir) => {
+            return vue.openBlock(), vue.createElementBlock("div", {
+              key: vir.id,
+              class: "vir-item"
+            }, [
+              (vue.openBlock(), vue.createBlock(vue.resolveDynamicComponent(_ctx.itemComponent), { item: vir }, null, 8, ["item"]))
+            ]);
+          }), 128))
+        ], 4)
+      ], 4)
+    ], 512);
+  }
+  const xVirScroll = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
+  const ReadonlyItem = vue.defineComponent({
+    props: ["value"],
+    render() {
+      return vue.withDirectives(vue.createVNode("div", {
+        "class": "x-input cursor-not-allowed xItem_readonly ellipsis"
+      }, [this.value, vue.createVNode("span", {
+        "style": "opacity:0"
+      }, [vue.createTextVNode(".")])]), [[vue.resolveDirective("uiPopover"), {
+        onlyEllipsis: true
+      }]]);
+    }
+  });
+  const Input = vue.defineComponent({
+    props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+    mounted() {
+      xU("xItem Input");
+    },
+    data(vm) {
+      return {
+        oldComponent: "",
+        ComponentInstance: "",
+        _modelValue: ""
+      };
+    },
+    methods: {
+      diffComponent(type2) {
+        if (type2 === this.oldComponent) {
+          return this.ComponentInstance;
+        }
+        this.oldComponent = type2;
+        const ComponentInstance = vue.resolveComponent(type2);
+        ComponentInstance.__v_skip = true;
+        this.ComponentInstance = ComponentInstance;
+      }
+    },
+    watch: {
+      "properties.value"(value) {
+        if (value !== void 0) {
+          if (value !== this._modelValue) {
+            this._modelValue = value;
+          }
+        }
+      },
+      _modelValue(modelValue) {
+        this.listeners["onUpdate:value"](modelValue);
+      }
+    },
+    computed: {
+      component({
+        properties
+      }) {
+        if (!this.ComponentInstance) {
+          this.diffComponent("ElInput");
+        }
+        if (properties.isNumber) {
+          this.diffComponent("ElInputNumber");
+        }
+        return this.ComponentInstance;
+      }
+    },
+    render(vm) {
+      const {
+        properties,
+        slots,
+        listeners,
+        propsWillDeleteFromConfigs,
+        component
+      } = vm;
+      if (properties.isReadonly) {
+        return vue.createVNode(ReadonlyItem, {
+          "value": properties.value
+        }, null);
+      }
+      if (properties.isTextarea) {
+        properties.type = "textarea";
+        properties.autosize = properties.autoSize || {
+          minRows: 4,
+          maxRows: 6
+        };
+      }
+      return vue.createVNode(component, vue.mergeProps({
+        "modelValue": this._modelValue,
+        "onUpdate:modelValue": ($event) => this._modelValue = $event
+      }, xU.omit(properties, ["value", "isTextarea", ...propsWillDeleteFromConfigs]), xU.omit(listeners, ["onUpdate:value"])), slots);
+    }
+  });
+  const DatePicker = ({
+    properties,
+    slots,
+    listeners
+  }) => {
+    function checkOneValue(value2) {
+      if (!value2) {
+        value2 = "";
+        return;
+      }
+      try {
+        value2 = dayjs__default.default(value2);
+        if (typeof value2 === "object" && value2.$d == "Invalid Date") {
+          value2 = "";
+          return;
+        }
+        xU(value2, properties.value);
+        if (value2 === "Invalid Date") {
+          xU("properties.value", properties.value);
+          value2 = "";
+          return;
+        }
+      } catch (error) {
+      } finally {
+        return value2;
+      }
+    }
+    const value = checkOneValue(properties.value);
+    return vue.createVNode(ElementPlus.ElDatePicker, vue.mergeProps(properties, listeners, {
+      "value": value
+    }), slots);
+  };
+  const RangePicker = ({
+    properties,
+    slots,
+    listeners
+  }) => {
+    const RangePicker2 = vue.resolveComponent("aRangePicker");
+    console.log("properties", properties.value);
+    return vue.createVNode(RangePicker2, vue.mergeProps(properties, listeners, {
+      "locale": Cpt_UI_locale.value.DatePicker
+    }), slots);
+  };
+  const Checkbox = vue.defineComponent({
+    props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+    computed: {
+      checked: {
+        get() {
+          var _a;
+          return ((_a = this.properties) == null ? void 0 : _a.value) || false;
+        },
+        set(val) {
+          this.listeners["onUpdate:value"](val);
+        }
+      }
+    },
+    render(vm) {
+      const _properties = xU.omit(this.properties, [...this.propsWillDeleteFromConfigs]);
+      return vue.createVNode(vue.resolveComponent("ElCheckbox"), vue.mergeProps({
+        "modelValue": this.checked,
+        "onUpdate:modelValue": ($event) => this.checked = $event
+      }, this.listeners, _properties), this.slots);
+    }
+  });
+  const Select = vue.defineComponent({
+    props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+    mounted() {
+      xU("xItem Select");
+    },
+    data(vm) {
+      return {
+        _modelValue: ""
+      };
+    },
+    methods: {},
+    watch: {
+      "properties.value"(value) {
+        if (value !== void 0) {
+          if (value !== this._modelValue) {
+            this._modelValue = value;
+          }
+        }
+      },
+      _modelValue(modelValue) {
+        this.listeners["onUpdate:value"](modelValue);
+      }
+    },
+    computed: {},
+    render(vm) {
+      const {
+        properties,
+        listeners,
+        propsWillDeleteFromConfigs
+      } = vm;
+      if (properties.isReadonly) {
+        return vue.createVNode(ReadonlyItem, {
+          "value": properties.value
+        }, null);
+      }
+      const _property = xU.omit(properties, [...propsWillDeleteFromConfigs, "options", "renderOptions"]);
+      xU(_property);
+      const renderOptions = () => {
+        if (properties.renderOptions) {
+          return properties.renderOptions();
+        } else {
+          return xU.map(properties.options, (option) => {
+            return vue.createVNode(vue.resolveComponent("ElOption"), {
+              "value": option.value,
+              "label": option.label
+            }, null);
+          });
+        }
+      };
+      return vue.createVNode(vue.resolveComponent("ElSelect"), vue.mergeProps({
+        "modelValue": this._modelValue,
+        "onUpdate:modelValue": ($event) => this._modelValue = $event
+      }, _property, listeners), {
+        default: renderOptions
+      });
+    }
+  });
+  const RadioGroup = ({
+    properties,
+    slots,
+    listeners,
+    propsWillDeleteFromConfigs
+  }) => {
+    const Radio = vue.resolveComponent("ElRadio");
+    const RadioGroup2 = vue.resolveComponent("ElRadioGroup");
+    const RadioButton = vue.resolveComponent("ElRadioButton");
+    const PROPERTY_OPTIONS = properties.options;
+    const componentPropertyOmitOptions = xU.omit(properties, ["options"]);
+    const renderOptions = () => {
+      if (properties.isButton) {
+        return xU.map(PROPERTY_OPTIONS, (option) => {
+          return vue.createVNode(RadioButton, {
+            "value": option.value
+          }, {
+            default: () => [option.label]
+          });
+        });
+      }
+      return xU.map(PROPERTY_OPTIONS, (option) => {
+        return vue.createVNode(Radio, {
+          "value": option.value
+        }, {
+          default: () => [option.label]
+        });
+      });
+    };
+    return vue.createVNode(RadioGroup2, vue.mergeProps(componentPropertyOmitOptions, listeners), {
+      default: renderOptions
+    });
+  };
+  const CheckboxGroup = ({
+    properties,
+    slots,
+    listeners
+  }) => {
+    return vue.createVNode(vue.resolveComponent("ElCheckboxGroup"), vue.mergeProps(properties, listeners), slots);
+  };
+  const xSwitch = vue.defineComponent({
+    props: ["properties", "slots", "listeners", "propsWillDeleteFromConfigs"],
+    mounted() {
+      xU("xItem ComponentSample");
+    },
+    data(vm) {
+      return {
+        _modelValue: ""
+      };
+    },
+    methods: {},
+    watch: {
+      "properties.value"(value) {
+        if (value !== void 0) {
+          if (value !== this._modelValue) {
+            this._modelValue = value;
+          }
+        }
+      },
+      _modelValue(modelValue) {
+        this.listeners["onUpdate:value"](modelValue);
+      }
+    },
+    computed: {},
+    render(vm) {
+      const {
+        properties,
+        listeners,
+        propsWillDeleteFromConfigs
+      } = vm;
+      return vue.createVNode("div", {
+        "class": "x-item_switch"
+      }, [vue.createVNode(vue.resolveComponent("ElSwitch"), vue.mergeProps({
+        "modelValue": this._modelValue,
+        "onUpdate:modelValue": ($event) => this._modelValue = $event
+      }, xU.omit(listeners, ["onUpdate:value"]), xU.omit(properties, ["value", ...propsWillDeleteFromConfigs])), null)]);
+    }
+  });
+  const itemRenders = {
+    Input,
+    Checkbox,
+    Select,
+    Switch: xSwitch,
+    DatePicker,
+    RangePicker,
+    RadioGroup,
+    CheckboxGroup
+  };
+  const getValueNeedVarify = ({
+    value,
+    xItemConfigs
+  }) => {
+    if (value !== void 0) {
+      return value;
+    } else if (xItemConfigs.value !== void 0) {
+      return xItemConfigs.value;
+    } else {
+      console.error(new Error("miss value"));
+      return xItemConfigs.defaultValue;
+    }
+  };
+  const EVENT_TYPE = {
+    validateForm: "validateForm",
+    update: "update",
+    change: "change",
+    input: "input",
+    blur: "blur",
+    focus: "focus"
+  };
+  const TIPS_TYPE = {
+    success: "success",
+    error: "error"
+  };
+  async function validateItem(idSelector) {
+    const allItems = $__default.default(`${idSelector} [id^=xItem_]`);
+    xU.map(allItems, (domEle, index2, $ele) => {
+      console.log(State_UI.xItemCollection[domEle.id]);
+    });
+  }
+  async function validateForm(configsForm, valuesCollection) {
+    let propsArray = Object.keys(configsForm);
+    if (valuesCollection) {
+      propsArray = Object.keys(valuesCollection);
+    }
+    return Promise.all(xU.map(propsArray, (prop) => {
+      const configs = configsForm[prop];
+      const valueNeedVarify = getValueNeedVarify({
+        value: valuesCollection && valuesCollection[prop] || configs.value,
+        xItemConfigs: configs
+      });
+      return new Promise((resolve2) => {
+        try {
+          (() => {
+            const isFalse = !configs.isShow;
+            if (isFalse) {
+              return resolve2("");
+            }
+            const isResFalse = xU.isFunction(configs.isShow) && !configs.isShow();
+            if (isResFalse) {
+              return resolve2("");
+            }
+          })();
+          if (configs.validate) {
+            configs.validate({
+              eventType: EVENT_TYPE.validateForm,
+              value: valueNeedVarify,
+              resolve: resolve2
+            });
+          } else {
+            resolve2("");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    })).then((results) => {
+      results = results.filter((res) => res && res[0] && res[1]);
+      return results;
+    }).catch((error) => {
+      return error;
+    });
+  }
+  const AllWasWell = (res) => {
+    return xU.isArray(res) && res.length === 0;
+  };
+  const checkXItem = async ({
+    xItemConfigs,
+    fnCheckedCallback,
+    value,
+    FormItemId,
+    resolve: resolve2
+  }) => {
+    const valueNeedVarify = getValueNeedVarify({
+      value,
+      xItemConfigs
+    });
+    xItemConfigs.checking = true;
+    fnCheckedCallback = fnCheckedCallback || xU.doNothing;
+    FormItemId = FormItemId || xItemConfigs.FormItemId;
+    let result;
+    try {
+      const {
+        rules,
+        prop
+      } = xItemConfigs;
+      result = await (async () => {
+        let dontCheck = 0;
+        for (const element of rules) {
+          const rule = element;
+          const trigger = rule.trigger || [];
+          let isFail = await (async () => {
+            let trigBy;
+            const isNeedVerify = (() => {
+              if (xItemConfigs.validate.triggerEventsObj[EVENT_TYPE.validateForm]) {
+                trigBy = "validateForm";
+                return true;
+              }
+              const isInTrigger = (eventName) => xItemConfigs.validate.triggerEventsObj[eventName];
+              if (xU.some(trigger, isInTrigger)) {
+                trigBy = `triggerEvent ${trigger.toString()}`;
+                return true;
+              }
+              if (trigger.includes(EVENT_TYPE.update)) {
+                const updateTrigger = [EVENT_TYPE.change, EVENT_TYPE.input, EVENT_TYPE.blur];
+                if (xU.some(updateTrigger, isInTrigger)) {
+                  trigBy = "update";
+                  return true;
+                }
+              }
+              return false;
+            })();
+            trigBy && xU.doNothing(`%cValidate trigger off by [${trigBy}]`, "color:yellow;background:green;");
+            if (isNeedVerify) {
+              const currentValue = (() => {
+                try {
+                  return JSON.parse(JSON.stringify(valueNeedVarify));
+                } catch (e) {
+                  return "";
+                }
+              })();
+              const validateResult = await rule.validator(currentValue, {
+                configs: xItemConfigs,
+                rule
+              });
+              if (validateResult) {
+                return validateResult;
+              }
+            } else {
+              dontCheck++;
+            }
+            return false;
+          })();
+          if (isFail) {
+            return [prop, rule.msg, FormItemId];
+          }
+        }
+        if (dontCheck === rules.length) {
+          return [false, false];
+        } else {
+          return [prop, false];
+        }
+      })();
+      fnCheckedCallback(result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      if (xU.isFunction(resolve2)) {
+        resolve2(result);
+      }
+      xItemConfigs.validate.triggerEventsObj = {};
+      return result;
+    }
+  };
+  const {
+    MutatingProps: MutatingProps$1
+  } = xU;
+  const domClass = {
+    tipsError: "x-form-item-explain x-form-item-explain-error"
+  };
+  const devHelper = {};
+  const WILL_DELETE = [
+    "onValidateForm",
+    "_$updateUI",
+    "once",
+    "itemTips",
+    "rules",
+    "labelVNodeRender",
+    "slots",
+    "validate",
+    "value"
+  ];
+  const DID_NOT_SET_MODEL_VALUE_BY_V_MODEL = "DID_NOT_SET_MODEL_VALUE_BY_V_MODEL";
+  const xItem = vue.defineComponent({
+    name: "XItem",
+    props: {
+      modelValue: {
+        type: [Object, String, Number, Boolean],
+        default() {
+          return DID_NOT_SET_MODEL_VALUE_BY_V_MODEL;
+        }
+      },
+      configs: {
+        type: Object,
+        default() {
+          return {};
+        }
+      }
+    },
+    emits: ["update:modelValue"],
+    setup(props, {
+      attrs,
+      slots,
+      emit,
+      expose
+    }) {
+      let Cpt_isShowXItem = true;
+      let Cpt_isDisabled = false;
+      if (xU.isFunction(props.configs.isShow)) {
+        Cpt_isShowXItem = vue.computed(props.configs.isShow);
+      } else if (xU.isBoolean(props.configs.isShow)) {
+        Cpt_isShowXItem = vue.computed(() => !!props.configs.isShow);
+      } else {
+        Cpt_isShowXItem = vue.computed(() => {
+          if (xU.isUndefined(props.configs.isShow)) {
+            props.configs.isShow = true;
+          }
+          return !!props.configs.isShow;
+        });
+      }
+      if (xU.isFunction(props.configs.disabled)) {
+        Cpt_isDisabled = vue.computed(props.configs.disabled);
+      } else if (xU.isBoolean(props.configs.disabled)) {
+        Cpt_isDisabled = vue.computed(() => !!props.configs.disabled);
+      }
+      return {
+        Cpt_isShowXItem,
+        Cpt_isDisabled
+      };
+    },
+    data(vm) {
+      const {
+        $props,
+        $attrs
+      } = vm;
+      const triggerValidate = xU.debounce(function(eventType) {
+        const {
+          configs
+        } = vm.$props;
+        if (configs.validate) {
+          configs.validate({
+            eventType,
+            value: vm.properties.value
+          });
+        }
+      }, 500);
+      const {
+        listeners,
+        propsWillDeleteFromConfigs
+      } = (() => {
+        const {
+          configs
+        } = $props;
+        const propsSet = /* @__PURE__ */ new Set();
+        const listeners2 = {
+          "onUpdate:value": (val) => {
+            if (xU.isObjSetAttr(configs)) {
+              if (configs.value === val) {
+                return;
+              } else {
+                configs.value = val;
+              }
+            }
+            vm.$emit("update:modelValue", val);
+            if (xU.isFunction(listeners2.onAfterValueEmit)) {
+              listeners2.onAfterValueEmit(val);
+            }
+            triggerValidate(EVENT_TYPE.update);
+          },
+          onValidateForm: () => {
+            triggerValidate(EVENT_TYPE.validateForm);
+          },
+          onChange: () => {
+            triggerValidate(EVENT_TYPE.change);
+          },
+          onInput: () => {
+            triggerValidate(EVENT_TYPE.input);
+          },
+          onBlur: () => {
+            triggerValidate(EVENT_TYPE.blur);
+          },
+          onFocus: () => {
+            triggerValidate(EVENT_TYPE.focus);
+          }
+        };
+        function makeEventHandlerSupportMultiple(prop, xItemInnerEventHandler) {
+          propsSet.add(prop);
+          if (typeof listeners2[prop] === "object" && xU.isArray(listeners2[prop].handlerArray)) {
+            listeners2[prop].handlerArray.push(xItemInnerEventHandler);
+          } else {
+            listeners2[prop] = (...args) => {
+              xU.each(listeners2[prop].handlerArray, (listener) => {
+                listener == null ? void 0 : listener.apply(configs, args);
+              });
+            };
+            listeners2[prop].handlerArray = [xItemInnerEventHandler];
+          }
+        }
+        xU.each(listeners2, (value, prop) => makeEventHandlerSupportMultiple(prop, value));
+        xU.each(configs, (value, prop) => {
+          if (xU.isListener(prop)) {
+            makeEventHandlerSupportMultiple(prop, value);
+          }
+        });
+        xU.each($attrs, (value, prop) => {
+          if (xU.isListener(prop)) {
+            makeEventHandlerSupportMultiple(prop, value);
+          }
+        });
+        return {
+          listeners: listeners2,
+          propsWillDeleteFromConfigs: [...propsSet]
+        };
+      })();
+      return {
+        rerenderCount: 0,
+        isRequired: false,
+        properties: null,
+        itemSlots: {},
+        listeners,
+        propsWillDeleteFromConfigs
+      };
+    },
+    computed: {
+      isSetVModel() {
+        return this.modelValue !== DID_NOT_SET_MODEL_VALUE_BY_V_MODEL;
+      },
+      CurrentXItem() {
+        if (xU.isObject(this.configs.itemType)) {
+          if (vue.isProxy(this.configs.itemType)) {
+            return vue.toRaw(this.configs.itemType);
+          }
+          return this.configs.itemType;
+        }
+        return itemRenders[this.configs.itemType] || itemRenders.Input;
+      },
+      itemTypeName() {
+        if (xU.isString(this.configs.itemType)) {
+          return String(this.configs.itemType);
+        }
+        return "";
+      },
+      isChecking() {
+        return Boolean(this.configs.checking);
+      },
+      FormItemId() {
+        return `xItem_${this._.uid}`;
+      },
+      itemTips() {
+        var _a, _b;
+        const _itemTips = {
+          type: "",
+          msg: ""
+        };
+        if ((_b = (_a = this.configs) == null ? void 0 : _a.itemTips) == null ? void 0 : _b.type) {
+          return {
+            type: this.configs.itemTips.type,
+            msg: xU.isFunction(this.configs.itemTips.msg) ? this.configs.itemTips.msg() : this.configs.itemTips.msg
+          };
+        } else {
+          this.configs.itemTips = _itemTips;
+          return _itemTips;
+        }
+      },
+      itemWrapperClass() {
+        return [
+          this.configs.itemWrapperClass,
+          "x-item-wrapper flex middle",
+          this.itemTips.type === TIPS_TYPE.error ? "x-form-item-has-error" : ""
+        ].join(" ");
+      },
+      tipsVNode() {
+        if (this.isChecking) {
+          return vue.createVNode("div", null, [vue.createVNode("div", {
+            "data-type": "checking"
+          }, [vue.createTextVNode("checking...")])]);
+        }
+        if (this.configs.tipsVNodeRender) {
+          return this.configs.tipsVNodeRender({
+            xItem: this,
+            configs: this.configs,
+            itemTips: this.itemTips
+          });
+        }
+        if (this.itemTips.msg) {
+          if (this.itemTips.type === TIPS_TYPE.error) {
+            return vue.createVNode("div", {
+              "class": domClass.tipsError
+            }, [vue.createVNode("div", {
+              "data-type": "error"
+            }, [this.itemTips.msg])]);
+          }
+        }
+        return null;
+      },
+      labelVNode() {
+        const classString = this.isRequired ? "x-form-item-required" : "";
+        if (this.configs.labelVNodeRender) {
+          return this.configs.labelVNodeRender(this.configs, classString);
+        }
+        let label = (() => {
+          const _label = this.configs.label;
+          if (_label) {
+            if (xU.isFunction(_label)) {
+              return _label();
+            }
+            if (xU.isString(_label) || _label.__v_isVNode) {
+              return _label;
+            }
+          }
+          return false;
+        })();
+        if (label === false) {
+          return null;
+        }
+        return vue.createVNode("div", {
+          "class": "x-form-item-label"
+        }, [vue.createVNode("label", {
+          "for": this.configs.prop,
+          "class": classString
+        }, [label])]);
+      }
+    },
+    watch: {
+      $attrs: {
+        handler() {
+          this.setProperties();
+        }
+      },
+      "properties.value": {
+        handler(value) {
+          xU(value);
+        }
+      },
+      "configs.value": {
+        handler() {
+          this.updateValue();
+        }
+      },
+      modelValue: {
+        handler() {
+          this.updateValue();
+        }
+      },
+      rerenderCount: {
+        handler() {
+          this.setProperties();
+        }
+      },
+      configs: {
+        handler() {
+          this.setProperties();
+        }
+      },
+      "configs.options": {
+        handler(value) {
+          this.setProperties();
+        }
+      },
+      "configs.rules": {
+        immediate: true,
+        handler(rules) {
+          if (rules) {
+            this.setValidateInfo(rules);
+          }
+        }
+      },
+      "configs.slots": {
+        immediate: true,
+        handler(slots) {
+          if (slots) {
+            this.setItemSlots();
+          }
+        }
+      }
+    },
+    created() {
+      const vm = this;
+      vm.configs.FormItemId = vm.FormItemId;
+      (() => {
+        vm.forceUpdateUI = xU.debounce(() => vm.rerenderCount++, 64);
+      })();
+      (() => {
+        vm.configs._$updateUI = (newConfigs) => {
+          xU.each(newConfigs, (value, prop) => {
+            vm.configs[prop] = value;
+          });
+          vm.forceUpdateUI();
+        };
+      })();
+      (() => {
+        vm.updateValue = xU.debounce(vm.updateValueSync, 94);
+        vm.updateValue();
+      })();
+      (() => {
+        vm.setProperties = xU.debounce(function setProperties() {
+          xU(vm._.uid);
+          const __properties = {};
+          const pickProps = (originConfigs) => {
+            xU.each(originConfigs, (item, prop) => {
+              if (WILL_DELETE.includes(prop)) {
+                return;
+              }
+              if (["placeholder"].includes(prop) && xU.isFunction(item)) {
+                __properties[prop] = item(this);
+                return;
+              }
+              __properties[prop] = item;
+            });
+          };
+          xU.each([this.configs, this.$attrs], pickProps);
+          this.properties = __properties;
+          this.updateValue();
+        }, 32);
+        vm.setProperties();
+      })();
+    },
+    mounted() {
+      var _a;
+      devHelper[this._.uid] = 0;
+      if ((_a = this.configs) == null ? void 0 : _a.once) {
+        this.configs.once.call(this.configs, this);
+      }
+      State_UI.xItemCollection[this.FormItemId] = this;
+    },
+    beforeUnmount() {
+      delete devHelper[this._.uid];
+      delete State_UI.xItemCollection[this.FormItemId];
+    },
+    methods: {
+      async updateValueSync() {
+        await xU.ensureValueDone(() => this.properties);
+        const vm = this;
+        const value = (() => {
+          if (vm.isSetVModel) {
+            return vm.modelValue;
+          } else if (xU.isObjSetAttr(vm.configs)) {
+            return vm.configs.value;
+          } else if (xU.isObjSetAttr(vm.configs, "defaultValue")) {
+            return vm.configs.defaultValue;
+          } else {
+            xU("either configs.value or modelValue");
+            return "";
+          }
+        })();
+        const diffRes = jsondiffpatch.diff(vm.properties.value, value);
+        if (diffRes) {
+          xU("diff xItem value", diffRes);
+          vm.properties.value = value;
+          vm.listeners["onUpdate:value"](value);
+        }
+      },
+      setTips(type2 = "", msg = "") {
+        MutatingProps$1(this, "configs.itemTips", {
+          type: type2,
+          msg
+        });
+      },
+      setItemSlots() {
+        this.itemSlots = this.configs.slots || {};
+      },
+      setValidateInfo(rules) {
+        let isRequired = false;
+        if (xU.isArrayFill(rules)) {
+          isRequired = xU.some(rules, {
+            name: "required"
+          });
+          const fnCheckedCallback = ([prop, msg]) => {
+            MutatingProps$1(this, "configs.checking", false);
+            if (prop) {
+              if (msg) {
+                this.setTips(TIPS_TYPE.error, msg);
+                if (xU.isFunction(this.configs.onValidateFail)) {
+                  this.configs.onValidateFail(this.configs);
+                }
+              } else {
+                this.setTips();
+              }
+            }
+          };
+          const debounceCheckXItem = xU.debounce(checkXItem, 300);
+          const fnConfigsValidate = ({
+            eventType,
+            value,
+            resolve: resolve2
+          }) => {
+            const prop = `configs.validate.triggerEventsObj.${eventType}`;
+            MutatingProps$1(this, prop, true);
+            debounceCheckXItem({
+              FormItemId: this.FormItemId,
+              xItemConfigs: this.configs,
+              value,
+              fnCheckedCallback,
+              resolve: resolve2
+            });
+          };
+          MutatingProps$1(this, "configs.validate", fnConfigsValidate);
+          MutatingProps$1(this, "configs.validate.triggerEventsObj", {});
+        } else {
+          if (xU.isFunction(this.configs.validate)) {
+            delete this.configs.validate;
+          }
+        }
+        this.isRequired = isRequired;
+      }
+    },
+    render() {
+      if (!this.properties) {
+        return null;
+      }
+      if (xU.isUndefined(this.Cpt_isShowXItem)) {
+        debugger;
+      }
+      if (!this.Cpt_isShowXItem) {
+        return null;
+      }
+      const {
+        CurrentXItem,
+        properties,
+        Cpt_isDisabled,
+        propsWillDeleteFromConfigs,
+        itemTypeName,
+        FormItemId
+      } = this;
+      xU(`xItem ${this._.uid} render ${++devHelper[this._.uid]} times`);
+      return vue.createVNode("div", {
+        "id": FormItemId,
+        "class": this.itemWrapperClass
+      }, [this.labelVNode, vue.createVNode("div", {
+        "class": "x-form-item-control",
+        "data-type": itemTypeName
+      }, [vue.createVNode(CurrentXItem, {
+        "id": `CurrentXItem_${FormItemId}`,
+        "data-current-item-label": properties.label,
+        "data-current-item-prop": properties.prop,
+        "data-current-item-type": itemTypeName,
+        "propsWillDeleteFromConfigs": propsWillDeleteFromConfigs,
+        "properties": {
+          ...properties,
+          disabled: Cpt_isDisabled
+        },
+        "listeners": this.listeners,
+        "slots": this.itemSlots
+      }, null), this.tipsVNode]), this.$slots.afterControll && this.$slots.afterControll()]);
+    }
+  });
+  const xVirTableTh = vue.defineComponent({
+    props: ["column", "index"],
+    computed: {
+      prop() {
+        var _a;
+        return (_a = this.column) == null ? void 0 : _a.prop;
+      },
+      label() {
+        var _a;
+        return (_a = this.column) == null ? void 0 : _a.label;
+      },
+      renderHeader() {
+        var _a;
+        return ((_a = this.column) == null ? void 0 : _a.renderHeader) || false;
+      },
+      vDomCellContent() {
+        if (this.renderHeader) {
+          return this.renderHeader({
+            label: this.label,
+            prop: this.prop,
+            index: this.index
+          });
+        }
+        return this.label;
+      }
+    },
+    render() {
+      return vue.createVNode("div", {
+        "role": "th",
+        "class": "xVirTable-cell",
+        "data-prop": this.prop,
+        "data-index": this.index
+      }, [this.vDomCellContent]);
+    }
+  });
+  const usefnObserveDomResize = () => {
+    function fnObserveDomResize($el, callback) {
+      this.resizeObserver = new ResizeObserver(callback);
+      this.resizeObserver.observe($el);
+    }
+    function fnUnobserveDomResize($el) {
+      this.resizeObserver.unobserve($el);
+    }
+    return {
+      fnObserveDomResize,
+      fnUnobserveDomResize
+    };
+  };
+  $__default.default(window).on("click.virTableTdId", function(e) {
+    const virTableTdId = (() => {
+      let $ele = $__default.default(e.target);
+      let _virTableTdId = $ele.attr("id");
+      if (/^virTableTdId_/.test(_virTableTdId)) {
+        return _virTableTdId;
+      } else {
+        $ele = $ele.parents("[id^=virTableTdId_]");
+        _virTableTdId = $ele.attr("id");
+        return _virTableTdId;
+      }
+    })();
+    $__default.default(window).trigger({
+      type: "onAllCell",
+      virTableTdId
+    });
+  });
+  const xVirTableTd = vue.defineComponent({
+    props: ["column", "data"],
+    emits: ["update:data"],
+    setup() {
+      return {
+        configs: vue.inject("configs")
+      };
+    },
+    computed: {
+      record() {
+        const vm = this;
+        return new Proxy(vm.data, {
+          get(obj, prop) {
+            return vm.data[prop];
+          },
+          set(obj, prop, val) {
+            vm.data[prop] = val;
+            vm.configs.dataSource[vm.data.__virRowIndex][prop] = val;
+            return true;
+          }
+        });
+      },
+      id() {
+        return `virTableTdId_${this._.uid}`;
+      },
+      prop() {
+        var _a;
+        return (_a = this.column) == null ? void 0 : _a.prop;
+      },
+      cell() {
+        return this.data[this.prop];
+      },
+      renderEditor() {
+        var _a, _b;
+        if ((_a = this.column) == null ? void 0 : _a.renderEditor) {
+          return (_b = this.column) == null ? void 0 : _b.renderEditor;
+        }
+        return false;
+      },
+      renderCell() {
+        var _a, _b;
+        if ((_a = this.column) == null ? void 0 : _a.renderCell) {
+          return (_b = this.column) == null ? void 0 : _b.renderCell;
+        }
+        return false;
+      }
+    },
+    data(vm) {
+      return {
+        isFocus: false,
+        count: 0
+      };
+    },
+    methods: {
+      handleAllCell(e) {
+        if (e.virTableTdId === this.id) {
+          if (!this.isFocus) {
+            this.isFocus = true;
+            setTimeout(() => {
+              $__default.default(this.$refs.cell).find("input").trigger("focus");
+            }, 64);
+          }
+        } else {
+          if (this.isFocus) {
+            this.isFocus = false;
+          }
+        }
+      }
+    },
+    mounted() {
+      $__default.default(window).on("onAllCell", this.handleAllCell);
+      if (this.renderEditor) {
+        $__default.default(this.$refs.cell).addClass("cursor-editor");
+      }
+    },
+    beforeUnmount() {
+      $__default.default(window).off("onAllCell", this.handleAllCell);
+    },
+    render() {
+      return vue.createVNode("div", {
+        "id": this.id,
+        "ref": "cell",
+        "role": "td",
+        "class": "xVirTable-cell",
+        "data-count": this.count,
+        "data-prop": this.prop,
+        "data-row-index": this.data.__virRowIndex
+      }, [(() => {
+        if (this.renderEditor && this.renderCell) {
+          if (this.isFocus) {
+            return this.renderEditor({
+              configs: this.configs,
+              record: this.record,
+              cell: this.cell,
+              index: this.data.__virRowIndex
+            });
+          } else {
+            return this.renderCell({
+              configs: this.configs,
+              record: this.record,
+              cell: this.cell,
+              index: this.data.__virRowIndex
+            });
+          }
+        }
+        if (!this.renderEditor && this.renderCell) {
+          return this.renderCell({
+            configs: this.configs,
+            record: this.record,
+            cell: this.cell,
+            index: this.data.__virRowIndex
+          });
+        }
+        if (this.renderEditor && !this.renderCell) {
+          if (this.isFocus) {
+            return this.renderEditor({
+              configs: this.configs,
+              record: this.record,
+              cell: this.cell,
+              index: this.data.__virRowIndex
+            });
+          } else {
+            return this.cell;
+          }
+        }
+        return this.cell;
+      })()]);
+    }
+  });
+  const xVirTableBody = vue.defineComponent({
+    props: ["columnOrder", "columns", "rowHeight", "selectedConfigs", "selected"],
+    emits: ["selectedChange", "update:scrollHeight", "scroll"],
+    inject: ["xVirTable"],
+    components: {
+      xVirTableTd
+    },
+    setup() {
+      const {
+        fnObserveDomResize,
+        fnUnobserveDomResize
+      } = usefnObserveDomResize();
+      return {
+        uniqBy: vue.inject("uniqBy"),
+        configs: vue.inject("configs"),
+        rowCache: {},
+        fnObserveDomResize,
+        fnUnobserveDomResize
+      };
+    },
+    data(vm) {
+      this.debounceSetPerBlockHeight = xU.debounce(function(viewportHeight) {
+        this.viewportHeight = viewportHeight;
+        this.perBlockRowCount = Math.ceil(viewportHeight / this.rowHeight);
+        this.perBlockHeight = this.perBlockRowCount * this.rowHeight;
+        this.setHeight();
+      }, 64);
+      return {
+        isLoading: false,
+        perBlockHeight: 1,
+        perBlockRowCount: 0,
+        blockInViewCount: 0,
+        styleWrapperAll: {
+          height: 0,
+          position: "relative"
+        },
+        virs1: [],
+        virs2: [],
+        virs3: []
+      };
+    },
+    mounted() {
+      this.fnObserveDomResize(this.$refs.wrapper, () => {
+        this.xVirTable.layoutDebounce();
+        this.debounceSetPerBlockHeight(this.$refs.wrapper.offsetHeight);
+      });
+      this.$watch(() => {
+        return `${this.configs.dataSource.length}_${this.perBlockHeight}_${this.perBlockRowCount}_${this.styleWrapper1}_${this.styleWrapper2}_${this.styleWrapper3}`;
+      }, () => {
+        this.updateCell();
+      });
+    },
+    beforeUnmount() {
+      this.fnUnobserveDomResize(this.$refs.wrapper);
+    },
+    computed: {
+      fnIsSelected() {
+        const {
+          isSelect,
+          prop
+        } = this.selectedConfigs || {};
+        if (xU.isFunction(isSelect)) {
+          return (rowInfo) => {
+            return isSelect.call(this, {
+              ...rowInfo,
+              selected: this.selected
+            });
+          };
+        } else {
+          return ({
+            rowData
+          }) => {
+            const id = rowData[prop];
+            return this.selected.includes(id);
+          };
+        }
+      },
+      fnIsDisabled() {
+        const {
+          isDisabled
+        } = this.selectedConfigs || {};
+        if (xU.isFunction(isDisabled)) {
+          return (...args) => {
+            return isDisabled.apply(this, args);
+          };
+        } else {
+          return () => {
+            return false;
+          };
+        }
+      },
+      positionBlock() {
+        return this.blockInViewCount % 3;
+      },
+      styleWrapper1() {
+        if (this.positionBlock === 0) {
+          return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
+        }
+        if (this.positionBlock === 1) {
+          return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight}px)`;
+        }
+        return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight}px)`;
+      },
+      styleWrapper2() {
+        if (this.positionBlock === 0) {
+          return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight}px)`;
+        }
+        if (this.positionBlock === 1) {
+          return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
+        }
+        return `transform:translateY(${(this.blockInViewCount - 1) * this.perBlockHeight}px)`;
+      },
+      styleWrapper3() {
+        if (this.positionBlock === 0) {
+          return `transform:translateY(${(this.blockInViewCount + 2) * this.perBlockHeight}px)`;
+        }
+        if (this.positionBlock === 1) {
+          return `transform:translateY(${(this.blockInViewCount + 1) * this.perBlockHeight}px)`;
+        }
+        return `transform:translateY(${this.blockInViewCount * this.perBlockHeight}px)`;
+      },
+      vDomBodyTr1() {
+        return this.genTr(this.virs1);
+      },
+      vDomBodyTr2() {
+        return this.genTr(this.virs2);
+      },
+      vDomBodyTr3() {
+        return this.genTr(this.virs3);
+      }
+    },
+    methods: {
+      clearCacheRow() {
+        const props = xU.filter(this.rowCache, (value, prop) => /^blockId/.test(prop));
+        xU.each(props, (prop) => delete this.rowCache[prop]);
+      },
+      onClickRow(payload) {
+        var _a;
+        if ((_a = this == null ? void 0 : this.configs) == null ? void 0 : _a.onClickRow) {
+          this.configs.onClickRow(payload);
+        }
+      },
+      genTr(rows) {
+        const vDomBlock = (() => {
+          if (!this.uniqBy) {
+            return xU.map(rows, (data, rowIndex) => {
+              const {
+                __virRowIndex
+              } = data;
+              const payload = {
+                rowIndex: __virRowIndex,
+                rowData: data
+              };
+              return vue.createVNode("div", {
+                "role": "tr",
+                "class": "xVirTable-row flex horizon",
+                "data-row-key": __virRowIndex,
+                "onClick": () => this.onClickRow(payload)
+              }, [this.genSelectedVDom(payload), xU.map(this.columnOrder, (prop, index2) => {
+                return vue.createVNode(xVirTableTd, {
+                  "column": this.columns[prop],
+                  "data-index": index2,
+                  "data": data,
+                  "onUpdate:data": ($event) => data = $event
+                }, null);
+              })]);
+            });
+          } else {
+            const blockId = xU.reduce(rows, (id, row) => {
+              id += row[this.uniqBy];
+              return id;
+            }, "blockId");
+            if (!this.rowCache[blockId]) {
+              this.rowCache[blockId] = xU.map(rows, (data, rowIndex) => {
+                if (!this.rowCache[data[this.uniqBy]]) {
+                  const {
+                    __virRowIndex
+                  } = data;
+                  this.rowCache[data[this.uniqBy]] = vue.createVNode("div", {
+                    "role": "tr",
+                    "class": "xVirTable-row flex horizon",
+                    "data-row-key": __virRowIndex
+                  }, [this.genSelectedVDom({
+                    rowIndex: __virRowIndex,
+                    rowData: data
+                  }), xU.map(this.columnOrder, (prop, index2) => {
+                    return vue.createVNode(xVirTableTd, {
+                      "column": this.columns[prop],
+                      "data-col-index": index2,
+                      "data": data,
+                      "onUpdate:data": ($event) => data = $event
+                    }, null);
+                  })]);
+                }
+                return this.rowCache[data._id];
+              });
+            }
+            return this.rowCache[blockId];
+          }
+        })();
+        return vDomBlock;
+      },
+      updateCell() {
+        xU("updateCell");
+        this.setVirs1();
+        this.setVirs2();
+        this.setVirs3();
+      },
+      setVirs1() {
+        const position = Number(this.styleWrapper1.match(/(\d)/g).join("")) / this.perBlockHeight;
+        const start = position * this.perBlockRowCount;
+        const end = start + this.perBlockRowCount;
+        this.virs1 = this.fragment(start, end);
+      },
+      setVirs2() {
+        const position = Number(this.styleWrapper2.match(/(\d)/g).join("")) / this.perBlockHeight;
+        const start = position * this.perBlockRowCount;
+        const end = start + this.perBlockRowCount;
+        this.virs2 = this.fragment(start, end);
+      },
+      setVirs3() {
+        const position = Number(this.styleWrapper3.match(/(\d)/g).join("")) / this.perBlockHeight;
+        const start = position * this.perBlockRowCount;
+        const end = start + this.perBlockRowCount;
+        this.virs3 = this.fragment(start, end);
+      },
+      fragment(start, end) {
+        const targetRecords = this.configs.dataSource.slice(start, end).map((i, index2) => {
+          i.__virRowIndex = start + index2;
+          return i;
+        });
+        return targetRecords;
+      },
+      genSelectedVDom(rowInfo) {
+        if (!this.selectedConfigs) {
+          return null;
+        }
+        const isSelected = this.fnIsSelected(rowInfo);
+        let isDisabled = this.fnIsDisabled(rowInfo);
+        const handleChange = (e) => {
+          const {
+            prop
+          } = this.selectedConfigs;
+          this.emitSelectedChange(e.target.checked, rowInfo.rowData[prop]);
+        };
+        let vDomChecked;
+        if (xU.isString(isDisabled)) {
+          isDisabled = true;
+          const uiPopoverConfigs = {
+            content: isDisabled
+          };
+          vDomChecked = vue.withDirectives(vue.createVNode(vue.resolveComponent("ElCheckbox"), {
+            "checked": isSelected,
+            "onChange": handleChange,
+            "disabled": true
+          }, null), [[vue.resolveDirective("uiPopover"), uiPopoverConfigs]]);
+        } else {
+          vDomChecked = vue.createVNode(vue.resolveComponent("ElCheckbox"), {
+            "checked": isSelected,
+            "onChange": handleChange,
+            "disabled": isDisabled
+          }, null);
+        }
+        return vue.createVNode("div", {
+          "role": "td",
+          "data-prop": "xVirSelected",
+          "class": "flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check"
+        }, [vDomChecked]);
+      },
+      emitSelectedChange(checked, id) {
+        this.$emit("selectedChange", {
+          checked,
+          id
+        });
+      },
+      setTop: xU.debounce(function() {
+        if (this.$refs.refWrapper) {
+          this.$refs.refWrapper.scrollTo({
+            top: this.top,
+            behavior: "smooth"
+          });
+        }
+      }, 1e3),
+      updateTop(event2) {
+        if (event2) {
+          const top = event2.target.scrollTop;
+          const left = event2.target.scrollLeft;
+          this.$emit("scroll", left);
+          this.blockInViewCount = Math.floor(top / this.perBlockHeight);
+        }
+      },
+      setHeight() {
+        const height = this.configs.dataSource.length * this.rowHeight;
+        if (!height) {
+          delete this.styleWrapperAll.width;
+        } else if (this.viewportHeight && height < this.viewportHeight) {
+          this.styleWrapperAll.width = `calc(100% - 6px)`;
+        } else {
+          delete this.styleWrapperAll.width;
+        }
+        this.styleWrapperAll.height = `${height}px`;
+        if (this.$refs.wrapper) {
+          this.$nextTick(() => {
+            if (this.$refs.wrapper.scrollTop > 1) {
+              this.$refs.wrapper.scrollTop--;
+            } else {
+              this.$refs.wrapper.scrollTop++;
+            }
+          });
+        }
+      }
+    },
+    watch: {
+      rowHeight: {
+        immediate: true,
+        async handler() {
+          await xU.ensureValueDone(() => {
+            var _a, _b;
+            return (_b = (_a = this.$refs) == null ? void 0 : _a.wrapper) == null ? void 0 : _b.offsetHeight;
+          });
+          this.debounceSetPerBlockHeight(this.$refs.wrapper.offsetHeight);
+        }
+      },
+      top() {
+        this.setTop();
+      },
+      "configs.dataSource": {
+        immediate: true,
+        async handler() {
+          await xU.ensureValueDone(() => this.perBlockHeight);
+          this.updateCell();
+          this.clearCacheRow();
+          this.updateTop(false);
+          this.setHeight();
+        }
+      }
+    },
+    render() {
+      const vDomTableBody = vue.createVNode("div", {
+        "role": "body",
+        "class": "xVirTable-body-wrapper flex1 width100",
+        "ref": "wrapper",
+        "onScroll": this.updateTop
+      }, [vue.createVNode("div", {
+        "style": this.styleWrapperAll
+      }, [vue.createVNode("div", {
+        "class": "xVirTable-body-item item1",
+        "style": this.styleWrapper1
+      }, [this.vDomBodyTr1]), vue.createVNode("div", {
+        "class": "xVirTable-body-item item2",
+        "style": this.styleWrapper2
+      }, [this.vDomBodyTr2]), vue.createVNode("div", {
+        "class": "xVirTable-body-item item3",
+        "style": this.styleWrapper3
+      }, [this.vDomBodyTr3])])]);
+      return vDomTableBody;
+    }
+  });
+  const {
+    MutatingProps
+  } = xU;
+  const mmWidth = (_width) => `width:${_width}; min-width:${_width}; max-width:${_width};`;
+  function defXVirTableConfigs(options) {
+    const required = ["rowHeight", "columns"];
+    if (xU.some(required, (prop) => {
+      if (!options[prop]) {
+        alert("defXVirTableConfigs miss required " + prop);
+        return true;
+      }
+      return false;
+    })) {
+      throw new Error("defXVirTableConfigs miss required");
+    }
+    if (options.selectedConfigs) {
+      options.selected = options.selected || [];
+      options.getSelectedRow = vue.markRaw(function() {
+        return xU.filter(options.dataSource, (i) => {
+          const idValue = i[options.selectedConfigs.prop];
+          return xU.isArrayFill(options == null ? void 0 : options.selected) && options.selected.includes(idValue);
+        });
+      });
+    }
+    return options;
+  }
+  defXVirTableConfigs.type = {
+    many: "many",
+    one: "one"
+  };
+  const xVirTable = vue.defineComponent({
+    props: ["configs", "uniqBy"],
+    components: {
+      xVirTableTh,
+      xVirTableBody
+    },
+    setup(props) {
+      vue.provide("uniqBy", props.uniqBy);
+      vue.provide("configs", props.configs);
+    },
+    mounted() {
+      this.initStyle();
+      this.layoutDebounce();
+    },
+    provide() {
+      const vm = this;
+      return {
+        xVirTable: vm
+      };
+    },
+    data() {
+      this.resetOperationWidthDebounce = xU.debounce(this.resetOperationWidth, STATIC_WORD.NEXT_TICK_TIME);
+      this.layoutDebounce = xU.debounce(this.layout, STATIC_WORD.NEXT_TICK_TIME);
+      this.resetColumnWidthDebounce = xU.debounce(this.resetColumnWidth, STATIC_WORD.NEXT_TICK_TIME);
+      return {
+        styleWidthXVirTable: 0,
+        styleWidthOperation: "120px",
+        selectedAll: false
+      };
+    },
+    computed: {
+      selectedIndeterminate() {
+        var _a, _b;
+        const dataLength = ((_b = (_a = this.configs) == null ? void 0 : _a.dataSource) == null ? void 0 : _b.length) || 0;
+        const selectedLength = this.selected.length;
+        if (dataLength == 0 || selectedLength == 0 || dataLength == selectedLength) {
+          return false;
+        }
+        return true;
+      },
+      selected() {
+        var _a;
+        return ((_a = this.configs) == null ? void 0 : _a.selected) || [];
+      },
+      selectedType() {
+        var _a, _b, _c;
+        if (!((_a = this.configs) == null ? void 0 : _a.selectedConfigs)) {
+          return false;
+        }
+        return ((_c = (_b = this.configs) == null ? void 0 : _b.selectedConfigs) == null ? void 0 : _c.type) || defXVirTableConfigs.type.many;
+      },
+      selectedProp() {
+        var _a, _b, _c, _d;
+        if (!this.selectedType) {
+          return false;
+        }
+        if (!((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.prop)) {
+          alert("vVirTable miss this.selected id prop");
+        }
+        return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.prop;
+      },
+      selectedBy() {
+        var _a, _b, _c, _d;
+        if (!this.selectedType) {
+          return false;
+        }
+        if (xU.isFunction((_b = (_a = this.configs) == null ? void 0 : _a.selectedConfigs) == null ? void 0 : _b.fn)) {
+          return (_d = (_c = this.configs) == null ? void 0 : _c.selectedConfigs) == null ? void 0 : _d.fn;
+        } else {
+          return false;
+        }
+      },
+      customClass() {
+        var _a, _b;
+        if (xU.isFunction((_a = this.configs) == null ? void 0 : _a.customClass)) {
+          return (_b = this.configs) == null ? void 0 : _b.customClass(this.xVirTableId);
+        } else {
+          return "";
+        }
+      },
+      rowHeight() {
+        var _a;
+        return ((_a = this.configs) == null ? void 0 : _a.rowHeight) || 32;
+      },
+      xVirTableId() {
+        return `xVirTableId_${this._.uid}`;
+      },
+      columnOrder() {
+        var _a, _b, _c;
+        if ((_a = this.configs) == null ? void 0 : _a.columnOrder) {
+          return (_b = this.configs) == null ? void 0 : _b.columnOrder;
+        }
+        return Object.keys(((_c = this.configs) == null ? void 0 : _c.columns) || {});
+      },
+      columnWidthStyleArray() {
+        const _columnWidthStyleArray = xU.reduce(
+          this.columnOrder,
+          (styleEachColumn, prop) => {
+            if (prop === STATIC_WORD.OPERATION) {
+              return styleEachColumn;
+            } else {
+              const configsColumn = this.configs.columns[prop] || {};
+              const {
+                width,
+                __calcWidth
+              } = configsColumn;
+              const _width = __calcWidth || width;
+              if (_width) {
+                styleEachColumn.push(`#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=${prop}],#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${prop}]{ ${mmWidth(_width)} }`);
+              }
+              return styleEachColumn;
+            }
+          },
+          [`#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=${STATIC_WORD.OPERATION}]{  ${mmWidth(this.styleWidthOperation)} }`, `#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${STATIC_WORD.OPERATION}]{  ${mmWidth(this.styleWidthOperation)} }`]
+        );
+        return _columnWidthStyleArray;
+      },
+      vDomTheadSelect() {
+        if (!this.selectedType) {
+          return null;
+        }
+        let vDomTheadSelect = vue.createVNode(vue.resolveComponent("ElCheckbox"), {
+          "checked": this.selectedAll,
+          "indeterminate": this.selectedIndeterminate,
+          "onChange": this.handleSelectedChangeTh
+        }, null);
+        if (this.selectedType == "one") {
+          vDomTheadSelect = null;
+        }
+        return vue.createVNode("div", {
+          "role": "th",
+          "class": "flex middle center xVirTable-cell xVirSelected_inner_element xVirSelected_inner_element_check",
+          "data-prop": "xVirSelected"
+        }, [vDomTheadSelect]);
+      },
+      vDomThead() {
+        return vue.createVNode("div", {
+          "role": "thead",
+          "class": "xVirTable-thead"
+        }, [vue.createVNode("div", {
+          "role": "tr",
+          "class": "flex horizon"
+        }, [this.vDomTheadSelect, xU.map(this.columnOrder, (prop, index2) => {
+          var _a;
+          const column = (_a = this.configs) == null ? void 0 : _a.columns[prop];
+          return vue.createVNode(xVirTableTh, {
+            "column": column,
+            "index": index2,
+            "key": prop
+          }, null);
+        })])]);
+      },
+      styleContent() {
+        const allStyleArray = [
+          `#${this.xVirTableId} div[role=table]{overflow:hidden;}`,
+          `#${this.xVirTableId} div[role=tr] >div{flex:1; }`,
+          `#${this.xVirTableId} div[role=tr] >div[role=th]{ width:200px;min-width:200px;max-width:200px;text-align:center;white-space: nowrap; }`,
+          `#${this.xVirTableId} div[role=tr] >div[role=th][data-prop=xVirSelected],#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=xVirSelected]{ width:32px;max-width:32px;min-width:32px;overflow:hidden;text-align:center; }`,
+          `#${this.xVirTableId} div[role=tr] >div[role=td]{ width:200px;min-width:200px;max-width:200px;overflow:hidden;height:${this.rowHeight}px;display: flex; justify-content: start; align-items: center;}`
+        ].concat(this.columnWidthStyleArray, this.customClass);
+        if (this.styleWidthXVirTable) {
+          allStyleArray.unshift(`#${this.xVirTableId} div[role=table] div[role=thead] {width:${this.styleWidthXVirTable}; }`);
+          if (this.configs.dataSource.length === 0) {
+            allStyleArray.unshift(`#${this.xVirTableId} .xVirTable-body-wrapper.flex1.width100 >div {width:${this.styleWidthXVirTable}; }`);
+          }
+        }
+        return allStyleArray.join("\n");
+      }
+    },
+    watch: {
+      "configs.selected"(selected) {
+        if ((selected == null ? void 0 : selected.length) === 0) {
+          this.selectedAll = false;
+        }
+      },
+      "configs.dataSource": {
+        handler() {
+          this.resetOperationWidthDebounce();
+        }
+      },
+      styleContent() {
+        this.updateStyle(this.styleContent);
+      }
+    },
+    methods: {
+      resetColumnWidth(contentWrapperWidth) {
+        const selectorTable = `#${this.xVirTableId}`;
+        const $tableWrapper = $__default.default(selectorTable);
+        const tableWrapperWidth = $tableWrapper.outerWidth();
+        const superfluous = tableWrapperWidth - contentWrapperWidth - 6;
+        const isGrow = superfluous > 1;
+        const isShrink = superfluous < -2;
+        console.log("superfluous", superfluous, "isGrow", isGrow, "isShrink", isShrink);
+        const selectorThead = `${selectorTable} >div[role=table] >div[role=thead] >div[role=tr] >div[role=th]`;
+        const $tHead = $__default.default(selectorThead);
+        const mayCalculateWidth = xU.filter(this.configs.columns, (i) => {
+          if (i.prop === STATIC_WORD.OPERATION) {
+            return false;
+          }
+          if (i.width) {
+            return false;
+          }
+          return true;
+        });
+        if (isGrow) {
+          const width = Math.floor(superfluous / mayCalculateWidth.length) - 0.5;
+          xU.each($tHead, (dom) => {
+            const prop = dom.dataset.prop;
+            const inMayCalculateWidth = xU.some(mayCalculateWidth, (i) => i.prop === prop);
+            if (inMayCalculateWidth) {
+              const columnWidth = dom.offsetWidth + width;
+              this.configs.columns[prop].__calcWidth = `${columnWidth}px`;
+            }
+          });
+        }
+        if (isShrink) {
+          if (mayCalculateWidth.length > 0) {
+            let originContentWrapperWidth = 10;
+            xU.each($tHead, (dom) => {
+              const prop = dom.dataset.prop;
+              const inMayCalculateWidth = xU.some(mayCalculateWidth, (i) => i.prop === prop);
+              if (inMayCalculateWidth) {
+                originContentWrapperWidth += 200;
+              } else {
+                originContentWrapperWidth += dom.offsetWidth;
+              }
+            });
+            if (originContentWrapperWidth < tableWrapperWidth) {
+              const width = Math.floor((tableWrapperWidth - originContentWrapperWidth) / mayCalculateWidth.length) - 0.5;
+              xU.each(mayCalculateWidth, (configs) => {
+                const columnWidth = 200 + width;
+                configs.__calcWidth = `${columnWidth}px`;
+              });
+            }
+          }
+        }
+      },
+      onBodyScroll(left) {
+        this.$refs.thead.scrollLeft = left;
+      },
+      resetOperationWidth() {
+        if (this.configs.dataSource.length === 0) {
+          return;
+        }
+        try {
+          const $wrapper = $__default.default(`#${this.xVirTableId} div[role=tr] >div[role=td][data-prop=${STATIC_WORD.OPERATION}]`);
+          const $child = $wrapper.find(">div");
+          const wrapperWidth = $wrapper.outerWidth();
+          const childWidth = $child.outerWidth();
+          if (!wrapperWidth && !childWidth) {
+            throw new Error("uninit");
+          }
+          if (wrapperWidth < childWidth) {
+            this.styleWidthOperation = `${childWidth}px`;
+          }
+          this.layoutDebounce();
+        } catch (error) {
+          this.resetOperationWidthDebounce();
+        }
+      },
+      layout() {
+        const selectorHead = `#${this.xVirTableId} >div[role=table] >div[role=thead] >div[role=tr] >div[role=th]`;
+        const selectorBody = `#${this.xVirTableId} .xVirTable-body-item`;
+        const bodyWidth = xU.map($__default.default(selectorBody), (dom) => dom.offsetWidth);
+        bodyWidth.push(xU.reduce($__default.default(selectorHead), (_width, dom) => {
+          _width += dom.offsetWidth;
+          return _width;
+        }, 0));
+        const width = xU.max(bodyWidth);
+        if (width) {
+          this.styleWidthXVirTable = `${width}px`;
+          this.resetColumnWidthDebounce(width);
+        }
+      },
+      initStyle() {
+        const $form = $__default.default(`#${this.xVirTableId}`);
+        const $style = $__default.default("<style/>", {
+          id: `style_${this.xVirTableId}`
+        }).append(this.styleContent);
+        $form.prepend($style);
+      },
+      updateStyle(styleContent) {
+        const $style = $__default.default(`#style_${this.xVirTableId}`);
+        $style.html(styleContent);
+      },
+      handleSelectedChange() {
+      },
+      handleSelectedChangeTh(e) {
+        const {
+          checked
+        } = e.target;
+        if (checked) {
+          this.selectedAll = true;
+          this.configs.selected = xU.map(this.configs.dataSource, (i) => MutatingProps(i, this.selectedProp));
+        } else {
+          this.configs.selected = [];
+        }
+      },
+      handleSelectedChangeTd({
+        id
+      }) {
+        var _a;
+        const isOnlyOne = this.selectedType === "one";
+        const index2 = xU.findIndex((_a = this.configs) == null ? void 0 : _a.selected, (i) => i === id);
+        if (index2 > -1) {
+          if (isOnlyOne) {
+            this.configs.selected = [];
+          } else {
+            this.configs.selected.splice(index2, 1);
+          }
+        } else {
+          if (isOnlyOne) {
+            this.configs.selected = [id];
+          } else {
+            this.configs.selected.push(id);
+          }
+        }
+      }
+    },
+    render() {
+      var _a, _b, _c;
+      const vDomTable = vue.createVNode("div", {
+        "id": this.xVirTableId,
+        "class": "xVirTable-wrapper flex vertical"
+      }, [vue.createVNode("div", {
+        "ref": "thead",
+        "role": "table",
+        "class": "xVirTable-header-wrapper",
+        "style": "padding-right: 6px;width:100%"
+      }, [this.vDomThead]), vue.createVNode(xVirTableBody, {
+        "onScroll": this.onBodyScroll,
+        "columnOrder": this.columnOrder,
+        "columns": (_a = this.configs) == null ? void 0 : _a.columns,
+        "rowHeight": this.rowHeight,
+        "onSelectedChange": this.handleSelectedChangeTd,
+        "selectedConfigs": (_b = this.configs) == null ? void 0 : _b.selectedConfigs,
+        "selected": (_c = this.configs) == null ? void 0 : _c.selected
+      }, null)]);
+      return vDomTable;
+    }
+  });
+  const {
+    $t
+  } = State_UI;
+  const SUCCESS = false;
+  const FAIL = true;
+  const RegexFn = {
+    email: () => /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+    mobile: () => /^1[34578]\d{9}$/
+  };
+  const makeFormRules = (options) => {
+    options.trigger = options.trigger || [EVENT_TYPE.update];
+    options.msg = options.msg || "";
+    return options;
+  };
+  const FormRules = {
+    SUCCESS,
+    FAIL,
+    required(msg, trigger = [EVENT_TYPE.update]) {
+      return makeFormRules({
+        name: "required",
+        msg: msg || $t("\u5FC5\u586B\u9879").label,
+        async validator(value) {
+          if (value) {
+            if (xU.isArray(value)) {
+              if (value.length > 0) {
+                return SUCCESS;
+              } else {
+                return FAIL;
+              }
+            }
+            return SUCCESS;
+          }
+          if (xU.isBoolean(value))
+            return SUCCESS;
+          if (xU.isNumber(value) && !xU.isNaN(value))
+            return SUCCESS;
+          return FAIL;
+        },
+        trigger
+      });
+    },
+    demo() {
+      return {
+        name: "Demo",
+        msg: "Demo",
+        async validator(value) {
+          await xU.sleep(1e3);
+          return FAIL;
+        },
+        trigger: [EVENT_TYPE.update, EVENT_TYPE.input, EVENT_TYPE.change, EVENT_TYPE.blur]
+      };
+    },
+    email() {
+      return {
+        name: "email",
+        msg: () => $t("\u8BF7\u8F93\u5165email").label,
+        async validator(value) {
+          if (RegexFn.email().test(value)) {
+            return SUCCESS;
+          }
+          return FAIL;
+        },
+        trigger: [EVENT_TYPE.update, EVENT_TYPE.input, EVENT_TYPE.change, EVENT_TYPE.blur]
+      };
+    },
+    custom({
+      name,
+      msg,
+      validator,
+      trigger
+    }) {
+      return makeFormRules({
+        name,
+        msg,
+        validator,
+        trigger
+      });
+    }
+  };
+  const KEY = {
+    right: 39,
+    left: 37,
+    esc: 27
+  };
+  const $win = $__default.default(window);
+  const $html = $__default.default("html");
+  const $document = $__default.default(document);
+  const DATA_TIPS_FOLLOW_ID = "data-tips-follow-id";
+  const DATA_V_UI_MOVE = "data-directive-ui-move";
+  const TYPE_IFRAME = "iframe";
+  const TYPE_LOADING = "loading";
+  const TYPE_TIPS = "tips";
+  const LAYUI_LAYER = "layui-layer";
+  const LAYUI_LAYER_SHADE = "layui-layer-shade";
+  const LAYUI_LAYER_MOVE = "layui-layer-move";
+  const LAYUI_LAYER_CONTENT = "layui-layer-content";
+  const LAYUI_LAYER_CLOSE = "layui-layer-close";
+  const LAYUI_LAYER_IFRAME = "layui-layer-iframe";
+  const LAYUI_LAYER_TITLE = "layui-layer-title";
+  const DOMS_ANIM = [
+    "layer-anim-00",
+    "layer-anim-01",
+    "layer-anim-02",
+    "layer-anim-03",
+    "layer-anim-04",
+    "layer-anim-05",
+    "layer-anim-06"
+  ];
+  const $MoveMask = $__default.default(
+    `<div class="${LAYUI_LAYER_MOVE}" id="${LAYUI_LAYER_MOVE}"></div>`
+  );
+  setTimeout(() => {
+    $html.append($MoveMask);
+  }, 0);
+  const READY = {
+    zIndex: 0,
+    pointMousedown: [],
+    basePath: function() {
+      var jsPath = document.currentScript ? document.currentScript.src : function() {
+        var js = document.scripts, last = js.length - 1, src;
+        for (var i = last; i > 0; i--) {
+          if (js[i].readyState === "interactive") {
+            src = js[i].src;
+            break;
+          }
+        }
+        return src || js[last].src;
+      }();
+      const GLOBAL = {};
+      return GLOBAL.layer_dir || jsPath.substring(0, jsPath.lastIndexOf("/") + 1);
+    }(),
+    config: {},
+    end: {},
+    minIndex: 0,
+    minLeft: [],
+    btn: ["&#x786E;&#x5B9A;", "&#x53D6;&#x6D88;"],
+    type: ["dialog", "page", "iframe", "loading", "tips"],
+    getStyle: function(node, name) {
+      var style = node.currentStyle ? node.currentStyle : window.getComputedStyle(node, null);
+      return style[style.getPropertyValue ? "getPropertyValue" : "getAttribute"](
+        name
+      );
+    },
+    reselect() {
+      $__default.default.each($__default.default("select"), function(index2, value) {
+        var sthis = $__default.default(this);
+        if (!sthis.parents("." + LAYUI_LAYER)[0]) {
+          sthis.attr("layer") == 1 && $__default.default("." + LAYUI_LAYER).length < 1 && sthis.removeAttr("layer").show();
+        }
+        sthis = null;
+      });
+    },
+    record($eleLayer) {
+      const [windowHeight, windowWidth] = [$win.height(), $win.width()];
+      const isLimit = $eleLayer.height() > windowHeight;
+      const isLimitWidth = $eleLayer.width() > windowWidth;
+      var area = [
+        isLimitWidth ? windowWidth - 64 : $eleLayer.width(),
+        isLimit ? windowHeight - 64 : $eleLayer.height(),
+        isLimit ? 32 : $eleLayer.position().top,
+        $eleLayer.position().left + parseFloat($eleLayer.css("margin-left"))
+      ];
+      $eleLayer.find(".layui-layer-max").addClass("layui-layer-maxmin");
+      $eleLayer.attr({
+        area
+      });
+    },
+    rescollbar(index2) {
+      if ($html.attr("layer-full") == index2) {
+        if ($html[0].style.removeProperty) {
+          $html[0].style.removeProperty("overflow");
+        } else {
+          $html[0].style.removeAttribute("overflow");
+        }
+        $html.removeAttr("layer-full");
+      }
+    }
+  };
+  const LayerUtils = {
+    setZIndex(zIndex) {
+      READY.zIndex = zIndex;
+    },
+    MSG: 0,
+    DIALOG: 1,
+    IFRAME: 2,
+    LOADING: 3,
+    TIPS: 4,
+    UP: 1,
+    RIGHT: 2,
+    BOTTOM: 3,
+    LEFT: 4,
+    v: "3.5.1",
+    ie: (() => {
+      var agent = navigator.userAgent.toLowerCase();
+      if ("ActiveXObject" in window) {
+        let version = agent.match(/msie\s(\d+)/);
+        if (version) {
+          return Number(version[1]);
+        } else {
+          return 11;
+        }
+      }
+      return 0;
+    })(),
+    path: READY.basePath,
+    config: function(options, fn) {
+      options = options || {};
+      LayerUtils.cache = READY.config = $__default.default.extend({}, READY.config, options);
+      LayerUtils.path = READY.config.path || LayerUtils.path;
+      typeof options.extend === "string" && (options.extend = [options.extend]);
+      if (!options.extend) {
+        return this;
+      }
+      return this;
+    },
+    open(options) {
+      const layerInstance = new ClassLayer(options);
+      const { _layerKey } = layerInstance;
+      return _layerKey;
+    },
+    alert(content, options, yes) {
+      var type2 = typeof options === "function";
+      if (type2)
+        yes = options;
+      return LayerUtils.open(
+        $__default.default.extend(
+          {
+            content,
+            yes
+          },
+          type2 ? {} : options
+        )
+      );
+    },
+    confirm(content, options, yes, cancel) {
+      if (xU.isFunction(options)) {
+        cancel = yes;
+        yes = options;
+      }
+      return LayerUtils.open(
+        $__default.default.extend(
+          {
+            content,
+            btn: READY.btn,
+            yes,
+            btn2: cancel
+          },
+          type ? {} : options
+        )
+      );
+    },
+    msg(content, options, end = () => null) {
+      var isOptionsIsFunction = xU.isFunction(options), rskin = READY.config.skin;
+      var skin = (rskin ? rskin + " " + rskin + "-msg" : "") || "layui-layer-msg";
+      var anim = DOMS_ANIM.length - 1;
+      if (isOptionsIsFunction)
+        end = options;
+      return LayerUtils.open(
+        $__default.default.extend(
+          {
+            content,
+            time: 3e3,
+            shade: false,
+            skin,
+            title: false,
+            closeBtn: false,
+            btn: false,
+            resize: false,
+            end
+          },
+          isOptionsIsFunction && !READY.config.skin ? {
+            skin: skin + " layui-layer-hui",
+            anim
+          } : function() {
+            options = options || {};
+            if (options.icon === -1 || options.icon === void 0 && !READY.config.skin) {
+              options.skin = skin + " " + (options.skin || "layui-layer-hui");
+            }
+            return options;
+          }()
+        )
+      );
+    },
+    load(icon, options) {
+      return LayerUtils.open(
+        $__default.default.extend(
+          {
+            type: 3,
+            icon: icon || 0,
+            resize: false,
+            shade: 0.01
+          },
+          options
+        )
+      );
+    },
+    tips(content, followSelector, options) {
+      return LayerUtils.open(
+        $__default.default.extend(
+          {
+            type: LayerUtils.TIPS,
+            content: [content, followSelector],
+            closeBtn: false,
+            time: 3e3,
+            shade: false,
+            resize: false,
+            fixed: false,
+            maxWidth: 260
+          },
+          options
+        )
+      );
+    },
+    close(layerKey) {
+      if (!layerKey) {
+        return Promise.reject();
+      }
+      return new Promise((resolve2, reject2) => {
+        try {
+          let removeLayerDomFromHtml = function() {
+            if (type2 === "dialog" && $eleLayer.attr("data-content-type") === "object") {
+              $eleLayer.children(`:not(.${LAYUI_LAYER_IFRAME})`).remove();
+            } else {
+              if (type2 === TYPE_IFRAME) {
+                try {
+                  var iframe = $__default.default(`#${LAYUI_LAYER_CONTENT}${layerKey}`)[0];
+                  iframe.contentWindow.document.write("");
+                  iframe.contentWindow.close();
+                  $eleLayer.find(`.${LAYUI_LAYER_IFRAME}`)[0].removeChild(iframe);
+                } catch (e) {
+                }
+              }
+            }
+            $eleLayer[0].innerHTML = "";
+            $eleLayer.remove();
+            try {
+              READY.end[layerKey] && READY.end[layerKey]();
+              delete READY.end[layerKey];
+            } catch (e) {
+            }
+          };
+          var $eleLayer = $__default.default(`#${LAYUI_LAYER}${layerKey}`);
+          var type2 = $eleLayer.attr("type");
+          var closeAnim = "layer-anim-close";
+          if ($eleLayer.length === 0) {
+            return;
+          }
+          if ($eleLayer.data("isOutAnim")) {
+            $eleLayer.addClass("layer-anim " + closeAnim);
+          }
+          $__default.default(`#layui-layer-moves, #${LAYUI_LAYER_SHADE}${layerKey}`).remove();
+          LayerUtils.ie == 6 && READY.reselect();
+          READY.rescollbar(layerKey);
+          if ($eleLayer.attr("minLeft")) {
+            READY.minIndex--;
+            READY.minLeft.push($eleLayer.attr("minLeft"));
+          }
+          setTimeout(function() {
+            removeLayerDomFromHtml();
+            resolve2(true);
+          }, 200);
+        } catch (error) {
+          console.error(error);
+          reject2(false);
+        }
+      });
+    },
+    getChildFrame(selector, index2) {
+      index2 = index2 || $__default.default(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
+      return $__default.default("#" + LAYUI_LAYER + index2).find("iframe").contents().find(selector);
+    },
+    getFrameIndex(name) {
+      return $__default.default("#" + name).parents(`.${LAYUI_LAYER_CONTENT}`).attr("data-layer-key");
+    },
+    iframeAuto(index2) {
+      if (!index2)
+        return;
+      var heg = LayerUtils.getChildFrame("html", index2).outerHeight();
+      var $eleLayer = $__default.default("#" + LAYUI_LAYER + index2);
+      var titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0;
+      var btnHeight = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0;
+      $eleLayer.css({
+        height: heg + titHeight + btnHeight
+      });
+      $eleLayer.find("iframe").css({
+        height: heg
+      });
+    },
+    iframeSrc(index2, url) {
+      $__default.default("#" + LAYUI_LAYER + index2).find("iframe").attr("src", url);
+    },
+    style(index2, options, limit) {
+      var $eleLayer = $__default.default("#" + LAYUI_LAYER + index2);
+      const $contentEle = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`);
+      const type2 = $eleLayer.attr("type");
+      const titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0;
+      let contentHeight = $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).outerHeight() || 0;
+      const [windowHeight, windowWidth] = [$win.height(), $win.width()];
+      $eleLayer.attr("minLeft");
+      if (type2 === TYPE_LOADING || type2 === TYPE_TIPS) {
+        return;
+      }
+      if (!limit) {
+        if (parseFloat(options.width) <= 260) {
+          options.width = 260;
+        }
+        if (parseFloat(options.height) - titHeight - contentHeight <= 64) {
+          options.height = 64 + titHeight + contentHeight;
+        }
+      }
+      if (options.height > windowHeight) {
+        options.height = parseFloat(windowHeight);
+      }
+      $eleLayer.css(options);
+      contentHeight = $contentEle.outerHeight();
+      if (type2 === TYPE_IFRAME) {
+        $eleLayer.find("iframe").addClass("flex1");
+      } else {
+        $contentEle.css({
+          height: parseFloat(options.height) - titHeight - contentHeight - parseFloat($contentEle.css("padding-top")) - parseFloat($contentEle.css("padding-bottom"))
+        });
+      }
+    },
+    min(index2, options) {
+      options = options || {};
+      var $eleLayer = $__default.default("#" + LAYUI_LAYER + index2), shadeo = $__default.default("#" + LAYUI_LAYER_SHADE + index2), titHeight = $eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0, left = $eleLayer.attr("minLeft") || 181 * READY.minIndex + "px", position = $eleLayer.css("position"), settings = {
+        width: 180,
+        height: titHeight,
+        position: "fixed",
+        overflow: "hidden"
+      };
+      READY.record($eleLayer);
+      if (READY.minLeft[0]) {
+        left = READY.minLeft[0];
+        READY.minLeft.shift();
+      }
+      if (options.minStack) {
+        settings.left = left;
+        settings.top = $win.height() - titHeight;
+        $eleLayer.attr("minLeft") || READY.minIndex++;
+        $eleLayer.attr("minLeft", left);
+      }
+      $eleLayer.attr("position", position);
+      LayerUtils.style(index2, settings, true);
+      $eleLayer.find(".layui-layer-min").hide();
+      $eleLayer.attr("type") === "page" && $eleLayer.find(LAYUI_LAYER_CONTENT).hide();
+      READY.rescollbar(index2);
+      shadeo.hide();
+    },
+    restore(index2) {
+      var $eleLayer = $__default.default("#" + LAYUI_LAYER + index2), shadeo = $__default.default("#" + LAYUI_LAYER_SHADE + index2), area = $eleLayer.attr("area").split(",");
+      $eleLayer.attr("type");
+      LayerUtils.style(
+        index2,
+        {
+          width: parseFloat(area[0]),
+          height: parseFloat(area[1]),
+          top: parseFloat(area[2]),
+          left: parseFloat(area[3]),
+          position: $eleLayer.attr("position"),
+          overflow: "visible"
+        },
+        true
+      );
+      $eleLayer.find(".layui-layer-max").removeClass("layui-layer-maxmin");
+      $eleLayer.find(".layui-layer-min").show();
+      $eleLayer.attr("type") === "page" && $eleLayer.find(LAYUI_LAYER_CONTENT).show();
+      READY.rescollbar(index2);
+      shadeo.show();
+    },
+    full(index2) {
+      var $eleLayer = $__default.default("#" + LAYUI_LAYER + index2), timer;
+      READY.record($eleLayer);
+      if (!$html.attr("layer-full")) {
+        $html.css("overflow", "hidden").attr("layer-full", index2);
+      }
+      clearTimeout(timer);
+      timer = setTimeout(function() {
+        var isfix = $eleLayer.css("position") === "fixed";
+        LayerUtils.style(
+          index2,
+          {
+            top: isfix ? 0 : $win.scrollTop(),
+            left: isfix ? 0 : $win.scrollLeft(),
+            width: $win.width(),
+            height: $win.height()
+          },
+          true
+        );
+        $eleLayer.find(".layui-layer-min").hide();
+      }, 100);
+    },
+    title(name, layerKey) {
+      $__default.default(`#${LAYUI_LAYER}${layerKey}`).find(`.${LAYUI_LAYER_TITLE}`).html(name);
+    },
+    async closeAll(type2) {
+      const needClose = [];
+      $__default.default(`.${LAYUI_LAYER}`).each(function() {
+        const $ele = $__default.default(this);
+        if (type2) {
+          if ($ele.attr("type") === type2) {
+            needClose.push($ele.attr("data-layer-key"));
+          }
+        } else {
+          needClose.push($ele.attr("data-layer-key"));
+        }
+      });
+      return await Promise.all(needClose.map(LayerUtils.close));
+    },
+    setLayerTop($current) {
+      const type2 = $current.attr("type");
+      if ($current.hasClass("set-layer-top")) {
+        return;
+      } else {
+        const selector = `.set-layer-top[type=${type2}]`;
+        $__default.default(selector).removeClass("set-layer-top");
+        $current.addClass("set-layer-top").appendTo($html);
+      }
+    }
+  };
+  class ClassLayer {
+    constructor(custumSettings) {
+      __publicField(this, "_layerKey", 0);
+      __publicField(this, "_IDLayer", LAYUI_LAYER);
+      __publicField(this, "_IDShade", LAYUI_LAYER_SHADE);
+      __publicField(this, "_IDContent", LAYUI_LAYER_CONTENT);
+      __publicField(this, "zIndex", 0);
+      __publicField(this, "typeName", "");
+      __publicField(this, "ismax", false);
+      __publicField(this, "isNeedTitle", false);
+      __publicField(this, "isContentTypeObject", false);
+      __publicField(this, "$eleLayer", null);
+      __publicField(this, "$eleShade", null);
+      __publicField(this, "config", {
+        type: 0,
+        title: "\u4FE1\u606F",
+        content: "",
+        skin: "",
+        area: "auto",
+        offset: "auto",
+        icon: -1,
+        btn: "\u786E\u8BA4",
+        btnAlign: "r",
+        closeBtn: "1",
+        shade: "0.3",
+        shadeClose: false,
+        during: 0,
+        id: "",
+        anim: 0,
+        isOutAnim: true,
+        maxmin: false,
+        fixed: true,
+        resize: true,
+        onResizing: false,
+        scrollbar: true,
+        maxWidth: 360,
+        maxHeight: 0,
+        zIndex: 1,
+        move: ".layui-layer-title",
+        moveOut: false,
+        onMoveEnd: false,
+        tips: 2,
+        tipsMore: false,
+        success: false,
+        yes: false,
+        onClickClose: false,
+        end: false,
+        full: false,
+        minStack: true
+      });
+      this.initConfig(custumSettings).insertLayer().addLayerListener().handleAnimation();
+    }
+    get cptDomShade() {
+      const { config, _IDShade } = this;
+      if (!config.shade) {
+        return "";
+      }
+      return `<div class="${LAYUI_LAYER_SHADE}" id="${_IDShade}" style="z-index:${this.zIndex - 1};"></div>`;
+    }
+    get cptDomTitle() {
+      const { config, _IDLayer } = this;
+      if (this.isContentTypeObject && !this.isNeedTitle) {
+        return "";
+      }
+      var isTitleObject = typeof config.title === "object";
+      if (!isTitleObject) {
+        config.title = [String(config.title), ""];
+      }
+      const [title, styleString] = config.title || ["", ""];
+      return `<div class="${LAYUI_LAYER_TITLE}" style="${styleString}" data-layer-id="${_IDLayer}"> ${title} </div >`;
+    }
+    get cptDomIcon() {
+      if (this.config.type == LayerUtils.MSG && this.config.icon !== -1) {
+        return `<i class="layui-layer-ico layui-layer-ico${this.config.icon}></i>`;
+      }
+      return "";
+    }
+    get cptDomContent() {
+      if (this.config.type == LayerUtils.DIALOG && this.isContentTypeObject) {
+        return "";
+      }
+      return this.config.content || "";
+    }
+    get cptDomSetDialogOperations() {
+      const { config, ismax, _IDLayer } = this;
+      return '<span class="layui-layer-setwin">' + function() {
+        var closebtn = ismax ? '<a class="layui-layer-min" href="javascript:;"><cite></cite></a><a class="layui-layer-ico layui-layer-max" href="javascript:;"></a>' : "";
+        if (config.closeBtn) {
+          closebtn += `<a data-layer-id="${_IDLayer}" class="layui-layer-ico ${LAYUI_LAYER_CLOSE} ` + LAYUI_LAYER_CLOSE + (config.title ? config.closeBtn : config.type == LayerUtils.TIPS ? "1" : "2") + '" href="javascript:;"></a>';
+        }
+        return closebtn;
+      }() + "</span>";
+    }
+    get cptDomFooterBtns() {
+      const { config } = this;
+      if (config.btn) {
+        if (typeof config.btn === "string") {
+          config.btn = [config.btn, ""];
+        }
+        if (xU.every(config.btn, (i) => !i)) {
+          return "";
+        }
+        const domButtons = xU.reduce(
+          config.btn,
+          (domButtonString, label) => {
+            if (label) {
+              domButtonString += `<a class="${LAYUI_LAYER_CONTENT}">${label}</a>`;
+            }
+            return domButtonString;
+          },
+          ""
+        );
+        return `<div class="${LAYUI_LAYER_CONTENT} layui-layer-btn-${config.btnAlign || ""}">${domButtons}</div>`;
+      }
+      return "";
+    }
+    get cptDomResizeBar() {
+      return this.config.resize ? '<span class="layui-layer-resize"></span>' : "";
+    }
+    get cptDomContainer() {
+      const {
+        config,
+        typeName,
+        isContentTypeObject,
+        zIndex,
+        _layerKey,
+        _IDLayer,
+        _IDContent
+      } = this;
+      const fnValid = (i) => !!i;
+      const layerWrapperClassname = [
+        "flex vertical elevation-2",
+        `layui-layer-${typeName}`,
+        LAYUI_LAYER,
+        config.skin,
+        (() => {
+          if ([LayerUtils.IFRAME, LayerUtils.MSG].includes(config.type) && !config.shade) {
+            return "layui-layer-border";
+          }
+          return "";
+        })()
+      ].filter(fnValid).join(" ");
+      const classContent = [
+        LAYUI_LAYER_CONTENT,
+        config.contentClass,
+        config.type == LayerUtils.MSG && config.icon !== -1 ? "layui-layer-padding" : "",
+        config.type == LayerUtils.LOADING ? `layui-layer-loading${config.icon}` : ""
+      ].filter(fnValid).join(" ");
+      const [width, height] = config.area || [];
+      return `
+<div id="${_IDLayer}" layer-wrapper="${_IDLayer}" type="${typeName}"
+		class="${layerWrapperClassname}" 
+		data-z-index="${zIndex}"
+		data-layer-key="${_layerKey}"
+		data-during-time="${config.during}"
+		data-content-type="${isContentTypeObject ? "object" : "string"}"
+		style="position:fixed;
+			z-index:${zIndex};
+			width:${width}; 
+			height:${height};"
+		>
+			${this.cptDomTitle}
+			<div class="${classContent}" id="${_IDContent}">
+				${this.cptDomIcon}
+				${this.cptDomContent}
+			</div>
+			${this.cptDomSetDialogOperations}
+			${this.cptDomFooterBtns}
+			${this.cptDomResizeBar}
+</div>`;
+    }
+    initConfig(custumSettings) {
+      const layerInstance = this;
+      layerInstance.config = Object.assign(layerInstance.config, custumSettings);
+      layerInstance.config.icon = custumSettings.type === LayerUtils.LOADING ? 0 : -1;
+      layerInstance.config.maxWidth = $win.width() - 15 * 2;
+      layerInstance.config.custumSettings = custumSettings;
+      const { config } = layerInstance;
+      layerInstance._layerKey = xU.genId("");
+      layerInstance._IDLayer = `${LAYUI_LAYER}${layerInstance._layerKey}`;
+      layerInstance._IDShade = `${LAYUI_LAYER_SHADE}${layerInstance._layerKey}`;
+      layerInstance._IDContent = `${LAYUI_LAYER_CONTENT}${layerInstance._layerKey}`;
+      layerInstance.zIndex = READY.zIndex + layerInstance.config.zIndex;
+      layerInstance.typeName = READY.type[config.type || 0];
+      layerInstance.isNeedTitle = [LayerUtils.IFRAME, LayerUtils.DIALOG].includes(
+        Number(config.type)
+      );
+      layerInstance.ismax = Boolean(config.maxmin && layerInstance.isNeedTitle);
+      layerInstance.isContentTypeObject = typeof config.content === "object";
+      layerInstance.config.onClickClose = async (params) => {
+        const isFalse = (val) => xU.isBoolean(val) && !val;
+        if (custumSettings.onClickClose) {
+          if (isFalse(await custumSettings.onClickClose(params))) {
+            return false;
+          }
+        } else if (custumSettings.onBeforeClose) {
+          if (isFalse(await custumSettings.onBeforeClose(params))) {
+            return false;
+          }
+        }
+        return true;
+      };
+      const { isContentTypeObject } = layerInstance;
+      if (typeof config.area === "string") {
+        config.area = config.area === "auto" ? ["", ""] : [config.area, ""];
+      }
+      if (config.shift) {
+        config.anim = config.shift;
+      }
+      if (LayerUtils.ie == 6) {
+        config.fixed = false;
+      }
+      const processContentStrategy = {
+        [LayerUtils.MSG]() {
+          config.btn = "btn" in config ? config.btn : READY.btn[0];
+          LayerUtils.closeAll("dialog");
+        },
+        [LayerUtils.IFRAME]() {
+          let scrolling = "auto";
+          let src = config.content;
+          if (isContentTypeObject) {
+            scrolling = config.content[1] || "auto";
+            src = config.content[0] || "";
+          }
+          config.btn = [];
+          config.content = `
+<iframe class="layui-layer-load flex flex1" 
+		scrolling="${scrolling}" 
+		src="${src}"
+		allowtransparency="true"
+		onload="this.className=''" 
+		style="height:100%;" 
+		frameborder="0">
+</iframe>`;
+        },
+        [LayerUtils.LOADING]() {
+          delete config.title;
+          delete config.closeBtn;
+          config.icon === -1 && config.icon === 0;
+          LayerUtils.closeAll("loading");
+        },
+        [LayerUtils.TIPS]() {
+          var _a;
+          if (!isContentTypeObject) {
+            config.content = [config.content, "body"];
+          }
+          config.follow = config.content[1];
+          const arrow = '<i class="layui-layer-TipsG"></i>';
+          config.content = `<div style="max-width:${((_a = config == null ? void 0 : config.custumSettings) == null ? void 0 : _a.maxWidth) || "300px"};overflow:auto;">${config.content[0]}<div>${arrow}`;
+          delete config.title;
+          config.btn = [];
+          config.tips = typeof config.tips === "object" ? config.tips : [config.tips, true];
+          config.tipsMore || LayerUtils.closeAll("tips");
+        }
+      };
+      const processContentFn = processContentStrategy[config.type];
+      processContentFn && processContentFn();
+      return layerInstance;
+    }
+    async setLayerPosition() {
+      await xU.sleep(34);
+      const layerInstance = this;
+      const { config, _layerKey } = layerInstance;
+      layerInstance.offset();
+      if (config.type === LayerUtils.TIPS) {
+        layerInstance.setTips();
+      }
+      layerInstance.$eleLayer.css("visibility", "visible");
+      if (config.fullscreen) {
+        setTimeout(() => {
+          LayerUtils.full(_layerKey);
+        }, 500);
+      }
+      if (config.fixed) {
+        $win.on("resize", function() {
+          layerInstance.offset();
+          if (/^\d+%$/.test(config.area[0]) || /^\d+%$/.test(config.area[1])) {
+            layerInstance.setPosition();
+          }
+          if (config.type == LayerUtils.tips) {
+            layerInstance.setTips();
+          }
+        });
+      }
+      if (typeof config.during === "number" && config.during > 0) {
+        setTimeout(function() {
+          LayerUtils.close(layerInstance._layerKey);
+        }, config.during);
+      }
+      LayerUtils.setLayerTop(layerInstance.$eleLayer);
+      return layerInstance;
+    }
+    handleAnimation() {
+      const layerInstance = this;
+      const { config } = layerInstance;
+      if (DOMS_ANIM[config.anim]) {
+        var animClass = "layer-anim " + DOMS_ANIM[config.anim];
+        layerInstance.$eleLayer.addClass(animClass).one(
+          "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend",
+          function() {
+            $__default.default(this).removeClass(animClass);
+          }
+        );
+      }
+      if (config.isOutAnim) {
+        layerInstance.$eleLayer.data("isOutAnim", true);
+      }
+      return layerInstance;
+    }
+    insertLayer() {
+      const layerInstance = this;
+      const { config, _layerKey, _IDShade } = layerInstance;
+      layerInstance.$eleLayer = $__default.default(layerInstance.cptDomContainer);
+      if (xU.isObject(config.content) && (xU.isString(config.content) || xU.isString(config.content.jquery))) {
+        const $content = $__default.default(config.content);
+        layerInstance.$eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).append($content);
+      }
+      layerInstance.$eleLayer.css({
+        visibility: "hidden",
+        top: "100%",
+        left: "100%"
+      });
+      $html.append(layerInstance.$eleLayer);
+      if (layerInstance.cptDomShade) {
+        $html.append(layerInstance.cptDomShade);
+        layerInstance.$eleShade = $__default.default(`#${_IDShade}`);
+        layerInstance.$eleShade.css({
+          "background-color": config.shade[1] || "#000",
+          opacity: config.shade[0] || config.shade
+        });
+      }
+      if (!config.scrollbar) {
+        $html.css("overflow", "hidden").attr("layer-full", _layerKey);
+      }
+      layerInstance.setLayerPosition();
+      return layerInstance;
+    }
+    offset() {
+      var layerInstance = this, config = layerInstance.config, $eleLayer = layerInstance.$eleLayer;
+      var area = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
+      var whetherOffsetIsObject = typeof config.offset === "object";
+      layerInstance.offsetTop = ($win.height() - area[1]) / 2;
+      layerInstance.offsetLeft = ($win.width() - area[0]) / 2;
+      if (whetherOffsetIsObject) {
+        const [top, left] = config.offset;
+        layerInstance.offsetTop = top;
+        layerInstance.offsetLeft = left || layerInstance.offsetLeft;
+      } else if (config.offset !== "auto") {
+        if (config.offset === "t") {
+          layerInstance.offsetTop = 0;
+        } else if (config.offset === "r") {
+          layerInstance.offsetLeft = $win.width() - area[0];
+        } else if (config.offset === "b") {
+          layerInstance.offsetTop = $win.height() - area[1];
+        } else if (config.offset === "l") {
+          layerInstance.offsetLeft = 0;
+        } else if (config.offset === "lt") {
+          layerInstance.offsetTop = 0;
+          layerInstance.offsetLeft = 0;
+        } else if (config.offset === "lb") {
+          layerInstance.offsetTop = $win.height() - area[1];
+          layerInstance.offsetLeft = 0;
+        } else if (config.offset === "rt") {
+          layerInstance.offsetTop = 0;
+          layerInstance.offsetLeft = $win.width() - area[0];
+        } else if (config.offset === "rb") {
+          layerInstance.offsetTop = $win.height() - area[1];
+          layerInstance.offsetLeft = $win.width() - area[0];
+        } else {
+          layerInstance.offsetTop = config.offset;
+        }
+      }
+      if (!config.fixed) {
+        layerInstance.offsetTop = /%$/.test(layerInstance.offsetTop) ? $win.height() * parseFloat(layerInstance.offsetTop) / 100 : parseFloat(layerInstance.offsetTop);
+        layerInstance.offsetLeft = /%$/.test(layerInstance.offsetLeft) ? $win.width() * parseFloat(layerInstance.offsetLeft) / 100 : parseFloat(layerInstance.offsetLeft);
+        layerInstance.offsetTop += $win.scrollTop();
+        layerInstance.offsetLeft += $win.scrollLeft();
+      }
+      if ($eleLayer.attr("minLeft")) {
+        layerInstance.offsetTop = $win.height() - ($eleLayer.find(`.${LAYUI_LAYER_TITLE}`).outerHeight() || 0);
+        layerInstance.offsetLeft = $eleLayer.css("left");
+      }
+      $eleLayer.css({
+        top: layerInstance.offsetTop,
+        left: layerInstance.offsetLeft
+      });
+      return layerInstance;
+    }
+    async setTips() {
+      const layerInstance = this;
+      const { config, $eleLayer } = layerInstance;
+      const [tipsDomWidth, tipsdomHeight] = [
+        $eleLayer.outerWidth(),
+        $eleLayer.outerHeight()
+      ];
+      let $eleFollow = $__default.default(config.follow);
+      if ($eleFollow.length == 0) {
+        $eleFollow = $html;
+      }
+      var followInfo = {
+        width: $eleFollow.outerWidth(),
+        height: $eleFollow.outerHeight(),
+        top: $eleFollow.offset().top,
+        left: $eleFollow.offset().left,
+        tipTop: 0,
+        tipLeft: 0
+      };
+      if (config.openAtPoint) {
+        const { top, left } = config.openAtPoint;
+        followInfo.top = top;
+        followInfo.left = left;
+      }
+      var $tipsG = $eleLayer.find(".layui-layer-TipsG");
+      const [direction, customColor] = config.tips || ["1", ""];
+      function makeLeftAuto() {
+        if (followInfo.left + tipsDomWidth - $win.width() > 0) {
+          followInfo.tipLeft = followInfo.left + followInfo.width - tipsDomWidth;
+          $tipsG.css({ right: 12, left: "auto" });
+        } else {
+          followInfo.tipLeft = followInfo.left;
+        }
+      }
+      const direction_strategy = {
+        [LayerUtils.UP]() {
+          makeLeftAuto();
+          followInfo.tipTop = followInfo.top - tipsdomHeight - 10;
+          $tipsG.removeClass("layui-layer-TipsB").addClass("layui-layer-TipsT").css("border-right-color", customColor);
+          followInfo.top - ($win.scrollTop() + tipsdomHeight + 8 * 2) < 0 && direction_strategy[2]();
+        },
+        [LayerUtils.RIGHT]() {
+          followInfo.tipLeft = followInfo.left + followInfo.width + 10;
+          followInfo.tipTop = followInfo.top;
+          $tipsG.removeClass("layui-layer-TipsL").addClass("layui-layer-TipsR").css("border-bottom-color", customColor);
+          $win.width() - (followInfo.left + followInfo.width + tipsDomWidth + 8 * 2) > 0 || direction_strategy[3]();
+        },
+        [LayerUtils.BOTTOM]() {
+          makeLeftAuto();
+          followInfo.tipTop = followInfo.top + followInfo.height + 10;
+          $tipsG.removeClass("layui-layer-TipsT").addClass("layui-layer-TipsB").css("border-right-color", customColor);
+          followInfo.top - $win.scrollTop() + followInfo.height + tipsdomHeight + 8 * 2 - $win.height() > 0 && direction_strategy[4]();
+        },
+        [LayerUtils.LEFT]() {
+          followInfo.tipLeft = followInfo.left - tipsDomWidth - 10;
+          followInfo.tipTop = followInfo.top;
+          $tipsG.removeClass("layui-layer-TipsR").addClass("layui-layer-TipsL").css("border-bottom-color", customColor);
+          tipsDomWidth + 8 * 2 - followInfo.left > 0 && direction_strategy[1]();
+        }
+      };
+      direction_strategy[direction] && direction_strategy[direction]();
+      $eleLayer.attr(DATA_TIPS_FOLLOW_ID, config.follow.substring(1));
+      $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).css({
+        "background-color": customColor,
+        "padding-right": config.closeBtn ? "30px" : ""
+      });
+      $eleLayer.css({
+        left: followInfo.tipLeft - $win.scrollLeft(),
+        top: followInfo.tipTop - $win.scrollTop(),
+        "transform-origin": [
+          $tipsG.hasClass("layui-layer-TipsT") ? "top" : "bottem",
+          $tipsG.hasClass("layui-layer-TipsL") ? "left" : "right"
+        ].join(" ")
+      });
+      if (!customColor) {
+        $tipsG.remove();
+      }
+    }
+    onMoveOrResize() {
+      var layerInstance = this;
+      const { config, $eleLayer } = layerInstance;
+      const $eleMove = $eleLayer.find(config.move);
+      const $eleResize = $eleLayer.find(".layui-layer-resize");
+      $eleMove.css("cursor", "move");
+      $eleMove.on("mousedown", function(e) {
+        LayerUtils.setLayerTop($eleLayer);
+        e.preventDefault();
+        if (config.move) {
+          READY.moveOrResizeInstance = layerInstance;
+          READY.moveOrResizeType = "move";
+          READY.pointMousedown = [
+            e.clientX - parseFloat($eleLayer.css("left")),
+            e.clientY - parseFloat($eleLayer.css("top"))
+          ];
+          $MoveMask.css("cursor", "move").show();
+        }
+      });
+      $eleResize.on("mousedown", function(e) {
+        LayerUtils.setLayerTop($eleLayer);
+        e.preventDefault();
+        READY.moveOrResizeInstance = layerInstance;
+        READY.moveOrResizeType = "resize";
+        READY.pointMousedown = [e.clientX, e.clientY];
+        READY.moveOrResizeWH = [$eleLayer.outerWidth(), $eleLayer.outerHeight()];
+        $MoveMask.css("cursor", "se-resize").show();
+      });
+      return layerInstance;
+    }
+    addLayerListener() {
+      const layerInstance = this;
+      const { $eleLayer, config } = layerInstance;
+      if (config.success) {
+        const args = [$eleLayer, layerInstance._layerKey, layerInstance];
+        if (config.type == LayerUtils.IFRAME) {
+          $eleLayer.find("iframe").on("load", function() {
+            config.success.apply(config, args);
+          });
+        } else {
+          config.success.apply(config, args);
+        }
+      }
+      $eleLayer.find(`.${LAYUI_LAYER_CONTENT}`).children("a").on("click", function() {
+        var index2 = $__default.default(this).index();
+        if (index2 === 0) {
+          if (config.yes) {
+            config.yes(layerInstance._layerKey, $eleLayer);
+          } else if (config["btn1"]) {
+            config["btn1"](layerInstance._layerKey, $eleLayer);
+          } else {
+            LayerUtils.close(layerInstance._layerKey);
+          }
+        } else {
+          var close = config["btn" + (index2 + 1)] && config["btn" + (index2 + 1)](layerInstance._layerKey, $eleLayer);
+          close === false || LayerUtils.close(layerInstance._layerKey);
+        }
+      });
+      $eleLayer.find(`.${LAYUI_LAYER_CLOSE}`).on("click", async function handleClickCloseBtn() {
+        let isClosed = false;
+        const isNeedClose = await config.onClickClose({
+          _layerKey: layerInstance._layerKey,
+          $eleLayer,
+          dialogOptions: ""
+        });
+        if (isNeedClose) {
+          if (!isClosed) {
+            isClosed = await LayerUtils.close(layerInstance._layerKey);
+          }
+          if (!isClosed) {
+            await LayerUtils.close($__default.default(this).attr("data-layer-id"));
+          }
+        }
+      });
+      if (config.shadeClose) {
+        layerInstance.$eleShade.on("click", function() {
+          LayerUtils.close(layerInstance._layerKey);
+        });
+      }
+      $eleLayer.find(".layui-layer-min").on("click", function() {
+        var min = config.min && config.min($eleLayer, layerInstance._layerKey);
+        min === false || LayerUtils.min(layerInstance._layerKey, config);
+      });
+      $eleLayer.find(".layui-layer-max").on("click", function() {
+        if ($__default.default(this).hasClass("layui-layer-maxmin")) {
+          LayerUtils.restore(layerInstance._layerKey);
+          config.restore && config.restore($eleLayer, layerInstance._layerKey);
+        } else {
+          LayerUtils.full(layerInstance._layerKey, config);
+          setTimeout(function() {
+            config.full && config.full($eleLayer, layerInstance._layerKey);
+          }, 100);
+        }
+      });
+      if (config.end) {
+        READY.end[layerInstance._layerKey] = config.end;
+      }
+      if (![LayerUtils.TIPS, LayerUtils.MSG, LayerUtils.LOADING].includes(
+        config.type
+      )) {
+        layerInstance.onMoveOrResize();
+      }
+      return layerInstance;
+    }
+  }
+  LayerUtils.cache || {};
+  $document.on("click.setLayerTop", "[layer-wrapper]", (event2) => {
+    const { currentTarget } = event2;
+    const $currentTarget = $__default.default(currentTarget);
+    LayerUtils.setLayerTop($currentTarget);
+  }).on(
+    "mousemove",
+    `.${LAYUI_LAYER_MOVE}`,
+    function(e) {
+      const { moveOrResizeInstance, moveOrResizeType, onMoving } = READY;
+      if (moveOrResizeInstance instanceof ClassLayer) {
+        const { $eleLayer, config } = moveOrResizeInstance;
+        if (moveOrResizeType === "move") {
+          e.preventDefault();
+          let X = e.clientX - READY.pointMousedown[0];
+          let Y = e.clientY - READY.pointMousedown[1];
+          const fixed = $eleLayer.css("position") === "fixed";
+          READY.stX = fixed ? 0 : $win.scrollLeft();
+          READY.stY = fixed ? 0 : $win.scrollTop();
+          if (!config.moveOut) {
+            let setRig = $win.width() - $eleLayer.outerWidth() + READY.stX;
+            let setBot = $win.height() - $eleLayer.outerHeight() + READY.stY;
+            if (X < READY.stX) {
+              X = READY.stX;
+            }
+            if (X > setRig) {
+              X = setRig;
+            }
+            if (Y < READY.stY) {
+              Y = READY.stY;
+            }
+            if (Y > setBot) {
+              Y = setBot;
+            }
+          }
+          $eleLayer.css({ left: X, top: Y });
+        }
+        if (config.resize) {
+          if (READY.moveOrResizeType === "resize") {
+            e.preventDefault();
+            const X = e.clientX - READY.pointMousedown[0];
+            const Y = e.clientY - READY.pointMousedown[1];
+            $eleLayer.css({
+              width: READY.moveOrResizeWH[0] + X,
+              height: READY.moveOrResizeWH[1] + Y
+            });
+            config.onResizing && config.onResizing($eleLayer);
+          }
+        }
+      } else if (typeof onMoving == "function") {
+        event && onMoving(event);
+      }
+    }
+  ).on("mouseup", function(e) {
+    if (READY.moveOrResizeInstance instanceof ClassLayer) {
+      const { config } = READY.moveOrResizeInstance;
+      if (config.onMoveEnd) {
+        config.onMoveEnd(READY.moveOrResizeInstance);
+      }
+      READY.moveOrResizeInstance = false;
+    }
+    $MoveMask.hide();
+  });
+  const EcsPressHandler = xU.debounce(async function(event2, dialogOptions) {
+    const $antModal = $__default.default(".x-modal-root");
+    if ($antModal.length > 0) {
+      return;
+    }
+    if (event2.keyCode === KEY.esc) {
+      await dialogOptions.closeDialog();
+    }
+  }, 100);
+  const xDialogFooter = vue.defineComponent({
+    props: ["configs"],
+    computed: {
+      onCancel() {
+        return this.configs.onCancel;
+      },
+      onOk() {
+        return this.configs.onOk;
+      },
+      vDomOk() {
+        var _a;
+        if ((_a = this.configs) == null ? void 0 : _a.hideOk) {
+          return null;
+        }
+        const configs = {
+          text: xU.isInput(this.configs.textOk) ? this.configs.textOk : State_UI.$t("\u786E\u5B9A").label,
+          disabled: xU.isInput(this.configs.disabledOk) ? this.configs.disabledOk : false,
+          onClick: this.onOk || xU.doNothing
+        };
+        return vue.createVNode(vue.resolveComponent("xButton"), {
+          "type": "primary",
+          "class": "ml10",
+          "configs": configs
+        }, null);
+      },
+      vDomCancel() {
+        var _a;
+        if ((_a = this.configs) == null ? void 0 : _a.hideCancel) {
+          return null;
+        }
+        const configs = {
+          text: xU.isInput(this.configs.textCancel) ? this.configs.textCancel : State_UI.$t("\u53D6\u6D88").label,
+          disabled: xU.isInput(this.configs.disabledCancel) ? this.configs.disabledCancel : false,
+          onClick: this.onCancel || xU.doNothing
+        };
+        return vue.createVNode(vue.resolveComponent("xButton"), {
+          "class": "ml10",
+          "configs": configs
+        }, null);
+      },
+      vDomContent() {
+        if (this.$slots.default) {
+          try {
+            const vDom = this.$slots.default();
+            vDom[0].children.pop();
+            return vDom;
+          } catch (error) {
+            return this.$slots.default();
+          }
+        } else {
+          return vue.createVNode(vue.Fragment, null, [this.vDomCancel, this.vDomOk]);
+        }
+      }
+    },
+    render() {
+      return vue.createVNode("div", {
+        "class": "flex middle end padding20"
+      }, [this.vDomContent]);
+    }
+  });
+  const installUIDialogComponent = (UI2, {
+    appPlugins,
+    dependState
+  }, app) => {
+    app.component("xDialogFooter", xDialogFooter);
+    UI2.dialog.component = async (dialogOptions) => new Promise((resolve2) => {
+      const {
+        component: BussinessComponent,
+        title,
+        area
+      } = dialogOptions;
+      const id = xU.genId("xDialog");
+      let $container = $__default.default("<div/>", {
+        id
+      });
+      const _dialogId = `#${id}`;
+      if (dialogOptions.yes) {
+        dialogOptions._yes = dialogOptions.yes;
+        delete dialogOptions.yes;
+      }
+      dialogOptions.closeDialog = async () => {
+        let isCloseDialog = true;
+        if (dialogOptions.onBeforeClose) {
+          const res = await dialogOptions.onBeforeClose({
+            dialogOptions,
+            _layerKey: "",
+            $eleLayer: ""
+          });
+          if (xU.isBoolean(res) && !res) {
+            isCloseDialog = false;
+          }
+        }
+        if (isCloseDialog) {
+          LayerUtils.close(handleEcsPress._layerKey);
+        }
+      };
+      let dialogVueApp = null;
+      let handleEcsPress = {
+        _layerKey: "",
+        handler: (event2) => EcsPressHandler(event2, dialogOptions),
+        on(_layerKey) {
+          handleEcsPress._layerKey = _layerKey;
+          if (!dialogOptions.isEcsCloseDialog) {
+            return;
+          }
+          $__default.default(document).on(`keyup.${_dialogId}`, handleEcsPress.handler);
+        },
+        off() {
+          $__default.default(document).off(`keyup.${_dialogId}`, handleEcsPress.handler);
+          handleEcsPress = null;
+        }
+      };
+      const layerOptions = xU.merge(dialogOptions, {
+        contentClass: "flex1",
+        offset: ["160px", null],
+        btn: []
+      }, dialogOptions, {
+        type: LayerUtils.DIALOG,
+        title: [title || ""],
+        area: area || [],
+        content: $container,
+        offset: ["160px", null],
+        btn: [],
+        success($eleLayer, _layerKey, layerInstance) {
+          handleEcsPress.on(_layerKey);
+          dialogOptions._layerInstance = layerInstance;
+          dialogOptions._dialog$ele = $eleLayer;
+          dialogOptions._layerKey = _layerKey;
+          try {
+            dialogVueApp = vue.createApp(vue.defineComponent({
+              components: {
+                BussinessComponent
+              },
+              created() {
+                this.dialogOptions._contentInstance = this;
+                if (this.dialogOptions.keepTop) {
+                  setTimeout(() => {
+                    $__default.default(`#layui-layer-shade${_layerKey}`).css("z-index", 1);
+                  }, 6);
+                }
+                resolve2(this.dialogOptions);
+              },
+              data() {
+                return {
+                  dialogOptions
+                };
+              },
+              render() {
+                return vue.createVNode("div", {
+                  "class": "ventose-dialog-content",
+                  "data-el-id": _dialogId
+                }, [vue.createVNode(BussinessComponent, {
+                  "propDialogOptions": this.dialogOptions
+                }, null)]);
+              }
+            }));
+            dialogVueApp.use(appPlugins, {
+              dependState
+            });
+            dialogVueApp.mount(_dialogId);
+          } catch (e) {
+            console.error(e);
+          }
+          dialogOptions.onAfterOpenDialoag && dialogOptions.onAfterOpenDialoag(dialogVueApp);
+        },
+        cancel() {
+          dialogOptions.closeDialog();
+          return false;
+        },
+        end() {
+          handleEcsPress.off();
+          $container.remove();
+          $container = null;
+          if (dialogVueApp) {
+            dialogVueApp.unmount();
+            dialogVueApp = null;
+          }
+          dialogOptions.payload = null;
+          dialogOptions._contentInstance = null;
+          dialogOptions = null;
+        }
+      }, xU.omit(dialogOptions, ["end", "cancel", "success", "content"]));
+      LayerUtils.open(layerOptions);
+    });
+  };
+  const appAddPlugin = {};
+  const appDependState = {};
+  const timer4CloseTips = {};
+  const visibleArea = {};
+  const DATA_APP_ID = "data-app-id";
+  const DATA_FOLLOW_ID = "data-follow-id";
+  const TIMEOUT_DELAY = 200;
+  const tipsOptionsCollection = {};
+  const tipsKeys = {};
+  function fnShowTips({
+    $ele,
+    followId,
+    appId,
+    event: event2
+  }) {
+    const options = tipsOptionsCollection[followId] || {
+      content: ""
+    };
+    if (!options.content) {
+      if (options.onlyEllipsis) {
+        const eleWidth = $ele.width() || 0;
+        const text = $ele.text();
+        const $div = $__default.default(`<span style="position:fixed;top:0;left:0;opacity: 0;height: 0;letter-spacing: normal;">${text}</span>`);
+        $div.appendTo($__default.default("body"));
+        const innerWidth = $div.width() || 0;
+        $div.remove();
+        if (innerWidth > eleWidth) {
+          options.content = text;
+        }
+      } else {
+        return;
+      }
+    }
+    let tipsContent = options.content;
+    if (!tipsContent) {
+      return;
+    }
+    let app;
+    const placement = (() => {
+      const placement_strategy = {
+        top: 1,
+        right: 2,
+        bottom: 3,
+        left: 4
+      };
+      return placement_strategy[options.placement || "top"];
+    })();
+    let layerTipsOptions = {
+      tips: [placement, "#fff"],
+      during: 1e3 * 60 * 10
+    };
+    const isOpenAtPoint = $ele.attr("data-open-at-point");
+    if (isOpenAtPoint) {
+      layerTipsOptions.openAtPoint = {
+        left: $ele.clientX,
+        top: $ele.clientY
+      };
+    }
+    if (xU.isPlainObject(options.content)) {
+      const id = `${followId}_content`;
+      tipsContent = `<div id="${id}"></div>`;
+      layerTipsOptions.success = function success(indexPanel, layerIndex) {
+        app = vue.createApp(options.content);
+        app.use(appAddPlugin[appId], {
+          dependState: appDependState[appId]
+        });
+        app.mount(`#${id}`);
+        options.afterOpenDialoag && options.afterOpenDialoag(app);
+      };
+      layerTipsOptions.end = function end() {
+        if (app) {
+          app.unmount();
+          app = null;
+        }
+      };
+    }
+    if (options.maxWidth) {
+      layerTipsOptions.maxWidth = maxWidth;
+    }
+    setTimeout(() => {
+      if (visibleArea[followId]) {
+        tipsKeys[followId] = LayerUtils.tips(tipsContent, `#${followId}`, layerTipsOptions);
+      }
+    }, options.delay || 32);
+  }
+  function installPopoverDirective(app, appSettings) {
+    const appId = xU.genId("appId");
+    appAddPlugin[appId] = appSettings.appPlugins;
+    appDependState[appId] = appSettings.dependState;
+    app.directive("uiPopover", {
+      mounted(el, binding) {
+        init();
+        updateMounted(el, binding);
+        function init() {
+          const followId = xU.genId("xPopoverTarget");
+          const $ele = $__default.default(el);
+          $ele.addClass("x-ui-popover").attr("id", followId).attr(DATA_APP_ID, appId).attr(DATA_FOLLOW_ID, followId);
+        }
+      },
+      beforeUpdate(el, binding) {
+        updateMounted(el, binding);
+      },
+      unmounted(el) {
+        const followId = $__default.default(el).attr(DATA_FOLLOW_ID);
+        if (typeof tipsKeys[followId] == "string" && tipsKeys[followId]) {
+          LayerUtils.close(tipsKeys[followId]);
+        }
+        delete tipsOptionsCollection[followId];
+        delete visibleArea[followId];
+      }
+    });
+    function updateMounted(el, binding) {
+      var _a, _b, _c, _d;
+      const $ele = $__default.default(el);
+      const followId = $ele.attr(DATA_FOLLOW_ID);
+      if (binding.value) {
+        tipsOptionsCollection[followId] = binding.value;
+        if ((_a = binding.value) == null ? void 0 : _a.trigger) {
+          $ele.attr("data-trigger", (_b = binding.value) == null ? void 0 : _b.trigger);
+          const classStrategy = {
+            rightClick: "pointer-right-click"
+          };
+          const className = classStrategy[(_c = binding.value) == null ? void 0 : _c.trigger] || "pointer";
+          if (!$ele.hasClass(className)) {
+            $ele.addClass();
+          }
+        }
+        if ((_d = binding.value) == null ? void 0 : _d.openAtPoint) {
+          $ele.attr("data-open-at-point", true);
+        }
+      }
+    }
+  }
+  function inVisibleArea(followId) {
+    if (timer4CloseTips[followId]) {
+      clearTimeout(timer4CloseTips[followId]);
+      delete timer4CloseTips[followId];
+    }
+    visibleArea[followId] = true;
+  }
+  function closeTips(followId, options = {}) {
+    delete visibleArea[followId];
+    timer4CloseTips[followId] = setTimeout(() => {
+      const layerIndex = tipsKeys[followId];
+      if (layerIndex) {
+        LayerUtils.close(layerIndex).then(() => {
+          delete tipsKeys[followId];
+          delete timer4CloseTips[followId];
+        });
+      }
+    }, TIMEOUT_DELAY);
+  }
+  function handleClick(event2) {
+    event2.preventDefault();
+    const $ele = $__default.default(this);
+    const followId = $ele.attr(DATA_FOLLOW_ID);
+    const appId = $ele.attr(DATA_APP_ID);
+    visibleArea[followId] = true;
+    if (tipsKeys[followId]) {
+      closeTips(followId);
+    } else {
+      fnShowTips({
+        $ele,
+        followId,
+        appId,
+        event: event2
+      });
+    }
+  }
+  $__default.default(document).on("click.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=click]`, handleClick);
+  $__default.default(document).on("contextmenu.uiPopver", `[${DATA_FOLLOW_ID}][data-trigger=rightClick]`, handleClick);
+  $__default.default(document).on("mouseenter.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
+    const $ele = $__default.default(this);
+    const followId = $ele.attr(DATA_FOLLOW_ID);
+    if (visibleArea[followId]) {
+      return;
+    } else {
+      const appId = $ele.attr(DATA_APP_ID);
+      inVisibleArea(followId);
+      if (tipsKeys[followId]) {
+        return;
+      }
+      if ($ele.attr("data-trigger") === "click") {
+        return;
+      }
+      if ($ele.attr("data-trigger") === "rightClick") {
+        return;
+      }
+      fnShowTips({
+        $ele,
+        followId,
+        appId,
+        event: event2
+      });
+    }
+  });
+  $__default.default(document).on("mouseleave.uiPopver", `[${DATA_FOLLOW_ID}]`, function(event2) {
+    const followId = $__default.default(this).attr(DATA_FOLLOW_ID);
+    closeTips(followId);
+  });
+  $__default.default(document).on("mouseenter.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
+    const followId = $__default.default(this).attr(DATA_TIPS_FOLLOW_ID);
+    inVisibleArea(followId);
+  });
+  $__default.default(document).on("mouseleave.uiPopverTips", `[${DATA_TIPS_FOLLOW_ID}]`, function(event2) {
+    const followId = $__default.default(this).attr(DATA_TIPS_FOLLOW_ID);
+    closeTips(followId);
+  });
+  function installLoading(app, options = {}) {
+    app.directive("xloading", {
+      updated(el, binding) {
+        if (binding.value) {
+          $__default.default(el).addClass("x-loading");
+        } else {
+          $__default.default(el).removeClass("x-loading");
+        }
+      }
+    });
+  }
+  function installMoveDirective(app) {
+    app.directive("uiMove", {
+      mounted(el, binding) {
+        if (binding.value) {
+          if (binding.value.onMoving) {
+            const $ele = $__default.default(el);
+            const id = xU.genId("xResize");
+            $ele.attr(DATA_V_UI_MOVE, id);
+            $ele.on("mousedown", function(event2) {
+              $MoveMask.css("cursor", "move").show();
+              const clickInfo = xU.getLeftTopFromAbsolute($ele);
+              clickInfo.w = $ele.width();
+              clickInfo.h = $ele.height();
+              const {
+                top,
+                left
+              } = xU.getLeftTopFromTranslate($ele);
+              clickInfo.translateX = left;
+              clickInfo.translateY = top;
+              READY.onMoving = (movingEvent) => {
+                binding.value.onMoving({
+                  $ele,
+                  clickInfo,
+                  clickEvent: event2,
+                  movingEvent
+                });
+              };
+            });
+          }
+        }
+      },
+      unmounted(el) {
+        const $ele = $__default.default(el);
+        $ele.attr(DATA_V_UI_MOVE);
+      }
+    });
+  }
+  const installDirective = (app, options) => {
+    installPopoverDirective(app, options);
+    [installLoading, installMoveDirective].forEach((install) => install(app));
+  };
+  function _isSlot(s) {
+    return typeof s === "function" || Object.prototype.toString.call(s) === "[object Object]" && !vue.isVNode(s);
+  }
+  let xItemNoPropCount = 0;
+  function defFormConfigs(configs) {
+    const targetConfigs = {};
+    configs.forEach((configs2) => {
+      configs2 = defItem.item(configs2);
+      targetConfigs[configs2.prop] = configs2;
+    });
+    return targetConfigs;
+  }
+  function defItem(options) {
+    const configs = defItem.item(options);
+    return {
+      [configs.prop]: configs
+    };
+  }
+  defItem.item = (options) => {
+    options.itemType = options.itemType || "Input";
+    if (xU.isObject(options.itemType)) {
+      options.itemType.__v_isReactive = false;
+    }
+    const _options = xU.merge({
+      prop: `xItem${xItemNoPropCount++}`,
+      itemTips: {
+        type: "",
+        msg: ""
+      }
+    }, options);
+    _options._$updateUI = (newConfigs) => {
+      xU.each(newConfigs, (value, prop) => {
+        _options[prop] = value;
+      });
+    };
+    return _options;
+  };
+  defItem.labelWithTips = ({
+    label,
+    tips,
+    icon
+  }) => {
+    return vue.createVNode("span", {
+      "class": "flex middle"
+    }, [label, vue.createVNode(vue.resolveComponent("aTooltip"), {
+      "title": tips
+    }, _isSlot(icon) ? icon : {
+      default: () => [icon]
+    })]);
+  };
+  function vModel(configs, prop, options = {
+    data: "data",
+    dataXItem: "dataXItem"
+  }) {
+    const {
+      data = "data",
+      dataXItem = "dataXItem"
+    } = options;
+    return {
+      value: configs[data][prop],
+      configs: configs[dataXItem][prop],
+      "onUpdate:modelValue"(e) {
+        configs[data][prop] = e;
+      }
+    };
+  }
+  function antColKey(prop, makeRenderCell) {
+    const target = {
+      dataIndex: prop,
+      prop,
+      key: prop
+    };
+    if (makeRenderCell) {
+      target.renderCell = makeRenderCell(prop);
+    }
+    return target;
+  }
+  const useModel = (type2) => {
+    return ({
+      title = "",
+      content = ""
+    }) => {
+      return new Promise((resolve2, reject2) => {
+        title = ((isDefault) => {
+          if (isDefault) {
+            const title_map = {
+              success: State_UI.$t("\u6210\u529F").label,
+              info: State_UI.$t("\u63D0\u793A").label,
+              error: State_UI.$t("\u9519\u8BEF").label,
+              warning: State_UI.$t("\u8B66\u544A").label
+            };
+            return title_map[type2];
+          } else {
+            return title;
+          }
+        })(!title);
+        debugger;
+        ElementPlus.ElMessageBox[type2](content, title, {
+          icon: vue.createVNode("link", {
+            "rel": "icon",
+            "type": "image/svg+xml",
+            "href": "/ExclamationCircleOutlined.svg"
+          }, null),
+          confirmButtonText: State_UI.$t("\u786E\u5B9A").label,
+          cancelButtonText: State_UI.$t("\u53D6\u6D88").label,
+          class: "test"
+        }).then(resolve2).catch(reject2);
+      });
+    };
+  };
+  LayerUtils.loading = function(indexDelete) {
+    this.loading.count = this.loading.count || 1;
+    this.loading.deep = this.loading.deep || /* @__PURE__ */ new Set();
+    $__default.default("body").trigger("click");
+    if (indexDelete >= 0) {
+      if (this.loading.deep.has(indexDelete)) {
+        this.loading.deep.delete(indexDelete);
+        if (this.loading.deep.size === 0) {
+          LayerUtils.close(this.loading.index);
+        }
+      } else {
+        console.error("loading", indexDelete);
+      }
+    } else {
+      let indexAdd = this.loading.count++;
+      if (this.loading.deep.size === 0) {
+        this.loading.index = LayerUtils.load(1);
+      }
+      this.loading.deep.add(indexAdd);
+      return indexAdd;
+    }
+  };
+  const UI = {
+    confirm({
+      title,
+      content,
+      okText,
+      cancelText
+    }) {
+      ElementPlus.ElMessageBox.confirm(content, title, {
+        confirmButtonText: okText || State_UI.$t("\u786E\u5B9A").label,
+        cancelButtonText: cancelText || State_UI.$t("\u53D6\u6D88").label
+      }).then(resolve).catch(reject);
+    },
+    dialog: {
+      component: async (options) => null,
+      success: useModel("success"),
+      info: useModel("info"),
+      error: useModel("error"),
+      warning: useModel("warning"),
+      confirm: ({
+        title,
+        content,
+        okText,
+        cancelText
+      }) => {
+        return new Promise(async (resolve2, reject2) => {
+          ElementPlus.ElMessageBox.confirm(content, title, {
+            confirmButtonText: okText || State_UI.$t("\u786E\u5B9A").label,
+            cancelButtonText: cancelText || State_UI.$t("\u53D6\u6D88").label
+          }).then(resolve2).catch(reject2);
+        });
+      },
+      delete({
+        title,
+        content
+      } = {}) {
+        title = title || State_UI.$t("\u5220\u9664").label;
+        content = content || State_UI.$t("\u5220\u9664\u786E\u8BA4\u63D0\u793A").label;
+        return new Promise((resolve2, reject2) => {
+          ElementPlus.ElMessageBox.confirm({
+            title,
+            icon: vue.createVNode(vue.resolveComponent("ExclamationCircleOutlined"), {
+              "style": "color:red"
+            }, null),
+            content,
+            okType: "danger",
+            okText: State_UI.$t("\u786E\u5B9A").label,
+            cancelText: State_UI.$t("\u53D6\u6D88").label,
+            onOk() {
+              resolve2("ok");
+            },
+            onCancel() {
+              reject2();
+            }
+          });
+        });
+      }
+    },
+    message: ElementPlus.ElMessage,
+    notification: new Proxy(ElementPlus.ElNotification, {
+      get(target, p, receiver) {
+        const m = target[p];
+        return new Proxy(m, {
+          apply(target2, thisArg, argArray) {
+            if (typeof argArray[0] === "string") {
+              argArray[0] = xU.merge({
+                message: argArray[0]
+              }, argArray[1] || {});
+            }
+            return target2.apply(thisArg, argArray);
+          }
+        });
+      }
+    }),
+    layer: LayerUtils
+  };
+  const get$head = () => {
+    let $head = $__default.default("html head");
+    if (!xU.is$Selected($head)) {
+      $head = $__default.default("<head/>");
+      $head.prependTo($__default.default("html"));
+    }
+    return $head;
+  };
+  const get$title = () => {
+    let $head = get$head();
+    let $title = $head.find("title");
+    if (!xU.is$Selected($title)) {
+      $title = $__default.default("<title/>");
+      $title.prependTo($head);
+    }
+    return $title;
+  };
+  const get$cssVariables = () => {
+    let $head = get$head();
+    let $cssVariables = $head.find("#cssVariables");
+    if (!xU.is$Selected($cssVariables)) {
+      $cssVariables = $__default.default("<style/>", {
+        id: "cssVariables"
+      });
+      $cssVariables.appendTo($head);
+    }
+    return $cssVariables;
+  };
+  const setDocumentTitle = (title) => {
+    get$title().text(title);
+  };
+  const setCSSVariables = (colors) => {
+    let $cssVariables = get$cssVariables();
+    const cssContent = xU.map(colors, (value, prop) => `--${prop}:${value}`).join(";");
+    $cssVariables.text(`:root{${cssContent}}`);
+  };
+  const pickValueFrom = (configs) => {
+    return xU.reduce(configs, (target, config, prop) => {
+      try {
+        target[prop] = JSON.parse(JSON.stringify(config.value));
+      } catch (error) {
+      }
+      return target;
+    }, {});
+  };
+  const setValueTo = (configs, values) => {
+    xU.each(values, (target, value, prop) => {
+      if (value === void 0) {
+        return;
+      }
+      if (configs[prop]) {
+        configs[prop].value = value;
+        if (xU.isFunction(configs[prop].onChange)) {
+          configs[prop].onChange(value);
+        }
+      }
+    });
+  };
+  const resetValueOf = (state, initState) => {
+    xU.each(initState, (value, prop) => {
+      state[prop] = JSON.parse(JSON.stringify(value));
+    });
+    return state;
+  };
+  const VNodeCollection = {
+    labelTips: (popContent) => (configs, className) => {
+      const {
+        prop,
+        label
+      } = configs;
+      return vue.createVNode("div", {
+        "class": "x-form-item-label"
+      }, [vue.createVNode("label", {
+        "for": prop,
+        "class": className
+      }, [label, vue.createVNode(vue.resolveComponent("aPopover"), {
+        "trigger": "hover",
+        "placement": "top"
+      }, {
+        content: () => popContent,
+        default: () => vue.createVNode(vue.resolveComponent("xIcon"), {
+          "icon": "Insidetips",
+          "class": "pointer ml4"
+        }, null)
+      })])]);
+    }
+  };
+  function newReactiveState(stateAndMethods) {
+    const __defaultValues = {};
+    function isFunctionInState({
+      value,
+      prop
+    }) {
+      if (value) {
+        const valueType = typeof value;
+        let isFunction = valueType == "function";
+        if (isFunction) {
+          isFunction = /^_\$/.test(prop);
+          if (isFunction) {
+            return true;
+          }
+        }
+      } else {
+        return false;
+      }
+    }
+    ___default.default.each(stateAndMethods, (value, prop) => {
+      if (isFunctionInState({
+        value,
+        prop
+      })) {
+        stateAndMethods[prop] = vue.markRaw(value);
+        return;
+      }
+      try {
+        __defaultValues[prop] = ___default.default.cloneDeep(value);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+    const innerVariablesAndMethods = {
+      __defaultValues: vue.markRaw(__defaultValues),
+      _$resetSelf: vue.markRaw(function() {
+        ___default.default.each(stateAndMethods.__defaultValues, (value, prop) => {
+          stateAndMethods[prop] = value;
+        });
+      }),
+      _$null: vue.markRaw(function() {
+        ___default.default.each(stateAndMethods, (value, prop) => {
+          if (isFunctionInState({
+            value,
+            prop
+          })) {
+            return;
+          }
+          if (!Object.keys(innerVariablesAndMethods).includes(prop)) {
+            delete stateAndMethods[prop];
+          }
+        });
+      })
+    };
+    ___default.default.each(innerVariablesAndMethods, (value, prop) => stateAndMethods[prop] = value);
+    return vue.reactive(stateAndMethods);
+  }
+  const DELAY = 60 * 5;
+  const CACHE_V_NODE = {};
+  const WILL_DELETE_PROPS = {
+    idCounts: {},
+    add(prop) {
+      const count = this.idCounts[prop] || 0;
+      this.idCounts[prop] = count + 1;
+    },
+    remove(prop) {
+      const count = this.idCounts[prop] || 0;
+      const val = count - 1;
+      this.idCounts[prop] = val < 0 ? 0 : val;
+    }
+  };
+  const deleteUnmountedInstance = (prop) => {
+    WILL_DELETE_PROPS.add(prop);
+    delayDeleteUnmountedInstance();
+  };
+  const delayDeleteUnmountedInstance = xU.debounce(function() {
+    xU.each(WILL_DELETE_PROPS.idCounts, (count, prop) => {
+      if (count > 0) {
+        delete CACHE_V_NODE[prop];
+        delete WILL_DELETE_PROPS.idCounts[prop];
+      }
+      if (!Object.keys(CACHE_V_NODE).includes(prop)) {
+        delete WILL_DELETE_PROPS.idCounts[prop];
+      }
+    });
+  }, 1e3 * DELAY);
+  function compileVNode(template, setupReturn, prop) {
+    if (xU.isPlainObject(prop) && prop.vNode) {
+      return prop.vNode;
+    }
+    const no_cache = !prop;
+    if (xU.isString(no_cache) && CACHE_V_NODE[prop]) {
+      WILL_DELETE_PROPS.remove(prop);
+      delayDeleteUnmountedInstance();
+      return CACHE_V_NODE[prop];
+    }
+    const vNode = vue.h(vue.defineComponent({
+      template,
+      mounted() {
+        if (no_cache) {
+          return;
+        }
+        WILL_DELETE_PROPS.remove(prop);
+        CACHE_V_NODE[prop] = this._.vnode;
+      },
+      unmounted() {
+        if (no_cache) {
+          return;
+        }
+        deleteUnmountedInstance(prop);
+      },
+      setup() {
+        if (xU.isFunction(setupReturn)) {
+          return setupReturn();
+        } else {
+          return setupReturn;
+        }
+      }
+    }));
+    if (xU.isPlainObject(prop)) {
+      prop.vNode = vNode;
+    } else {
+      return vNode;
+    }
+  }
+  const xLogObject = vue.defineComponent({
+    name: "xLogObject",
+    props: ["obj"],
+    computed: {
+      objString: {
+        get() {
+          if (xU.isObject(this.obj)) {
+            return JSON.stringify(this.obj, null, 2);
+          } else {
+            return "";
+          }
+        }
+      }
+    },
+    render() {
+      if (!State_UI.isDev || this.$attrs.hide) {
+        return null;
+      } else {
+        return vue.createVNode("pre", {
+          "style": "width:500px;height:400px;"
+        }, [vue.createVNode("code", null, [vue.createTextVNode(" "), this.objString, vue.createTextVNode(" ")])]);
+      }
+    }
+  });
+  const useScopeStyle = () => {
+    const scopeStyle = vue.reactive({});
+    function styleObject2String(styleObject) {
+      return xU.map(xU.merge({
+        width: "120px",
+        "text-align": "right"
+      }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
+    }
+    function updateStyle(vm, styleContent) {
+      if (!vm.$styleEle) {
+        vm.$styleEle = $(vm.ele);
+      }
+      vm.$styleEle.html(styleContent);
+    }
+    function setStyle(styleObject) {
+      const instance = vue.getCurrentInstance();
+      xU.each(styleObject, (value, prop) => {
+        scopeStyle[prop] = value;
+      });
+      updateStyle(
+        instance.ctx,
+        styleObject2String(scopeStyle)
+      );
+    }
+    return {
+      setStyle
+    };
+  };
+  const xInfoCard$1 = "";
+  const InfoCardCol = vue.defineComponent({
+    props: ["col"],
+    computed: {
+      isHide() {
+        return this.col.isHide || false;
+      },
+      styleLabel() {
+        return {};
+      },
+      vDomLabel() {
+        return this.col.label;
+      },
+      vDomContent() {
+        return this.col.value;
+      }
+    },
+    render() {
+      if (this.isHide) {
+        return null;
+      }
+      return vue.createVNode(vue.Fragment, null, [vue.createVNode("div", {
+        "class": "x-descriptions-item-label",
+        "style": this.styleLabel
+      }, [this.vDomLabel]), vue.createVNode("div", {
+        "class": "x-descriptions-item-content flex1"
+      }, [this.vDomContent])]);
+    }
+  });
+  const InfoCardRow = vue.defineComponent({
+    props: ["row"],
+    computed: {
+      colArray() {
+        var _a;
+        return ((_a = this == null ? void 0 : this.row) == null ? void 0 : _a.colArray) || false;
+      },
+      vDomCol() {
+        if (this.row) {
+          return xU.map(this.colArray, (col) => {
+            return vue.createVNode(InfoCardCol, {
+              "col": col
+            }, null);
+          });
+        }
+        return null;
+      },
+      styleRow() {
+        var _a;
+        if ((_a = this == null ? void 0 : this.row) == null ? void 0 : _a.style) {
+          return this.row.style;
+        }
+        return "";
+      }
+    },
+    render() {
+      return vue.createVNode("div", {
+        "class": "InfoCardRow x-descriptions-row flex middle",
+        "style": this.styleRow
+      }, [this.vDomCol]);
+    }
+  });
+  const xInfoCard = vue.defineComponent({
+    props: ["info", "title"],
+    methods: {
+      updateLableStyle(styleObject) {
+        const styleString = xU.map(xU.merge({
+          "min-width": "120px",
+          "text-align": "right"
+        }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
+        const styleContent = `#${this.id} .x-descriptions-item-label {${styleString}}`;
+        if (!this.$styleEle) {
+          const $form = $__default.default(`#${this.id}`);
+          const $style = $__default.default("<style/>", {
+            id: `style_${this.id}`
+          });
+          $form.prepend($style);
+          this.$styleEle = $style;
+        }
+        this.$styleEle.html(styleContent);
+      }
+    },
+    mounted() {
+      this.$watch("info.colLabelWidth", (width) => {
+        if (width) {
+          xU("width", width);
+          this.updateLableStyle({
+            width
+          });
+        }
+      }, {
+        immediate: true,
+        deep: true
+      });
+    },
+    computed: {
+      id() {
+        return `InfoCard_${this._.uid}`;
+      },
+      colLabelWidth() {
+        var _a;
+        return ((_a = this == null ? void 0 : this.info) == null ? void 0 : _a.colLabelWidth) || "120px";
+      },
+      rowArray() {
+        var _a;
+        return ((_a = this == null ? void 0 : this.info) == null ? void 0 : _a.rowArray) || false;
+      },
+      vDomTitle() {
+        if (!this.title) {
+          return null;
+        }
+        return vue.createVNode("div", {
+          "class": "x-descriptions-header"
+        }, [vue.createVNode("div", {
+          "class": "x-descriptions-title"
+        }, [this.title])]);
+      },
+      vDomDescriptions() {
+        if (this.rowArray) {
+          return vue.createVNode("div", {
+            "class": "x-descriptions-view"
+          }, [xU.map(this.rowArray, (row) => {
+            return vue.createVNode(InfoCardRow, {
+              "row": row
+            }, null);
+          })]);
+        }
+        if (this.$slots.default) {
+          return this.$slots.default();
+        }
+        return null;
+      }
+    },
+    render() {
+      return vue.createVNode("div", {
+        "class": "x-descriptions x-descriptions-middle x-descriptions-bordered x-infomation-card",
+        "id": this.id
+      }, [this.vDomTitle, this.vDomDescriptions]);
+    }
+  });
+  var toggleSelection = function() {
+    var selection = document.getSelection();
+    if (!selection.rangeCount) {
+      return function() {
+      };
+    }
+    var active = document.activeElement;
+    var ranges = [];
+    for (var i = 0; i < selection.rangeCount; i++) {
+      ranges.push(selection.getRangeAt(i));
+    }
+    switch (active.tagName.toUpperCase()) {
+      case "INPUT":
+      case "TEXTAREA":
+        active.blur();
+        break;
+      default:
+        active = null;
+        break;
+    }
+    selection.removeAllRanges();
+    return function() {
+      selection.type === "Caret" && selection.removeAllRanges();
+      if (!selection.rangeCount) {
+        ranges.forEach(function(range) {
+          selection.addRange(range);
+        });
+      }
+      active && active.focus();
+    };
+  };
+  var deselectCurrent = toggleSelection;
+  var clipboardToIE11Formatting = {
+    "text/plain": "Text",
+    "text/html": "Url",
+    "default": "Text"
+  };
+  var defaultMessage = "Copy to clipboard: #{key}, Enter";
+  function format(message) {
+    var copyKey = (/mac os x/i.test(navigator.userAgent) ? "\u2318" : "Ctrl") + "+C";
+    return message.replace(/#{\s*key\s*}/g, copyKey);
+  }
+  function copy(text, options) {
+    var debug, message, reselectPrevious, range, selection, mark, success = false;
+    if (!options) {
+      options = {};
+    }
+    debug = options.debug || false;
+    try {
+      reselectPrevious = deselectCurrent();
+      range = document.createRange();
+      selection = document.getSelection();
+      mark = document.createElement("span");
+      mark.textContent = text;
+      mark.ariaHidden = "true";
+      mark.style.all = "unset";
+      mark.style.position = "fixed";
+      mark.style.top = 0;
+      mark.style.clip = "rect(0, 0, 0, 0)";
+      mark.style.whiteSpace = "pre";
+      mark.style.webkitUserSelect = "text";
+      mark.style.MozUserSelect = "text";
+      mark.style.msUserSelect = "text";
+      mark.style.userSelect = "text";
+      mark.addEventListener("copy", function(e) {
+        e.stopPropagation();
+        if (options.format) {
+          e.preventDefault();
+          if (typeof e.clipboardData === "undefined") {
+            debug && console.warn("unable to use e.clipboardData");
+            debug && console.warn("trying IE specific stuff");
+            window.clipboardData.clearData();
+            var format2 = clipboardToIE11Formatting[options.format] || clipboardToIE11Formatting["default"];
+            window.clipboardData.setData(format2, text);
+          } else {
+            e.clipboardData.clearData();
+            e.clipboardData.setData(options.format, text);
+          }
+        }
+        if (options.onCopy) {
+          e.preventDefault();
+          options.onCopy(e.clipboardData);
+        }
+      });
+      document.body.appendChild(mark);
+      range.selectNodeContents(mark);
+      selection.addRange(range);
+      var successful = document.execCommand("copy");
+      if (!successful) {
+        throw new Error("copy command was unsuccessful");
+      }
+      success = true;
+    } catch (err) {
+      debug && console.error("unable to copy using execCommand: ", err);
+      debug && console.warn("trying IE specific stuff");
+      try {
+        window.clipboardData.setData(options.format || "text", text);
+        options.onCopy && options.onCopy(window.clipboardData);
+        success = true;
+      } catch (err2) {
+        debug && console.error("unable to copy using clipboardData: ", err2);
+        debug && console.error("falling back to prompt");
+        message = format("message" in options ? options.message : defaultMessage);
+        window.prompt(message, text);
+      }
+    } finally {
+      if (selection) {
+        if (typeof selection.removeRange == "function") {
+          selection.removeRange(range);
+        } else {
+          selection.removeAllRanges();
+        }
+      }
+      if (mark) {
+        document.body.removeChild(mark);
+      }
+      reselectPrevious();
+    }
+    return success;
+  }
+  var copyToClipboard = copy;
+  const xLinkCopy = vue.defineComponent({
+    name: "xLinkCopy",
+    props: ["to"],
+    data() {
+      return {};
+    },
+    setup(props) {
+    },
+    computed: {
+      xDomText() {
+        var _a;
+        if ((_a = this.$slots) == null ? void 0 : _a.default) {
+          return this.$slots.default();
+        }
+        return "";
+      }
+    },
+    watch: {},
+    created() {
+    },
+    methods: {
+      handleClickText(...args) {
+        if (this.to) {
+          this.to.apply(this, args);
+        }
+      },
+      copyText() {
+        if (copyToClipboard($__default.default(this.$refs.contents).text())) {
+          UI.message.success(this.$t("\u5DF2\u7ECF\u6210\u529F\u590D\u5236\u5230\u526A\u5207\u677F").label);
+        } else {
+          UI.message.error(this.$t("\u590D\u5236\u5230\u526A\u5207\u677F\u5931\u8D25").label);
+        }
+      }
+    },
+    render({
+      xDomText,
+      handleClickText,
+      copyText
+    }) {
+      return vue.createVNode("div", {
+        "class": "xLinkCopy x-btn x-btn-link flex"
+      }, [vue.withDirectives(vue.createVNode("div", {
+        "class": "flex1 ellipsis mr4",
+        "onClick": handleClickText,
+        "ref": "contents"
+      }, [xDomText]), [[vue.resolveDirective("uiPopover"), {
+        onlyEllipsis: true
+      }]]), vue.createVNode(vue.resolveComponent("xIcon"), {
+        "icon": "InsideCopy",
+        "class": "xLinkCopy_icon",
+        "onClick": copyText
+      }, null)]);
+    }
+  });
+  const xInfoDiffCard$1 = "";
+  const xInfoDiffCard = vue.defineComponent({
+    name: "xInfoDiffCard",
+    props: ["old", "new", "title"],
+    render() {
+      return vue.createVNode("div", null, [vue.createVNode("div", null, [this.title, vue.createTextVNode(":")]), vue.createVNode("div", {
+        "class": "flex vertical"
+      }, [vue.createVNode("div", {
+        "class": "xInfoDiffCard-value xInfoDiffCard-delta xInfoDiffCard-left-value"
+      }, [vue.createVNode("pre", null, [this.old])]), vue.createVNode("div", {
+        "class": "xInfoDiffCard-value xInfoDiffCard-right-value"
+      }, [vue.createVNode("pre", null, [this.new])])])]);
+    }
+  });
+  if (State_UI.isDev) {
+    window.dayjs = dayjs__default.default;
+    window.moment = dayjs__default.default;
+    window.jquery = $__default.default;
+    window._ = xU;
+  }
+  const compositionAPI = {
+    usefnObserveDomResize,
+    useScopeStyle
+  };
+  const componentMyUI = {
+    xIcon,
+    xButton,
+    xGap,
+    xRender,
+    xItem,
+    xForm,
+    xButtonCountDown,
+    xCharts,
+    xView,
+    xDataGrid: _sfc_main$4,
+    xDataGridToolbar,
+    xColFilter,
+    xPagination,
+    xCellLabel,
+    xVirScroll,
+    xVirTable,
+    xLogObject,
+    xInfoCard,
+    xLinkCopy,
+    xInfoDiffCard
+  };
+  const components = {
+    ...componentMyUI
+  };
+  const VentoseUIWithInstall = {
+    install: (app, options) => {
+      app.config.globalProperties.$t = $t$1;
+      installDirective(app, options);
+      installUIDialogComponent(UI, options, app);
+      xU.each(components, (component, name) => {
+        if (component.name) {
+          name = component.name;
+        } else {
+          xU.doNothing(name, `miss name`);
+        }
+        app.component(component.name || name, component);
+      });
+      app.use(ElementPlus__default.default);
+    }
+  };
+  Object.defineProperty(exports2, "dayjs", {
+    enumerable: true,
+    get: () => dayjs__default.default
+  });
+  Object.defineProperty(exports2, "moment", {
+    enumerable: true,
+    get: () => dayjs__default.default
+  });
+  Object.defineProperty(exports2, "$", {
+    enumerable: true,
+    get: () => $__default.default
+  });
+  exports2.$t = $t$1;
+  exports2.AllWasWell = AllWasWell;
+  exports2.Cpt_UI_locale = Cpt_UI_locale;
+  exports2.EVENT_TYPE = EVENT_TYPE;
+  exports2.FormRules = FormRules;
+  exports2.RegexFn = RegexFn;
+  exports2.State_UI = State_UI;
+  exports2.UI = UI;
+  exports2.VNodeCollection = VNodeCollection;
+  exports2.VentoseUIWithInstall = VentoseUIWithInstall;
+  exports2._ = xU;
+  exports2.antColKey = antColKey;
+  exports2.compileVNode = compileVNode;
+  exports2.components = components;
+  exports2.compositionAPI = compositionAPI;
+  exports2.defCol = defCol;
+  exports2.defColActions = defColActions;
+  exports2.defColActionsBtnlist = defColActionsBtnlist;
+  exports2.defDataGridOption = defDataGridOption;
+  exports2.defFormConfigs = defFormConfigs;
+  exports2.defItem = defItem;
+  exports2.defPagination = defPagination;
+  exports2.defXVirTableConfigs = defXVirTableConfigs;
+  exports2.getPaginationPageSize = getPaginationPageSize;
+  exports2.iStorage = iStorage;
+  exports2.lStorage = lStorage;
+  exports2.newReactiveState = newReactiveState;
+  exports2.pickValueFrom = pickValueFrom;
+  exports2.resetValueOf = resetValueOf;
+  exports2.setCSSVariables = setCSSVariables;
+  exports2.setDataGridInfo = setDataGridInfo;
+  exports2.setDocumentTitle = setDocumentTitle;
+  exports2.setPagination = setPagination;
+  exports2.setValueTo = setValueTo;
+  exports2.vModel = vModel;
+  exports2.validateForm = validateForm;
+  exports2.validateItem = validateItem;
+  exports2.xU = xU;
+  Object.defineProperties(exports2, { __esModule: { value: true }, [Symbol.toStringTag]: { value: "Module" } });
+});

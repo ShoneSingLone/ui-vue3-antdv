@@ -1,1 +1,371 @@
-import{a as e}from"./app.js";import"../../entry/index.js";const{$t:t}=VentoseUI.State_UI,l=Vue.defineComponent({props:{options:{type:Object,default:()=>({})}},data(){const{row:e}=this.options.payload||{},{name:l,age:o}=e||{};return{tips1:'### 自定义form 宽度，label宽度，居中\n```html\n<xForm class=\\"flex vertical\\" :labelStyle="State.styleForm">\n```\n```js\nconsole.log(window)\n//\n```',styleForm:{width:"120px","text-align":"right"},row:e||{},dataXItem:{...VentoseUI.defItem({value:l||"新增",label:t("name").label,prop:"name",rules:[VentoseUI.FormRules.required()]}),...VentoseUI.defItem({value:o||0,label:t("age").label,prop:"age",rules:[VentoseUI.FormRules.required()]})}}},methods:{async verifyForm(){const e=await VentoseUI.validateForm(this.dataXItem);return VentoseUI.AllWasWell(e)},getParams(){return{...this.row,...this.data}}},render(){return Vue.createVNode("div",{id:"DialogModifyIP"},[Vue.createVNode(Vue.resolveComponent("xForm"),{class:"flex vertical",labelStyle:this.styleForm},{default:()=>[Vue.createVNode(Vue.resolveComponent("aAlert"),{message:this.$t("提示信息").label,type:"info"},null),VentoseUI.xU.map(this.dataXItem,(e=>Vue.createVNode(Vue.Fragment,null,[Vue.createVNode(Vue.resolveComponent("xGap"),{t:"10"},null),Vue.createVNode(Vue.resolveComponent("xItem"),{configs:e},null)])))]}),Vue.createVNode(Vue.resolveComponent("mkit"),{md:'### 自定义form 宽度，label宽度，居中\n```js\n<xForm class="flex vertical" labelStyle={this.styleForm}>\n\t<aAlert message={this.$t("提示信息").label} type="info" />\n    {xU.map(this.dataXItem, (item) => {\n     return (<>\n      <xGap t="10" />\n      <xItem configs={item} />\n     </>);\n    })}\n</xForm>\n\ndataXItem: {\n    ...defItem({\n     value: name || "新增",\n     label: $t("name").label,\n     prop: "name",\n     rules: [FormRules.required()]\n    }),\n    ...defItem({\n     value: age || 0,\n     label: $t("age").label,\n     prop: "age",\n     rules: [FormRules.required()]\n    })\n   }\n\nstyleForm: {\n\twidth: "120px",\n\t\x3c!--todo:具体实现是join字符串，没有做camel的转换，所以用标准css属性短横线--\x3e\n\t"text-align": "right"\n}\n```'},null)])}}),{xItem:o}=VentoseUI.components,n={components:{DemoXFormWithForm:l},methods:{valid(){}},setup:e=>({pickValueFrom:VentoseUI.pickValueFrom}),computed:{valueFromConfigs(){return JSON.stringify(VentoseUI.pickValueFrom(this.xForm))}},data(){const e=this;return{configsValidBtn:{text:"校验",async onClick(){try{const t=await VentoseUI.validateForm(e.xForm);VentoseUI.AllWasWell(t)?VentoseUI.UI.message.success("校验成功"):VentoseUI.UI.message.error("校验失败")}catch(t){VentoseUI.UI.notification.error((null==t?void 0:t.message)||"错误")}}},formData:{inputValue:"v-model"},xForm:{...VentoseUI.defItem({value:[],prop:"slotsAddonBefore",itemType:"Select",options:[{label:VentoseUI.$t("类型A").label,value:"AAA"},{label:VentoseUI.$t("类型B").label,value:"BBB"}],style:{width:"80px"}}),...VentoseUI.defItem({prop:"search",placeholder:"Input",allowClear:!0,onAfterValueEmit(e){console.log("🚀:","search configs",this,e)}}),...VentoseUI.defItem({label:"withLabelProperty",prop:"withLabelProperty",placeholder:"Input",allowClear:!0,rules:[VentoseUI.FormRules.required()]}),...VentoseUI.defItem({label:"slots",prop:"slots",value:"slots的value",placeholder:"Input",allowClear:!0,once(){const t=Vue.h(o,{configs:e.xForm.slotsAddonBefore});this.slots=Vue.markRaw({addonBefore:()=>t})},rules:[VentoseUI.FormRules.required()]}),...VentoseUI.defItem({labelVNodeRender:VentoseUI.VNodeCollection.labelTips(Vue.h("ul",null,[VentoseUI.$t("只能由英文字母(区分大小写)、数字和特殊字符@.\\_-组成").label,VentoseUI.$t('不能以"op_svc"、"paas_op"或\\开头').label,VentoseUI.$t("不能以\\结尾").label,VentoseUI.$t('不能命名为"admin"、"power_user"或"guest"').label,VentoseUI.$t("长度范围是4到32位").label].map((e=>Vue.h("li",null,e))))),label:VentoseUI.$t("label使用Tips").label,prop:"withLabelProperty",placeholder:"Input",allowClear:!0,rules:[VentoseUI.FormRules.required()]}),...VentoseUI.defItem({value:[],prop:"select",label:VentoseUI.$t("类型").label,itemType:"Select",options:[{label:VentoseUI.$t("类型A").label,value:"AAA"},{label:VentoseUI.$t("类型B").label,value:"BBB"}],mode:"multiple",maxTagCount:1,maxTagTextLength:10,style:{width:"200px"}})},tips1:'###\n```js\n<xItem :configs="xForm.search" class="flex1" v-model="formData.inputValue" />\nformData: {\n\tinputValue: "v-model"\n},\n...defItem({\n\tprop: "search",\n\tplaceholder: "Input",\n\tallowClear: true,\n\tonAfterValueEmit(val) {\n\t\tconsole.log("🚀:", "search configs", this, val);\n\t}\n}),\n```\n',tips2:'### 只使用configs绑定数据\n>必须有**value**属性\n```js\n<xItem :configs="xForm.select" class="flex1" />\n/* 必须有value属性 */\n...defItem({\n\tvalue: [],\n\tprop: "select",\n\tlabel: $t("类型").label,\n\titemType: "Select",\n\toptions: [\n\t\t{\n\t\t\tlabel: $t("类型A").label,\n\t\t\tvalue: "AAA"\n\t\t},\n\t\t{\n\t\t\tlabel: $t("类型B").label,\n\t\t\tvalue: "BBB"\n\t\t}\n\t],\n\tmode: "multiple",\n\tmaxTagCount: 1,\n\tmaxTagTextLength: 10,\n\tstyle: { width: "200px" }\n})\n```\n'}}},a={class:"mr10"},s={class:"flex middle mt10"},r={class:"mr10"},u={class:"mr10"},m={class:"flex middle mt10"},i={class:"mr10"},V=Vue.createElementVNode("div",{class:"mt10"},null,-1);const d=e(n,[["render",function(e,t,l,o,n,d){const c=Vue.resolveComponent("DemoAndCode"),p=Vue.resolveComponent("xButton"),f=Vue.resolveComponent("mkit"),I=Vue.resolveComponent("xItem"),x=Vue.resolveComponent("ElCard"),g=Vue.resolveComponent("DemoXFormWithForm");return Vue.openBlock(),Vue.createElementBlock(Vue.Fragment,null,[Vue.createVNode(c,{title:"基本用法",path:"/boundless/demo/xForm/DialogDemoXItem.sfc"}),Vue.createVNode(c,{title:"slot",path:"/boundless/demo/xForm/xItemSlot.sfc"}),Vue.createVNode(c,{title:"DatePicker",path:"/boundless/demo/xForm/xItemDatePicker.sfc"}),Vue.createVNode(x,null,{default:Vue.withCtx((()=>[Vue.createTextVNode(Vue.toDisplayString(d.valueFromConfigs)+" ",1),Vue.createVNode(p,{configs:n.configsValidBtn},null,8,["configs"]),Vue.createVNode(f,{md:n.tips1},null,8,["md"]),Vue.createElementVNode("span",a,Vue.toDisplayString(n.formData.inputValue),1),Vue.createVNode(I,{configs:n.xForm.search,class:"flex1",modelValue:n.formData.inputValue,"onUpdate:modelValue":t[0]||(t[0]=e=>n.formData.inputValue=e)},null,8,["configs","modelValue"]),Vue.createVNode(f,{md:n.tips2},null,8,["md"]),Vue.createElementVNode("div",s,[Vue.createElementVNode("span",r,Vue.toDisplayString(n.xForm.slots.value),1),Vue.createVNode(I,{configs:n.xForm.slots,class:"flex1"},null,8,["configs"]),Vue.createElementVNode("span",u,Vue.toDisplayString(n.xForm.slotsAddonBefore.value),1)]),Vue.createElementVNode("div",m,[Vue.createElementVNode("span",i,Vue.toDisplayString(n.xForm.select.value),1),Vue.createVNode(I,{configs:n.xForm.select,class:"flex1"},null,8,["configs"])]),Vue.createVNode(I,{configs:n.xForm.withLabelProperty,class:"flex1",modelValue:n.formData.inputValue,"onUpdate:modelValue":t[1]||(t[1]=e=>n.formData.inputValue=e)},null,8,["configs","modelValue"])])),_:1}),V,Vue.createVNode(x,null,{default:Vue.withCtx((()=>[Vue.createVNode(g,{options:{payload:{row:{}}}})])),_:1})],64)}]]);export{d as default};
+import { a as _export_sfc } from "./app.js";
+import "../../index.js";
+const {
+  $t
+} = VentoseUI.State_UI;
+const DemoXFormWithForm = Vue.defineComponent({
+  props: {
+    options: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
+  data() {
+    const {
+      row
+    } = this.options.payload || {};
+    const {
+      name,
+      age
+    } = row || {};
+    return {
+      tips1: `### \u81EA\u5B9A\u4E49form \u5BBD\u5EA6\uFF0Clabel\u5BBD\u5EA6\uFF0C\u5C45\u4E2D
+\`\`\`html
+<xForm class=\\"flex vertical\\" :labelStyle="State.styleForm">
+\`\`\`
+\`\`\`js
+console.log(window)
+//
+\`\`\``,
+      styleForm: {
+        width: "120px",
+        "text-align": "right"
+      },
+      row: row || {},
+      dataXItem: {
+        ...VentoseUI.defItem({
+          value: name || "\u65B0\u589E",
+          label: $t("name").label,
+          prop: "name",
+          rules: [VentoseUI.FormRules.required()]
+        }),
+        ...VentoseUI.defItem({
+          value: age || 0,
+          label: $t("age").label,
+          prop: "age",
+          rules: [VentoseUI.FormRules.required()]
+        })
+      }
+    };
+  },
+  methods: {
+    async verifyForm() {
+      const validateResults = await VentoseUI.validateForm(this.dataXItem);
+      return VentoseUI.AllWasWell(validateResults);
+    },
+    getParams() {
+      return {
+        ...this.row,
+        ...this.data
+      };
+    }
+  },
+  render() {
+    return Vue.createVNode("div", {
+      "id": "DialogModifyIP"
+    }, [Vue.createVNode(Vue.resolveComponent("xForm"), {
+      "class": "flex vertical",
+      "labelStyle": this.styleForm
+    }, {
+      default: () => [Vue.createVNode(Vue.resolveComponent("aAlert"), {
+        "message": this.$t("\u63D0\u793A\u4FE1\u606F").label,
+        "type": "info"
+      }, null), VentoseUI.xU.map(this.dataXItem, (item) => {
+        return Vue.createVNode(Vue.Fragment, null, [Vue.createVNode(Vue.resolveComponent("xGap"), {
+          "t": "10"
+        }, null), Vue.createVNode(Vue.resolveComponent("xItem"), {
+          "configs": item
+        }, null)]);
+      })]
+    }), Vue.createVNode(Vue.resolveComponent("mkit"), {
+      "md": `### \u81EA\u5B9A\u4E49form \u5BBD\u5EA6\uFF0Clabel\u5BBD\u5EA6\uFF0C\u5C45\u4E2D
+\`\`\`js
+<xForm class="flex vertical" labelStyle={this.styleForm}>
+	<aAlert message={this.$t("\u63D0\u793A\u4FE1\u606F").label} type="info" />
+    {xU.map(this.dataXItem, (item) => {
+     return (<>
+      <xGap t="10" />
+      <xItem configs={item} />
+     </>);
+    })}
+</xForm>
+
+dataXItem: {
+    ...defItem({
+     value: name || "\u65B0\u589E",
+     label: $t("name").label,
+     prop: "name",
+     rules: [FormRules.required()]
+    }),
+    ...defItem({
+     value: age || 0,
+     label: $t("age").label,
+     prop: "age",
+     rules: [FormRules.required()]
+    })
+   }
+
+styleForm: {
+	width: "120px",
+	<!--todo:\u5177\u4F53\u5B9E\u73B0\u662Fjoin\u5B57\u7B26\u4E32\uFF0C\u6CA1\u6709\u505Acamel\u7684\u8F6C\u6362\uFF0C\u6240\u4EE5\u7528\u6807\u51C6css\u5C5E\u6027\u77ED\u6A2A\u7EBF-->
+	"text-align": "right"
+}
+\`\`\``
+    }, null)]);
+  }
+});
+const { xItem } = VentoseUI.components;
+const _sfc_main = {
+  components: {
+    DemoXFormWithForm
+  },
+  methods: {
+    valid() {
+    }
+  },
+  setup(props) {
+    return {
+      pickValueFrom: VentoseUI.pickValueFrom
+    };
+  },
+  computed: {
+    valueFromConfigs() {
+      return JSON.stringify(VentoseUI.pickValueFrom(this.xForm));
+    }
+  },
+  data() {
+    const vm = this;
+    const xForm = {
+      ...VentoseUI.defItem({
+        value: [],
+        prop: "slotsAddonBefore",
+        itemType: "Select",
+        options: [
+          {
+            label: VentoseUI.$t("\u7C7B\u578BA").label,
+            value: "AAA"
+          },
+          {
+            label: VentoseUI.$t("\u7C7B\u578BB").label,
+            value: "BBB"
+          }
+        ],
+        style: { width: "80px" }
+      }),
+      ...VentoseUI.defItem({
+        prop: "search",
+        placeholder: "Input",
+        allowClear: true,
+        onAfterValueEmit(val) {
+          console.log("\u{1F680}:", "search configs", this, val);
+        }
+      }),
+      ...VentoseUI.defItem({
+        label: "withLabelProperty",
+        prop: "withLabelProperty",
+        placeholder: "Input",
+        allowClear: true,
+        rules: [VentoseUI.FormRules.required()]
+      }),
+      ...VentoseUI.defItem({
+        label: "slots",
+        prop: "slots",
+        value: "slots\u7684value",
+        placeholder: "Input",
+        allowClear: true,
+        once() {
+          const vDomSlotsSelector = Vue.h(xItem, {
+            configs: vm.xForm.slotsAddonBefore
+          });
+          this.slots = Vue.markRaw({
+            addonBefore: () => vDomSlotsSelector
+          });
+        },
+        rules: [VentoseUI.FormRules.required()]
+      }),
+      ...VentoseUI.defItem({
+        labelVNodeRender: VentoseUI.VNodeCollection.labelTips(
+          Vue.h(
+            "ul",
+            null,
+            [
+              VentoseUI.$t(`\u53EA\u80FD\u7531\u82F1\u6587\u5B57\u6BCD(\u533A\u5206\u5927\u5C0F\u5199)\u3001\u6570\u5B57\u548C\u7279\u6B8A\u5B57\u7B26@.\\_-\u7EC4\u6210`).label,
+              VentoseUI.$t(`\u4E0D\u80FD\u4EE5"op_svc"\u3001"paas_op"\u6216\\\u5F00\u5934`).label,
+              VentoseUI.$t(`\u4E0D\u80FD\u4EE5\\\u7ED3\u5C3E`).label,
+              VentoseUI.$t(`\u4E0D\u80FD\u547D\u540D\u4E3A"admin"\u3001"power_user"\u6216"guest"`).label,
+              VentoseUI.$t(`\u957F\u5EA6\u8303\u56F4\u662F4\u523032\u4F4D`).label
+            ].map((content) => Vue.h("li", null, content))
+          )
+        ),
+        label: VentoseUI.$t("label\u4F7F\u7528Tips").label,
+        prop: "withLabelProperty",
+        placeholder: "Input",
+        allowClear: true,
+        rules: [VentoseUI.FormRules.required()]
+      }),
+      ...VentoseUI.defItem({
+        value: [],
+        prop: "select",
+        label: VentoseUI.$t("\u7C7B\u578B").label,
+        itemType: "Select",
+        options: [
+          {
+            label: VentoseUI.$t("\u7C7B\u578BA").label,
+            value: "AAA"
+          },
+          {
+            label: VentoseUI.$t("\u7C7B\u578BB").label,
+            value: "BBB"
+          }
+        ],
+        mode: "multiple",
+        maxTagCount: 1,
+        maxTagTextLength: 10,
+        style: { width: "200px" }
+      })
+    };
+    return {
+      configsValidBtn: {
+        text: "\u6821\u9A8C",
+        async onClick() {
+          try {
+            const validateResults = await VentoseUI.validateForm(vm.xForm);
+            if (VentoseUI.AllWasWell(validateResults)) {
+              VentoseUI.UI.message.success("\u6821\u9A8C\u6210\u529F");
+            } else {
+              VentoseUI.UI.message.error("\u6821\u9A8C\u5931\u8D25");
+            }
+          } catch (error) {
+            VentoseUI.UI.notification.error((error == null ? void 0 : error.message) || "\u9519\u8BEF");
+          }
+        }
+      },
+      formData: {
+        inputValue: "v-model"
+      },
+      xForm,
+      tips1: `###
+\`\`\`js
+<xItem :configs="xForm.search" class="flex1" v-model="formData.inputValue" />
+formData: {
+	inputValue: "v-model"
+},
+...defItem({
+	prop: "search",
+	placeholder: "Input",
+	allowClear: true,
+	onAfterValueEmit(val) {
+		console.log("\u{1F680}:", "search configs", this, val);
+	}
+}),
+\`\`\`
+`,
+      tips2: `### \u53EA\u4F7F\u7528configs\u7ED1\u5B9A\u6570\u636E
+>\u5FC5\u987B\u6709**value**\u5C5E\u6027
+\`\`\`js
+<xItem :configs="xForm.select" class="flex1" />
+/* \u5FC5\u987B\u6709value\u5C5E\u6027 */
+...defItem({
+	value: [],
+	prop: "select",
+	label: $t("\u7C7B\u578B").label,
+	itemType: "Select",
+	options: [
+		{
+			label: $t("\u7C7B\u578BA").label,
+			value: "AAA"
+		},
+		{
+			label: $t("\u7C7B\u578BB").label,
+			value: "BBB"
+		}
+	],
+	mode: "multiple",
+	maxTagCount: 1,
+	maxTagTextLength: 10,
+	style: { width: "200px" }
+})
+\`\`\`
+`
+    };
+  }
+};
+const _hoisted_1 = { class: "mr10" };
+const _hoisted_2 = { class: "flex middle mt10" };
+const _hoisted_3 = { class: "mr10" };
+const _hoisted_4 = { class: "mr10" };
+const _hoisted_5 = { class: "flex middle mt10" };
+const _hoisted_6 = { class: "mr10" };
+const _hoisted_7 = /* @__PURE__ */ Vue.createElementVNode("div", { class: "mt10" }, null, -1);
+function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+  const _component_DemoAndCode = Vue.resolveComponent("DemoAndCode");
+  const _component_xButton = Vue.resolveComponent("xButton");
+  const _component_mkit = Vue.resolveComponent("mkit");
+  const _component_xItem = Vue.resolveComponent("xItem");
+  const _component_ElCard = Vue.resolveComponent("ElCard");
+  const _component_DemoXFormWithForm = Vue.resolveComponent("DemoXFormWithForm");
+  return Vue.openBlock(), Vue.createElementBlock(Vue.Fragment, null, [
+    Vue.createVNode(_component_DemoAndCode, {
+      title: "\u57FA\u672C\u7528\u6CD5",
+      path: "/boundless/demo/xForm/DialogDemoXItem.sfc"
+    }),
+    Vue.createVNode(_component_DemoAndCode, {
+      title: "slot",
+      path: "/boundless/demo/xForm/xItemSlot.sfc"
+    }),
+    Vue.createVNode(_component_DemoAndCode, {
+      title: "DatePicker",
+      path: "/boundless/demo/xForm/xItemDatePicker.sfc"
+    }),
+    Vue.createVNode(_component_ElCard, null, {
+      default: Vue.withCtx(() => [
+        Vue.createTextVNode(Vue.toDisplayString($options.valueFromConfigs) + " ", 1),
+        Vue.createVNode(_component_xButton, { configs: $data.configsValidBtn }, null, 8, ["configs"]),
+        Vue.createVNode(_component_mkit, { md: $data.tips1 }, null, 8, ["md"]),
+        Vue.createElementVNode("span", _hoisted_1, Vue.toDisplayString($data.formData.inputValue), 1),
+        Vue.createVNode(_component_xItem, {
+          configs: $data.xForm.search,
+          class: "flex1",
+          modelValue: $data.formData.inputValue,
+          "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.formData.inputValue = $event)
+        }, null, 8, ["configs", "modelValue"]),
+        Vue.createVNode(_component_mkit, { md: $data.tips2 }, null, 8, ["md"]),
+        Vue.createElementVNode("div", _hoisted_2, [
+          Vue.createElementVNode("span", _hoisted_3, Vue.toDisplayString($data.xForm.slots.value), 1),
+          Vue.createVNode(_component_xItem, {
+            configs: $data.xForm.slots,
+            class: "flex1"
+          }, null, 8, ["configs"]),
+          Vue.createElementVNode("span", _hoisted_4, Vue.toDisplayString($data.xForm.slotsAddonBefore.value), 1)
+        ]),
+        Vue.createElementVNode("div", _hoisted_5, [
+          Vue.createElementVNode("span", _hoisted_6, Vue.toDisplayString($data.xForm.select.value), 1),
+          Vue.createVNode(_component_xItem, {
+            configs: $data.xForm.select,
+            class: "flex1"
+          }, null, 8, ["configs"])
+        ]),
+        Vue.createVNode(_component_xItem, {
+          configs: $data.xForm.withLabelProperty,
+          class: "flex1",
+          modelValue: $data.formData.inputValue,
+          "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.formData.inputValue = $event)
+        }, null, 8, ["configs", "modelValue"])
+      ]),
+      _: 1
+    }),
+    _hoisted_7,
+    Vue.createVNode(_component_ElCard, null, {
+      default: Vue.withCtx(() => [
+        Vue.createVNode(_component_DemoXFormWithForm, { options: { payload: { row: {} } } })
+      ]),
+      _: 1
+    })
+  ], 64);
+}
+const DemoXForm = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
+export {
+  DemoXForm as default
+};

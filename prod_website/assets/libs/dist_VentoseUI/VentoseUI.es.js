@@ -96,6 +96,8 @@ const iStorage = async function(key, val) {
   }
 };
 iStorage.clear = clear;
+window.process = window.process || {};
+window.TEMPLATE_PLACEHOLDER = "";
 const onRE = /^on[^a-z]/;
 const VueComponents = {};
 const cache = {};
@@ -446,6 +448,7 @@ const privateLodash = {
     const isInvalidDate = label == privateLodash.WORDS.INVALID_DATE;
     return isInvalidDate ? "--" : label;
   },
+  isObjSetAttr: (obj, attrName = "value") => Object.keys(obj).includes(attrName),
   keepDecimals: function(val, fractionDigits) {
     let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
     if (num === "NaN") {
@@ -2540,9 +2543,9 @@ const RadioGroup = ({
   listeners,
   propsWillDeleteFromConfigs
 }) => {
-  const Radio = resolveComponent("aRadio");
-  const RadioGroup2 = resolveComponent("aRadioGroup");
-  const RadioButton = resolveComponent("aRadioButton");
+  const Radio = resolveComponent("ElRadio");
+  const RadioGroup2 = resolveComponent("ElRadioGroup");
+  const RadioButton = resolveComponent("ElRadioButton");
   const PROPERTY_OPTIONS = properties.options;
   const componentPropertyOmitOptions = xU.omit(properties, ["options"]);
   const renderOptions = () => {
@@ -2805,12 +2808,15 @@ const WILL_DELETE = [
   "validate",
   "value"
 ];
+const DID_NOT_SET_MODEL_VALUE_BY_V_MODEL = "DID_NOT_SET_MODEL_VALUE_BY_V_MODEL";
 const xItem = defineComponent({
   name: "XItem",
   props: {
     modelValue: {
       type: [Object, String, Number, Boolean],
-      default: void 0
+      default() {
+        return DID_NOT_SET_MODEL_VALUE_BY_V_MODEL;
+      }
     },
     configs: {
       type: Object,
@@ -2876,7 +2882,7 @@ const xItem = defineComponent({
       const propsSet = /* @__PURE__ */ new Set();
       const listeners2 = {
         "onUpdate:value": (val) => {
-          if (configs.value !== void 0) {
+          if (xU.isObjSetAttr(configs)) {
             if (configs.value === val) {
               return;
             } else {
@@ -2944,6 +2950,9 @@ const xItem = defineComponent({
     };
   },
   computed: {
+    isSetVModel() {
+      return this.modelValue !== DID_NOT_SET_MODEL_VALUE_BY_V_MODEL;
+    },
     CurrentXItem() {
       if (xU.isObject(this.configs.itemType)) {
         if (isProxy(this.configs.itemType)) {
@@ -3151,17 +3160,16 @@ const xItem = defineComponent({
       await xU.ensureValueDone(() => this.properties);
       const vm = this;
       const value = (() => {
-        if (vm.modelValue !== void 0) {
+        if (vm.isSetVModel) {
           return vm.modelValue;
+        } else if (xU.isObjSetAttr(vm.configs)) {
+          return vm.configs.value;
+        } else if (xU.isObjSetAttr(vm.configs, "defaultValue")) {
+          return vm.configs.defaultValue;
+        } else {
+          xU("either configs.value or modelValue");
+          return "";
         }
-        if (vm.configs.value == void 0) {
-          if (vm.configs.defaultValue !== void 0) {
-            return vm.configs.defaultValue;
-          } else {
-            xU("either configs.value or modelValue");
-          }
-        }
-        return vm.configs.value;
       })();
       const diffRes = diff(vm.properties.value, value);
       if (diffRes) {

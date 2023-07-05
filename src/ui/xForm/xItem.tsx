@@ -26,6 +26,8 @@ const WILL_DELETE = [
 	"value"
 ];
 
+const DID_NOT_SET_MODEL_VALUE_BY_V_MODEL = "DID_NOT_SET_MODEL_VALUE_BY_V_MODEL";
+
 /* itemWrapperClass */
 export const xItem = defineComponent({
 	name: "XItem",
@@ -33,7 +35,9 @@ export const xItem = defineComponent({
 		/* 绑定的值 */
 		modelValue: {
 			type: [Object, String, Number, Boolean],
-			default: undefined
+			default() {
+				return DID_NOT_SET_MODEL_VALUE_BY_V_MODEL;
+			}
 		},
 		configs: {
 			type: Object,
@@ -96,7 +100,7 @@ export const xItem = defineComponent({
 				/* 主要的触发方式 */
 				"onUpdate:value": (val: any) => {
 					/* 使用configs.value的形式，一般是configs与组件是一对一的关系,configs需要是reactive的  */
-					if (configs.value !== undefined) {
+					if (xU.isObjSetAttr(configs)) {
 						if (configs.value === val) {
 							return;
 						} else {
@@ -182,6 +186,9 @@ export const xItem = defineComponent({
 		};
 	},
 	computed: {
+		isSetVModel() {
+			return this.modelValue !== DID_NOT_SET_MODEL_VALUE_BY_V_MODEL;
+		},
 		CurrentXItem() {
 			if (xU.isObject(this.configs.itemType)) {
 				if (isProxy(this.configs.itemType)) {
@@ -413,18 +420,19 @@ export const xItem = defineComponent({
 			const vm = this;
 			/* modelValue configs.value configs.defaultValue */
 			const value = (() => {
-				if (vm.modelValue !== undefined) {
+				/* v-model的优先级更高，如果有，就优先选modelValue */
+				if (vm.isSetVModel) {
 					return vm.modelValue;
+				} else if (xU.isObjSetAttr(vm.configs)) {
+					/* configs.value */
+					return vm.configs.value;
+				} else if (xU.isObjSetAttr(vm.configs, "defaultValue")) {
+					/* 如果设置了就以默认值 */
+					return vm.configs.defaultValue;
+				} else {
+					xU("either configs.value or modelValue");
+					return "";
 				}
-				if (vm.configs.value == undefined) {
-					if (vm.configs.defaultValue !== undefined) {
-						return vm.configs.defaultValue;
-					} else {
-						xU("either configs.value or modelValue");
-					}
-				}
-
-				return vm.configs.value;
 			})();
 
 			const diffRes = diff(vm.properties.value, value);

@@ -1,1 +1,70 @@
-import{a as e}from"./app.js";import"../../entry/index.js";const t={name:"DemoXIcon"},n={class:"flex vertical",style:{"text-align":"left"}},o={class:"flex middle"},l={class:""},c=Vue.createElementVNode("h2",null," ventoseUI 内置svg,在预置按钮里面用。以Inside作为前缀,一般不需要用到 ",-1),d={class:"flex"},a={class:""},i=Vue.createElementVNode("h2",null,"从/public/assets/svg加载",-1),s={class:"flex vertical"};const r=e(t,[["render",function(e,t,r,V,u,N){const m=Vue.resolveComponent("xIcon");return Vue.openBlock(),Vue.createElementBlock("div",n,[Vue.createElementVNode("div",o,[Vue.createVNode(m,{icon:"unknown",class:"auto-size"}),Vue.createTextVNode(" 未加载出来默认图标 ")]),Vue.createElementVNode("div",l,[c,Vue.createElementVNode("div",d,[Vue.createVNode(m,{icon:"InsideDeleteOutlined",style:{color:"gray"}}),Vue.createVNode(m,{icon:"InsideExclamationCircleOutlined",style:{color:"red"}}),Vue.createVNode(m,{icon:"InsideLoadingOutlined"}),Vue.createVNode(m,{icon:"InsideSaveOutlined"}),Vue.createVNode(m,{icon:"InsideSearchOutlined"}),Vue.createVNode(m,{icon:"InsideSyncOutlined"}),Vue.createVNode(m,{icon:"InsideUploadOutlined"})])]),Vue.createElementVNode("div",a,[i,Vue.createElementVNode("div",s,[Vue.createElementVNode("span",null,[Vue.createVNode(m,{icon:"vite",style:{color:"red",width:"64px",height:"64px"},class:"auto-size"}),Vue.createTextVNode(" vite ")]),Vue.createElementVNode("span",null,[Vue.createVNode(m,{icon:"UserOutlined",style:{color:"gray",width:"64px",height:"64px"}}),Vue.createTextVNode(" UserOutlined ")])])])])}]]);export{r as default};
+import { a as _export_sfc } from "./app.js";
+import "../../index.js";
+const _sfc_main = {
+  name: "DemoXIcon"
+};
+const _hoisted_1 = {
+  class: "flex vertical",
+  style: { "text-align": "left" }
+};
+const _hoisted_2 = { class: "flex middle" };
+const _hoisted_3 = { class: "" };
+const _hoisted_4 = /* @__PURE__ */ Vue.createElementVNode("h2", null, " ventoseUI \u5185\u7F6Esvg,\u5728\u9884\u7F6E\u6309\u94AE\u91CC\u9762\u7528\u3002\u4EE5Inside\u4F5C\u4E3A\u524D\u7F00,\u4E00\u822C\u4E0D\u9700\u8981\u7528\u5230 ", -1);
+const _hoisted_5 = { class: "flex" };
+const _hoisted_6 = { class: "" };
+const _hoisted_7 = /* @__PURE__ */ Vue.createElementVNode("h2", null, "\u4ECE/public/assets/svg\u52A0\u8F7D", -1);
+const _hoisted_8 = { class: "flex vertical" };
+function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+  const _component_xIcon = Vue.resolveComponent("xIcon");
+  return Vue.openBlock(), Vue.createElementBlock("div", _hoisted_1, [
+    Vue.createElementVNode("div", _hoisted_2, [
+      Vue.createVNode(_component_xIcon, {
+        icon: "unknown",
+        class: "auto-size"
+      }),
+      Vue.createTextVNode(" \u672A\u52A0\u8F7D\u51FA\u6765\u9ED8\u8BA4\u56FE\u6807 ")
+    ]),
+    Vue.createElementVNode("div", _hoisted_3, [
+      _hoisted_4,
+      Vue.createElementVNode("div", _hoisted_5, [
+        Vue.createVNode(_component_xIcon, {
+          icon: "InsideDeleteOutlined",
+          style: { "color": "gray" }
+        }),
+        Vue.createVNode(_component_xIcon, {
+          icon: "InsideExclamationCircleOutlined",
+          style: { "color": "red" }
+        }),
+        Vue.createVNode(_component_xIcon, { icon: "InsideLoadingOutlined" }),
+        Vue.createVNode(_component_xIcon, { icon: "InsideSaveOutlined" }),
+        Vue.createVNode(_component_xIcon, { icon: "InsideSearchOutlined" }),
+        Vue.createVNode(_component_xIcon, { icon: "InsideSyncOutlined" }),
+        Vue.createVNode(_component_xIcon, { icon: "InsideUploadOutlined" })
+      ])
+    ]),
+    Vue.createElementVNode("div", _hoisted_6, [
+      _hoisted_7,
+      Vue.createElementVNode("div", _hoisted_8, [
+        Vue.createElementVNode("span", null, [
+          Vue.createVNode(_component_xIcon, {
+            icon: "vite",
+            style: { "color": "red", "width": "64px", "height": "64px" },
+            class: "auto-size"
+          }),
+          Vue.createTextVNode(" vite ")
+        ]),
+        Vue.createElementVNode("span", null, [
+          Vue.createVNode(_component_xIcon, {
+            icon: "UserOutlined",
+            style: { "color": "gray", "width": "64px", "height": "64px" }
+          }),
+          Vue.createTextVNode(" UserOutlined ")
+        ])
+      ])
+    ])
+  ]);
+}
+const DemoXIcon = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
+export {
+  DemoXIcon as default
+};

@@ -510,7 +510,14 @@ const privateLodash = {
 		const isInvalidDate = label == privateLodash.WORDS.INVALID_DATE;
 		return isInvalidDate ? "--" : label;
 	},
-
+	/**
+	 * 对象是否设置了某属性，默认是检测xItem的configs是否设置了value，之前通过判断undefined有bug
+	 * @param obj
+	 * @param attrName
+	 * @returns
+	 */
+	isObjSetAttr: (obj, attrName = "value") =>
+		Object.keys(obj).includes(attrName),
 	keepDecimals: function (val: number, fractionDigits: 2) {
 		let num = Number((val * 100) / 1024 / 100).toFixed(fractionDigits);
 		if (num === "NaN") {

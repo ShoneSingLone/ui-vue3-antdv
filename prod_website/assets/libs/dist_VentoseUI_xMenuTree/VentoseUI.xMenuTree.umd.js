@@ -1,1 +1,146 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t(require("vue"),require("@ventose/ui")):"function"==typeof define&&define.amd?define(["vue","@ventose/ui"],t):((e="undefined"!=typeof globalThis?globalThis:e||self).VentoseUI=e.VentoseUI||{},e.VentoseUI.components=e.VentoseUI.components||{},e.VentoseUI.components.xMenuTree=t(e.Vue,e.VentoseUI))}(this,(function(e,t){"use strict";const n=t=>e.createVNode(e.resolveComponent("xIcon"),{icon:t,style:"width:16px;height:100%;",class:"auto-size"},null);return e.defineComponent({name:"xMenuTree",props:["tree","authFn"],setup:()=>({}),data:e=>(e.setActiveMenuHighlight=t.xU.debounce((function(){const t=e.pathAndIdCollection[e.currentPath];t&&(e.onOpenChange([t]),e.arr_selectedMenuId=[t])}),300),{openKeys:[],pathAndIdCollection:{},arr_selectedMenuId:[]}),watch:{currentPath:{immediate:!0,handler(){this.setActiveMenuHighlight&&this.setActiveMenuHighlight()}}},methods:{onOpenChange(e){if(!t.xU.isArrayFill(e))return;const n=t.xU.last(e)||"",o=t.xU.safeSplit(n,"###").filter((e=>e)),l=[];for(let t=0;t<o.length;t++){const e=o[t];0===t?l[0]=`###${e}`:l[t]=`${l[t-1]}###${e}`}this.openKeys=l}},computed:{currentPath(){return this.$route.path},subTree(){const o=this,l=this.tree||[],r=(l,s)=>{const a=`${s}###${l.id}`;return this.authFn&&!this.authFn(l)?null:t.xU.isArrayFill(l.children)?e.createVNode(e.resolveComponent("aSubMenu"),{key:a},{icon:()=>n(l.icon),title:()=>l.label,default:()=>t.xU.map(l.children,(e=>r(e,a)))}):(o.pathAndIdCollection[l.path]=a,e.createVNode(e.resolveComponent("elMenuItem"),{key:a,class:"flex middle"},{icon:()=>n(l.icon),title:()=>l.label,default:()=>{if(l.payload&&l.payload.openType&&"NEW_TAB"===l.payload.openType){const t={};return l.path||(t.disabled=!0),e.createVNode("a",e.mergeProps({title:l.label},t,{href:l.path,target:"_blank",onClick:e=>{e.stopPropagation(),e.preventDefault(),l.path&&l.path&&window.open(l.path,"_blank")}}),[l.label])}return e.createVNode(e.Fragment,null,[e.createVNode(e.resolveComponent("RouterLink"),{to:l.path||"/404"},{default:()=>[l.label]})])}}))};return t.xU.isArrayFill(l)?t.xU.map(l,(e=>r(e,""))):null}},render(){return e.createVNode(e.resolveComponent("elMenu"),{openKeys:this.openKeys,onOpenChange:this.onOpenChange,selectedKeys:this.arr_selectedMenuId,"onUpdate:selectedKeys":e=>this.arr_selectedMenuId=e,mode:"inline"},{default:()=>[this.subTree]})}})}));
+(function(global, factory) {
+  typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory(require("vue"), require("@ventose/ui")) : typeof define === "function" && define.amd ? define(["vue", "@ventose/ui"], factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, global.VentoseUI = global.VentoseUI || {}, global.VentoseUI.components = global.VentoseUI.components || {}, global.VentoseUI.components.xMenuTree = factory(global.Vue, global.VentoseUI));
+})(this, function(vue, ui) {
+  "use strict";
+  const getIcon = (icon) => {
+    return vue.createVNode(vue.resolveComponent("xIcon"), {
+      "icon": icon,
+      "style": "width:16px;height:100%;",
+      "class": "auto-size"
+    }, null);
+  };
+  const _sfc_main = vue.defineComponent({
+    name: "xMenuTree",
+    props: ["tree", "authFn"],
+    setup() {
+      return {};
+    },
+    data(vm) {
+      vm.setActiveMenuHighlight = ui.xU.debounce(function() {
+        const openKey = vm.pathAndIdCollection[vm.currentPath];
+        if (!openKey) {
+          return;
+        }
+        vm.onOpenChange([openKey]);
+        vm.arr_selectedMenuId = [openKey];
+      }, 300);
+      return {
+        openKeys: [],
+        pathAndIdCollection: {},
+        arr_selectedMenuId: []
+      };
+    },
+    watch: {
+      currentPath: {
+        immediate: true,
+        handler() {
+          if (this.setActiveMenuHighlight) {
+            this.setActiveMenuHighlight();
+          }
+        }
+      }
+    },
+    methods: {
+      onOpenChange(openKeys) {
+        if (!ui.xU.isArrayFill(openKeys)) {
+          return;
+        }
+        const latestOpenKey = ui.xU.last(openKeys) || "";
+        const openKeyArray = ui.xU.safeSplit(latestOpenKey, "###").filter((i) => i);
+        const _openKeys = [];
+        for (let index = 0; index < openKeyArray.length; index++) {
+          const element = openKeyArray[index];
+          if (index === 0) {
+            _openKeys[0] = `###${element}`;
+          } else {
+            _openKeys[index] = `${_openKeys[index - 1]}###${element}`;
+          }
+        }
+        this.openKeys = _openKeys;
+      }
+    },
+    computed: {
+      currentPath() {
+        return this.$route.path;
+      },
+      subTree() {
+        const vm = this;
+        const treeArray = this.tree || [];
+        const MenuItemRender = (currentMenuInfo, parentId) => {
+          const currentId = `${parentId}###${currentMenuInfo.id}`;
+          if (this.authFn) {
+            if (!this.authFn(currentMenuInfo)) {
+              return null;
+            }
+          }
+          if (ui.xU.isArrayFill(currentMenuInfo.children)) {
+            return vue.createVNode(vue.resolveComponent("aSubMenu"), {
+              "key": currentId
+            }, {
+              icon: () => getIcon(currentMenuInfo.icon),
+              title: () => currentMenuInfo.label,
+              default: () => ui.xU.map(currentMenuInfo.children, (i) => MenuItemRender(i, currentId))
+            });
+          } else {
+            vm.pathAndIdCollection[currentMenuInfo.path] = currentId;
+            return vue.createVNode(vue.resolveComponent("elMenuItem"), {
+              "key": currentId,
+              "class": "flex middle"
+            }, {
+              icon: () => getIcon(currentMenuInfo.icon),
+              title: () => currentMenuInfo.label,
+              default: () => {
+                if (currentMenuInfo.payload) {
+                  if (currentMenuInfo.payload.openType && currentMenuInfo.payload.openType === "NEW_TAB") {
+                    const isDisabled = {};
+                    if (!currentMenuInfo.path) {
+                      isDisabled.disabled = true;
+                    }
+                    return vue.createVNode("a", vue.mergeProps({
+                      "title": currentMenuInfo.label
+                    }, isDisabled, {
+                      "href": currentMenuInfo.path,
+                      "target": "_blank",
+                      "onClick": (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        if (!currentMenuInfo.path) {
+                          return;
+                        }
+                        currentMenuInfo.path && window.open(currentMenuInfo.path, "_blank");
+                      }
+                    }), [currentMenuInfo.label]);
+                  }
+                }
+                return vue.createVNode(vue.Fragment, null, [vue.createVNode(vue.resolveComponent("RouterLink"), {
+                  "to": currentMenuInfo.path || "/404"
+                }, {
+                  default: () => [currentMenuInfo.label]
+                })]);
+              }
+            });
+          }
+        };
+        if (ui.xU.isArrayFill(treeArray)) {
+          return ui.xU.map(treeArray, (i) => {
+            return MenuItemRender(i, "");
+          });
+        } else {
+          return null;
+        }
+      }
+    },
+    render() {
+      return vue.createVNode(vue.resolveComponent("elMenu"), {
+        "openKeys": this.openKeys,
+        "onOpenChange": this.onOpenChange,
+        "selectedKeys": this.arr_selectedMenuId,
+        "onUpdate:selectedKeys": ($event) => this.arr_selectedMenuId = $event,
+        "mode": "inline"
+      }, {
+        default: () => [this.subTree]
+      });
+    }
+  });
+  return _sfc_main;
+});

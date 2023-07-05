@@ -21,7 +21,7 @@ const libXxxName = process.env.libName;
 const isUseDevServer = process.env.runPlugin === "useDevServer";
 
 const EXTERNAL_LIBS = {
-	"element-plus": "antd",
+	"element-plus": "ElementPlus",
 	vue: "Vue",
 	jquery: "$",
 	lodash: "_",
@@ -55,8 +55,8 @@ const ConfigOptions = {
 	},
 	build: {
 		cssMinify: true,
-		minify: "terser",
-		// minify: false,
+		// minify: "terser",
+		minify: false,
 		outDir: "dist",
 		terserOptions: {
 			compress: {
@@ -76,9 +76,6 @@ const ConfigOptions = {
 					} else {
 						return "assets/[ext]/[name].[ext]";
 					}
-				},
-				entryFileNames: ({ name, type: assetType }) => {
-					return "entry/[name].js";
 				},
 				globals: EXTERNAL_LIBS
 			}
@@ -193,5 +190,6 @@ function handleApp() {
 			svgHelper()
 		];
 		ConfigOptions.build.outDir = "prod_website";
+		ConfigOptions.build.rollupOptions.output.entryFileNames = _ => "[name].js";
 	}
 }
