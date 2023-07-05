@@ -422,20 +422,22 @@ const privateLodash = {
 	 * @param {string} globalName
 	 * @returns 在window中名为globalName的全局变量
 	 */
-	asyncLoadJS: async (url: string, globalName: string) => {
-		return new Promise(r => {
+	asyncLoadJS: async function asyncLoadJS(url: string, globalName: string) {
+		return new Promise(resolve => {
 			/* UMD 会暴露出一个全局对象，正是此globalName */
 			/* @ts-ignore */
 			if (window[globalName]) {
 				/* @ts-ignore */
-				r(window[globalName]);
+				resolve(window[globalName]);
+				return;
+			} else {
+				const $style = $("<script/>").attr("id", `async_load_js_${globalName}`);
+				$style.appendTo($("body")).on("load", function () {
+					/* @ts-ignore */
+					resolve(window[globalName]);
+				});
+				$style.attr("src", url);
 			}
-			const $style = $("<script/>").attr("id", `asyncLoadJS_${globalName}`);
-			$style.appendTo($("body")).on("load", function () {
-				/* @ts-ignore */
-				r(window[globalName]);
-			});
-			$style.attr("src", url);
 		});
 	},
 	asyncGlobalJS: async (globalName: string, url: string) => {
