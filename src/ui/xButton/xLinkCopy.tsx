@@ -38,7 +38,7 @@ export const xLinkCopy = defineComponent({
 	},
 	render({ xDomText, handleClickText, copyText }) {
 		return (
-			<div class="xLinkCopy ant-btn ant-btn-link flex">
+			<div class="xLinkCopy x-btn x-btn-link flex">
 				<div
 					class="flex1 ellipsis mr4"
 					onClick={handleClickText}

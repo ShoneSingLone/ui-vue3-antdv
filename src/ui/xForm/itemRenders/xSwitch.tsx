@@ -30,7 +30,7 @@ export const xSwitch = defineComponent({
 		/*用span包裹：宽度自适应*/
 		return (
 			<div class="x-item_switch">
-				<aSwitch
+				<ElSwitch
 					{...xU.omit(listeners, ["onUpdate:value"])}
 					{...xU.omit(properties, ["value", ...propsWillDeleteFromConfigs])}
 					checked={properties.value}

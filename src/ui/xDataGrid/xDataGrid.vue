@@ -64,11 +64,11 @@ export default defineComponent({
 			} else {
 				const slots = {
 					emptyText: () => (
-						<div class="ant-empty ant-empty-normal">
-							<div class="ant-empty-image">
+						<div class="x-empty x-empty-normal">
+							<div class="x-empty-image">
 								<xIcon icon="InsideEmpty" style="width:64px" />
 							</div>
-							<p class="ant-empty-description">
+							<p class="x-empty-description">
 								{this.Cpt_UI_locale.Empty.description}
 							</p>
 						</div>

@@ -8,7 +8,7 @@ import { State_UI } from "../State_UI";
 
 const { MutatingProps } = xU;
 const domClass = {
-	tipsError: "ant-form-item-explain ant-form-item-explain-error"
+	tipsError: "x-form-item-explain x-form-item-explain-error"
 };
 
 const devHelper = {};
@@ -224,8 +224,8 @@ export const xItem = defineComponent({
 			return [
 				this.configs.itemWrapperClass,
 				/*flex 一般与从简在同一行*/
-				"ant-form-item ant-form-item-with-help x-item flex",
-				this.itemTips.type === TIPS_TYPE.error ? "ant-form-item-has-error" : ""
+				"x-form-item-wrapper flex middle",
+				this.itemTips.type === TIPS_TYPE.error ? "x-form-item-has-error" : ""
 			].join(" ");
 		},
 		/* VNode */
@@ -259,7 +259,7 @@ export const xItem = defineComponent({
 		},
 		/* 表单label 如果有提供String类型，就显示 */
 		labelVNode() {
-			const classString = this.isRequired ? "ant-form-item-required" : "";
+			const classString = this.isRequired ? "x-form-item-required" : "";
 
 			if (this.configs.labelVNodeRender) {
 				return this.configs.labelVNodeRender(this.configs, classString);
@@ -283,7 +283,7 @@ export const xItem = defineComponent({
 				return null;
 			}
 			return (
-				<div class="ant-form-item-label">
+				<div class="x-form-item-label">
 					<label for={this.configs.prop} class={classString}>
 						{label}
 					</label>
@@ -516,7 +516,7 @@ export const xItem = defineComponent({
 				{/* label */}
 				{this.labelVNode}
 				{/* 控件 */}
-				<div class="ant-form-item-control" data-type={itemTypeName}>
+				<div class="x-form-item-control" data-type={itemTypeName}>
 					<CurrentXItem
 						id={`CurrentXItem_${FormItemId}`}
 						data-current-item-label={properties.label}

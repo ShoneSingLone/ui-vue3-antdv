@@ -7,7 +7,7 @@ import { createApp, defineComponent } from "vue";
 import { State_UI } from "../../State_UI";
 
 const EcsPressHandler = xU.debounce(async function (event, dialogOptions) {
-	const $antModal = $(".ant-modal-root");
+	const $antModal = $(".x-modal-root");
 	/* 如果有ant的弹窗就不关闭layer */
 	if ($antModal.length > 0) {
 		return;

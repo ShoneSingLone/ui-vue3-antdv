@@ -150,7 +150,7 @@ var __publicField = (obj, key, value) => {
         }, this.labelStyle), (value, prop) => `${prop}: ${value}`).join(";");
       },
       styleContent() {
-        return [`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`, `#${this.xFormId} { ${this.formStyleText} }`, `#${this.xFormId} div.ant-form-item-label { ${this.labelStyleText} }`].join("\n");
+        return [`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`, `#${this.xFormId} { ${this.formStyleText} }`, `#${this.xFormId} div.x-form-item-label { ${this.labelStyleText} }`].join("\n");
       }
     },
     mounted() {
@@ -1190,9 +1190,9 @@ var __publicField = (obj, key, value) => {
   const _hoisted_1$2 = {
     width: "64",
     height: "41",
-    class: "ant-empty-img-simple"
+    class: "x-empty-img-simple"
   };
-  const _hoisted_2$2 = /* @__PURE__ */ vue.createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="ant-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="ant-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="ant-empty-img-simple-path"></path></g></g>', 1);
+  const _hoisted_2$2 = /* @__PURE__ */ vue.createStaticVNode('<g fill="none" fill-rule="evenodd" transform="translate(0 1)"><ellipse cx="32" cy="33" fill="#F5F5F5" class="x-empty-img-simple-ellipse" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9" class="x-empty-img-simple-g"><path d="M55 12.76 44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path fill="#FAFAFA" d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="x-empty-img-simple-path"></path></g></g>', 1);
   const _hoisted_3$2 = [
     _hoisted_2$2
   ];
@@ -1500,14 +1500,14 @@ var __publicField = (obj, key, value) => {
         } else {
           const slots = {
             emptyText: () => vue.createVNode("div", {
-              "class": "ant-empty ant-empty-normal"
+              "class": "x-empty x-empty-normal"
             }, [vue.createVNode("div", {
-              "class": "ant-empty-image"
+              "class": "x-empty-image"
             }, [vue.createVNode(vue.resolveComponent("xIcon"), {
               "icon": "InsideEmpty",
               "style": "width:64px"
             }, null)]), vue.createVNode("p", {
-              "class": "ant-empty-description"
+              "class": "x-empty-description"
             }, [this.Cpt_UI_locale.Empty.description])]),
             bodyCell: (args) => {
               const {
@@ -1942,7 +1942,7 @@ var __publicField = (obj, key, value) => {
     props: ["value"],
     render() {
       return vue.withDirectives(vue.createVNode("div", {
-        "class": "ant-input cursor-not-allowed xItem_readonly ellipsis"
+        "class": "x-input cursor-not-allowed xItem_readonly ellipsis"
       }, [this.value, vue.createVNode("span", {
         "style": "opacity:0"
       }, [vue.createTextVNode(".")])]), [[vue.resolveDirective("uiPopover"), {
@@ -2367,7 +2367,7 @@ var __publicField = (obj, key, value) => {
     MutatingProps: MutatingProps$1
   } = xU;
   const domClass = {
-    tipsError: "ant-form-item-explain ant-form-item-explain-error"
+    tipsError: "x-form-item-explain x-form-item-explain-error"
   };
   const devHelper = {};
   const WILL_DELETE = [
@@ -2560,8 +2560,8 @@ var __publicField = (obj, key, value) => {
       itemWrapperClass() {
         return [
           this.configs.itemWrapperClass,
-          "ant-form-item ant-form-item-with-help x-item flex",
-          this.itemTips.type === TIPS_TYPE.error ? "ant-form-item-has-error" : ""
+          "x-form-item x-form-item-with-help x-item flex",
+          this.itemTips.type === TIPS_TYPE.error ? "x-form-item-has-error" : ""
         ].join(" ");
       },
       tipsVNode() {
@@ -2589,7 +2589,7 @@ var __publicField = (obj, key, value) => {
         return null;
       },
       labelVNode() {
-        const classString = this.isRequired ? "ant-form-item-required" : "";
+        const classString = this.isRequired ? "x-form-item-required" : "";
         if (this.configs.labelVNodeRender) {
           return this.configs.labelVNodeRender(this.configs, classString);
         }
@@ -2609,7 +2609,7 @@ var __publicField = (obj, key, value) => {
           return null;
         }
         return vue.createVNode("div", {
-          "class": "ant-form-item-label"
+          "class": "x-form-item-label"
         }, [vue.createVNode("label", {
           "for": this.configs.prop,
           "class": classString
@@ -2823,7 +2823,7 @@ var __publicField = (obj, key, value) => {
         "id": FormItemId,
         "class": this.itemWrapperClass
       }, [this.labelVNode, vue.createVNode("div", {
-        "class": "ant-form-item-control",
+        "class": "x-form-item-control",
         "data-type": itemTypeName
       }, [vue.createVNode(CurrentXItem, {
         "id": `CurrentXItem_${FormItemId}`,
@@ -3811,7 +3811,7 @@ var __publicField = (obj, key, value) => {
     }
   });
   xU.debounce(async function(event2, dialogOptions) {
-    const $antModal = $__default.default(".ant-modal-root");
+    const $antModal = $__default.default(".x-modal-root");
     if ($antModal.length > 0) {
       return;
     }
@@ -3869,7 +3869,7 @@ var __publicField = (obj, key, value) => {
     },
     render() {
       return vue.createVNode("div", {
-        "class": "flex middle end ant-modal-footer"
+        "class": "flex middle end x-modal-footer"
       }, [this.vDomContent]);
     }
   });
@@ -4244,10 +4244,10 @@ var __publicField = (obj, key, value) => {
         return null;
       }
       return vue.createVNode(vue.Fragment, null, [vue.createVNode("div", {
-        "class": "ant-descriptions-item-label",
+        "class": "x-descriptions-item-label",
         "style": this.styleLabel
       }, [this.vDomLabel]), vue.createVNode("div", {
-        "class": "ant-descriptions-item-content flex1"
+        "class": "x-descriptions-item-content flex1"
       }, [this.vDomContent])]);
     }
   });
@@ -4278,7 +4278,7 @@ var __publicField = (obj, key, value) => {
     },
     render() {
       return vue.createVNode("div", {
-        "class": "InfoCardRow ant-descriptions-row flex middle",
+        "class": "InfoCardRow x-descriptions-row flex middle",
         "style": this.styleRow
       }, [this.vDomCol]);
     }
@@ -4291,7 +4291,7 @@ var __publicField = (obj, key, value) => {
           "min-width": "120px",
           "text-align": "right"
         }, styleObject), (value, prop) => `${prop}: ${value}`).join(";");
-        const styleContent = `#${this.id} .ant-descriptions-item-label {${styleString}}`;
+        const styleContent = `#${this.id} .x-descriptions-item-label {${styleString}}`;
         if (!this.$styleEle) {
           const $form = $__default.default(`#${this.id}`);
           const $style = $__default.default("<style/>", {
@@ -4333,15 +4333,15 @@ var __publicField = (obj, key, value) => {
           return null;
         }
         return vue.createVNode("div", {
-          "class": "ant-descriptions-header"
+          "class": "x-descriptions-header"
         }, [vue.createVNode("div", {
-          "class": "ant-descriptions-title"
+          "class": "x-descriptions-title"
         }, [this.title])]);
       },
       vDomDescriptions() {
         if (this.rowArray) {
           return vue.createVNode("div", {
-            "class": "ant-descriptions-view"
+            "class": "x-descriptions-view"
           }, [xU.map(this.rowArray, (row) => {
             return vue.createVNode(InfoCardRow, {
               "row": row
@@ -4356,7 +4356,7 @@ var __publicField = (obj, key, value) => {
     },
     render() {
       return vue.createVNode("div", {
-        "class": "ant-descriptions ant-descriptions-middle ant-descriptions-bordered x-infomation-card",
+        "class": "x-descriptions x-descriptions-middle x-descriptions-bordered x-infomation-card",
         "id": this.id
       }, [this.vDomTitle, this.vDomDescriptions]);
     }
@@ -4522,7 +4522,7 @@ var __publicField = (obj, key, value) => {
       copyText
     }) {
       return vue.createVNode("div", {
-        "class": "xLinkCopy ant-btn ant-btn-link flex"
+        "class": "xLinkCopy x-btn x-btn-link flex"
       }, [vue.withDirectives(vue.createVNode("div", {
         "class": "flex1 ellipsis mr4",
         "onClick": handleClickText,

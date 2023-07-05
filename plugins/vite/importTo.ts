@@ -181,7 +181,7 @@ function PluginImportToCDN(options: Options): Plugin[] {
 									.join("\n")
 							)
 							.join("\n");
-				fs.writeFileSync("./html.html", html, "utf-8");
+				// fs.writeFileSync("./html.html", html, "utf-8");
 
 				const $ = CheerioLoad(html);
 				const $body = $("body");

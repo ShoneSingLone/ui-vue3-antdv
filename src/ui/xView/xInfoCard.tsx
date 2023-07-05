@@ -26,10 +26,10 @@ export const InfoCardCol = defineComponent({
 
 		return (
 			<>
-				<div class="ant-descriptions-item-label" style={this.styleLabel}>
+				<div class="x-descriptions-item-label" style={this.styleLabel}>
 					{this.vDomLabel}
 				</div>
-				<div class="ant-descriptions-item-content flex1">
+				<div class="x-descriptions-item-content flex1">
 					{this.vDomContent}
 				</div>
 			</>
@@ -61,7 +61,7 @@ export const InfoCardRow = defineComponent({
 	render() {
 		return (
 			<div
-				class="InfoCardRow ant-descriptions-row flex middle"
+				class="InfoCardRow x-descriptions-row flex middle"
 				style={this.styleRow}>
 				{this.vDomCol}
 			</div>
@@ -83,7 +83,7 @@ export const xInfoCard = defineComponent({
 				)
 				.join(";");
 
-			const styleContent = `#${this.id} .ant-descriptions-item-label {${styleString}}`;
+			const styleContent = `#${this.id} .x-descriptions-item-label {${styleString}}`;
 			if (!this.$styleEle) {
 				const $form = $(`#${this.id}`);
 				const $style = $("<style/>", { id: `style_${this.id}` });
@@ -123,15 +123,15 @@ export const xInfoCard = defineComponent({
 				return null;
 			}
 			return (
-				<div class="ant-descriptions-header">
-					<div class="ant-descriptions-title">{this.title}</div>
+				<div class="x-descriptions-header">
+					<div class="x-descriptions-title">{this.title}</div>
 				</div>
 			);
 		},
 		vDomDescriptions() {
 			if (this.rowArray) {
 				return (
-					<div class="ant-descriptions-view">
+					<div class="x-descriptions-view">
 						{xU.map(this.rowArray, row => {
 							return <InfoCardRow row={row} />;
 						})}
@@ -147,7 +147,7 @@ export const xInfoCard = defineComponent({
 	render() {
 		return (
 			<div
-				class="ant-descriptions ant-descriptions-middle ant-descriptions-bordered x-infomation-card"
+				class="x-descriptions x-descriptions-middle x-descriptions-bordered x-infomation-card"
 				id={this.id}>
 				{this.vDomTitle}
 				{this.vDomDescriptions}

@@ -387,10 +387,11 @@ const privateLodash = {
 	 * @param {*} url
 	 * @returns
 	 */
-	asyncLoadText: async function (url: string) {
+	asyncLoadText: async function (url: string, options: any = {}) {
+		let isForceUpdate = options.isForceUpdate || false;
 		/* 在开发模式下App.vue 会设置这个对象 */
 		/* @ts-ignore */
-		if (!State_UI.isDev) {
+		if (!isForceUpdate && !State_UI.isDev) {
 			const res = await iStorage(url);
 			if (res) {
 				return res;

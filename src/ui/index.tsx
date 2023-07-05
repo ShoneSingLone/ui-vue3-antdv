@@ -72,7 +72,7 @@ if (State_UI.isDev) {
 	/* @ts-ignore */
 	window.jquery = $;
 	/* @ts-ignore */
-	window._ = lodash;
+	window._ = xU;
 }
 
 export const compositionAPI = {

@@ -49,7 +49,7 @@ export default defineComponent({
 			return [
 				`#${this.xFormId} { width:100%; padding:0 16px; display: grid;grid-template-columns: repeat(${this.col},1fr);}`,
 				`#${this.xFormId} { ${this.formStyleText} }`,
-				`#${this.xFormId} div.ant-form-item-label { ${this.labelStyleText} }`
+				`#${this.xFormId} div.x-form-item-label { ${this.labelStyleText} }`
 			].join("\n");
 		}
 	},

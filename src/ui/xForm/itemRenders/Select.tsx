@@ -21,7 +21,6 @@ export default defineComponent({
 				}
 			}
 		},
-
 		_modelValue(modelValue) {
 			this.listeners["onUpdate:value"](modelValue);
 		}
@@ -42,21 +41,21 @@ export default defineComponent({
 			"options",
 			"renderOptions"
 		]);
+		xU(_property);
 		const renderOptions = () => {
 			if (properties.renderOptions) {
 				return properties.renderOptions();
 			} else {
 				return xU.map(properties.options, option => {
-					return (
-						<aSelectOption value={option.value}>{option.label}</aSelectOption>
-					);
+					return <ElOption value={option.value} label={option.label} />;
 				});
 			}
 		};
 		return (
-			<aSelect
-				{...listeners}
+			<ElSelect
+				v-model={this._modelValue}
 				{..._property}
+				{...listeners}
 				v-slots={{ default: renderOptions }}
 			/>
 		);
