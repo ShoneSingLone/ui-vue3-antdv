@@ -31,12 +31,9 @@ export const xSwitch = defineComponent({
 		return (
 			<div class="x-item_switch">
 				<ElSwitch
+					v-model={this._modelValue}
 					{...xU.omit(listeners, ["onUpdate:value"])}
 					{...xU.omit(properties, ["value", ...propsWillDeleteFromConfigs])}
-					checked={properties.value}
-					onClick={() => {
-						listeners["onUpdate:value"](!properties.value);
-					}}
 				/>
 			</div>
 		);
