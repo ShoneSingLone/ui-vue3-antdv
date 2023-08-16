@@ -25,6 +25,19 @@
 						<template #title>
 							<span class="flex middle">
 								<xIcon icon="UserOutlined" />
+								<span class="ml4">测试</span>
+							</span>
+						</template>
+						<a-menu-item
+							:key="menu.path"
+							v-for="menu in routes.filter(i => i.category == 'test')">
+							<RouterLink :to="menu.path">{{ menu.path }}</RouterLink>
+						</a-menu-item>
+					</a-sub-menu>
+					<a-sub-menu key="sub1">
+						<template #title>
+							<span class="flex middle">
+								<xIcon icon="UserOutlined" />
 								<span class="ml4">单组件</span>
 							</span>
 						</template>

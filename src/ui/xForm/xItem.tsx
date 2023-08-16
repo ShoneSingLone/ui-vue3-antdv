@@ -95,6 +95,9 @@ export const xItem = defineComponent({
 			const listeners = {
 				/* 主要的触发方式 */
 				"onUpdate:value": (val: any) => {
+					if (val === undefined) {
+						val = null;
+					}
 					/* 使用configs.value的形式，一般是configs与组件是一对一的关系,configs需要是reactive的  */
 					if (configs.value !== undefined) {
 						if (configs.value === val) {
