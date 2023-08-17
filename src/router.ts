@@ -2,7 +2,16 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 export const routes = [
 	{ category: "test", path: "/Dev", component: () => import("./Dev.vue") },
-	{ category: "test", path: "/test/xItem", component: () => import("./ui/xForm/xItem.test.jsx") },
+	{
+		category: "test",
+		path: "/test/xItem",
+		component: () => import("./ui/xForm/xItem.test.jsx")
+	},
+	{
+		category: "test",
+		path: "/test/xCharts",
+		component: () => import("./ui/xCharts/xCharts.test.jsx")
+	},
 	{ path: "/Dev/a", component: () => import("./Dev.vue") },
 	{ path: "/Dev/b/a", component: () => import("./Dev.vue") },
 	{ path: "/Dev/b/b", component: () => import("./Dev.vue") },

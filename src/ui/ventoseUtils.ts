@@ -505,7 +505,7 @@ const privateLodash = {
 		}
 		const label = dayjs(date).format(format);
 		const isInvalidDate = label == privateLodash.WORDS.INVALID_DATE;
-		return isInvalidDate ? "--" : label;
+		return isInvalidDate ? "" : label;
 	},
 
 	keepDecimals: function (val: number, fractionDigits: 2) {

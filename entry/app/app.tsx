@@ -18,6 +18,7 @@ const appPlugins = {
 
 		app.use({
 			install: (app, { watch } = {}) => {
+				app.config.globalProperties.$echarts = window.echarts;
 				app.component(xMenuTreeVue.name, xMenuTreeVue);
 				app.component("Mkit", Mkit);
 				app.component("DemoAndCode", DemoAndCode);

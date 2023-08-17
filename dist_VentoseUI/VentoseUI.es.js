@@ -461,7 +461,7 @@ const privateLodash = {
     }
     const label = dayjs(date).format(format2);
     const isInvalidDate = label == privateLodash.WORDS.INVALID_DATE;
-    return isInvalidDate ? "--" : label;
+    return isInvalidDate ? "" : label;
   },
   keepDecimals: function(val, fractionDigits) {
     let num = Number(val * 100 / 1024 / 100).toFixed(fractionDigits);
@@ -1547,7 +1547,7 @@ const _sfc_main$6 = defineComponent({
       await xU.ensureValueDone(() => this.$el);
       const options = this.helper.initOptions(this.$props);
       this.options = this.helper.updateOptions(options, this.dataset);
-      this.myChart = this.$echarts.init(this.$el);
+      this.myChart = markRaw(this.$echarts.init(this.$el));
       if ((_a = this == null ? void 0 : this.helper) == null ? void 0 : _a.afterInit) {
         (_b = this == null ? void 0 : this.helper) == null ? void 0 : _b.afterInit({
           instance: this.myChart
@@ -1562,6 +1562,9 @@ const _sfc_main$6 = defineComponent({
     };
   },
   computed: {
+    cpt_id() {
+      return "xCharts_" + this._.uid;
+    },
     helper() {
       if (xU.isPlainObject(this.configs)) {
         return this.configs;
@@ -1595,14 +1598,14 @@ const _sfc_main$6 = defineComponent({
           }
         }
       });
-      this.resizeObserver.observe(this.$el);
+      this.$el && this.resizeObserver.observe(this.$el);
     }
   }
 });
 const _hoisted_1$f = ["id"];
 function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("div", {
-    id: _ctx.id,
+    id: _ctx.cpt_id,
     class: "x-charts flex flex1 center middle"
   }, null, 8, _hoisted_1$f);
 }

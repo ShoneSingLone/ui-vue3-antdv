@@ -1,7 +1,8 @@
 <script lang="tsx">
 import { line } from "./configs/line";
 import { xU } from "../ventoseUtils";
-import { defineComponent } from "vue";
+import { defineComponent,markRaw } from "vue";
+import $ from "jquery"
 
 const CONFIGS_MAP = { line };
 
@@ -38,7 +39,8 @@ export default defineComponent({
 			await xU.ensureValueDone(() => this.$el);
 			const options = this.helper.initOptions(this.$props);
 			this.options = this.helper.updateOptions(options, this.dataset);
-			this.myChart = this.$echarts.init(this.$el);
+			/* TMD坑死了 */
+			this.myChart = markRaw(this.$echarts.init(this.$el));
 			if (this?.helper?.afterInit) {
 				this?.helper?.afterInit({ instance: this.myChart });
 			}
@@ -49,6 +51,10 @@ export default defineComponent({
 		return { myChart: false };
 	},
 	computed: {
+		cpt_id() {
+			return "xCharts_" + this._.uid
+		},
+
 		helper() {
 			if (xU.isPlainObject(this.configs)) {
 				return this.configs;
@@ -82,12 +88,12 @@ export default defineComponent({
 					}
 				}
 			});
-			this.resizeObserver.observe(this.$el);
+			this.$el && this.resizeObserver.observe(this.$el);
 		}
 	}
 });
 </script>
 
 <template>
-	<div :id="id" class="x-charts flex flex1 center middle" />
+	<div :id="cpt_id" class="x-charts flex flex1 center middle" />
 </template>

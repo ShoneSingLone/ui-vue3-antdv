@@ -7,7 +7,7 @@ export default defineComponent({
 		const conditions = reactive(
 			defItem({
 				value: null,
-				placeholder: "环境",
+				label: "环境",
 				prop: "envType",
 				itemType: "Select",
 				allowClear: true,
@@ -22,9 +22,16 @@ export default defineComponent({
 		return () => {
 			return (
 				<>
+					<mkit md="antdv重置清空value会变成undefined，xItem重置为null，不然undefined会被判定为没有value" />
 					<xItem configs={conditions.envType} />
-					<div>{typeof conditions.envType.value}</div>
-					<div>{conditions.envType.value}</div>
+					<div>
+						<h5>typeof conditions.envType.value</h5>{" "}
+						{typeof conditions.envType.value}
+					</div>
+					<div>
+						<h5>conditions.envType.value </h5>
+						{conditions.envType.value}
+					</div>
 				</>
 			);
 		};
